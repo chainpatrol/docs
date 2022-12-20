@@ -1,0 +1,160 @@
+openapi: 3.0.2
+info:
+  title: ChainPatrol External API - OpenAPI 3.0
+  contact:
+    email: umar@chainpatrol.io
+  version: 1.0.0
+externalDocs:
+  description: Find out more about ChainPatrol
+  url: http://chainpatrol.io
+servers:
+  - url: https://app.chainpatrol.io/api/v1
+paths:
+  /asset/check:
+    post:
+      summary: Check asset
+      description: Check asset status
+      requestBody:
+        $ref: "#/components/requestBodies/CheckAssetRequest"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckAssetResponse"
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error
+  /asset/list:
+    post:
+      summary: List assets
+      description: List asset statuses
+      requestBody:
+        $ref: "#/components/requestBodies/ListAssetRequest"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListAssetResponse"
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error
+components:
+  schemas:
+    CheckAssetResponse:
+      type: object
+      properties:
+        result:
+          type: string
+          description: The result of the asset status check
+          example: BLOCKED
+          enum:
+            - ALLOWED
+            - BLOCKED
+            - UNKNOWN
+        reason:
+          type: string
+          description: |
+            The reason for the result. If the result is `BLOCKED` this will be either
+            `report` if it was reported on ChainPatrol or `eth-phishing-detect` if it was
+            reported on the eth-phishing-detect list.
+          example: "report"
+    ListAssetResponse:
+      type: object
+      properties:
+        assets:
+          type: array
+          items:
+            type: object
+            properties:
+              content:
+                type: string
+                description: Asset content
+                example: "cow-fi.net"
+              type:
+                type: string
+                description: Asset type
+                example: URL
+                enum:
+                  - URL
+                  - ADDRESS
+              status:
+                type: string
+                description: The result of the asset status check
+                example: BLOCKED
+                enum:
+                  - ALLOWED
+                  - BLOCKED
+                  - UNKNOWN
+  requestBodies:
+    CheckAssetRequest:
+      description: Check asset request body
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - asset
+              - type
+            properties:
+              asset:
+                type: string
+                description: Asset to check
+                example: "cow-fi.net"
+              type:
+                type: string
+                description: Asset type
+                example: URL
+                enum:
+                  - URL
+                  - ADDRESS
+              detailed:
+                type: boolean
+                description: |
+                  The detailed boolean will also return the reports 
+                  that caused the asset to be blocked or allowed
+    ListAssetRequest:
+      description: |
+        List asset request body
+                
+        Defaults to getting all the updates in the last 1 day.
+        
+        You can also choose a `startDate` and `endDate` for the range of asset updates, most 
+        timestamp formats should work, we use [Luxon](https://moment.github.io/luxon/#/parsing) 
+        for parsing the dates.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - type
+            properties:
+              type:
+                type: string
+                description: Asset type
+                example: URL
+                enum:
+                  - URL
+                  - ADDRESS
+              startDate:
+                type: string
+                description: |
+                  The start date to list assets from. This should be in the format
+                  `YYYY-MM-DD` and is inclusive.
+                example: "2020-01-01"
+              endDate:
+                type: string
+                description: |
+                  The end date to list assets from. This should be in the format
+                  `YYYY-MM-DD` and is inclusive.
+                example: "2020-01-01"
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: "API-KEY"
+      in: header

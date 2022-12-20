@@ -1,0 +1,64 @@
+---
+title: Concepts
+---
+
+## Assets
+
+On ChainPatrol, we track crypto-related items like URLs, contract addresses, and wallet addresses.
+These items are called **assets**. Assets can be added to the ChainPatrol database by organization owners.
+Typically, we'll add the assets for you during your onboarding process.
+
+![Assets](/images/assets.png)
+
+
+### Asset Status
+
+Each asset has a status that indicates whether or not it is allowed or blocked:
+
+- **Allowed** - The asset is safe and has been reviewed by the owner of the asset and ChainPatrol.
+- **Blocked** - The asset is a scam and has been reported to ChainPatrol.
+
+If the asset has not been reviewed by ChainPatrol, it will have the following status:
+
+- **Unknown** - The asset has not been reviewed by ChainPatrol.
+
+
+## Reports
+
+Reports are the way that users can change the status of an asset. When a user reports an asset, they submit
+one or more proposals that contain a request to change the asset status.
+
+Reports can be submitted either by the org members through the organization's admin dashboard, or by the public
+through the organization's public security portal.
+
+### Report Status
+
+Each report has a status that indicates whether or not it has been reviewed by the organization owner and ChainPatrol:
+
+- **To Do**: None of the proposals in the report have been reviewed yet
+- **In Progress**: Some of the proposals in the report have been reviewed
+- **Closed**: All of the proposals in the report have been reviewed
+
+Reports are grouped by their status in the admin dashboard to make it easier to manage.
+
+For more information about how to create reports, see the [Report stage](/reporting-flow/report) page.
+
+![Report Statuses](/images/report-statuses.png)
+
+## Proposals
+
+Proposals are the way that users can propose changes the status of an asset. When a user submits a report, they are actually
+submitting one or more proposals. Typically, a scam will have multiple URLs and contract addresses associated with it, so
+you can submit a report with separate proposals for each with some context about why you think it's a scam in the description.
+
+
+## Reviews
+
+Org admins and ChainPatrol staff **both** have to review a proposal to change the status of an asset. When a proposal is reviewed,
+the reviewer can either approve or reject the proposal. If the proposal is approved by both the org admin and ChainPatrol,
+the asset status will be updated. If the proposal is rejected by either the org admin or ChainPatrol, the asset status will
+not be updated, and the proposal will be closed.
+
+For more information about how to review proposals, see the [Review stage](/reporting-flow/review) page.
+
+![Review](/images/review.png)

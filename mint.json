@@ -1,0 +1,96 @@
+{
+  "name": "ChainPatrol",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#6622DC",
+    "light": "#985EFD",
+    "dark": "#2A186B",
+    "ultraLight": "#E1CFFF",
+    "ultraDark": "#150D31",
+    "background": {
+      "dark": "#060114"
+    },
+    "anchors": {
+      "from": "#D922D2",
+      "to": "#6622DC"
+    }
+  },
+  "api": {
+    "baseUrl": "https://app.chainpatrol.io/api/v1",
+    "auth": {
+      "name": "API-KEY"
+    }
+  },
+  "topbarCtaButton": {
+    "name": "Sign In",
+    "url": "https://app.chainpatrol.io/"
+  },
+  "topbarLinks": [
+    {
+      "name": "Request Early Access",
+      "url": "https://chainpatrol.io/beta"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Changelog",
+      "icon": "note",
+      "url": "https://chainpatrol.io/changelog"
+    },
+    {
+      "name": "Book a Demo",
+      "icon": "circle-play",
+      "url": "https://calendar.app.google/mbHSej2xYwa4X9b59"
+    },
+    {
+      "name": "Community",
+      "icon": "discord",
+      "url": "https://chainpatrol.io/discord"
+    },
+    {
+      "name": "Twitter",
+      "icon": "twitter",
+      "url": "https://twitter.com/ChainPatrol"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "General",
+      "pages": [
+        "general/introduction",
+        "general/how-it-works",
+        "general/concepts",
+        "general/beta"
+      ]
+    },
+    {
+      "group": "Reporting Flow",
+      "pages": [
+        "reporting-flow/overview",
+        "reporting-flow/detect",
+        "reporting-flow/report",
+        "reporting-flow/review",
+        "reporting-flow/protect"
+      ]
+    },
+    {
+      "group": "ChainPatrol External API",
+      "pages": [
+        "external-api/overview",
+        "external-api/authentication",
+        "external-api/asset-check",
+        "external-api/asset-list"
+      ]
+    }
+  ],
+  "backgroundImage": "/background.png",
+  "footerSocials": {
+    "website": "https://chainpatrol.io",
+    "twitter": "https://twitter.com/ChainPatrol",
+    "linkedin": "https://www.linkedin.com/company/89545915"
+  }
+}
