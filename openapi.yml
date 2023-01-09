@@ -141,6 +141,14 @@ components:
                 enum:
                   - URL
                   - ADDRESS
+              status:
+                type: string
+                description: Status of the assets to retrieve
+                example: BLOCKED
+                default: BLOCKED
+                enum:
+                  - BLOCKED
+                  - ALLOWED
               startDate:
                 type: string
                 description: |
