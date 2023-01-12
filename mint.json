@@ -83,6 +83,7 @@
       "pages": [
         "external-api/overview",
         "external-api/authentication",
+        "external-api/report-create",
         "external-api/asset-check",
         "external-api/asset-list"
       ]
