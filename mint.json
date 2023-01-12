@@ -19,6 +19,7 @@
       "to": "#6622DC"
     }
   },
+  "versions": ["v2", "v1"],
   "openApi": "https://chainpatrol-web-git-trpc-openapi-chainpatrol.vercel.app/api/v2/openapi.json",
   "api": {
     "baseUrl": "https://app.chainpatrol.io/api/v2",
@@ -80,12 +81,24 @@
     },
     {
       "group": "ChainPatrol External API",
+      "version": "v1",
       "pages": [
         "external-api/overview",
-        "external-api/authentication",
-        "external-api/report-create",
-        "external-api/asset-check",
-        "external-api/asset-list"
+        "external-api/v1/authentication",
+        "external-api/v1/report-create",
+        "external-api/v1/asset-check",
+        "external-api/v1/asset-list"
+      ]
+    },
+    {
+      "group": "ChainPatrol External API",
+      "version": "v2",
+      "pages": [
+        "external-api/overview",
+        "external-api/v2/authentication",
+        "external-api/v2/report-create",
+        "external-api/v2/asset-check",
+        "external-api/v2/asset-list"
       ]
     }
   ],
