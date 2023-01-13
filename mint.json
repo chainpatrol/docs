@@ -24,7 +24,7 @@
   "api": {
     "baseUrl": "https://app.chainpatrol.io/api/v2",
     "auth": {
-      "name": "API-KEY"
+      "name": "X-CHAINPATROL-API-KEY"
     }
   },
   "topbarCtaButton": {
