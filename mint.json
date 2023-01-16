@@ -1,4 +1,5 @@
 {
+  "$schema": "https://mintlify.com/schema.json",
   "name": "ChainPatrol",
   "logo": {
     "light": "/logo/light.svg",
