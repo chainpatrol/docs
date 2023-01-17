@@ -20,7 +20,7 @@
       "to": "#6622DC"
     }
   },
-  "openApi": "https://chainpatrol-web-git-trpc-openapi-chainpatrol.vercel.app/api/v2/openapi.json",
+  "openApi": "https://chainpatrol-qrynifhvh-chainpatrol.vercel.app/api/v2/openapi.json",
   "api": {
     "baseUrl": "https://app.chainpatrol.io/api/v2",
     "auth": {
