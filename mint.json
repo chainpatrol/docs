@@ -95,5 +95,10 @@
     "website": "https://chainpatrol.io",
     "twitter": "https://twitter.com/ChainPatrol",
     "linkedin": "https://www.linkedin.com/company/89545915"
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-2RSVN6Q782"
+    }
   }
 }
