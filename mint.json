@@ -3,15 +3,14 @@
   "name": "ChainPatrol",
   "logo": {
     "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "dark": "/logo/dark.svg",
+    "href": "https://chainpatrol.io"
   },
   "favicon": "/favicon.svg",
   "colors": {
     "primary": "#6622DC",
     "light": "#985EFD",
     "dark": "#2A186B",
-    "ultraLight": "#E1CFFF",
-    "ultraDark": "#150D31",
     "background": {
       "dark": "#060114"
     },
