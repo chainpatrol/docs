@@ -66,17 +66,17 @@
         "general/how-it-works",
         "general/concepts",
         "general/beta",
-        "general/discord-bot"
-      ]
-    },
-    {
-      "group": "Reporting Flow",
-      "pages": [
-        "reporting-flow/overview",
-        "reporting-flow/detect",
-        "reporting-flow/report",
-        "reporting-flow/review",
-        "reporting-flow/protect"
+        "general/discord-bot",
+        {
+          "group": "Reporting Flow",
+          "pages": [
+            "reporting-flow/overview",
+            "reporting-flow/detect",
+            "reporting-flow/report",
+            "reporting-flow/review",
+            "reporting-flow/protect"
+          ]
+        }
       ]
     },
     {
