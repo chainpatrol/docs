@@ -80,6 +80,15 @@
       ]
     },
     {
+      "group": "Wallet Integration",
+      "pages": [
+        "wallet-integration/guide",
+        "wallet-integration/best-practices",
+        "wallet-integration/examples",
+        "wallet-integration/faq"
+      ]
+    },
+    {
       "group": "ChainPatrol External API",
       "pages": [
         "external-api/overview",
