@@ -83,7 +83,7 @@
       "group": "Wallet Integration",
       "pages": [
         "wallet-integration/guide",
-        "wallet-integration/best-practices",
+        "wallet-integration/list-vs-check",
         "wallet-integration/examples",
         "wallet-integration/false-positives",
         "wallet-integration/faq"
