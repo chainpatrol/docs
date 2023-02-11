@@ -4,7 +4,7 @@ sidebarTitle: Asset Check vs. List
 description: A comparison between the Asset Check and Asset List endpoints and when you should use each one.
 ---
 
-## Asset Check
+## Option 1: Asset Check
 
 The [Asset Check](/external-api/asset-check) endpoint allows you to check if a URL is allowed or blocked by ChainPatrol. It's the simplest way to start using ChainPatrol in your wallet since it's a single HTTP request, which avoids the complexities of managing a list of URLs yourself.
 
@@ -18,7 +18,7 @@ The [Asset Check](/external-api/asset-check) endpoint allows you to check if a U
 - **Privacy**: URLs are submitted as is to ChainPatrol, so the server knows which URLs you look up.
 - **Performance**: The server has to look up each URL individually, which can be slow if you have a lot of URLs to check at once or if you check URLs frequently.
 
-## Asset List
+## Option 2: Asset List
 
 The [Asset List](/external-api/asset-list) endpoint allows you to fetch URLs on our allowlist/blocklist in bulk. This is useful if you want to check a large number of URLs at once, or if you want to keep a local copy of the URLs for privacy or auditing reasons. Using this endpoint requires you to manage your own list of URLs, which can be a bit more complicated. We recommend it only for wallets that have a large number of users and/or specific requirements about data storage and access.
 
