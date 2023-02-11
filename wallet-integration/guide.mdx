@@ -16,8 +16,8 @@ use-case that's not covered here.
 
 ## Overview
 
-Our goal is to prevent users from interacting with a malicious website that is intended to
-steal user funds or credentials.
+The goal of integrating ChainPatrol's API into your wallet is to prevent users from interacting
+with a malicious website that is intended to steal their funds or credentials.
 
 To achieve this goal, you will need to do the following:
 
@@ -51,7 +51,7 @@ window.addEventListener("load", async function () {
   const url = window.location.href;
 
   // Check if the website is malicious
-  const response = fetch("https://app.chainpatrol.io/v2/asset/check", {
+  const response = fetch("https://app.chainpatrol.io/api/v2/asset/check", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -62,10 +62,10 @@ window.addEventListener("load", async function () {
     }),
   });
 
+  // Check if the site is blocked
   if (response.ok) {
     const data = await response.json();
 
-    // Check if the site is blocked
     if (data.status === "BLOCKED") {
       // The website is malicious
     } else {
@@ -77,61 +77,45 @@ window.addEventListener("load", async function () {
 
 ## Displaying a warning to the user
 
-If the website is malicious, we should display a warning to the user. Our recommended
-approach is to redirect the user to a warning page.
+If the website is malicious, you should display a warning to the user.
+
+Our recommended approach is to redirect the user to a warning page which will let the
+user know that they are about to visit a malicious website, and give them the option to
+safely exit, continue, or report a false positive if they believe the website is not malicious.
 
 ```js
-window.addEventListener("load", function () {
-  // Get the URL of the website
-  const url = window.location.href;
-
-  // Check if the website is malicious
-  const response = fetch("https://app.chainpatrol.io/v2/asset/check", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      type: "URL",
-      content: url,
-    }),
-  });
-
-  if (response.ok) {
-    const data = await response.json();
-
-    // Check if the site is blocked
-    if (data.status === "BLOCKED") {
-      // The website is malicious, redirect the user to the warning page
-      window.location.assign(`https://wallet.chainpatrol.com/warning?originUrl=${window.location.href}&reportUrl=https://wallet.chainpatrol.com/report`);
-    } else {
-      // The website is not malicious
-    }
-  }
-});
+if (data.status === "BLOCKED") {
+  // The website is malicious, redirect the user to the warning page
+  window.location.assign("https://wallet.acme.com/warning");
+}
 ```
 
-You can use the ChainPatrol hosted page to redirect and you are done.
+There are two options for creating the warning page:
 
-The ChainPatrol hosted page takes care of the rest for you including
+<AccordionGroup>
+  <Accordion title="ChainPatrol's Hosted Page" description="Recommended option" icon="sparkles" iconType="duotone">
+## ChainPatrol hosted Page
+
+The ChainPatrol hosted page takes care of:
 
 - Displaying a warning to the user
 - Allowing the user to continue if they wish
 - Allowing the user to report a false positive
 
-If you want to create your own page, you can read on with the guide below.
-
-### ChainPatrol hosted Page
-
 All you need to do is pass the `originUrl` query parameter to the warning page.
 
 ```js
-window.location.href = "https://wallet.chainpatrol.com/warning?originUrl= " + window.location.href + "&reportUrl=https://wallet.chainpatrol.com/report;
+window.location.assign(
+  `https://wallet.acme.com/warning?originUrl=${window.location.href}&reportUrl=https://wallet.acme.com/report`
+);
 ```
 
-### Custom Page
+  </Accordion>
+  
+  <Accordion title="Custom Page" description="Use if you want full control/branding" icon="brackets-curly" iconType="duotone">
+## Custom Page
 
-#### Displaying the warning
+### Displaying the warning
 
 We can display the warning by using the `OriginUrl` query parameter.
 
@@ -144,13 +128,13 @@ We can display the warning by using the `OriginUrl` query parameter.
 <p><strong>Origin URL:</strong> {{ .OriginUrl }}</p>
 ```
 
-#### Allowing the user to Continue
+### Allowing the user to Continue
 
 If the user wishes to continue, we can allow them to do so by adding a button to the warning page that will redirect them
 back to the original website.
 
 ```html
-<a href="https://wallet.chainpatrol.com/continue?originUrl= {{ .OriginUrl }}">
+<a href="https://wallet.acme.com/continue?originUrl= {{ .OriginUrl }}">
   Continue at your own risk
 </a>
 ```
@@ -161,10 +145,15 @@ If the user believes the website is not malicious, we can allow them to report a
 by adding a button to the warning page that will redirect them to the chainpatrol dispute page.
 
 ```html
-<a href="https://wallet.chainpatrol.com/dispute?originUrl= {{ .OriginUrl }}">
+<a href="https://wallet.acme.com/dispute?content= {{ .OriginUrl }}">
   Report a false positive
 </a>
 ```
+
+  </Accordion>
+</AccordionGroup>
+
+If you need help deciding which option is best for you, please feel free to reach out to us.
 
 # Conclusion
 
