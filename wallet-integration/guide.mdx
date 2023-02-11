@@ -86,7 +86,7 @@ safely exit, continue, or report a false positive if they believe the website is
 ```js
 if (data.status === "BLOCKED") {
   // The website is malicious, redirect the user to the warning page
-  window.location.assign("https://wallet.acme.com/warning");
+  window.location.assign("https://app.chainpatrol.io/warning");
 }
 ```
 
@@ -106,7 +106,7 @@ All you need to do is pass the `originUrl` query parameter to the warning page.
 
 ```js
 window.location.assign(
-  `https://wallet.acme.com/warning?originUrl=${window.location.href}&reportUrl=https://wallet.acme.com/report`
+  `https://app.chainpatrol.io/warning?originUrl=${window.location.href}`
 );
 ```
 
@@ -117,7 +117,14 @@ window.location.assign(
 
 ### Displaying the warning
 
-We can display the warning by using the `OriginUrl` query parameter.
+We can display the warning by reading the `originUrl` query parameter:
+
+```js
+const urlParams = new URLSearchParams(window.location.search);
+const originUrl = urlParams.get("originUrl");
+```
+
+and displaying it on the page.
 
 ```html
 <h1>Warning</h1>
@@ -125,7 +132,7 @@ We can display the warning by using the `OriginUrl` query parameter.
   You are about to visit a website that has been flagged as malicious by
   ChainPatrol.
 </p>
-<p><strong>Origin URL:</strong> {{ .OriginUrl }}</p>
+<p><strong>Origin URL:</strong> {{ originUrl }}</p>
 ```
 
 ### Allowing the user to Continue
@@ -134,18 +141,16 @@ If the user wishes to continue, we can allow them to do so by adding a button to
 back to the original website.
 
 ```html
-<a href="https://wallet.acme.com/continue?originUrl= {{ .OriginUrl }}">
-  Continue at your own risk
-</a>
+<a href="{{ originUrl }}">Continue at your own risk</a>
 ```
 
 #### Allowing the user to report a false positive
 
 If the user believes the website is not malicious, we can allow them to report a false positive
-by adding a button to the warning page that will redirect them to the chainpatrol dispute page.
+by adding a button to the warning page that will redirect them to the [ChainPatrol dispute page](https://app.chainpatrol.io/dispute).
 
 ```html
-<a href="https://wallet.acme.com/dispute?content= {{ .OriginUrl }}">
+<a href="https://app.chainpatrol.io/dispute?content={{ originUrl }}">
   Report a false positive
 </a>
 ```
@@ -155,17 +160,11 @@ by adding a button to the warning page that will redirect them to the chainpatro
 
 If you need help deciding which option is best for you, please feel free to reach out to us.
 
-# Conclusion
+## Conclusion
 
 We've now added a layer of security to your wallet by protecting users from scams and phishing.
 
-You can see a working example of this in our [ChainPatrol Extension Github Repository]().
+## Next Steps
 
-# Next Steps
-
-- [ChainPatrol API Documentation](/docs/api)
-- [ChainPatrol Extension Github Repository]()
-
-# Contact Us
-
-If you have any questions, please feel free to reach out to nikita@chainpatrol.io
+- Read the [ChainPatrol API Documentation](/docs/api)
+- Browse the sample [ChainPatrol Extension](https://github.com/chainpatrol/extension) Github Repository
