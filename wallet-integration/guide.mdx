@@ -6,3 +6,160 @@ description: This guide will walk you through setting up the ChainPatrol API int
 
 We're going to assume you're creating a web-based wallet, but the same
 principles apply to Mobile or Desktop.
+
+Our goal is to prevent users from interactin with a malicious website that is intended to steal user funds or credentials.
+
+# Overview
+
+We will need to do the following:
+
+1. Detect when a user has visited a new website
+
+2. Check if the website is malicious with the ChainPatrol API
+
+3. Display a warning to the user if the website is malicious
+
+4. Allow the user to continue if they wish
+
+5. Allow the user to report a false positive
+
+# Detecting a new website
+
+The first step is to detect when a user has visited a new website. This can be done by listening for the `onload` event on the `window` object.
+
+```js
+window.addEventListener("load", function () {
+  // Do stuff
+});
+```
+
+# Checking if the website is malicious
+
+Once we know the user has visited a new website, we can check if the website is malicious with the ChainPatrol API.
+
+```js
+window.addEventListener("load", function () {
+  // Check if the website is malicious
+  fetch("https://api.chainpatrol.com/v1/check", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      url: window.location.href,
+    }),
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      // Do stuff
+      if (data.status === "BLOCKED") {
+        // The website is malicious
+      } else {
+        // The website is not malicious
+      }
+    });
+});
+```
+
+# Displaying a warning to the user
+
+If the website is malicious, we should display a warning to the user. Our recommended approach is to redirect the user to a warning page.
+
+```js
+window.addEventListener("load", function () {
+  // Check if the website is malicious
+  fetch("https://api.chainpatrol.com/v1/check", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      url: window.location.href,
+    }),
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      // Do stuff
+      if (data.status === "BLOCKED") {
+        // The website is malicious
+        window.location.href = "https://wallet.chainpatrol.com/warning?originUrl= " + window.location.href + "&reportUrl=https://wallet.chainpatrol.com/report;
+      } else {
+        // The website is not malicious
+      }
+    });
+});
+```
+
+You can use the ChainPatrol hosted page to redirect and you are done.
+
+The ChainPatrol hosted page takes care of the rest for you including
+
+- Displaying a warning to the user
+- Allowing the user to continue if they wish
+- Allowing the user to report a false positive
+
+If you want to create your own page, you can read on with the guide below.
+
+## ChainPatrol hosted Page
+
+All you need to do is pass the `originUrl` query parameter to the warning page.
+
+```js
+window.location.href = "https://wallet.chainpatrol.com/warning?originUrl= " + window.location.href + "&reportUrl=https://wallet.chainpatrol.com/report;
+```
+
+## Custom Page
+
+### Displaying the warning
+
+We can display the warning by using the `OriginUrl` query parameter.
+
+```html
+<h1>Warning</h1>
+<p>
+  You are about to visit a website that has been flagged as malicious by
+  ChainPatrol.
+</p>
+<p><strong>Origin URL:</strong> {{ .OriginUrl }}</p>
+```
+
+### Allowing the user to Continue
+
+If the user wishes to continue, we can allow them to do so by adding a button to the warning page that will redirect them
+back to the original website.
+
+```html
+<a href="https://wallet.chainpatrol.com/continue?originUrl= {{ .OriginUrl }}">
+  Continue at your own risk
+</a>
+```
+
+### Allowing the user to report a false positive
+
+If the user believes the website is not malicious, we can allow them to report a false positive
+by adding a button to the warning page that will redirect them to the chainpatrol dispute page.
+
+```html
+<a href="https://wallet.chainpatrol.com/dispute?originUrl= {{ .OriginUrl }}">
+  Report a false positive
+</a>
+```
+
+# Conclusion
+
+We've now added a layer of security to your wallet by protecting users from scams and phishing.
+
+You can see a working example of this in our [ChainPatrol Extension Github Repository]().
+
+# Next Steps
+
+- [ChainPatrol API Documentation](/docs/api)
+- [ChainPatrol Extension Github Repository]()
+
+# Contact Us
+
+If you have any questions, please feel free to reach out to nikita@chainpatrol.io
