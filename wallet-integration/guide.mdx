@@ -1,0 +1,170 @@
+---
+title: Wallet Developer Integration Guide
+sidebarTitle: Guide
+description: In this guide, you'll learn how to integrate ChainPatrol API into your wallet.
+---
+
+<Note>
+
+This guide assumes you're creating a web-based wallet, but the same principles apply
+to integrating our APIs for Mobile or Desktop wallets.
+
+[Let us know](mailto:nikita@chainpatrol.io) if you'd like to see a guide for a specific
+use-case that's not covered here.
+
+</Note>
+
+## Overview
+
+The goal of integrating ChainPatrol's API into your wallet is to prevent users from interacting
+with a malicious website that is intended to steal their funds or credentials.
+
+To achieve this goal, you will need to do the following:
+
+- 🔍 Detect when a user has visited a new website
+- 🥷 Check if the website is malicious with the ChainPatrol API
+- ⚠️ Display a warning to the user if the website is malicious
+- 🤞 Allow the user to continue if they wish
+- 😅 Allow the user to report a false positive
+
+Let's dive deeper into each of these steps:
+
+## Detecting a new website
+
+The first step is to detect when a user has visited a new website. This can be done by
+listening for the `load` event on the `window` object.
+
+```js
+window.addEventListener("load", async function () {
+  // The page has loaded
+});
+```
+
+## Checking if the website is malicious
+
+Once we know the user has visited a new website, we can check if the website is malicious
+with the ChainPatrol API.
+
+```js
+window.addEventListener("load", async function () {
+  // Get the URL of the website
+  const url = window.location.href;
+
+  // Check if the website is malicious
+  const response = fetch("https://app.chainpatrol.io/api/v2/asset/check", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      type: "URL",
+      content: url,
+    }),
+  });
+
+  // Check if the site is blocked
+  if (response.ok) {
+    const data = await response.json();
+
+    if (data.status === "BLOCKED") {
+      // The website is malicious
+    } else {
+      // The website is not malicious
+    }
+  }
+});
+```
+
+## Displaying a warning to the user
+
+If the website is malicious, you should display a warning to the user.
+
+Our recommended approach is to redirect the user to a warning page which will let the
+user know that they are about to visit a malicious website, and give them the option to
+safely exit, continue, or report a false positive if they believe the website is not malicious.
+
+```js
+if (data.status === "BLOCKED") {
+  // The website is malicious, redirect the user to the warning page
+  window.location.assign("https://app.chainpatrol.io/warning");
+}
+```
+
+There are two options for creating the warning page:
+
+<AccordionGroup>
+  <Accordion title="ChainPatrol's Hosted Page" description="Recommended option" icon="sparkles" iconType="duotone">
+## ChainPatrol hosted Page
+
+The ChainPatrol hosted page takes care of:
+
+- Displaying a warning to the user
+- Allowing the user to continue if they wish
+- Allowing the user to report a false positive
+
+All you need to do is pass the `originUrl` query parameter to the warning page.
+
+```js
+window.location.assign(
+  `https://app.chainpatrol.io/warning?originUrl=${window.location.href}`
+);
+```
+
+  </Accordion>
+  
+  <Accordion title="Custom Page" description="Use if you want full control/branding" icon="brackets-curly" iconType="duotone">
+## Custom Page
+
+### Displaying the warning
+
+We can display the warning by reading the `originUrl` query parameter:
+
+```js
+const urlParams = new URLSearchParams(window.location.search);
+const originUrl = urlParams.get("originUrl");
+```
+
+and displaying it on the page.
+
+```html
+<h1>Warning</h1>
+<p>
+  You are about to visit a website that has been flagged as malicious by
+  ChainPatrol.
+</p>
+<p><strong>Origin URL:</strong> {{ originUrl }}</p>
+```
+
+### Allowing the user to Continue
+
+If the user wishes to continue, we can allow them to do so by adding a button to the warning page that will redirect them
+back to the original website.
+
+```html
+<a href="{{ originUrl }}">Continue at your own risk</a>
+```
+
+#### Allowing the user to report a false positive
+
+If the user believes the website is not malicious, we can allow them to report a false positive
+by adding a button to the warning page that will redirect them to the [ChainPatrol dispute page](https://app.chainpatrol.io/dispute).
+
+```html
+<a href="https://app.chainpatrol.io/dispute?content={{ originUrl }}">
+  Report a false positive
+</a>
+```
+
+  </Accordion>
+</AccordionGroup>
+
+If you need help deciding which option is best for you, please feel free to reach out to us.
+
+## Conclusion
+
+We've now added a layer of security to your wallet by protecting users from scams and phishing.
+
+## Next Steps
+
+- Read the [ChainPatrol API Documentation](/docs/api)
+- Browse the sample [ChainPatrol Extension](https://github.com/chainpatrol/extension) Github Repository

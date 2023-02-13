@@ -66,17 +66,27 @@
         "general/how-it-works",
         "general/concepts",
         "general/beta",
-        "general/discord-bot"
+        "general/discord-bot",
+        {
+          "group": "Reporting Flow",
+          "pages": [
+            "reporting-flow/overview",
+            "reporting-flow/detect",
+            "reporting-flow/report",
+            "reporting-flow/review",
+            "reporting-flow/protect"
+          ]
+        }
       ]
     },
     {
-      "group": "Reporting Flow",
+      "group": "Wallet Integration",
       "pages": [
-        "reporting-flow/overview",
-        "reporting-flow/detect",
-        "reporting-flow/report",
-        "reporting-flow/review",
-        "reporting-flow/protect"
+        "wallet-integration/guide",
+        "wallet-integration/check-vs-list",
+        "wallet-integration/examples",
+        "wallet-integration/false-positives",
+        "wallet-integration/faq"
       ]
     },
     {
