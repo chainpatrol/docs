@@ -84,7 +84,6 @@
       "pages": [
         "wallet-integration/guide",
         "wallet-integration/check-vs-list",
-        "wallet-integration/examples",
         "wallet-integration/false-positives",
         "wallet-integration/faq"
       ]
