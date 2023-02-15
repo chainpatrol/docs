@@ -32,10 +32,10 @@ Let's dive deeper into each of these steps:
 ## Detecting a new website
 
 The first step is to detect when a user has visited a new website. This can be done by
-listening for the `load` event on the `window` object.
+listening for the `DOMContentLoaded` event on the `window` object.
 
 ```js
-window.addEventListener("load", async function () {
+window.addEventListener("DOMContentLoaded", async function () {
   // The page has loaded
 });
 ```
@@ -46,7 +46,7 @@ Once we know the user has visited a new website, we can check if the website is 
 with the ChainPatrol API.
 
 ```js
-window.addEventListener("load", async function () {
+window.addEventListener("DOMContentLoaded", async function () {
   // Get the URL of the website
   const url = window.location.href;
 
