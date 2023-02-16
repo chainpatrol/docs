@@ -6,8 +6,8 @@ description: In this guide, you'll learn how to integrate ChainPatrol API into y
 
 <Note>
 
-This guide assumes you're creating a web-based wallet, but the same principles apply
-to integrating our APIs for Mobile or Desktop wallets.
+This guide assumes you're creating a wallet using a web browser extension, but the same principles apply
+to integrate our APIs for Mobile or Desktop wallets.
 
 [Let us know](mailto:nikita@chainpatrol.io) if you'd like to see a guide for a specific
 use-case that's not covered here.
@@ -31,18 +31,20 @@ Let's dive deeper into each of these steps:
 
 ## Detecting a new website
 
-The first step is to detect when a user has visited a new website. This can be done by
-listening for the `onBeforeNavigate` event on the `window` object.
+The first step is to detect when a user has visited a new website. If you're building a
+web browser extension, you can use the `browser.onBeforeNavigate` API. Here
+we're using Mozilla's [webextension-polyfill](https://github.com/mozilla/webextension-polyfill)
+to smooth out the differences between the Chrome and Firefox APIs.
 
 ```ts
-import { browser } from "webextension-polyfill-ts";
+import browser from "webextension-polyfill";
 
 browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
   //do stuff
 });
 ```
 
-This code would typically go into your Background file.
+This code would typically go into your `Background` file.
 
 ![Background file](https://user-images.githubusercontent.com/10101970/219277025-1a02f736-dbf0-4f63-84f6-611c9a502011.png)
 
