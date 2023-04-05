@@ -36,10 +36,11 @@ connected to your ChainPatrol organization.
 
 ### Feed
 
-You can create a feed channel of scam reports submitted by your server members. To do this,
+You can create a feed channel of all reports to your organization. To do this,
 create a new channel on your Discord server and name it something like `chainpatrol-reports`. This is where the
-bot will post messages when a new scam report is submitted. Then, you can use the following command
-to link the channel to your ChainPatrol organization:
+bot will post messages when a new scam report is submitted.
+
+Then, you can use the following command to link the channel to your ChainPatrol organization:
 
 ```
 /setup feed <channel>
@@ -47,8 +48,12 @@ to link the channel to your ChainPatrol organization:
 
 Follow the instructions in the bot's response to link the channel to your ChainPatrol organization.
 
+![Image showing the Discord bot's response to the setup feed command](/images/discord-bot-feed-setup.png)
+
 You can check that the feed is connected correctly by running the `/setup status` command. If the
 feed is connected correctly, you should see the channel name in the bot's response.
+
+![Image showing the Discord bot's response to the setup status command after setting up the feed](/images/discord-bot-feed-status.png)
 
 As a final test, you can try submitting a test scam report using the `/report` command. You should see a message
 in the feed channel with the scam report shortly after submitting.
