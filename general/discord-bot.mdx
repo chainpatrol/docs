@@ -1,13 +1,8 @@
 ---
-title: ChainPatrol Discord Bot (BETA)
+title: ChainPatrol Discord Bot
 sidebarTitle: Discord Bot
 description: A Discord bot that can be used submit scam reports to ChainPatrol
 ---
-
-<Warning>
-  This is a beta feature. If you have any feedback or suggestions, please let us
-  know in our [Discord server](https://chainpatrol.io/discord).
-</Warning>
 
 <Frame>![ChainPatrol Discord Bot](/images/discord-bot.png)</Frame>
 
@@ -18,21 +13,45 @@ reports that get sent to your admin dashboard for review.
 ## Setup
 
 <Tip>
-  If you have a dedicated `scam-reports` channel, we recommend adding the bot to
-  this channel and directing your server members to use the bot there for easy
-  auditing
+  If you have a dedicated `scam-reports` channel, we recommend pinning a message
+  in this channel and directing your server members to use the bot there for
+  easy reporting
 </Tip>
 
 To add the bot to your server, you need to be an admin of the server. Then, you
-can use the following link to add the bot to your server:
+can use the following link to add the bot:
 
 [🚀 Add ChainPatrol to your server](https://chainpatrol.io/bot/install)
 
-Then, you need to configure the bot to send reports to your admin dashboard. Right now,
+Next, you need to configure the bot to send reports to your admin dashboard on ChainPatrol. Right now,
 this is can be done by reaching out to us on our [Discord server](https://chainpatrol.io/discord)
 and letting us know that you want to add the bot to your server. We will create an organization
-for you on ChainPatrol and link it to your Discord server. Then, you can use the
-`/report` command to submit scam reports.
+for you on ChainPatrol and you can then use the `/setup connect` slash command to link your Discord server
+to your org on ChainPatrol.
+
+To check that the bot is working, you can use the `/setup status` command to see if the bot is
+connected to your ChainPatrol organization.
+
+### Feed
+
+You can create a feed channel of scam reports submitted by your server members. To do this,
+create a new channel on your Discord server and name it something like `chainpatrol-reports`. This is where the
+bot will post messages when a new scam report is submitted. Then, you can use the following command
+to link the channel to your ChainPatrol organization:
+
+```
+/setup feed <channel>
+```
+
+Follow the instructions in the bot's response to link the channel to your ChainPatrol organization.
+
+You can check that the feed is connected correctly by running the `/setup status` command. If the
+feed is connected correctly, you should see the channel name in the bot's response.
+
+As a final test, you can try submitting a test scam report using the `/report` command. You should see a message
+in the feed channel with the scam report shortly after submitting.
+
+![Example of the feed channel](/images/discord-bot-prompt.png)
 
 ## Usage
 
