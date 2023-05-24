@@ -1,0 +1,14 @@
+---
+title: Proxy API requests
+description: This article explains how to set up a server to proxy requests to ChainPatrol.
+---
+
+## Why proxy requests?
+
+There are two main benefits of using a proxy server to proxy requests to ChainPatrol:
+
+1. **Prevent leaking your API key** - You can proxy requests to ChainPatrol through your own server which adds the ChainPatrol API key to each requests only on the server. This way, your API key is never exposed to the public.
+
+2. **Protect your user's privacy** - By proxying requests through your own server, ChainPatrol servers will not be able to read the IP addresses of your users.
+
+## How to proxy requests

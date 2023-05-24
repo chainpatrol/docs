@@ -15,7 +15,7 @@ The [Asset Check](/external-api/asset-check) endpoint allows you to check if a U
 
 ### Drawbacks
 
-- **Privacy**: URLs are submitted as is to ChainPatrol, so the server knows which URLs you look up.
+- **Privacy**: URLs are submitted as is to ChainPatrol, so the server knows which URLs you look up. _However_, you can [set up a proxy server](/wallet-integration/proxy) to avoid this.
 - **Performance**: The server has to look up each URL individually, which can be slow if you have a lot of URLs to check at once or if you check URLs frequently.
 
 ## Option 2: Asset List
