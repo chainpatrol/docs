@@ -5,10 +5,66 @@ description: This article explains how to set up a server to proxy requests to C
 
 ## Why proxy requests?
 
-There are two main benefits of using a proxy server to proxy requests to ChainPatrol:
+There are two main benefits of using a proxy server to route requests to ChainPatrol:
 
-1. **Prevent leaking your API key** - You can proxy requests to ChainPatrol through your own server which adds the ChainPatrol API key to each requests only on the server. This way, your API key is never exposed to the public.
+1. **Prevent leaking your API key** - You can proxy requests to ChainPatrol through your own server which adds the ChainPatrol API key to each requests **only on the server**. This way, your API key is never exposed to the public.
 
-2. **Protect your user's privacy** - By proxying requests through your own server, ChainPatrol servers will not be able to read the IP addresses of your users.
+2. **Protect your user's privacy** - By proxying requests through your own server, ChainPatrol servers will not be able to read the IP addresses of your users if you are using the `/asset/check` API. This is because the requests to ChainPatrol will originate from your server and not from your user's browser.
 
 ## How to proxy requests
+
+<AccordionGroup>
+  <Accordion title="Cloudflare Workers" description="Recommended" icon="cloudflare">
+    
+    [Cloudflare Workers](https://workers.cloudflare.com/) is a serverless platform that allows you to run JavaScript code on Cloudflare's edge network. This means that you can run your own serverless proxy server for free.
+
+    ### 1. Create a new Cloudflare Worker
+
+    Go to the [Cloudflare Workers dashboard](https://dash.cloudflare.com/workers) and click on **Create a Worker**.
+
+    ![Create a new Cloudflare Worker](./cloudflare-workers-1.png)
+
+    ### 2. Copy and paste the code below
+
+    Make sure to replace the `API_KEY` variable with your ChainPatrol API key.
+
+    ```js
+    const API_KEY = 'YOUR_API_KEY'
+    const UPSTREAM_URL = 'https://app.chainpatrol.io/api/v2/asset/check'
+
+    addEventListener('fetch', event => {
+        event.respondWith(handleRequest(event.request))
+    })
+
+    /**
+     * Respond to the request
+     * @param {Request} request
+     */
+    async function handleRequest(request) {
+        // Create a new request to the upstream server
+        const upstreamRequest = new Request(UPSTREAM_URL, request)
+
+        // Set the ChainPatrol API key
+        const headers = new Headers(upstreamRequest.headers)
+        headers.set('X-API-KEY', API_KEY)
+        upstreamRequest.headers = headers
+
+        // Return the response
+        return fetch(upstreamRequest)
+    }
+    ```
+
+    ### 3. Test the proxy server
+
+    Click on **Save and Deploy** and then click on **Preview** to test the proxy server.
+
+    ![Test the proxy server](./cloudflare-workers-2.png)
+
+    ### 4. Use the proxy server
+
+    You can now use the proxy server by sending requests to the URL of your Cloudflare Worker. For example, if your Cloudflare Worker is named `chainpatrol-proxy`, you can send requests to `https://chainpatrol-proxy.your-subdomain.workers.dev`.
+
+  </Accordion>
+  <Accordion title="Express.js" icon="js"></Accordion>
+
+</AccordionGroup>
