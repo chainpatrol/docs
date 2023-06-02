@@ -73,6 +73,48 @@ You can proxy requests to ChainPatrol using any server-side technology. Below ar
     You can now use the proxy server by sending requests to the URL of your Cloudflare Worker. For example, if your Cloudflare Worker is named `chainpatrol-proxy`, you can send requests to `https://chainpatrol-proxy.your-subdomain.workers.dev`.
 
   </Accordion>
+
+  <Accordion title="Deno Deploy" icon="dinosaur">
+
+    [Deno Deploy](https://deno.com/deploy) is a serverless platform that allows you to run JavaScript code on Deno's edge network. This means that you can run your own serverless proxy server for cheap.
+
+    ### 1. Create a new Deno Deploy project
+
+    Go to the [Deno Deploy dashboard](https://dash.deno.com/projects/new) and click on **Create a new project**.
+
+    ![Create a new Deno Deploy project](./deno-deploy-1.png)
+
+    ### 2. Copy and paste the code below
+
+    Make sure to replace the `API_KEY` variable with your ChainPatrol API key.
+
+    ```js
+    import { serve } from "https://deno.land/std@0.140.0/http/server.ts";
+
+    const API_KEY = "YOUR_API_KEY";
+    const UPSTREAM_URL = "https://app.chainpatrol.io/api/v2/asset/check";
+
+    async function handler(req: Request): Promise<Response> {
+        // Create a new request to the upstream server
+        const upstreamRequest = new Request(UPSTREAM_URL, req);
+
+        // Set the ChainPatrol API key
+        const headers = new Headers(upstreamRequest.headers);
+        headers.set("X-API-KEY", API_KEY);
+        upstreamRequest.headers = headers;
+
+        // Return the response
+        return fetch(upstreamRequest);
+    }
+
+    serve(handler);
+    ```
+
+    ### 3. Use the proxy server
+
+    You can now use the proxy server by sending requests to the URL of your Deno Deploy project. For example, if your Deno Deploy project is named `chainpatrol-proxy`, you can send requests to `https://chainpatrol-proxy.deno.dev`.
+
+  </Accordion>
   
   <Accordion title="Express.js" icon="js">
 
@@ -167,46 +209,14 @@ You can proxy requests to ChainPatrol using any server-side technology. Below ar
 
   </Accordion>
 
-  <Accordion title="Deno Deploy" icon="dinosaur">
-
-    [Deno Deploy](https://deno.com/deploy) is a serverless platform that allows you to run JavaScript code on Deno's edge network. This means that you can run your own serverless proxy server for cheap.
-
-    ### 1. Create a new Deno Deploy project
-
-    Go to the [Deno Deploy dashboard](https://dash.deno.com/projects/new) and click on **Create a new project**.
-
-    ![Create a new Deno Deploy project](./deno-deploy-1.png)
-
-    ### 2. Copy and paste the code below
-
-    Make sure to replace the `API_KEY` variable with your ChainPatrol API key.
-
-    ```js
-    import { serve } from "https://deno.land/std@0.140.0/http/server.ts";
-
-    const API_KEY = "YOUR_API_KEY";
-    const UPSTREAM_URL = "https://app.chainpatrol.io/api/v2/asset/check";
-
-    async function handler(req: Request): Promise<Response> {
-        // Create a new request to the upstream server
-        const upstreamRequest = new Request(UPSTREAM_URL, req);
-
-        // Set the ChainPatrol API key
-        const headers = new Headers(upstreamRequest.headers);
-        headers.set("X-API-KEY", API_KEY);
-        upstreamRequest.headers = headers;
-
-        // Return the response
-        return fetch(upstreamRequest);
-    }
-
-    serve(handler);
-    ```
-
-    ### 3. Use the proxy server
-
-    You can now use the proxy server by sending requests to the URL of your Deno Deploy project. For example, if your Deno Deploy project is named `chainpatrol-proxy`, you can send requests to `https://chainpatrol-proxy.deno.dev`.
-
-  </Accordion>
-
 </AccordionGroup>
+
+## Important Considerations
+
+- When deploying your proxy server, consider the ingress and egress volume that you'll handle from your clients. If you're expecting a lot of traffic, you may want to consider using a serverless platform like Cloudflare Workers or Deno Deploy to reduce costs.
+
+- Try to keep your proxy server as close to your clients as possible. This will reduce latency and improve performance.
+
+- When deploying your proxy server, make sure to use HTTPS. This will ensure that your requests are encrypted and secure.
+
+- We reserve the right to block/rate-limit your API key if we detect excessive usage or abuse. Please make sure to handle errors gracefully in the event of unexpected downtime and let us know when you are planning on going live with your integration, so that we can provision the appropriate resources to meet your demand. If you have any questions, please contact us at [support@chainpatrol.io](mailto:support@chainpatrol.io?subject=Re:%20Proxy%20API%20Requests&body=).
