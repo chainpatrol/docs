@@ -65,6 +65,52 @@ There are two main benefits of using a proxy server to route requests to ChainPa
     You can now use the proxy server by sending requests to the URL of your Cloudflare Worker. For example, if your Cloudflare Worker is named `chainpatrol-proxy`, you can send requests to `https://chainpatrol-proxy.your-subdomain.workers.dev`.
 
   </Accordion>
+  
   <Accordion title="Express.js" icon="js"></Accordion>
+
+  <Accordion title="Next.js API Route" icon="js">
+
+    If you're using [Next.js](https://nextjs.org/), you can create an API route to proxy requests to ChainPatrol.
+
+    ### 1. Create a new API route
+
+    Create a new file in the `pages/api` directory and name it `chainpatrol.js`.
+
+    ### 2. Copy and paste the code below
+
+    Make sure to replace the `API_KEY` variable with your ChainPatrol API key.
+
+    ```js
+    // pages/api/chainpatrol.js
+
+    const API_KEY = 'YOUR_API_KEY'
+    const UPSTREAM_URL = 'https://app.chainpatrol.io/api/v2/asset/check'
+
+    export default async function handler(req, res) {
+        // Create a new request to the upstream server
+        const upstreamRequest = new Request(UPSTREAM_URL, req)
+
+        // Set the ChainPatrol API key
+        const headers = new Headers(upstreamRequest.headers)
+        headers.set('X-API-KEY', API_KEY)
+        upstreamRequest.headers = headers
+
+        // Return the response
+        const upstreamResponse = await fetch(upstreamRequest)
+        res.status(upstreamResponse.status).send(upstreamResponse.body)
+    }
+
+    export const config = {
+        api: {
+            bodyParser: false,
+        },
+    }
+    ```
+
+    ### 3. Use the proxy server
+
+    You can now use the proxy server by sending requests to the URL of your Next.js API route. For example, if your Next.js app is running on `http://localhost:3000`, you can send requests to `http://localhost:3000/api/chainpatrol`.
+
+  </Accordion>
 
 </AccordionGroup>
