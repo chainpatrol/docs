@@ -13,10 +13,18 @@ There are two main benefits of using a proxy server to route requests to ChainPa
 
 ## How to proxy requests
 
+You can proxy requests to ChainPatrol using any server-side technology. Below are some examples of how to proxy requests using different technologies.
+
+<Warning>
+  The provided examples are just a starting point and do not include any error
+  handling, rate limiting, or request whitelisting. You should implement these
+  features to ensure that your proxy server is secure and reliable.
+</Warning>
+
 <AccordionGroup>
   <Accordion title="Cloudflare Workers" description="Recommended" icon="cloudflare">
     
-    [Cloudflare Workers](https://workers.cloudflare.com/) is a serverless platform that allows you to run JavaScript code on Cloudflare's edge network. This means that you can run your own serverless proxy server for free.
+    [Cloudflare Workers](https://workers.cloudflare.com/) is a serverless platform that allows you to run JavaScript code on Cloudflare's edge network. This means that you can run your own serverless proxy server for cheap.
 
     ### 1. Create a new Cloudflare Worker
 
@@ -73,9 +81,7 @@ There are two main benefits of using a proxy server to route requests to ChainPa
     ### 1. Install the `node-fetch` package
 
     ```bash
-
     npm install node-fetch
-
     ```
 
     ### 2. Copy and paste the code below
@@ -116,7 +122,7 @@ There are two main benefits of using a proxy server to route requests to ChainPa
 
   </Accordion>
 
-  <Accordion title="Next.js API Route" icon="js">
+  <Accordion title="Next.js API Route" icon="react">
 
     If you're using [Next.js](https://nextjs.org/), you can create an API route to proxy requests to ChainPatrol.
 
@@ -158,6 +164,48 @@ There are two main benefits of using a proxy server to route requests to ChainPa
     ### 3. Use the proxy server
 
     You can now use the proxy server by sending requests to the URL of your Next.js API route. For example, if your Next.js app is running on `http://localhost:3000`, you can send requests to `http://localhost:3000/api/chainpatrol`.
+
+  </Accordion>
+
+  <Accordion title="Deno Deploy" icon="dinosaur">
+
+    [Deno Deploy](https://deno.com/deploy) is a serverless platform that allows you to run JavaScript code on Deno's edge network. This means that you can run your own serverless proxy server for cheap.
+
+    ### 1. Create a new Deno Deploy project
+
+    Go to the [Deno Deploy dashboard](https://dash.deno.com/projects/new) and click on **Create a new project**.
+
+    ![Create a new Deno Deploy project](./deno-deploy-1.png)
+
+    ### 2. Copy and paste the code below
+
+    Make sure to replace the `API_KEY` variable with your ChainPatrol API key.
+
+    ```js
+    import { serve } from "https://deno.land/std@0.140.0/http/server.ts";
+
+    const API_KEY = "YOUR_API_KEY";
+    const UPSTREAM_URL = "https://app.chainpatrol.io/api/v2/asset/check";
+
+    async function handler(req: Request): Promise<Response> {
+        // Create a new request to the upstream server
+        const upstreamRequest = new Request(UPSTREAM_URL, req);
+
+        // Set the ChainPatrol API key
+        const headers = new Headers(upstreamRequest.headers);
+        headers.set("X-API-KEY", API_KEY);
+        upstreamRequest.headers = headers;
+
+        // Return the response
+        return fetch(upstreamRequest);
+    }
+
+    serve(handler);
+    ```
+
+    ### 3. Use the proxy server
+
+    You can now use the proxy server by sending requests to the URL of your Deno Deploy project. For example, if your Deno Deploy project is named `chainpatrol-proxy`, you can send requests to `https://chainpatrol-proxy.deno.dev`.
 
   </Accordion>
 
