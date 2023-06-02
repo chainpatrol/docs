@@ -66,7 +66,55 @@ There are two main benefits of using a proxy server to route requests to ChainPa
 
   </Accordion>
   
-  <Accordion title="Express.js" icon="js"></Accordion>
+  <Accordion title="Express.js" icon="js">
+
+    If you're using [Express.js](https://expressjs.com/), you can create a new route to proxy requests to ChainPatrol.
+
+    ### 1. Install the `node-fetch` package
+
+    ```bash
+
+    npm install node-fetch
+
+    ```
+
+    ### 2. Copy and paste the code below
+
+    Make sure to replace the `API_KEY` variable with your ChainPatrol API key.
+
+    ```js
+    const express = require('express')
+    const fetch = require('node-fetch')
+
+    const API_KEY = 'YOUR_API_KEY'
+    const UPSTREAM_URL = 'https://app.chainpatrol.io/api/v2/asset/check'
+
+    const app = express()
+
+    app.post('/api/chainpatrol', async (req, res) => {
+        // Create a new request to the upstream server
+        const upstreamRequest = new fetch.Request(UPSTREAM_URL, req)
+
+        // Set the ChainPatrol API key
+        const headers = new fetch.Headers(upstreamRequest.headers)
+        headers.set('X-API-KEY', API_KEY)
+        upstreamRequest.headers = headers
+
+        // Return the response
+        const upstreamResponse = await fetch(upstreamRequest)
+        res.status(upstreamResponse.status).send(upstreamResponse.body)
+    })
+
+    app.listen(3000, () => {
+        console.log('Listening on port 3000')
+    })
+    ```
+
+    ### 3. Use the proxy server
+
+    You can now use the proxy server by sending requests to the URL of your Express.js route. For example, if your Express.js app is running on `http://localhost:3000`, you can send requests to `http://localhost:3000/api/chainpatrol`.
+
+  </Accordion>
 
   <Accordion title="Next.js API Route" icon="js">
 
