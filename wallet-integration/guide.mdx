@@ -108,7 +108,9 @@ The ChainPatrol hosted page takes care of:
 - Allowing the user to continue if they wish
 - Allowing the user to report a false positive
 
-All you need to do is pass the `originUrl` query parameter to the warning page.
+### Using the warning page
+
+When you have determined that the site is malicious, you can redirect the tab to the ChainPatrol warning page. You need to pass the `originUrl` query parameter to the warning page so that it can display the URL to the user.
 
 ```ts
 browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
@@ -122,7 +124,9 @@ browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
 });
 ```
 
-To allow the user to continue, listen for the `CHAINPATROL_CONTINUE_AT_OWN_RISK` message in your background script
+### Allowing the user to Continue
+
+To allow the user to ignore the warning and continue to the potentially malicious site, listen for the `CHAINPATROL_CONTINUE_AT_OWN_RISK` message in your background script
 and add the domain to a list of domains to ignore.
 
 ```ts
@@ -145,6 +149,13 @@ browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
   // ...existing code for checking if the URL is blocked
 });
 ```
+
+<Note>
+  It's up to you how you want to store this data, but we recommended using the
+  browser's storage APIs, such as:
+  [chrome.storage](https://developer.chrome.com/docs/extensions/reference/storage/)
+  for Chrome extensions.
+</Note>
 
 ### Whitelabeling the warning page
 
