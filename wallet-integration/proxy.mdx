@@ -85,28 +85,24 @@ You can proxy requests to ChainPatrol using any server-side technology. Below ar
 
     ### 1. Create a new Deno Deploy project
 
-    Go to the [Deno Deploy dashboard](https://dash.deno.com/projects/new) and click on **Create a new project**.
+    Go to the [Deno Deploy dashboard](https://dash.deno.com/) and click on **New project** and fork the `Hello World` example.
 
-    ![Create a new Deno Deploy project](./deno-deploy-1.png)
+    ![Create a new Deno Deploy project](/images/deno-deploy-1.png)
 
     ### 2. Copy and paste the code below
 
-    Make sure to replace the `API_KEY` variable with your ChainPatrol API key.
-
     ```js
-    import { serve } from "https://deno.land/std@0.140.0/http/server.ts";
+    import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
-    const API_KEY = "YOUR_API_KEY";
     const UPSTREAM_URL = "https://app.chainpatrol.io/api/v2/asset/check";
 
-    async function handler(req: Request): Promise<Response> {
+    async function handler(request: Request): Promise<Response> {
         // Create a new request to the upstream server
-        const upstreamRequest = new Request(UPSTREAM_URL, req);
+        const url = new URL(UPSTREAM_URL);
+        const upstreamRequest = new Request(url, request);
 
         // Set the ChainPatrol API key
-        const headers = new Headers(upstreamRequest.headers);
-        headers.set("X-API-KEY", API_KEY);
-        upstreamRequest.headers = headers;
+        upstreamRequest.headers.set('X-API-KEY', Deno.env.API_KEY);
 
         // Return the response
         return fetch(upstreamRequest);
@@ -114,6 +110,12 @@ You can proxy requests to ChainPatrol using any server-side technology. Below ar
 
     serve(handler);
     ```
+
+    ### 3. Set the `API_KEY` environment variable
+
+    Add the `API_KEY` environment variable in the Deno editor and set your ChainPatrol API key:
+
+    ![Set the API_KEY environment variable](/images/deno-deploy-2.png)
 
     ### 3. Use the proxy server
 
