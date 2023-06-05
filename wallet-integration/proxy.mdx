@@ -28,45 +28,50 @@ You can proxy requests to ChainPatrol using any server-side technology. Below ar
 
     ### 1. Create a new Cloudflare Worker
 
-    Go to the [Cloudflare Workers dashboard](https://dash.cloudflare.com/workers) and click on **Create a Worker**.
+    Go to the [Cloudflare Workers dashboard](https://dash.cloudflare.com/workers) and create a new worker.
 
-    ![Create a new Cloudflare Worker](./cloudflare-workers-1.png)
+    ![Create a new Cloudflare Worker](/images/cloudflare-workers-1.png)
 
     ### 2. Copy and paste the code below
 
     Make sure to replace the `API_KEY` variable with your ChainPatrol API key.
 
     ```js
-    const API_KEY = 'YOUR_API_KEY'
-    const UPSTREAM_URL = 'https://app.chainpatrol.io/api/v2/asset/check'
+    const API_KEY = 'YOUR_API_KEY';
+    const UPSTREAM_URL = 'https://app.chainpatrol.io/api/v2/asset/check';
 
-    addEventListener('fetch', event => {
-        event.respondWith(handleRequest(event.request))
-    })
-
-    /**
-     * Respond to the request
-     * @param {Request} request
-     */
-    async function handleRequest(request) {
+    export default {
+      async fetch(request, env, ctx) {
         // Create a new request to the upstream server
-        const upstreamRequest = new Request(UPSTREAM_URL, request)
+        const url = new URL(UPSTREAM_URL);
+        const upstreamRequest = new Request(url, request);
 
         // Set the ChainPatrol API key
-        const headers = new Headers(upstreamRequest.headers)
-        headers.set('X-API-KEY', API_KEY)
-        upstreamRequest.headers = headers
+        upstreamRequest.headers.set('X-API-KEY', API_KEY);
 
         // Return the response
-        return fetch(upstreamRequest)
-    }
+        return fetch(upstreamRequest);
+      },
+    };
     ```
 
     ### 3. Test the proxy server
 
-    Click on **Save and Deploy** and then click on **Preview** to test the proxy server.
+    Click on **Save and deploy** and then test the proxy server using `curl`:
 
-    ![Test the proxy server](./cloudflare-workers-2.png)
+    ```bash
+    curl --request POST \
+      --url https://chainpatrol-proxy.your-subdomain.workers.dev/ \
+      --header 'Content-Type: application/json' \
+      --data '{
+        "type": "URL",
+        "content": "google.com"
+      }'
+    ```
+
+    ```json Output
+    {"status":"ALLOWED"}
+    ```
 
     ### 4. Use the proxy server
 
