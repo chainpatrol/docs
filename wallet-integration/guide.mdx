@@ -134,7 +134,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 ```
 
-Then you can update your code to first check if the URL is in the ignore list:
+Then you can update your code to first check if the URL is in the ignore list before checking if it's blocked:
 
 ```ts
 browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
@@ -142,7 +142,7 @@ browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
     return;
   }
 
-  //...
+  // ...existing code for checking if the URL is blocked
 });
 ```
 
