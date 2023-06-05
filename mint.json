@@ -19,7 +19,7 @@
       "to": "#6622DC"
     }
   },
-  "openApi": "https://app.chainpatrol.io/api/v2/openapi.json",
+  "openapi": "https://app.chainpatrol.io/api/v2/openapi.json",
   "api": {
     "baseUrl": "https://app.chainpatrol.io/api/v2",
     "auth": {
@@ -84,6 +84,7 @@
       "pages": [
         "wallet-integration/guide",
         "wallet-integration/check-vs-list",
+        "wallet-integration/proxy",
         "wallet-integration/false-positives"
       ]
     },
