@@ -82,18 +82,6 @@ Our recommended approach is to redirect the user to a warning page which will le
 user know that they are about to visit a malicious website, and give them the option to
 safely exit, continue, or report a false positive if they believe the website is not malicious.
 
-```ts
-browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
-  const isBlocked = await checkUrl(details.url);
-  if (isBlocked) {
-    // redirect
-    browser.tabs.update(details.tabId, {
-      url: "https://app.chainpatrol.io/warning?originUrl=" + details.url,
-    });
-  }
-});
-```
-
 There are two options for creating the warning page:
 
 <AccordionGroup>
@@ -142,11 +130,18 @@ Then you can update your code to first check if the URL is in the ignore list be
 
 ```ts
 browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
+  // exit early if the URL is in the ignore list
   if (checkIgnoreList(details.url)) {
     return;
   }
 
-  // ...existing code for checking if the URL is blocked
+  const isBlocked = await checkUrl(details.url);
+  if (isBlocked) {
+    // redirect
+    browser.tabs.update(details.tabId, {
+      url: `https://app.chainpatrol.io/warning?originUrl=${details.url}`,
+    });
+  }
 });
 ```
 
