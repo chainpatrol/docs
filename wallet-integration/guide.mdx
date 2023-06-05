@@ -58,7 +58,6 @@ with the ChainPatrol API.
 export const checkUrl = async (url: string) => {
   const response = await fetch(
     "https://app.chainpatrol.io/api/v2/asset/check",
-
     {
       method: "POST",
       headers: {
@@ -117,9 +116,33 @@ browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
   if (isBlocked) {
     // redirect
     browser.tabs.update(details.tabId, {
-      url: "https://app.chainpatrol.io/warning?originUrl=" + details.url,
+      url: `https://app.chainpatrol.io/warning?originUrl=${details.url}`,
     });
   }
+});
+```
+
+To allow the user to continue, listen for the `CHAINPATROL_CONTINUE_AT_OWN_RISK` message in your background script
+and add the domain to a list of domains to ignore.
+
+```ts
+// In your extension's background script
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === "CHAINPATROL_CONTINUE_AT_OWN_RISK") {
+    addToIgnoreList(request.domain);
+  }
+});
+```
+
+Then you can update your code to first check if the URL is in the ignore list:
+
+```ts
+browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
+  if (checkIgnoreList(details.url)) {
+    return;
+  }
+
+  //...
 });
 ```
 
@@ -156,11 +179,18 @@ and displaying it on the page.
 ### Allowing the user to Continue
 
 If the user wishes to continue, we can allow them to do so by adding a button to the warning page that will redirect them
-back to the original website.
+back to the original website
 
 ```html
 <a href="{{ originUrl }}">Continue at your own risk</a>
 ```
+
+<Note>
+  To prevent the user from seeing the warning again, we can add the domain to a
+  list of domains to ignore. It's up to you how you want to store this data, but
+  we recommended using the browser's storage APIs or equivalent on other
+  platforms.
+</Note>
 
 #### Allowing the user to report a false positive
 
