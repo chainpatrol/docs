@@ -342,68 +342,28 @@ Definitions:
 
 For the purposes of this Section, the following definitions shall apply:
 
-- a. “Business/Service Interruption” means any delay or stoppage to the Services forced upon ChainPatrol by reasons which could not have been reasonably
+- a. “Business/Service Interruption” means any delay or stoppage to the Services forced upon ChainPatrol by reasons which could not have been reasonably foreseen or prevented;
 
-# foreseen or prevented;
+- b. “Computer Security” means the programs and software ChainPatrol utilizes to protect its and its End-Users’ Data;
 
-# b. “Computer Security” means the programs and software ChainPatrol utilizes to
+- c. “Cyber Extortion” means any direct or indirect attempt to coerce ChainPatrol or its representatives through online or electronic means into any form of exchange to prevent a threatened action by the coercing party;
 
-# protect its and its End-Users’ Data;
+- d. “Data” means any electronic information, text, image, video or other code provided to, or in the possession or control of, ChainPatrol.
 
-# c. “Cyber Extortion” means any direct or indirect attempt to coerce ChainPatrol or
+- e. “Force Majeure” includes, without limitation, strikes, work stoppages, accidents, acts of war or terrorism, civil or military disturbances, nuclear or natural
+  catastrophes or acts of God, pandemics or epidemics, government-mandated
+  lockdowns, and interruptions, loss or malfunctions of utilities, communications or computer (software and hardware) services;
 
-```
-its representatives through online or electronic means into any form of exchange
-```
+- f. “Information” includes Personally Identifiable Information, Data, and any other
+  documentation which could be reasonably foreseen as having intrinsic or economic value to the End-User and/or ChainPatrol;
 
-# to prevent a threatened action by the coercing party;
+- g. “Malicious Code” means any code in any part of a software system or script that
+  is intended to cause undesired effects, security breaches or damage to a system.
 
-# d. “Data” means any electronic information, text, image, video or other code
+- h. “Personally Identifiable Information” means any information that alone or in combination with other information held by ChainPatrol can be used to specifically identify a End-User;
 
-# provided to, or in the possession or control of, ChainPatrol.
-
-# e. “Force Majeure” includes, without limitation, strikes, work stoppages, accidents,
-
-```
-acts of war or terrorism, civil or military disturbances, nuclear or natural
-catastrophes or acts of God, pandemics or epidemics, government-mandated
-lockdowns, and interruptions, loss or malfunctions of utilities, communications or
-```
-
-# computer (software and hardware) services;
-
-# f. “Information” includes Personally Identifiable Information, Data, and any other
-
-```
-documentation which could be reasonably foreseen as having intrinsic or
-```
-
-# economic value to the End-User and/or ChainPatrol;
-
-# g. “Malicious Code” means any code in any part of a software system or script that
-
-```
-is intended to cause undesired effects, security breaches or damage to a
-```
-
-# system.
-
-# h. “Personally Identifiable Information” means any information that alone or in
-
-```
-combination with other information held by ChainPatrol can be used to
-```
-
-# specifically identify a End-User;
-
-# i. “Security Breach” means any compromise of ChainPatrol’s personal or corporate
-
-```
-accounts, computers, or any other password-protected information, that leads to
-the accidental or unlawful destruction, loss, alteration, unauthorized disclosure
-```
-
-# of, or access to protected data transmitted, stored or otherwise processed
+- i. “Security Breach” means any compromise of ChainPatrol’s personal or corporate accounts, computers, or any other password-protected information, that leads to
+  the accidental or unlawful destruction, loss, alteration, unauthorized disclosure of, or access to protected data transmitted, stored or otherwise processed
 
 ChainPatrol takes our End-Users’ security extremely seriously. While we endeavour to take
 every reasonable precaution to protect your information, certain events outside of our control,
@@ -416,108 +376,70 @@ the care, custody or control of ChainPatrol. Further, in such event, ChainPatrol
 liable or responsible for any interruption to the Website or the Services that is a direct or indirect
 result of:
 
-# a. The plagiarising of any other End-User’s data;
+- a. The plagiarising of any other End-User’s data;
 
-# b. The alteration, corruption, destruction, deletion, or damage to data stored on
+- b. The alteration, corruption, destruction, deletion, or damage to data stored on ChainPatrol’s computer systems;
 
-# ChainPatrol’s computer systems;
+- c. Data loss, damage or inability to access data and/or intellectual property infringement that is caused by a security breach, unforeseen or reasonably
+  unpreventable computer hardware, software or firmware failure, or satellite or internet failure;
 
-# c. Data loss, damage or inability to access data and/or intellectual property
+- d. The failure to prevent transmission of malicious code from ChainPatrol computer
+  systems to computer or network systems belonging to an End-User or related third party;
 
-```
-infringement that is caused by a security breach, unforeseen or reasonably
-unpreventable computer hardware, software or firmware failure, or satellite or
-```
+- e. The failure to prevent a loss or threat caused by cyber extortion.
 
-# internet failure;
-
-# d. The failure to prevent transmission of malicious code from ChainPatrol computer
-
-```
-systems to computer or network systems belonging to an End-User or related
-```
-
-# third party;
-
-# e. The failure to prevent a loss or threat caused by cyber extortion.
-
-ChainPatrol shall not be held responsible or liable for any damage or loss to an End-User’s
-data, intellectual property, or documentation which result from a force majeure event.
+ChainPatrol shall not be held responsible or liable for any damage or loss to an End-User’s data, intellectual property, or documentation which result from a force majeure event.
 
 As a condition of your access and use of the Website or the Services, you agree that you may
 use the Website and the Services only for lawful purposes and in accordance with these Terms
 and Conditions. Without limiting the foregoing, you warrant and agree that, when using the
 Website or the Services, you shall not:
 
-# a. Violate any applicable federal, provincial, local, or international law or regulation
+- a. Violate any applicable federal, provincial, local, or international law or regulation or submit any material that could give rise to any civil or criminal liability under
+  applicable laws or regulations or that otherwise may be in conflict with these
 
-```
-or submit any material that could give rise to any civil or criminal liability under
-applicable laws or regulations or that otherwise may be in conflict with these
-```
+- Terms and Conditions and our privacy policy;
 
-# Terms and Conditions and our privacy policy;
+- b. Upload or cause to be displayed on or through the Website any material that is
+  exploitive, obscene, harmful, threatening, abusive, harassing, hateful,
+  defamatory, sexually explicit or pornographic, violent, inflammatory, or
+  discriminatory based on race, sex, religion, nationality, disability, sexual orientation, or age or other such prohibited ground or be otherwise objectionable;
 
-# b. Upload or cause to be displayed on or through the Website any material that is
+- c. Provide or contribute to any false, inaccurate or misleading information;
 
-```
-exploitive, obscene, harmful, threatening, abusive, harassing, hateful,
-defamatory, sexually explicit or pornographic, violent, inflammatory, or
-discriminatory based on race, sex, religion, nationality, disability, sexual
-```
+- d. Impersonate or attempt to impersonate ChainPatrol, a ChainPatrol employee,
+  another user, or any other person or entity (including, without limitation, by using
+  email addresses, or screen names associated with any of the foregoing);
 
-# orientation, or age or other such prohibited ground or be otherwise objectionable;
+- e. Transmit, or procure the sending of, any advertisements or promotions,
+  commercial activities or sales, including without limitation any “spam”, “junk mail”,
+  “chain letter”, contests, sweepstakes and other sales promotions, barter, or
+  advertising or any other similar solicitation;
 
-# c. Provide or contribute to any false, inaccurate or misleading information;
+- f. Engage in conduct that restricts or inhibits anyone’s use or enjoyment of the
+  Website, or which, as determined by us, may harm ChainPatrol or users of the Website or expose them to liability;
 
-# d. Impersonate or attempt to impersonate ChainPatrol, a ChainPatrol employee,
+- g. Promote any illegal activity, or advocate, promote, or assist any unlawful act;
 
-```
-another user, or any other person or entity (including, without limitation, by using
-```
+- h. Systematically retrieve data or other content from the Website to create or
+  compile, directly or indirectly, a collection, compilation, database, or directory
+  without written permission from us;
 
-# email addresses, or screen names associated with any of the foregoing);
+- i. Circumvent, disable, or otherwise interfere with security-related features of the
+  Website or Services, including features that prevent or restrict the use of copying
+  of any content or enforce limitations on the use of the Website and/or the
+  Services contained therein;
+- j. Make improper use of our support services or submit false reports about abuse or
+  misconduct;
+- k. Attempt to bypass any measures of the Website designed to prevent or restrict
+  access to the Website, or any portion of the Website and/or Services;
 
-# e. Transmit, or procure the sending of, any advertisements or promotions,
+- l. Give the impression that content you created originated from or is endorsed by
+  ChainPatrol or any other person or entity, if this is not the case;
 
-```
-commercial activities or sales, including without limitation any “spam”, “junk mail”,
-“chain letter”, contests, sweepstakes and other sales promotions, barter, or
-```
+- m. Plagiarize any other End-User’s content or creations; or
 
-# advertising or any other similar solicitation;
-
-# f. Engage in conduct that restricts or inhibits anyone’s use or enjoyment of the
-
-```
-Website, or which, as determined by us, may harm ChainPatrol or users of the
-```
-
-# Website or expose them to liability;
-
-# g. Promote any illegal activity, or advocate, promote, or assist any unlawful act;
-
-```
-h. Systematically retrieve data or other content from the Website to create or
-compile, directly or indirectly, a collection, compilation, database, or directory
-without written permission from us;
-i. Circumvent, disable, or otherwise interfere with security-related features of the
-Website or Services, including features that prevent or restrict the use of copying
-of any content or enforce limitations on the use of the Website and/or the
-Services contained therein;
-j. Make improper use of our support services or submit false reports about abuse or
-misconduct;
-k. Attempt to bypass any measures of the Website designed to prevent or restrict
-access to the Website, or any portion of the Website and/or Services;
-```
-
-# l. Give the impression that content you created originated from or is endorsed by
-
-# ChainPatrol or any other person or entity, if this is not the case;
-
-# m. Plagiarize any other End-User’s content or creations; or
-
-# n. Reproduce or use without authorization any copyrighted material.
+- n. Reproduce or use without authorization any copyrighted material.
 
 **Availability**
 
@@ -918,15 +840,13 @@ United States before one arbitrator. The arbitration shall be administered by JA
 its Streamlined Arbitration Rules and Procedures. Judgment on the award may be entered in
 any court having jurisdiction. This clause shall not preclude the parties from seeking provisional
 remedies in aid of arbitration from a court of appropriate jurisdiction. This Agreement will be
-governed by and construed in accordance with the laws of the State of Delaware without
+governed by and construed in accordance with the laws of the State of Delaware without respect to its choice of law provisions.
 
-# respect to its choice of law provisions.
+# Privacy Policy
 
 ```
-Privacy Policy
-```
-
 Last updated: May 2023
+```
 
 This Privacy Policy describes ChainPatrol Inc.’s (operating from time to time as “ChainPatrol”)
 and its affiliates’ policies for collecting, using, and disclosing your information. You can view
@@ -944,463 +864,237 @@ Our Privacy Policy explains what Information we collect through the Website, why
 and how we use that Information. It is our policy to respect the privacy of our Users regarding
 any Information that we may collect while using our Service.
 
-# 1) Terms of the Policy
+1. Terms of the Policy
 
-# a) It is ChainPatrol’s policy to comply with the privacy legislation within our jurisdiction.
+- a. It is ChainPatrol’s policy to comply with the privacy legislation within our jurisdiction. This Privacy Policy covers all activities subject to the provisions of Canada’s federal and Ontario’s provincial privacy laws, and other international jurisdictions not otherwise specifically addressed by this Policy. The Website and Services are available internationally, and we endeavour to ensure compliance with all applicable privacy legislation in your jurisdiction. ChainPatrol provides its services primarily to Canadian markets, and ensures its compliance with all applicable privacy legislation, including but not limited to, the secure storage of user data, disclosing the collection and use of its user data, and only using its users’ data for purposes associated with or ancillary to the Services.
 
-```
-This Privacy Policy covers all activities subject to the provisions of Canada’s federal
-and Ontario’s provincial privacy laws, and other international jurisdictions not otherwise
-specifically addressed by this Policy. The Website and Services are available
-internationally, and we endeavour to ensure compliance with all applicable privacy
-legislation in your jurisdiction. ChainPatrol provides its services primarily to Canadian
-markets, and ensures its compliance with all applicable privacy legislation, including but
-not limited to, the secure storage of user data, disclosing the collection and use of its
-user data, and only using its users’ data for purposes associated with or ancillary to the
-```
+- b) The rights and obligations contained in this Privacy Policy may not be available to all individuals or in all jurisdictions. You may contact our Privacy Officer for more information on this Policy at support@chainpatrol.io.
 
-# Services.
+- c) ChainPatrol does not knowingly collect personally identifiable information from any person under the age of 13. In the case we discover that a child under 13 has provided us with personal information, we immediately delete this from our servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact us at support@chainpatrol.io so that we may remove your child’s personal information.
 
-# a) The rights and obligations contained in this Privacy Policy may not be available to all
+- d) In order to help ChainPatrol maintain and ensure that your personal information is accurate and up to date, you must inform us, without delay, of any change in the information you provided to ChainPatrol.
 
-```
-individuals or in all jurisdictions. You may contact our Privacy Officer for more
-```
+2. Personal Information
 
-# information on this Policy at support@chainpatrol.io.
+- a) The personal information ChainPatrol collects includes:
 
-# b) ChainPatrol does not knowingly collect personally identifiable information from any
+  - i) Your First and Last Name;
 
-```
-person under the age of 13. In the case we discover that a child under 13 has provided
-us with personal information, we immediately delete this from our servers. If you are a
-parent or guardian and you are aware that your child has provided us with personal
-information, please contact us at support@chainpatrol.io so that we may remove your
-```
+  - ii) Country in which you are Located;
 
-# child’s personal information.
+  - iii) Email Address;
 
-# c) In order to help ChainPatrol maintain and ensure that your personal information is
+  - iv) Credit Card Payment Information;
 
-```
-accurate and up to date, you must inform us, without delay, of any change in the
-```
+  - v) Any other information required in accordance with applicable legislation; and
 
-# information you provided to ChainPatrol.
+  - vi) Prior to purchasing any ChainPatrol Services, you will also be required to provide your billing address. (the “Data”)
 
-# 2) Personal Information
+- b) ChainPatrol may collect personal information through the following means:
 
-# d) The personal information ChainPatrol collects includes:
+  - i) Directly from you/the User;
 
-# i) Your First and Last Name;
+  - ii) Electronic Devices;
 
-# ii) Country in which you are Located;
+  - iii) Third Party Sources; and
 
-# iii) Email Address;
+  - iv) Refund Requests
 
-# iv) Credit Card Payment Information;
+- c) Your Data may be used for purposes including but not limited to:
 
-# v) Any other information required in accordance with applicable legislation; and
+  - i) Connecting with you to provide the Services;
 
-# vi) Prior to purchasing any ChainPatrol Services, you will also be required to provide
+  - ii) Providing you access to online resources;
 
-# your billing address.
+  - iii) Processing Refunds;
 
-```
-(the “Data”)
-```
+  - iv) Administering Promotions;
 
-# a) ChainPatrol may collect personal information through the following means:
+  - v) Administering, billing, and collecting funds in relation to your use of Website or the Services;
 
-# i) Directly from you/the User;
+  - vi) Protecting against fraud or error;
 
-# ii) Electronic Devices;
+  - vii) Communicating with you to fulfill requests and ensure satisfaction; or
 
-# iii) Third Party Sources; and
+  - viii) Facilitating a refund or reimbursement;
 
-# iv) Refund Requests
+- d) To help us monitor and improve the Website quality, we may collect your computer or mobile phone’s Internet Protocol (IP) address, browser type, the web page visited before you came to our websites, information you search for on the Website, locale preferences, transactions date and time, operating system information, as well as metadata concerning your Data such as software of origin and typology.
 
-# c) Your Data may be used for purposes including but not limited to:
+- e) ChainPatrol will always seek your consent before or at the time that we collect personal information. ChainPatrol may collect information about you from a third party if you have consented to that third party to release your information, for example, for payment or credit card processing. ChainPatrol may also utilize the services of third parties and may receive personal information collected by those third parties in the
+  course of the performance of the Services. ChainPatrol requires all third parties to provide confirmation that they are authorized to release your information.
 
-# i) Connecting with you to provide the Services;
+- f) ChainPatrol is the sole and exclusive owner of the Data and will not sell, share, lease, or otherwise distribute or disclose the Data in any way other than as disclosed by this Privacy Policy. Data may be collected through multiple pages on the Website.
 
-# ii) Providing you access to online resources;
+- g) Pursuant to the General Data Protection Regulation (“GDPR”), if you are a resident of the European Economic Area (“EEA”), we process your personal information under only the following lawful bases:
 
-# iii) Processing Refunds;
+  - i) With your consent;
+  - ii) Further to the performance of the contract between you and the Website;
+  - iii) In compliance with our legal obligations;
+  - iv) To protect your vital interests;
+  - v) To perform a task carried out in the public interest;
+  - vi) For our legitimate interests, which do not override your fundamental rights and freedoms.
 
-# iv) Administering Promotions;
+3. Cookies
 
-# v) Administering, billing, and collecting funds in relation to your use of Website or the
+- a) To ensure that the Website is optimized for ease of use, we or our service provider(s) may use Cookies to collect standard information about your language preferences, when you visit the Site, your browser type and version, and other similar information.
+  You are not required to accept Cookies from the Website. You can reset your browser
+  to notify you when it has received a Cookie or refuse to accept Cookies. However, if
+  you refuse to accept Cookies, you may limit your viewing and/or not be able to access all features on the website.
 
-# Services;
+- b) ChainPatrol or its hosting providers may collect traffic information and information about your visit in a log file on a server. Log file information may include, but is not limited to,
+  internet protocol (IP) addresses, browser type, internet service provider (ISP), referring/exit pages, platform type, date/time stamp, and number of clicks. We or our hosting provider use this information to analyze trends, administer sites, track aggregations of users’ movements, and gather demographic information for aggregate use. IP addresses and other log file information are not connected to personally identifiable information.
 
-# vi) Protecting against fraud or error;
+- c) ChainPatrol may also collect information from web beacons which indicate whether you visited a certain page on a website, opened a promotional email, or clicked on an online advertisement.
 
-# vii) Communicating with you to fulfill requests and ensure satisfaction; or
+- d) ChainPatrol may collect geographic location from your mobile device or IP number to determine the nearest store or suggest specific product shipping offerings.
 
-# viii) Facilitating a refund or reimbursement;
+- e) This Website is not designed to recognize “Do Not Track” requests from web browsers.
 
-# d) To help us monitor and improve the Website quality, we may collect your computer or
+5.  Authorized Disclosure and Use
 
-```
-mobile phone’s Internet Protocol (IP) address, browser type, the web page visited
-before you came to our websites, information you search for on the Website, locale
-preferences, transactions date and time, operating system information, as well as
-```
+- a) ChainPatrol discloses personally-identifying information (“Personal Information”) only to
+  its employees, contractors and affiliated organizations and third parties that need to
+  know that Personal Information to process it on ChainPatrol's behalf or to provide the
+  Services, and that have agreed not to disclose it to others. Some of those employees, contractors and affiliated organizations and third parties may be located outside of Canada and/or outside your jurisdiction. By using the Website or the Service, you
+  consent to the disclosure of such information to them for purposes including but notlimited to:
 
-# metadata concerning your Data such as software of origin and typology.
+  - i) Providing the Services;
 
-# e) ChainPatrol will always seek your consent before or at the time that we collect
+  - ii) Processing your payment;
 
-```
-personal information. ChainPatrol may collect information about you from a third party
-if you have consented to that third party to release your information, for example, for
-payment or credit card processing. ChainPatrol may also utilize the services of third
-parties and may receive personal information collected by those third parties in the
-course of the performance of the Services. ChainPatrol requires all third parties to
-```
+  - iii) Managing and administering to User Accounts;
 
-# provide confirmation that they are authorized to release your information.
+  - iv) Sending marketing and promotional communications;
 
-# f) ChainPatrol is the sole and exclusive owner of the Data and will not sell, share, lease,
+  - v) Conducting feedback and User surveys;
 
-```
-or otherwise distribute or disclose the Data in any way other than as disclosed by this
-```
+- b) ChainPatrol may also use your Personal Information, specifically your contact information, including but not limited to your name and email address, with your consent for the following purposes:
 
-# Privacy Policy. Data may be collected through multiple pages on the Website.
+  - i) to send you the ChainPatrol newsletter;
 
-```
-g) Pursuant to the General Data Protection Regulation (“GDPR”), if you are a resident of
-the European Economic Area (“EEA”), we process your personal information under
-only the following lawful bases:
-```
+  - ii) to inform you of ChainPatrol contests or surveys and provide associated notices and updates;
 
-```
-i) With your consent;
-ii) Further to the performance of the contract between you and the Website;
-iii) In compliance with our legal obligations;
-iv) To protect your vital interests;
-v) To perform a task carried out in the public interest;
-vi) For our legitimate interests, which do not override your fundamental rights and
-freedoms.
-```
+  - iii) to inform you of special offers from ChainPatrol and its partners and select third parties and to provide associated notices and updates; or
 
-# 3) Cookies
+  - iv) to inform you of updates to the Website and Services;
 
-# a) To ensure that the Website is optimized for ease of use, we or our service provider(s)
+- c) Your personal information may also be used and disclosed:
 
-```
-may use Cookies to collect standard information about your language preferences,
-when you visit the Site, your browser type and version, and other similar information.
-You are not required to accept Cookies from the Website. You can reset your browser
-to notify you when it has received a Cookie or refuse to accept Cookies. However, if
-you refuse to accept Cookies, you may limit your viewing and/or not be able to access
-```
+  - i) to comply with valid legal proceedings;
 
-# all features on the website.
+  - ii) to respond to a complaint or dispute;
 
-# b) ChainPatrol or its hosting providers may collect traffic information and information about
+  - iii) during an emergency situation where health or safety is at risk;
 
-```
-your visit in a log file on a server. Log file information may include, but is not limited to,
-internet protocol (IP) addresses, browser type, internet service provider (ISP), referring/
-exit pages, platform type, date/time stamp, and number of clicks. We or our hosting
-provider use this information to analyze trends, administer sites, track aggregations of
-users’ movements, and gather demographic information for aggregate use. IP
-addresses and other log file information are not connected to personally identifiable
-```
+  - iv) to protect the rights of ChainPatrol;
 
-# information.
+  - v) to prevent fraud or abuse of ChainPatrol or its Users;
 
-# c) ChainPatrol may also collect information from web beacons which indicate whether you
+  - vi) to protect the safety of any individual from injury or death;
 
-```
-visited a certain page on a website, opened a promotional email, or clicked on an online
-```
+  - vii) as required by our professional advisors;
 
-# advertisement.
+  - viii) where the personal information is publicly available; or
 
-# d) ChainPatrol may collect geographic location from your mobile device or IP number to
+  - ix) with your consent.
 
-# determine the nearest store or suggest specific product shipping offerings.
-
-# e) This Website is not designed to recognize “Do Not Track” requests from web browsers.
-
-# 5) Authorized Disclosure and Use
-
-# a) ChainPatrol discloses personally-identifying information (“Personal Information”) only to
-
-```
-its employees, contractors and affiliated organizations and third parties that need to
-know that Personal Information to process it on ChainPatrol's behalf or to provide the
-Services, and that have agreed not to disclose it to others. Some of those employees,
-contractors and affiliated organizations and third parties may be located outside of
-Canada and/or outside your jurisdiction. By using the Website or the Service, you
-consent to the disclosure of such information to them for purposes including but not
-```
-
-# limited to:
-
-# i) Providing the Services;
-
-# ii) Processing your payment;
-
-# iii) Managing and administering to User Accounts;
-
-# iv) Sending marketing and promotional communications;
-
-# v) Conducting feedback and User surveys;
-
-# b) ChainPatrol may also use your Personal Information, specifically your contact
-
-```
-information, including but not limited to your name and email address, with your
-```
-
-# consent for the following purposes:
-
-# i) to send you the ChainPatrol newsletter;
-
-# ii) to inform you of ChainPatrol contests or surveys and provide associated notices
-
-# and updates;
-
-# iii) to inform you of special offers from ChainPatrol and its partners and select third
-
-# parties and to provide associated notices and updates; or
-
-# iv) to inform you of updates to the Website and Services;
-
-# c) Your personal information may also be used and disclosed:
-
-# i) to comply with valid legal proceedings;
-
-# ii) to respond to a complaint or dispute;
-
-# iii) during an emergency situation where health or safety is at risk;
-
-# iv) to protect the rights of ChainPatrol;
-
-# v) to prevent fraud or abuse of ChainPatrol or its Users;
-
-# vi) to protect the safety of any individual from injury or death;
-
-# vii) as required by our professional advisors;
-
-# viii) where the personal information is publicly available; or
-
-# ix) with your consent.
-
-```
 In such event, only the minimum amount of personal information required to fulfill the
 contemplated purpose will be disclosed.
-```
 
-# a) Collected Information and Cookies may be used in aggregate form to assess how our
+- a) Collected Information and Cookies may be used in aggregate form to assess how our users use our Website. Your consent will always be sought prior to Cookies beingallowed from the Website.
 
-```
-users use our Website. Your consent will always be sought prior to Cookies being
-```
+- b) When you contact ChainPatrol to obtain support, we may keep a record of your communication to help solve any issues you might be facing and reserve the right to publish it without any way to identify its origin, to help us support other Clients.
 
-# allowed from the Website.
+- c) If we are involved in a merger, acquisition, or sale of all or a portion of our assets, your Data and Information may be transferred as part of that transaction. We will notify you
+  via email and a notice on our websites of any change in control or use of your Data or
+  Information. We will also notify you of choices you may have regarding the Data and Information.
 
-# b) When you contact ChainPatrol to obtain support, we may keep a record of your
+- d) We may share aggregated, non-personally identifiable information publicly and with our partners, such as publishers, advertisers or connected sites. For example, we may
+  share information publicly to show trends about the general use of our Service.
+  ChainPatrol will never disclose data which may personally identify you without your prior written consent.
 
-```
-communication to help solve any issues you might be facing and reserve the right to
-```
+- e) You may change or withdraw your consent, or update your Personal Information at any time, subject to legal or contractual obligations and reasonable notice by contacting our Privacy Officer in writing to support@chainpatrol.io. ChainPatrol may terminate any services to you immediately if you withdraw your consent to the collection of Personal Information. ChainPatrol may require that you provide to us sufficient information to identify yourself before we comply with any request regarding Personal Information or Data stored by ChainPatrol. ChainPatrol will use all reasonable efforts to respond to user requests in a timely manner.
 
-# publish it without any way to identify its origin, to help us support other Clients.
+6.  Retention of Data and Information
 
-# c) If we are involved in a merger, acquisition, or sale of all or a portion of our assets, your
+- a) You may change or update your privacy preferences by contacting support@chainpatrol.io. This includes:
 
-```
-Data and Information may be transferred as part of that transaction. We will notify you
-via email and a notice on our websites of any change in control or use of your Data or
-Information. We will also notify you of choices you may have regarding the Data and
-```
+  - i) Updating your address and personal information;
 
-# Information.
+  - ii) Subscribing or unsubscribing to marketing and promotional communications; and
 
-# d) We may share aggregated, non-personally identifiable information publicly and with
+  - iii) Updating your credit card information.
 
-```
-our partners, such as publishers, advertisers or connected sites. For example, we may
-share information publicly to show trends about the general use of our Service.
-ChainPatrol will never disclose data which may personally identify you without your
-```
+- b) ChainPatrol will retain your information for as long as needed to provide you the Services. We use industry-standard encryption and security standards to protect your information. Once the Services you have purchased are deemed to have been rendered in the sole discretion of ChainPatrol, your Data will be deleted within 30 days. If you wish to request the deletion of your Data, you may request such deletion by contacting us at support@chainpatrol.io.
 
-# prior written consent.
+- c) ChainPatrol may retain and use your information as necessary to comply with our legal obligations, resolve disputes, and enforce our agreements. Consistent with these requirements, we will endeavour to delete your information quickly upon request. Please note, however, that there might be latency in deleting information from our servers and backed-up versions might exist after deletion.
 
-# e) You may change or withdraw your consent, or update your Personal Information at
+- d) If a specific purpose is stated on the Website for the collection of information from you, the information collected will only be stored and used for that stated purpose. Your
+  information will not be used for any other purpose which is not stated explicitly on the Website.
 
-```
-any time, subject to legal or contractual obligations and reasonable notice by
-contacting our Privacy Officer in writing to support@chainpatrol.io. ChainPatrol may
-terminate any services to you immediately if you withdraw your consent to the
-collection of Personal Information. ChainPatrol may require that you provide to us
-sufficient information to identify yourself before we comply with any request regarding
-Personal Information or Data stored by ChainPatrol. ChainPatrol will use all
-```
+- e) ChainPatrol will not process personal information in a way that is incompatible with the purposes for which it has been collected or subsequently authorized by you. We generally assume that information that you give to us is accurate. If information you give to us is inconsistent with other information you give to us or with information that is available in public records or from other sources that ChainPatrol is permitted by law or
+  agreement to use, ChainPatrol will use reasonable efforts to make sure that the information we process is accurate.
 
-# reasonable efforts to respond to user requests in a timely manner.
+- f) ChainPatrol may refuse to provide access to information to the extent that disclosure is likely to interfere with the safeguarding of important countervailing public interests, such
+  as national security; defense; or public security. Other reasons for denying or limiting access are:
 
-# 6) Retention of Data and Information
+  - i) Interference with execution or enforcement of the law, including the prevention, investigation or detection of offenses or the right to a fair trial;
 
-# a) Yo u m a y c h a n g e o r u p d a t e y o u r p r i v a c y p r e f e r e n c e s b y c o n t a c t i n g
+  - ii) Interference with private causes of action, including the prevention, investigation, or detection of legal claims or the right to a fair trial;
 
-# support@chainpatrol.io. This includes:
+  - iii) Disclosure of personal information pertaining to other individual(s) where such references cannot be redacted;
 
-# i) Updating your address and personal information;
+  - iv) Breaching a legal or other professional privilege or obligation;
 
-# ii) Subscribing or unsubscribing to marketing and promotional communications; and
+  - v) Breaching the necessary confidentiality of future or ongoing negotiations, such as those involving the acquisition of publicly quoted companies;
 
-# iii) Updating your credit card information.
+  - vi) Prejudicing employee security investigations or grievance proceedings;
 
-# b) ChainPatrol will retain your information for as long as needed to provide you the
+  - vii) Prejudicing the confidentiality that may be necessary for limited periods in connection with employee succession planning and corporate reorganizations;
 
-```
-Services. We use industry-standard encryption and security standards to protect your
-information. Once the Services you have purchased are deemed to have been
-rendered in the sole discretion of ChainPatrol, your Data will be deleted within 30 days.
-If you wish to request the deletion of your Data, you may request such deletion by
-```
+  - viii) Prejudicing the confidentiality that may be necessary in connection with monitoring, inspection or regulatory functions connected with sound economic or financial management; or
 
-# contacting us at support@chainpatrol.io.
+  - ix) Other circumstances in which the burden or cost of providing access would be disproportionate or the legitimate rights or interests of others would be violated.
 
-# c) ChainPatrol may retain and use your information as necessary to comply with our legal
+7. Third Party Applications
 
-```
-obligations, resolve disputes, and enforce our agreements. Consistent with these
-requirements, we will endeavour to delete your information quickly upon request.
-Please note, however, that there might be latency in deleting information from our
-```
+- a) Our Privacy Policy does not apply to services offered by other companies or individuals, including products or sites that may be linked from our Services. Our
+  Privacy Policy does not cover the information practices of other companies and
+  organizations who advertise our services, and who may use cookies, pixel tags and other technologies to serve and offer relevant ads.
 
-# servers and backed-up versions might exist after deletion.
+- b) We may share your information with a third party application with your consent, for example for payment processing. We accept no responsibility or liability in respect of any third party. Please refer to the privacy policies published on any third party sites which you may access through our site before submitting personal information to them.
 
-# d) If a specific purpose is stated on the Website for the collection of information from you,
+8. Enforcement
 
-```
-the information collected will only be stored and used for that stated purpose. Your
-information will not be used for any other purpose which is not stated explicitly on the
-```
+   We regularly review our compliance with our Privacy Policy. When we receive formal written
+   complaints, we will contact the person who made the complaint to follow up. We work with the
+   appropriate regulatory authorities to resolve any complaints regarding the transfer of Data and
+   Information that we cannot resolve with our Clients directly.
 
-# Website.
+9. Security
 
-# e) ChainPatrol will not process personal information in a way that is incompatible with the
+   The security of your Data and Information is important to us. We follow the generally accepted
+   standards held within our industry to protect the information submitted to us, both during
+   transmission and once we receive it. We store our data on internal, external, and encrypted
+   online servers, protected with firewalls, malware protection, and multiple backup points.
+   However, no method of electronic transmission or storage is 100% secure. Therefore, we
+   cannot and do not guarantee absolute security. Unless specific contractual arrangements are
+   made with you, ChainPatrol may process your Data on a server located outside your
+   jurisdiction.
 
-```
-purposes for which it has been collected or subsequently authorized by you. We
-generally assume that information that you give to us is accurate. If information you
-give to us is inconsistent with other information you give to us or with information that is
-available in public records or from other sources that ChainPatrol is permitted by law or
-agreement to use, ChainPatrol will use reasonable efforts to make sure that the
-```
+10. Privacy Officer
 
-# information we process is accurate.
+    The Privacy Officer for ChainPatrol is Vito Giovannetti. Should you have any questions about
 
-# f) ChainPatrol may refuse to provide access to information to the extent that disclosure is
+    this policy, including any complaints, you may contact our Privacy Officer at support@chainpatrol.io or by written notice delivered to 900 Foulk Road Suite 201 Wilmington, DE 19803.
 
-```
-likely to interfere with the safeguarding of important countervailing public interests, such
-as national security; defense; or public security. Other reasons for denying or limiting
-```
+11. Costs
 
-# access are:
+    ChainPatrol reserves the right to charge a reasonable amount to respond to requests to
+    produce transcripts, copies, or transfers of its Data. You will be notified prior to being assessed
+    a charge for such services.
 
-# i) Interference with execution or enforcement of the law, including the prevention,
-
-# investigation or detection of offenses or the right to a fair trial;
-
-# ii) Interference with private causes of action, including the prevention, investigation,
-
-# or detection of legal claims or the right to a fair trial;
-
-# iii) Disclosure of personal information pertaining to other individual(s) where such
-
-# references cannot be redacted;
-
-# iv) Breaching a legal or other professional privilege or obligation;
-
-# v) Breaching the necessary confidentiality of future or ongoing negotiations, such
-
-# as those involving the acquisition of publicly quoted companies;
-
-# vi) Prejudicing employee security investigations or grievance proceedings;
-
-# vii) Prejudicing the confidentiality that may be necessary for limited periods in
-
-# connection with employee succession planning and corporate reorganizations;
-
-# viii) Prejudicing the confidentiality that may be necessary in connection with
-
-```
-monitoring, inspection or regulatory functions connected with sound economic or
-```
-
-# financial management; or
-
-# ix) Other circumstances in which the burden or cost of providing access would be
-
-# disproportionate or the legitimate rights or interests of others would be violated.
-
-# 7) Third Party Applications
-
-# a) Our Privacy Policy does not apply to services offered by other companies or
-
-```
-individuals, including products or sites that may be linked from our Services. Our
-Privacy Policy does not cover the information practices of other companies and
-organizations who advertise our services, and who may use cookies, pixel tags and
-```
-
-# other technologies to serve and offer relevant ads.
-
-# b) We may share your information with a third party application with your consent, for
-
-```
-example for payment processing. We accept no responsibility or liability in respect of
-any third party. Please refer to the privacy policies published on any third party sites
-```
-
-# which you may access through our site before submitting personal information to them.
-
-# 8) Enforcement
-
-We regularly review our compliance with our Privacy Policy. When we receive formal written
-complaints, we will contact the person who made the complaint to follow up. We work with the
-appropriate regulatory authorities to resolve any complaints regarding the transfer of Data and
-Information that we cannot resolve with our Clients directly.
-
-# 9) Security
-
-The security of your Data and Information is important to us. We follow the generally accepted
-standards held within our industry to protect the information submitted to us, both during
-transmission and once we receive it. We store our data on internal, external, and encrypted
-online servers, protected with firewalls, malware protection, and multiple backup points.
-However, no method of electronic transmission or storage is 100% secure. Therefore, we
-cannot and do not guarantee absolute security. Unless specific contractual arrangements are
-made with you, ChainPatrol may process your Data on a server located outside your
-jurisdiction.
-
-# 10)Privacy Officer
-
-The Privacy Officer for ChainPatrol is Vito Giovannetti. Should you have any questions about
-
-this policy, including any complaints, you may contact our Privacy Officer at
-
-# support@chainpatrol.io or by written notice delivered to 900 Foulk Road Suite 201 Wilmington,
-
-## DE 19803.
-
-# 11)Costs
-
-ChainPatrol reserves the right to charge a reasonable amount to respond to requests to
-produce transcripts, copies, or transfers of its Data. You will be notified prior to being assessed
-a charge for such services.
-
-# 12)Changes to This Privacy Policy
+12. Changes to This Privacy Policy
 
 Our Privacy Policy may change from time to time. We will not reduce your rights under this
 Privacy Policy without your explicit approval. We will post any privacy policy changes on our
