@@ -74,6 +74,16 @@ export const checkUrl = async (url: string) => {
 };
 ```
 
+### Extension Permissions Required
+
+To detect when the user visits a new site, you'll need to add the following permissions to your `manifest.json` file:
+
+```json
+{
+  "permissions": ["webNavigation"]
+}
+```
+
 ## Displaying a warning to the user
 
 If the website is malicious, you should display a warning to the user.
