@@ -36,6 +36,16 @@
       "url": "https://chainpatrol.io/beta"
     }
   ],
+  "tabs": [
+    {
+      "name": "SDK Reference",
+      "url": "sdk"
+    },
+    {
+      "name": "API Reference",
+      "url": "external-api"
+    }
+  ],
   "anchors": [
     {
       "name": "Changelog",
@@ -60,9 +70,12 @@
   ],
   "navigation": [
     {
+      "group": "Getting Started",
+      "pages": ["introduction", "faq"]
+    },
+    {
       "group": "General",
       "pages": [
-        "general/introduction",
         "general/how-it-works",
         "general/concepts",
         "general/beta",
@@ -89,14 +102,20 @@
       ]
     },
     {
-      "group": "ChainPatrol External API",
-      "pages": [
-        "external-api/overview",
-        "external-api/authentication",
-        "external-api/report-create",
-        "external-api/asset-check",
-        "external-api/asset-list"
-      ]
+      "group": "API Reference",
+      "pages": ["external-api/overview", "external-api/authentication"]
+    },
+    {
+      "group": "Assets",
+      "pages": ["external-api/asset-check", "external-api/asset-list"]
+    },
+    {
+      "group": "Reports",
+      "pages": ["external-api/report-create"]
+    },
+    {
+      "group": "@chainpatrol/sdk",
+      "pages": ["sdk/overview", "sdk/api-client", "sdk/scam-detector"]
     }
   ],
   "backgroundImage": "/background.png",
