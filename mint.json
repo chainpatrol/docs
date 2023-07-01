@@ -44,28 +44,10 @@
     {
       "name": "API Reference",
       "url": "external-api"
-    }
-  ],
-  "anchors": [
+    },
     {
       "name": "Changelog",
-      "icon": "note",
       "url": "https://chainpatrol.io/changelog"
-    },
-    {
-      "name": "Book a Demo",
-      "icon": "circle-play",
-      "url": "https://calendar.app.google/mbHSej2xYwa4X9b59"
-    },
-    {
-      "name": "Community",
-      "icon": "discord",
-      "url": "https://chainpatrol.io/discord"
-    },
-    {
-      "name": "Twitter",
-      "icon": "twitter",
-      "url": "https://twitter.com/ChainPatrol"
     }
   ],
   "navigation": [
@@ -160,9 +142,9 @@
   ],
   "backgroundImage": "/background.png",
   "footerSocials": {
-    "website": "https://chainpatrol.io",
     "twitter": "https://twitter.com/ChainPatrol",
-    "linkedin": "https://www.linkedin.com/company/89545915"
+    "linkedin": "https://www.linkedin.com/company/89545915",
+    "discord": "https://chainpatrol.io/discord"
   },
   "analytics": {
     "ga4": {
