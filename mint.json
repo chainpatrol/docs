@@ -115,7 +115,27 @@
     },
     {
       "group": "@chainpatrol/sdk",
-      "pages": ["sdk/overview", "sdk/api-client", "sdk/scam-detector"]
+      "pages": [
+        "sdk/overview",
+        {
+          "group": "ChainPatrolClient",
+          "pages": [
+            "sdk/chainpatrol-client/overview",
+            "sdk/chainpatrol-client/constructor",
+            {
+              "group": "Instance methods",
+              "pages": [
+                "sdk/chainpatrol-client/instance-methods/asset-check",
+                "sdk/chainpatrol-client/instance-methods/asset-list",
+                "sdk/chainpatrol-client/instance-methods/report-create"
+              ]
+            }
+          ]
+        },
+        "sdk/scam-detector",
+        "sdk/storage",
+        "sdk/relay"
+      ]
     }
   ],
   "backgroundImage": "/background.png",

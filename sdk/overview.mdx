@@ -1,4 +1,5 @@
 ---
+icon: hand-wave
 title: Overview
 description: Use our Typescript SDK to interact with ChainPatrol's APIs
 ---
@@ -33,9 +34,9 @@ pnpm add @chainpatrol/sdk
 
 ## Exports
 
-| Name                                      | Description                                               |
-| :---------------------------------------- | :-------------------------------------------------------- |
-| [ChainPatrol](./classes/chainpatrol.md)   | The main class for interacting with the ChainPatrol API.  |
-| [ScamDetector](./classes/scamdetector.md) | The main class for interacting with the ScamDetector API. |
-| [Storage](./classes/storage.md)           | The main class for interacting with the Storage API.      |
-| [Relay](./classes/relay.md)               | The main class for interacting with the Relay API.        |
+| Name                              | Description                                                           |
+| :-------------------------------- | :-------------------------------------------------------------------- |
+| [ChainPatrolClient](./api-client) | Used to create a client that connects to the ChainPatrol API          |
+| [ScamDetector](./scam-detector)   | A simple interface for detecting phishing URLs                        |
+| [Storage](./storage)              | Storage cache implemementation for ScamDetector                       |
+| [Relay](./relay)                  | A message relay for sharing events between browser extension contexts |

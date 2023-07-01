@@ -1,4 +1,5 @@
 ---
+icon: radar
 title: Scam Detector
 description: Detect scam URLs in your dApp, wallet, or browser extension.
 ---
@@ -16,7 +17,7 @@ There are two modes of operation for the Scam Detector:
 - `local`: This mode uses a local database of scam URLs. Use this mode for offline scam detection and testing.
 - `cloud`: This mode uses ChainPatrol's cloud service to detect scams.
 
-## Local Mode
+### Local Mode
 
 ```js
 const detector = new ScamDetector({
@@ -24,7 +25,7 @@ const detector = new ScamDetector({
 });
 ```
 
-## Cloud Mode
+### Cloud Mode
 
 ```js
 const detector = new ScamDetector({
