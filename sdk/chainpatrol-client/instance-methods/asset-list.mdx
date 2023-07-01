@@ -1,0 +1,95 @@
+---
+title: asset.list()
+description: The `asset.list()` method gets the status of all assets that ChainPatrol has reviewed in bulk.
+---
+
+## Example
+
+<CodeGroup>
+
+```js Code
+const results = await chainpatrol.asset.list({
+  type: "URL",
+  status: "BLOCKED",
+  startDate: "2023-01-01",
+  endDate: "2023-12-31",
+});
+
+console.log(results);
+```
+
+```js Output
+[
+  {
+    type: "URL",
+    content: "example.com",
+    status: "BLOCKED",
+  },
+  {
+    type: "URL",
+    content: "scam-airdrop.net",
+    status: "BLOCKED",
+  },
+];
+```
+
+</CodeGroup>
+
+## Parameters
+
+<ParamField body="options" type="object" required>
+<Expandable title="properties" defaultOpen>
+    <ParamField body="type" type="enum<string>" required>
+        The `type` property specifies what type of asset you are querying for. 
+        
+        The following types are supported: `URL`, `PAGE`, `ADDRESS`.
+    </ParamField>
+
+    <ParamField body="status" type="enum<string>" required>
+        The `status` property specifies the status of the asset you are querying for.
+
+        The following statuses are supported: `BLOCKED`, `ALLOWED`, `UNKNOWN`.
+    </ParamField>
+
+    <ParamField body="startDate" type="string" required>
+        The `startDate` property specifies the start date of the time range you are querying for. The date must be in the format `YYYY-MM-DD`.
+    </ParamField>
+
+    <ParamField body="endDate" type="string" required>
+        The `endDate` property specifies the end date of the time range you are querying for. The date must be in the format `YYYY-MM-DD`.
+
+        The `endDate` must be greater than or equal to the `startDate`.
+    </ParamField>
+
+</Expandable>
+</ParamField>
+
+## Return Value
+
+The `asset.list()` method returns a `Promise` that resolves to an array of objects with the following properties:
+
+<ResponseField name="results" type="object[]" required>
+  <Expandable title="properties" defaultOpen>
+
+    <ResponseField name="type" type="enum<string>" required>
+        The `type` property specifies the type of the asset.
+
+        The following types are supported: `URL`, `PAGE`, `ADDRESS`.
+    </ResponseField>
+
+    <ResponseField name="content" type="string" required>
+      The `content` property contains the content of the asset.
+
+      - In the case of a `URL` or `PAGE` asset, this is the URL of the asset.
+      - In the case of an `ADDRESS` asset, this is the wallet or contract address of the asset.
+    </ResponseField>
+
+    <ResponseField name="status" type="enum<string>" required>
+      The `status` property contains the status of the asset.
+
+      The following statuses are supported: `UNKNOWN`, `ALLOWED`, `BLOCKED`.
+
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>

@@ -36,6 +36,16 @@
       "url": "https://chainpatrol.io/beta"
     }
   ],
+  "tabs": [
+    {
+      "name": "SDK Reference",
+      "url": "sdk"
+    },
+    {
+      "name": "API Reference",
+      "url": "external-api"
+    }
+  ],
   "anchors": [
     {
       "name": "Changelog",
@@ -60,23 +70,25 @@
   ],
   "navigation": [
     {
+      "group": "Getting Started",
+      "pages": ["introduction", "faq"]
+    },
+    {
       "group": "General",
       "pages": [
-        "general/introduction",
         "general/how-it-works",
         "general/concepts",
         "general/beta",
-        "general/discord-bot",
-        {
-          "group": "Reporting Flow",
-          "pages": [
-            "reporting-flow/overview",
-            "reporting-flow/detect",
-            "reporting-flow/report",
-            "reporting-flow/review",
-            "reporting-flow/protect"
-          ]
-        }
+        "general/discord-bot"
+      ]
+    },
+    {
+      "group": "Reporting Flow",
+      "pages": [
+        "reporting-flow/detect",
+        "reporting-flow/report",
+        "reporting-flow/review",
+        "reporting-flow/protect"
       ]
     },
     {
@@ -89,13 +101,60 @@
       ]
     },
     {
-      "group": "ChainPatrol External API",
+      "group": "API Reference",
+      "pages": ["external-api/overview", "external-api/authentication"]
+    },
+    {
+      "group": "Assets",
+      "pages": ["external-api/asset-check", "external-api/asset-list"]
+    },
+    {
+      "group": "Reports",
+      "pages": ["external-api/report-create"]
+    },
+    {
+      "group": "@chainpatrol/sdk",
       "pages": [
-        "external-api/overview",
-        "external-api/authentication",
-        "external-api/report-create",
-        "external-api/asset-check",
-        "external-api/asset-list"
+        "sdk/overview",
+        {
+          "group": "ChainPatrolClient",
+          "pages": [
+            "sdk/chainpatrol-client/overview",
+            "sdk/chainpatrol-client/constructor",
+            {
+              "group": "Instance methods",
+              "pages": [
+                "sdk/chainpatrol-client/instance-methods/asset-check",
+                "sdk/chainpatrol-client/instance-methods/asset-list"
+              ]
+            }
+          ]
+        },
+        {
+          "group": "ScamDetector",
+          "pages": [
+            "sdk/scam-detector/overview",
+            "sdk/scam-detector/constructor",
+            {
+              "group": "Instance methods",
+              "pages": [
+                "sdk/scam-detector/instance-methods/url",
+                "sdk/scam-detector/instance-methods/allow",
+                "sdk/scam-detector/instance-methods/block"
+              ]
+            }
+          ]
+        },
+        {
+          "group": "Storage",
+          "pages": [
+            "sdk/storage/overview",
+            "sdk/storage/browser",
+            "sdk/storage/extensions",
+            "sdk/storage/memory"
+          ]
+        },
+        "sdk/relay"
       ]
     }
   ],

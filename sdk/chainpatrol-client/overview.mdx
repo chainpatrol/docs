@@ -1,0 +1,30 @@
+---
+title: Overview
+description: ChainPatrolClient is used to construct a client that connects to the ChainPatrol API
+---
+
+A [ChainPatrolClient](./constructor) allows you to interface with the ChainPatrol API from a Node.js or browser application.
+
+```js
+import { ChainPatrolClient } from "@chainpatrol/sdk";
+
+const chainpatrol = new ChainPatrolClient({ apiKey: "<API_KEY>" });
+```
+
+## Constructor
+
+### `new ChainPatrolClient()`
+
+Creates a new ChainPatrolClient instance.
+
+---
+
+## Instance Methods
+
+### [asset.check()](./instance-methods/asset-check)
+
+Checks the status of an asset to see if it is malicious or not.
+
+### [asset.list()](./instance-methods/asset-list)
+
+Lists all assets (and their statuses) that have been reviewed by ChainPatrol.

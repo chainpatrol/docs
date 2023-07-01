@@ -1,0 +1,72 @@
+---
+title: asset.check()
+description: The `asset.check()` method checks the status of an asset.
+---
+
+## Example
+
+<CodeGroup>
+
+```js Code
+const result = await chainpatrol.asset.check({
+  type: "URL",
+  content: "https://my-website.scam.com",
+});
+
+console.log(results);
+```
+
+```js Output
+{
+  status: "BLOCKED",
+  reason: "eth-phishing-detect"
+}
+```
+
+</CodeGroup>
+
+## Parameters
+
+<ParamField body="options" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="type" type="enum<string>" required>
+        The `type` property specifies what type of asset you are querying for. 
+        
+        The following types are supported: `URL`, `PAGE`, `ADDRESS`.
+    </ParamField>
+
+    <ParamField body="content" type="string" required>
+      The `content` property contains the actual asset you are querying for.
+
+      - In the case of a `URL` or `PAGE` asset, this is the URL of the asset.
+      - In the case of an `ADDRESS` asset, this is the wallet or contract address of the asset.
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+## Return Value
+
+The `asset.check()` method returns a `Promise` that resolves to an object with the following properties:
+
+<ResponseField name="result" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ResponseField name="status" type="enum<string>" required>
+      The `status` property contains the status of the asset.
+
+      The following statuses are supported: `UNKNOWN`, `ALLOWED`, `BLOCKED`.
+
+    </ResponseField>
+
+    <ResponseField name="reason" type="string">
+        If the asset is allowed or blocked, this will be the reason why.
+        ChainPatrol aggregates data from multiple sources, so this will
+        tell you which source blocked or allowed the asset.
+
+        - `eth-phishing-detect` - the asset is on MetaMask's blocklist
+        - `reported` - the asset is on ChainPatrol's blocklist because it was reported by a user
+
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>

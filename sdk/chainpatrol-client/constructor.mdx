@@ -1,0 +1,31 @@
+---
+title: Constructor
+description: Creates a new instance of the `ChainPatrolClient` class.
+---
+
+## Example
+
+```ts
+import { ChainPatrolClient } from "@chainpatrol/sdk";
+
+const chainpatrol = new ChainPatrolClient({ apiKey: "<API_KEY>" });
+```
+
+## Parameters
+
+<ParamField body="options" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="apiKey" type="string">
+      The `apiKey` property is the API Key for accessing ChainPatrol's APIs. We
+      recommend using an environment variable to store your API Key.
+    </ParamField>
+
+    <ParamField body="baseUrl" type="string">
+      The `baseUrl` property is an optional property that specifies the API URL. You
+      only need to specify this if you are using a proxy server.
+
+      Defaults to `https://app.chainpatrol.io/v2/`
+    </ParamField>
+
+  </Expandable>
+</ParamField>
