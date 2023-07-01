@@ -126,8 +126,7 @@
               "group": "Instance methods",
               "pages": [
                 "sdk/chainpatrol-client/instance-methods/asset-check",
-                "sdk/chainpatrol-client/instance-methods/asset-list",
-                "sdk/chainpatrol-client/instance-methods/report-create"
+                "sdk/chainpatrol-client/instance-methods/asset-list"
               ]
             }
           ]
