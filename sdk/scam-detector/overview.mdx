@@ -1,0 +1,77 @@
+---
+title: Overview
+description: ScamDetector is used to detect Phishing and Scam websites using ChainPatrol's APIs.
+---
+
+A [ScamDetector](./constructor) allows you to easily build out scam safety features in your dApp or wallet. It is a smart wrapper around ChainPatrol's APIs that allows you to check if a website is a scam or not. It comes with a variety of storage adapters, so you can easily cache the results of your checks and avoid making unnecessary API calls.
+
+## Modes
+
+There are two modes of operation for the Scam Detector:
+
+- `local`: This mode uses a local database of scam URLs. Use this mode for offline scam detection and testing.
+- `cloud`: This mode uses ChainPatrol's cloud service to detect scams.
+
+### Local Mode
+
+```js
+const detector = new ScamDetector({
+  mode: "local",
+});
+```
+
+### Cloud Mode
+
+```js
+const detector = new ScamDetector({
+  mode: "cloud",
+  apiKey: "YOUR_API_KEY",
+});
+```
+
+## Example
+
+```js
+import { ScamDetector, Storage } from "@chainpatrol/sdk";
+
+// Create a new detector instance
+const detector = new ScamDetector({
+  mode: "cloud", // 'cloud' | 'local' (default: 'cloud')
+
+  // Optional: Specify a custom API key (required if `mode` is set to `cloud`)
+  apiKey: "YOUR_API_KEY",
+
+  // Optional: Configure a proxy server (only available for 'cloud' mode)
+  proxyUrl: "https://proxy.acme.com",
+
+  // Optional: Specify a custom storage adapter
+  storage: Storage.extension(),
+  // storage: Storage.browser(),
+  // storage: Storage.memory(),
+
+  // Optional: Specify a custom redirect URL
+  redirectUrl: "https://app.chainpatrol.io/warning",
+});
+```
+
+## Constructor
+
+### `new ScamDetector(options)`
+
+Creates a new instance of the ScamDetector class.
+
+---
+
+## Instance Methods
+
+### [url()](./instance-methods/url)
+
+Checks if a URL is a scam or not.
+
+### [allow()](./instance-methods/allow)
+
+Adds a URL to the local allowlist.
+
+### [block()](./instance-methods/block)
+
+Adds a URL to the local blocklist.

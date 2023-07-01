@@ -131,8 +131,30 @@
             }
           ]
         },
-        "sdk/scam-detector",
-        "sdk/storage",
+        {
+          "group": "ScamDetector",
+          "pages": [
+            "sdk/scam-detector/overview",
+            "sdk/scam-detector/constructor",
+            {
+              "group": "Instance methods",
+              "pages": [
+                "sdk/scam-detector/instance-methods/url",
+                "sdk/scam-detector/instance-methods/allow",
+                "sdk/scam-detector/instance-methods/block"
+              ]
+            }
+          ]
+        },
+        {
+          "group": "Storage",
+          "pages": [
+            "sdk/storage/overview",
+            "sdk/storage/browser",
+            "sdk/storage/extensions",
+            "sdk/storage/memory"
+          ]
+        },
         "sdk/relay"
       ]
     }
