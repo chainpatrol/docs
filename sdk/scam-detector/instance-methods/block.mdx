@@ -1,3 +1,39 @@
 ---
 title: block()
 ---
+
+## Example
+
+<CodeGroup>
+
+```js Code
+await detector.block("google.com");
+
+console.log(detector.url("https://google.com"));
+```
+
+```js Output
+{
+    ok: true,
+    url: "google.com",
+    status: "BLOCKED",
+    redirectUrl: "https://app.chainpatrol.io/warning?originUrl=https://google.com"
+}
+```
+
+</CodeGroup>
+
+## Parameters
+
+<ParamField body="url" type="string" required>
+
+    The URL to block. This can be a full URL or a domain.
+
+    Ex. `https://google.com` or `google.com`
+
+</ParamField>
+
+## Return Value
+
+The return value is a promise that resolves when the URL has been added to the local blocklist. The promise may
+reject if the URL is invalid, so we recommend wrapping this in a try/catch block.
