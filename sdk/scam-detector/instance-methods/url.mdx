@@ -1,3 +1,107 @@
 ---
 title: url()
 ---
+
+## Example
+
+<CodeGroup>
+
+```js Code
+const result = await detector.url("https://www.mountaintop-finance.com");
+
+console.log(result);
+```
+
+```js Output (Allowed)
+{
+    ok: true,
+    url: "mountaintop-finance.com",
+    status: "ALLOWED",
+}
+```
+
+```js Output (Blocked)
+{
+    ok: true,
+    url: "mountaintop-finance.com",
+    status: "BLOCKED",
+    redirectUrl: "https://app.chainpatrol.io/warning?originUrl=https://www.mountaintop-finance.com"
+}
+```
+
+```js Output (Error)
+{
+    ok: false,
+    url: "mountaintop-finance.com",
+    error: "Invalid URL"
+}
+```
+
+</CodeGroup>
+
+## Parameters
+
+<ParamField body="url" type="string" required>
+
+    The URL to check. This can be a full URL or a domain.
+
+    Ex. `https://google.com` or `google.com`
+
+</ParamField>
+
+## Return Value
+
+The return value is a promise that resolves with an object containing the
+result of the check.
+
+### Success
+
+If the check was successful, the object will contain the following properties:
+
+<ParamField body="result" type="object" required>
+  <Expandable title="properties" defaultOpen>
+
+    <ParamField body="ok" type="true" required>
+      This property will be `true` if the check was successful.
+    </ParamField>
+
+    <ParamField body="url" type="string">
+      The `url` property is the URL that was checked.
+    </ParamField>
+
+    <ParamField body="status" type="'ALLOWED' | 'BLOCKED' | 'UNKNOWN'" required>
+      The `status` property indicates whether the URL is allowed or blocked.
+    </ParamField>
+
+    <ParamField body="redirectUrl" type="string | (url: string) => string">
+      The `redirectUrl` property is an optional property that can be used to
+      specify a redirect URL for when the detector detects a scam.
+
+      By default, the detector will return the ChainPatrol warning page URL,
+      but you can override this by specifying your own URL.
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+### Failure
+
+However, if the check was unsuccessful, the object will contain the following:
+
+<ParamField body="result" type="object" required>
+  <Expandable title="properties" defaultOpen>
+
+    <ParamField body="ok" type="false" required>
+        This property will be `false` if the check was unsuccessful.
+    </ParamField>
+
+    <ParamField body="url" type="string">
+      The `url` property is the URL that was checked.
+    </ParamField>
+
+    <ParamField body="error" type="string">
+      The `error` property will contain a human-readable error message.
+    </ParamField>
+
+  </Expandable>
+</ParamField>

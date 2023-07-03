@@ -131,7 +131,7 @@
           "pages": [
             "sdk/storage/overview",
             "sdk/storage/browser",
-            "sdk/storage/extensions",
+            "sdk/storage/extension",
             "sdk/storage/memory"
           ]
         },
