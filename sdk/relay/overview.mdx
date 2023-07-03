@@ -1,5 +1,5 @@
 ---
-title: Relay
+title: Overview
 description: Relay messages between browser extensions and web pages.
 ---
 
@@ -68,3 +68,19 @@ Under the hood, the `Relay` class sets up the appropriate message listeners depe
 the scripting context (ie. `window.postMessage` in the warning page, `chrome.runtime.sendMessage` in the content
 and background scripts), and makes sure that all messages are passed along to all
 subscribers.
+
+---
+
+## Static Methods
+
+### [Relay.send()](./static-methods/send)
+
+Sends an event to listeners.
+
+### [Relay.run()](./static-methods/run)
+
+Sets up listeners for events and forwards events to all other listeners.
+
+### [Relay.on()](./static-methods/on)
+
+Adds a listener for an event.

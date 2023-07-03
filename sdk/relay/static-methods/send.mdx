@@ -1,0 +1,24 @@
+---
+title: send()
+description: Send an event to the ChainPatrol relay.
+---
+
+## Example
+
+```js
+import { Relay, Events } from "@chainpatrol/sdk";
+
+Relay.send(Events.ContinueAtOwnRisk, { domain: "example.com" });
+```
+
+## Parameters
+
+The `send()` method accepts two parameters:
+
+<ParamField body="type" type="EventType" required>
+  The `type` property specifies what type of event you want to send.
+</ParamField>
+
+<ParamField body="data" type="object" required>
+  The `data` property is an object that contains the event data.
+</ParamField>

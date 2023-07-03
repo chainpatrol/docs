@@ -135,7 +135,20 @@
             "sdk/storage/memory"
           ]
         },
-        "sdk/relay"
+        {
+          "group": "Relay",
+          "pages": [
+            "sdk/relay/overview",
+            {
+              "group": "Static methods",
+              "pages": [
+                "sdk/relay/static-methods/send",
+                "sdk/relay/static-methods/run",
+                "sdk/relay/static-methods/on"
+              ]
+            }
+          ]
+        }
       ]
     }
   ],

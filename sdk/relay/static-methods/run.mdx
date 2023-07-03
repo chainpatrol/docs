@@ -1,0 +1,21 @@
+---
+title: run()
+description: Starts the relay in the current JS context.
+---
+
+## Example
+
+```js
+import { Relay, Events } from "@chainpatrol/sdk";
+
+Relay.run([Events.ContinueAtOwnRisk]);
+```
+
+## Parameters
+
+The `run()` method accepts one parameter which is an array of events to forward:
+
+<ParamField body="events" type="EventType[]" required>
+  The `events` property specifies what events to forward to other listeners of
+  the relay.
+</ParamField>

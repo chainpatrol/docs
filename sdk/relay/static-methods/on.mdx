@@ -1,0 +1,28 @@
+---
+title: on()
+description: Listen for events from the ChainPatrol Relay.
+---
+
+## Example
+
+```js
+import { Relay, Events } from "@chainpatrol/sdk";
+
+Relay.on(Events.ContinueAtOwnRisk, (request) => {
+  // Handle the event
+});
+```
+
+## Parameters
+
+The `on()` method accepts two parameters:
+
+<ParamField body="type" type="EventType" required>
+  The `type` property specifies what type of event you want to listen for.
+</ParamField>
+
+<ParamField body="callback" type="(data: EventData) => void" required>
+  The `callback` property is a function that will be called when the event is
+  triggered. The event data is passed to the callback function as the first
+  parameter.
+</ParamField>
