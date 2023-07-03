@@ -42,7 +42,7 @@
       "url": "sdk"
     },
     {
-      "name": "API Reference",
+      "name": "External API",
       "url": "external-api"
     },
     {
@@ -82,7 +82,7 @@
       ]
     },
     {
-      "group": "API Reference",
+      "group": "External API",
       "pages": ["external-api/overview", "external-api/authentication"]
     },
     {
@@ -95,8 +95,11 @@
     },
     {
       "group": "@chainpatrol/sdk",
+      "pages": ["sdk/overview"]
+    },
+    {
+      "group": "API Reference",
       "pages": [
-        "sdk/overview",
         {
           "group": "ChainPatrolClient",
           "pages": [
