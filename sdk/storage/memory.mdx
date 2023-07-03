@@ -1,3 +1,19 @@
 ---
 title: Memory
 ---
+
+The `Storage.memory()` adapter stores data in memory. This is the default adapter when you instantiate
+a new `ScamDetector` instance.
+
+We don't recommend using this adapter in production, as it will not persist data between sessions. But
+it is useful for testing and development.
+
+## Example
+
+```js
+import { Storage } from "@chainpatrol/sdk";
+
+const storage = Storage.memory({
+  quota: 1024 * 1024 * 2, // 2MB
+});
+```

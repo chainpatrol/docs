@@ -2,3 +2,23 @@
 title: Overview
 description: Adapters for storing cached data for the Scam Detector
 ---
+
+The [ScamDetector](/sdk/scam-detector/overview) class is designed to be used with any cache storage adapter
+to reduce the number of API calls needed to perform a scam check. This is done by storing the
+results of previous API calls in the cache and retrieving them when needed.
+
+Depending on what environment you are using the SDK in, you may need to use a different storage adapter.
+
+## Adapters
+
+| Adapter                  | Description                                                    |
+| ------------------------ | -------------------------------------------------------------- |
+| [Browser](./browser)     | Stores the cached data in the browser's local storage.         |
+| [Extension](./extension) | Stores the cached data in the browser's extension storage.     |
+| [Memory](./memory)       | Stores the cached data in memory. This is the default adapter. |
+
+<Note>
+  Are we missing an adapter? Feel free to reach out to us at{" "}
+  [support@chainpatrol.io](mailto:support@chainpatrol.io?subject=Re:%20Custom%20Storage%20Adapter&body=)
+  and we'll be happy to discuss implementing it.
+</Note>

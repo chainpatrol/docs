@@ -1,3 +1,34 @@
 ---
 title: Extension
 ---
+
+The `Storage.extension()` adapter uses the browser's [extension storage API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage) to store data.
+Use this adapter if you are building a browser extension for Chrome, Firefox, or Edge.
+
+## Pre-requisites
+
+You will need to enable the `storage` permission in your extension's `manifest.json` file:
+
+```json
+{
+  "permissions": ["storage"]
+}
+```
+
+Optionally, you can also enable the `unlimitedStorage` permission to allow your extension to use more than 5MB of storage.
+
+```json
+{
+  "permissions": ["storage", "unlimitedStorage"]
+}
+```
+
+## Example
+
+```js
+import { Storage } from "@chainpatrol/sdk";
+
+const storage = Storage.extension({
+  quota: 1024 * 1024 * 5, // 5MB
+});
+```

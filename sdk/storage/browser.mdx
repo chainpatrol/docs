@@ -1,3 +1,23 @@
 ---
 title: Browser
 ---
+
+The `Storage.browser()` adapter uses the browser's `localStorage` API to store data.
+This adapter should be used by dApps that run in the browser. For browser extensions,
+use the [Storage.extension()](./extension) adapter.
+
+## Example
+
+```js
+import { Storage } from "@chainpatrol/sdk";
+
+const storage = Storage.browser({
+  quota: 1024 * 1024 * 2, // 2MB
+});
+```
+
+## Limitations
+
+The `localStorage` API limits the amount of data that can be stored to 5MB. We recommend
+using the `quota` option to limit the amount of data that is stored to avoid hitting
+this limit, especially if you are storing other data in `localStorage` as well.
