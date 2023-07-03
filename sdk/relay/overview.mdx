@@ -27,28 +27,11 @@ Relay.run([Events.ContinueAtOwnRisk]);
 ```
 
 ```js Background Script
-import browser from "webextension-polyfill";
-import { Relay, Events, ScamDetector, Storage } from "@chainpatrol/sdk";
-
-const detector = new ScamDetector({
-  // ...
-  storage: Storage.extension(),
-});
-
-// Listen for navigation events
-browser.webNavigation.onBeforeNavigate.addListener(async (details) => {
-  const result = await detector.url(details.url);
-
-  if (result.ok && result.status === "BLOCKED") {
-    browser.tabs.update(details.tabId, {
-      url: result.redirectUrl,
-    });
-  }
-});
+import { Relay, Events } from "@chainpatrol/sdk";
 
 // Listen for messages from relay
-Relay.on(Events.ContinueAtOwnRisk, (request) => {
-  detector.allow({ url: request.domain });
+Relay.on(Events.ContinueAtOwnRisk, (data) => {
+  // Do something with the event data
 });
 ```
 
