@@ -11,6 +11,8 @@ There are two modes of operation for the Scam Detector:
 
 ### Local Mode
 
+To use the local mode, you need to instantiate the `ScamDetector` class with the `mode` option set to `local`.
+
 ```js
 const detector = new ScamDetector({
   mode: "local",
@@ -19,9 +21,61 @@ const detector = new ScamDetector({
 
 ### Cloud Mode
 
+To use the cloud mode, you need to instantiate the `ScamDetector` class with the `mode` option set to `cloud` and provide your API key.
+
 ```js
 const detector = new ScamDetector({
   mode: "cloud",
   apiKey: "YOUR_API_KEY",
 });
 ```
+
+## Parameters
+
+<ParamField body="options" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="mode" type="'local' | 'cloud'" required>
+      The `mode` property controls the mode of operation for the Scam Detector.
+
+      The value of this property can be either `local` or `cloud`.
+    </ParamField>
+
+    <ParamField body="apiKey" type="string">
+      The `apiKey` property is the API Key for accessing ChainPatrol's APIs. We
+      recommend using an environment variable to store your API Key.
+
+      This property is required when the `mode` property is set to `cloud`.
+    </ParamField>
+
+    <ParamField body="proxyUrl" type="string">
+      The `proxyUrl` property is an optional property that can be used to
+      specify a proxy URL for accessing ChainPatrol's APIs.
+
+      This property is useful when you are behind a firewall or need to use a
+      proxy to access the internet.
+
+      This value is only used when the `mode` property is set to `cloud`.
+    </ParamField>
+
+    <ParamField body="redirectUrl" type="string | (url: string) => string">
+      The `redirectUrl` property is an optional property that can be used to
+      specify a redirect URL for when the detector detects a scam.
+
+      By default, the detector will return the ChainPatrol warning page URL,
+      but you can override this by specifying your own URL.
+    </ParamField>
+
+    <ParamField body="storage" type="Storage">
+      The `storage` property is an optional property that can be used to
+      specify a custom storage adapter for the detector to cache URL lookups.
+
+      By default, the detector will use the `Storage.memory()` adapter, which
+      stores the cache database in memory. This means that the database will be
+      cleared when the process exits. If you want to persist the database, you
+      can use the `Storage.browser()` adapter, which stores the database in
+      local storage, or the `Storage.extension()` adapter, which stores the database
+      in the browser's extension storage.
+    </ParamField>
+
+  </Expandable>
+</ParamField>
