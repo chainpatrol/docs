@@ -2,3 +2,69 @@
 title: Relay
 description: Relay messages between browser extensions and web pages.
 ---
+
+The `Relay` class is a utility for receiving messages from the ChainPatrol
+warning page in your browser extension-based wallet/security app. You may
+already have a message passing system in place in your browser extension, but
+this class is provided as a convenience for those who do not, or if you want to
+keep your message passing system separate from the ChainPatrol SDK.
+
+## Usage
+
+<CodeGroup>
+
+```js Warning Page
+import { Relay, Events } from "@chainpatrol/sdk";
+
+// Send a message to the extension
+Relay.send(Events.ContinueAtOwnRisk, { domain: "example.com" });
+```
+
+```js Content Script
+import { Relay, Events } from "@chainpatrol/sdk";
+
+Relay.run([Events.ContinueAtOwnRisk]);
+```
+
+```js Background Script
+import browser from "webextension-polyfill";
+import { Relay, Events, ScamDetector, Storage } from "@chainpatrol/sdk";
+
+const detector = new ScamDetector({
+  // ...
+  storage: Storage.extension(),
+});
+
+// Listen for navigation events
+browser.webNavigation.onBeforeNavigate.addListener(async (details) => {
+  const result = await detector.url(details.url);
+
+  if (result.ok && result.status === "BLOCKED") {
+    browser.tabs.update(details.tabId, {
+      url: result.redirectUrl,
+    });
+  }
+});
+
+// Listen for messages from relay
+Relay.on(Events.ContinueAtOwnRisk, (request) => {
+  detector.allow({ url: request.domain });
+});
+```
+
+</CodeGroup>
+
+## How it works
+
+In order for events from the warning page to be received by your browser extension,
+the messages have to be relayed from the warning page to the content script, and then
+from the content script to the background script.
+
+<Frame>
+  <img src="/images/relay.png" />
+</Frame>
+
+Under the hood, the `Relay` class sets up the appropriate message listeners depending on
+the scripting context (ie. `window.postMessage` in the warning page, `chrome.runtime.sendMessage` in the content
+and background scripts), and makes sure that all messages are passed along to all
+subscribers.
