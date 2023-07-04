@@ -1,0 +1,39 @@
+---
+title: ignore()
+---
+
+## Example
+
+<CodeGroup>
+
+```js Code
+await detector.block("google.com");
+await detector.ignore("google.com");
+
+console.log(detector.url("https://google.com"));
+```
+
+```js Output
+{
+    ok: true,
+    url: "google.com",
+    status: "IGNORED"
+}
+```
+
+</CodeGroup>
+
+## Parameters
+
+<ParamField body="url" type="string" required>
+
+    The URL to ignore. This can be a full URL or a domain.
+
+    Ex. `https://google.com` or `google.com`
+
+</ParamField>
+
+## Return Value
+
+The return value is a promise that resolves when the URL has been added to the local ignorelist. The promise may
+reject if the URL is invalid, so we recommend wrapping this in a try/catch block.

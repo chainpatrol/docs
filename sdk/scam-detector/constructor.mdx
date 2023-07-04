@@ -45,6 +45,8 @@ const detector = new ScamDetector({
       recommend using an environment variable to store your API Key.
 
       This property is required when the `mode` property is set to `cloud`.
+      If `proxyUrl` is set, this property is not required as the proxy server
+      will handle the authentication.
     </ParamField>
 
     <ParamField body="proxyUrl" type="string">

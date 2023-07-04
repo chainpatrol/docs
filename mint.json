@@ -124,7 +124,8 @@
               "pages": [
                 "sdk/scam-detector/instance-methods/url",
                 "sdk/scam-detector/instance-methods/allow",
-                "sdk/scam-detector/instance-methods/block"
+                "sdk/scam-detector/instance-methods/block",
+                "sdk/scam-detector/instance-methods/ignore"
               ]
             }
           ]
