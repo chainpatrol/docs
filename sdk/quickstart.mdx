@@ -1,0 +1,45 @@
+---
+title: Quickstart
+---
+
+While, this SDK is designed to be in the browser, on a server, or in an extension.
+The most common use-case for using the ChainPatrol SDK is if you're
+building a browser extension-based wallet.
+
+The code snippet below shows how to use the SDK in the background script of a
+browser extension, demonstrating 3 core concepts:
+
+- Instantiating the `ScamDetector`
+- Listening for navigation events
+- Using the `ScamDetector` to check a URL, and redirecting the user if the URL is
+  a scam
+
+```js background.js
+import { ScamDetector } from "@chainpatrol/sdk";
+
+// Instantiate the detector
+const detector = new ScamDetector({
+  mode: "cloud",
+  apiKey: "YOUR_API_KEY",
+});
+
+// Listen for navigation events
+chrome.webNavigation.onBeforeNavigate.addListener(async ({ url, tabId }) => {
+  const result = await detector.url(domain);
+  if (result.ok && result.status === "BLOCKED") {
+    // Redirect the user to the warning page
+    chrome.tabs.update(tabId, {
+      url: result.redirectUrl,
+    });
+  }
+});
+```
+
+These concepts are generally applicable to other environments as well. For example
+if you're using the SDK in a messaging web application, instead of listening for
+navigation events using `chrome.webNavigation`, you would listen for navigation
+events for links clicked in the application, or you could instead wait until the
+user initiates a transaction and check the URL that initiated the transaction.
+
+The next sections of the documentation will go into more detail about the
+different classes exported by the SDK, and how to use them.

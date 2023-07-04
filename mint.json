@@ -95,7 +95,7 @@
     },
     {
       "group": "@chainpatrol/sdk",
-      "pages": ["sdk/overview"]
+      "pages": ["sdk/overview", "sdk/quickstart"]
     },
     {
       "group": "API Reference",
