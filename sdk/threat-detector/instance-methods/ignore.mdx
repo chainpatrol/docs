@@ -3,15 +3,18 @@ title: ignore()
 description: Use this method to ignore a domain when the user chooses to continue at their own risk after seeing a warning
 ---
 
+If a user chooses to continue at their own risk after seeing a warning, you can use this method to ignore the
+domain so that the detector ignores the domain in the future. Without this, the user will continue to be redirected
+to the warning page, which is not a good user experience.
+
 ## Example
 
 <CodeGroup>
 
 ```js Code
-await detector.block("google.com");
 await detector.ignore("google.com");
 
-console.log(detector.url("https://google.com"));
+console.log(await detector.url("https://google.com"));
 ```
 
 ```js Output

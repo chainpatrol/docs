@@ -17,7 +17,7 @@ in the allowlist. In `cloud` mode, the allowlist is populated automatically.
 ```js Code
 await detector.allow("google.com");
 
-console.log(detector.url("https://google.com"));
+console.log(await detector.url("https://google.com"));
 ```
 
 ```js Output
