@@ -8,6 +8,17 @@ To make it easier for wallet and dApp builders to protect their users
 from these threats, we've built a JavaScript SDK that you can use to
 interact with our threat detection APIs.
 
+```js
+import { ThreatDetector } from "@chainpatrol/sdk";
+
+const detector = new ThreatDetector({
+  mode: "cloud",
+  apiKey: "YOUR_API_KEY",
+});
+
+const result = await detector.url("https://scam-site.com");
+```
+
 ## Installation
 
 <Tabs>
