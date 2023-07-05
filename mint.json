@@ -101,20 +101,6 @@
       "group": "API Reference",
       "pages": [
         {
-          "group": "ChainPatrolClient",
-          "pages": [
-            "sdk/chainpatrol-client/overview",
-            "sdk/chainpatrol-client/constructor",
-            {
-              "group": "Instance methods",
-              "pages": [
-                "sdk/chainpatrol-client/instance-methods/asset-check",
-                "sdk/chainpatrol-client/instance-methods/asset-list"
-              ]
-            }
-          ]
-        },
-        {
           "group": "ScamDetector",
           "pages": [
             "sdk/scam-detector/overview",
@@ -149,6 +135,20 @@
                 "sdk/relay/static-methods/send",
                 "sdk/relay/static-methods/run",
                 "sdk/relay/static-methods/on"
+              ]
+            }
+          ]
+        },
+        {
+          "group": "ChainPatrolClient",
+          "pages": [
+            "sdk/chainpatrol-client/overview",
+            "sdk/chainpatrol-client/constructor",
+            {
+              "group": "Instance methods",
+              "pages": [
+                "sdk/chainpatrol-client/instance-methods/asset-check",
+                "sdk/chainpatrol-client/instance-methods/asset-list"
               ]
             }
           ]
