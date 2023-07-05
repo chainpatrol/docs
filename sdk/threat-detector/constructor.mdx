@@ -4,27 +4,27 @@ title: Constructor
 
 ## Modes
 
-There are two modes of operation for the Scam Detector:
+There are two modes of operation for the Threat Detector:
 
-- `local`: This mode uses a local database of scam URLs. Use this mode for offline scam detection and testing.
+- `local`: This mode uses a local database of scam URLs. Use this mode for offline threat detection and testing.
 - `cloud`: This mode uses ChainPatrol's cloud service to detect scams.
 
 ### Local Mode
 
-To use the local mode, you need to instantiate the `ScamDetector` class with the `mode` option set to `local`.
+To use the local mode, you need to instantiate the `ThreatDetector` class with the `mode` option set to `local`.
 
 ```js
-const detector = new ScamDetector({
+const detector = new ThreatDetector({
   mode: "local",
 });
 ```
 
 ### Cloud Mode
 
-To use the cloud mode, you need to instantiate the `ScamDetector` class with the `mode` option set to `cloud` and provide your API key.
+To use the cloud mode, you need to instantiate the `ThreatDetector` class with the `mode` option set to `cloud` and provide your API key.
 
 ```js
-const detector = new ScamDetector({
+const detector = new ThreatDetector({
   mode: "cloud",
   apiKey: "YOUR_API_KEY",
 });
@@ -35,7 +35,7 @@ const detector = new ScamDetector({
 <ParamField body="options" type="object" required>
   <Expandable title="properties" defaultOpen>
     <ParamField body="mode" type="'local' | 'cloud'" required>
-      The `mode` property controls the mode of operation for the Scam Detector.
+      The `mode` property controls the mode of operation for the Threat Detector.
 
       The value of this property can be either `local` or `cloud`.
     </ParamField>

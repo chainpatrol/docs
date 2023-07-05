@@ -101,17 +101,17 @@
       "group": "API Reference",
       "pages": [
         {
-          "group": "ScamDetector",
+          "group": "ThreatDetector",
           "pages": [
-            "sdk/scam-detector/overview",
-            "sdk/scam-detector/constructor",
+            "sdk/threat-detector/overview",
+            "sdk/threat-detector/constructor",
             {
               "group": "Instance methods",
               "pages": [
-                "sdk/scam-detector/instance-methods/url",
-                "sdk/scam-detector/instance-methods/allow",
-                "sdk/scam-detector/instance-methods/block",
-                "sdk/scam-detector/instance-methods/ignore"
+                "sdk/threat-detector/instance-methods/url",
+                "sdk/threat-detector/instance-methods/allow",
+                "sdk/threat-detector/instance-methods/block",
+                "sdk/threat-detector/instance-methods/ignore"
               ]
             }
           ]

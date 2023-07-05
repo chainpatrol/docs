@@ -9,19 +9,19 @@ detection in a browser extension-based wallet (ex. Metamask).
 The code snippet below shows how to use the SDK in the background script of a
 browser extension, demonstrating 4 core concepts:
 
-- Instantiating the `ScamDetector`
+- Instantiating the `ThreatDetector`
 - Listening for navigation events
-- Using the `ScamDetector` to check a URL, and redirecting the user if the URL is
+- Using the `ThreatDetector` to check a URL, and redirecting the user if the URL is
   a scam
 - Handling events from the warning page using the Relay class to forward events
 
 <CodeGroup>
 
 ```js background.js
-import { ScamDetector, Relay, Events } from "@chainpatrol/sdk";
+import { ThreatDetector, Relay, Events } from "@chainpatrol/sdk";
 
 // Instantiate the detector
-const detector = new ScamDetector({
+const detector = new ThreatDetector({
   mode: "cloud",
   apiKey: "YOUR_API_KEY",
 });
