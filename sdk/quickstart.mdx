@@ -18,17 +18,18 @@ browser extension, demonstrating 4 core concepts:
 <CodeGroup>
 
 ```js background.js
-import { ThreatDetector, Relay, Events } from "@chainpatrol/sdk";
+import { ThreatDetector, Relay, Events, Storage } from "@chainpatrol/sdk";
 
 // Instantiate the detector
 const detector = new ThreatDetector({
   mode: "cloud",
   apiKey: "YOUR_API_KEY",
+  storage: Storage.extension(),
 });
 
 // Listen for navigation events
 chrome.webNavigation.onBeforeNavigate.addListener(async ({ url, tabId }) => {
-  const result = await detector.url(domain);
+  const result = await detector.url(url);
   if (result.ok && result.status === "BLOCKED") {
     // Redirect the user to the warning page
     chrome.tabs.update(tabId, {
@@ -38,8 +39,8 @@ chrome.webNavigation.onBeforeNavigate.addListener(async ({ url, tabId }) => {
 });
 
 // Listen for events from the warning page
-Relay.on(Events.ContinueAtOwnRisk, ({ domain }) => {
-  detector.ignore(domain);
+Relay.on(Events.ContinueAtOwnRisk, async ({ domain }) => {
+  await detector.ignore(domain);
 });
 ```
 

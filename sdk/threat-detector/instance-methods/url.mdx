@@ -3,6 +3,12 @@ title: url()
 description: Use this method to check a URL to see if it is malicious.
 ---
 
+<Note>
+  Only the domain portion of the URL is checked. The path and query string are
+  stripped before sending the request to the ChainPatrol API to preserve privacy
+  and prevent leaking sensitive information.
+</Note>
+
 ## Example
 
 <CodeGroup>
@@ -33,8 +39,8 @@ console.log(result);
 ```js Output (Error)
 {
     ok: false,
-    url: "mountaintop-finance.com",
-    error: "Invalid URL"
+    url: "abcdefgh",
+    error: "Unable to parse domain"
 }
 ```
 
@@ -44,7 +50,8 @@ console.log(result);
 
 <ParamField body="url" type="string" required>
 
-    The URL to check. This can be a full URL or a domain.
+    The URL to check. This can be a full URL or a domain. The URL will be
+    parsed to extract only the domain for checking.
 
     Ex. `https://google.com` or `google.com`
 
@@ -74,12 +81,14 @@ If the check was successful, the object will contain the following properties:
       The `status` property indicates whether the URL is allowed or blocked.
     </ParamField>
 
-    <ParamField body="redirectUrl" type="string | (url: string) => string">
-      The `redirectUrl` property is an optional property that can be used to
-      specify a redirect URL for when the detector detects a threat.
+    <ParamField body="redirectUrl" type="string">
+      The `redirectUrl` property specifies where to redirect the user when the
+      detector detects a threat. This property will only be present if the
+      `status` property is set to `BLOCKED`.
 
       By default, the detector will return the ChainPatrol warning page URL,
-      but you can override this by specifying your own URL.
+      but you can override this by specifying your own `redirectUrl` in when
+      instantiating the `ThreatDetector`.
     </ParamField>
 
   </Expandable>

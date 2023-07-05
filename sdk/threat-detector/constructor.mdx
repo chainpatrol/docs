@@ -65,6 +65,26 @@ const detector = new ThreatDetector({
 
       By default, the detector will return the ChainPatrol warning page URL,
       but you can override this by specifying your own URL.
+
+      If you specify a **string**, the string will be used as the redirect URL
+      with the scam URL appended as the `originUrl` query parameter:
+
+      ```js
+      const detector = new ThreatDetector({
+        redirectUrl: "https://your-warning-page.com/",
+      });
+      ```
+
+      If you specify a **function**, the function will be called with the scam URL
+      as the first argument:
+
+      ```js
+      const detector = new ThreatDetector({
+        redirectUrl: (url) => {
+          return `https://your-warning-page.com/?url=${encodeURIComponent(url)}`;
+        },
+      });
+      ```
     </ParamField>
 
     <ParamField body="storage" type="Storage">

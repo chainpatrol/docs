@@ -36,5 +36,44 @@ console.log(detector.url("https://google.com"));
 
 ## Return Value
 
-The return value is a promise that resolves when the URL has been added to the local ignorelist. The promise may
-reject if the URL is invalid, so we recommend wrapping this in a try/catch block.
+The return value is a promise that resolves with a result object.
+
+### Success
+
+If the addition was successful, the object will contain the following properties:
+
+<ParamField body="result" type="object" required>
+  <Expandable title="properties" defaultOpen>
+
+    <ParamField body="ok" type="true" required>
+      This property will be `true` if the addition was successful.
+    </ParamField>
+
+    <ParamField body="url" type="string">
+      The `url` property is the URL that was added.
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+### Failure
+
+However, if the addition was unsuccessful, the object will contain the following:
+
+<ParamField body="result" type="object" required>
+  <Expandable title="properties" defaultOpen>
+
+    <ParamField body="ok" type="false" required>
+        This property will be `false` if the addition was unsuccessful.
+    </ParamField>
+
+    <ParamField body="url" type="string">
+      The `url` property is the URL that we tried to add.
+    </ParamField>
+
+    <ParamField body="error" type="string">
+      The `error` property will contain a human-readable error message.
+    </ParamField>
+
+  </Expandable>
+</ParamField>

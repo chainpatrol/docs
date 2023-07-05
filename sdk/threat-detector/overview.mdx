@@ -15,7 +15,7 @@ import { ThreatDetector, Storage } from "@chainpatrol/sdk";
 const detector = new ThreatDetector({
   mode: "cloud", // 'cloud' | 'local' (default: 'cloud')
 
-  // Optional: Specify a custom API key (required if `mode` is set to `cloud`)
+  // Optional: Specify a custom API key (only available for 'cloud' mode)
   apiKey: "YOUR_API_KEY",
 
   // Optional: Configure a proxy server (only available for 'cloud' mode)
