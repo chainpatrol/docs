@@ -46,3 +46,38 @@ This event is sent when the status of an asset changes. The `status` field can b
   }
 }
 ```
+
+## Signature Verification
+
+ChainPatrol signs each webhook request with a signature to verify that the request originated from ChainPatrol. The signature is included in the `X-ChainPatrol-Signature` header of each request. The signature is computed by taking the SHA256 HMAC of the request body using your webhook secret as the key. The signature is encoded as a hex string.
+
+```
+sha256=hex(hmac_sha256(webhook_secret, request_body))
+```
+
+You can verify the signature of a request by computing the signature yourself and comparing it to the signature included in the request. If the two signatures match, then you can be sure that the request originated from ChainPatrol.
+
+Here's an example of how to verify the signature in Node.js:
+
+```js
+const crypto = require("node:crypto");
+
+const [, signature] = req.headers["x-chainpatrol-signature"].split("=");
+
+const expectedSignature = crypto
+  .createHmac("sha256", process.env.WEBHOOK_SECRET)
+  .update(req.body)
+  .digest("hex");
+
+if (signature !== expectedSignature) {
+  throw new Error("Invalid signature");
+}
+```
+
+## Retry Policy
+
+Webhooks will be retried up to 3 times with an exponential backoff if your endpoint returns a non-2xx status code. If your endpoint returns a 2xx status code, then the webhook will not be retried.
+
+## Security
+
+Webhooks are sent over HTTPS and are signed with a secret that is unique to your account. You should treat your webhook secret like a password and keep it secure. If you suspect that your webhook secret has been compromised, then you should reach out to us immediately so that we can generate a new secret for you and invalidate the old one.
