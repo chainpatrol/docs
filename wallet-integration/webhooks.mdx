@@ -1,0 +1,47 @@
+---
+icon: webhook
+title: Webhooks
+description: Use webhooks to notify your wallet about changes to ChainPatrol's global blocklist
+---
+
+## What is a webhook?
+
+A webhook is a way for applications to be notified of events in ChainPatrol in real-time. ChainPatrol uses webhooks to notify your wallet about changes to our global blocklist. This allows your wallet to update its blocklist in real-time, without having to wait for a scheduled cron job to run. This is especially useful if you opt to use our [Asset List](/external-api/asset-list) endpoint to sync our data as you can update your blocklist as soon as we update ours.
+
+## Steps to set up a webhook
+
+1. Create a local endpoint to receive the webhook
+2. Contact us to register your test endpoint
+3. Test that your webhook is working correctly
+4. Deploy your webhook endpoint to production
+5. Contact us to enable your webhook in production
+
+## Event types
+
+### `debug.test`
+
+This event is used for testing your webhook endpoint. It is sent once when we register your webhook endpoint for the first time.
+
+```json
+{
+  "event": "debug.test",
+  "data": {}
+}
+```
+
+### `asset.status-updated`
+
+This event is sent when the status of an asset changes. The `status` field can be one of `BLOCKED`, `ALLOWED`, or `UNKNOWN`.
+
+```json
+{
+  "type": "asset.status-updated",
+  "created_at": "2023-08-31T00:00:00.000Z",
+  "data": {
+    "asset_id": 132,
+    "type": "URL",
+    "content": "https://example.com",
+    "status": "BLOCKED"
+  }
+}
+```

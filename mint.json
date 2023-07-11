@@ -82,6 +82,7 @@
         "wallet-integration/guide",
         "wallet-integration/check-vs-list",
         "wallet-integration/proxy",
+        "wallet-integration/webhooks",
         "wallet-integration/false-positives"
       ]
     },
