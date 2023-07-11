@@ -1,27 +1,44 @@
 ---
 title: URL
+description: Represents a domain or subdomain to be reported
 ---
 
-All of scam site URL domains(includes their sub-domains) that have been submitted from users and organizations.
+**URLs** are the most common type of asset. It is a string that is used to identify a resource on the Internet.
 
 When you sumbit a report, if you select asset type as `URL`, the url string will be normalized and its domain will be submitted to **Chainpatrol**.
+
+<Warning>
+  For sites that host user-generated content, such as blogs, forums, and social
+  (ex. Twitter) or link shortening services (ex. Bitly), blocking the domain is
+  not feasible, since it will block all user-generated content. In these cases,
+  you should report using the [PAGE](./page) asset type.
+</Warning>
+
+## Normalization
+
+Normalization is the process of removing all unnecessary characters from the URL string. It is done to make the URL string more readable and to remove any ambiguity.
+
+ChainPatrol performs the following normalization steps:
+
+- Remove the scheme (http, https, ftp, etc.)
+- Convert the domain to lowercase
+- Convert unicode characters to [punycode](https://en.wikipedia.org/wiki/Punycode)
+- Remove username, password, port, query, fragment
+- Remove trailing slash
 
 #### Report
 
 ```
-https://www.chainpatrol.xyz/home
+BLOCK https://www.chainpatrol.xyz/home
 ```
 
 #### Result
 
+When a domain is blocked, all subdomains of that domain are also blocked:
+
 ```
-chainpatrol.xyz
-*.chainpatrol.xyz
-*.*.chainpatrol.xyz
+BLOCK chainpatrol.xyz
+BLOCK *.chainpatrol.xyz
+BLOCK *.*.chainpatrol.xyz
 ...
 ```
-
-<Warning>
-  It shouldn't be such like twitter or telegram page links. `Page` glossary is
-  described about them.
-</Warning>

@@ -1,10 +1,13 @@
 ---
 title: Page
+description: Represents a page link to be reported
 ---
 
-Fake or scam page links that have been submitted from users and organizations.
+The `PAGE` asset type is used to report webpages on a domain. Unlike `URL` asset type, the `PAGE` asset type will NOT normalize the URL string before submitting to **Chainpatrol**.
 
-When you sumbit a report, if you select asset type as `Page`, the url string won't be normalized and its original string will be submitted to **Chainpatrol**.
+This allows you to report webpages on sites where the scam or malicious content is hosted on a subpath of the domain.
+
+When you sumbit a report, if you submit a URL that matches one of the domains below, a `PAGE` asset will be created instead of a `URL` asset.
 
 #### Available page domains
 
@@ -22,3 +25,9 @@ tinyurl.com
 twitter.com
 beacons.ai
 ```
+
+<Note>
+  If you would like to see a domain added to this list, please reach out to us
+  at
+  [support@chainpatrol.io](mailto:support@chainpatrol.io?subject=Re:%20New%20domain%20for%20PAGE%20asset%20type&body=).
+</Note>
