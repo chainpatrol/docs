@@ -1,0 +1,19 @@
+---
+title: Address
+description: Represents a wallet address or smart contract address on the Ethereum blockchain.
+---
+
+Addresses are the identifiers of users and smart contracts on the Ethereum blockchain. They are 20 bytes long and are usually represented in hexadecimal form.
+
+When submitting a report, you can provide the address of the wallet or smart contract you are reporting on and we'll detect if it's a valid Ethereum address based on the `0x` prefix and the length of the address.
+
+## Normalization
+
+We normalize addresses by converting the characters to lowercase.
+
+#### Report
+
+```
+0xb3764761e297d6f121e79c32a65829cd1ddb4d32  // Wallet
+0x709ecbd07197e082dd830871fec0cc34537a6e23  // Smart contract
+```
