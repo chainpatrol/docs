@@ -19,6 +19,10 @@
       "to": "#6622DC"
     }
   },
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true
+  },
   "openapi": "https://app.chainpatrol.io/api/v2/openapi.json",
   "api": {
     "baseUrl": "https://app.chainpatrol.io/api/v2",
