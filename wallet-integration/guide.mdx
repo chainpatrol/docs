@@ -41,15 +41,28 @@ Let's dive deeper into each of these steps:
 The first step is to detect when a user has visited a new website. If you're building a
 web browser extension, you have a couple of choices:
 
-### Use the `browser.onBeforeNavigate` API
+### Option 1: Use the `browser.onBeforeNavigate` API
 
-This approach requires adding the `webNavigation` permission to your `manifest.json` file.
+This approach requires adding the `webNavigation` permission to your `manifest.json` file:
 
 ```json
 {
   "permissions": ["webNavigation"]
 }
 ```
+
+<Warning>
+
+This will trigger a new permissions request when the user installs your
+extension to request access to your browsing history.
+
+Alternatively, you can make this permission optional by adding the
+`"optional_permissions": ["webNavigation"]` key to your `manifest.json` file instead.
+But this will require you to add additional logic to your extension to request this
+permission at the appropriate time (ex. in a settings page, or via a Call to Action
+prompt). You will also need to handle the case where the user denies the permission request.
+
+</Warning>
 
 Then you can listen for the `onBeforeNavigate` event in your Background script:
 
@@ -66,15 +79,30 @@ browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
 });
 ```
 
-### Use the `browser.tabs.onUpdated` API
+### Option 2: Use the `browser.tabs.onUpdated` API
 
-This approach requires adding the `tabs` permission to your `manifest.json` file.
+This approach requires adding the `tabs` permission to your `manifest.json` file
+and providing host permissions for all the domains you want to support:
 
 ```json
 {
-  "permissions": ["tabs"]
+  "permissions": ["tabs"],
+  "host_permissions": ["<all_urls>"]
 }
 ```
+
+<Warning>
+
+If your extension does not already have this permission, this will trigger a new
+permissions request when the user installs your extension to request access to all URLs.
+
+Alternatively, you can make this permission optional by adding the
+`"optional_permissions": ["tabs"]` key to your `manifest.json` file, but this
+will require you to add additional logic to your extension to request this
+permission at the appropriate time (ex. in a settings page, or via a Call to Action
+prompt). You will also need to handle the case where the user denies the permission request.
+
+</Warning>
 
 Then you can listen for the `onUpdated` event in your Background script:
 
@@ -92,7 +120,7 @@ browser.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
 });
 ```
 
-### Get the current URL from a content script
+### Option 3: Get the current URL from a content script
 
 If you're already using a content script in your extension, you can get the current
 URL from the `window.location` object without needing to add any additional permissions.
