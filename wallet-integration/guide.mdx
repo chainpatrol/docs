@@ -53,14 +53,15 @@ This approach requires adding the `webNavigation` permission to your `manifest.j
 
 <Warning>
 
-This will trigger a new permissions request when the user installs your
-extension to request access to your browsing history.
+If your extension does not already have this permission, this will trigger a new
+permissions request when the user installs your extension to "Read your browsing history".
 
 Alternatively, you can make this permission optional by adding the
 `"optional_permissions": ["webNavigation"]` key to your `manifest.json` file instead.
 But this will require you to add additional logic to your extension to request this
 permission at the appropriate time (ex. in a settings page, or via a Call to Action
-prompt). You will also need to handle the case where the user denies the permission request.
+prompt to opt-in to protection). You will also need to handle the case where the user
+denies the permission request.
 
 </Warning>
 
@@ -81,20 +82,18 @@ browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
 
 ### Option 2: Use the `browser.tabs.onUpdated` API
 
-This approach requires adding the `tabs` permission to your `manifest.json` file
-and providing host permissions for all the domains you want to support:
+This approach requires adding the `tabs` permission to your `manifest.json` file:
 
 ```json
 {
-  "permissions": ["tabs"],
-  "host_permissions": ["<all_urls>"]
+  "permissions": ["tabs"]
 }
 ```
 
 <Warning>
 
 If your extension does not already have this permission, this will trigger a new
-permissions request when the user installs your extension to request access to all URLs.
+permissions request when the user installs your extension to "Read your browsing history".
 
 Alternatively, you can make this permission optional by adding the
 `"optional_permissions": ["tabs"]` key to your `manifest.json` file, but this
