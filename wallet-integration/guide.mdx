@@ -30,24 +30,79 @@ To achieve this goal, you will need to do the following:
 
 Let's dive deeper into each of these steps:
 
-## Detecting a new website
+## Detecting navigation to a new website
+
+<Note>
+  In the code examples below, we're using Mozilla's
+  [webextension-polyfill](https://github.com/mozilla/webextension-polyfill) to
+  smooth out the differences between the Chrome and Firefox APIs.
+</Note>
 
 The first step is to detect when a user has visited a new website. If you're building a
-web browser extension, you can use the `browser.onBeforeNavigate` API. Here
-we're using Mozilla's [webextension-polyfill](https://github.com/mozilla/webextension-polyfill)
-to smooth out the differences between the Chrome and Firefox APIs.
+web browser extension, you have a couple of choices:
+
+### Use the `browser.onBeforeNavigate` API
+
+This approach requires adding the `webNavigation` permission to your `manifest.json` file.
+
+```json
+{
+  "permissions": ["webNavigation"]
+}
+```
+
+Then you can listen for the `onBeforeNavigate` event in your Background script:
 
 ```ts
 import browser from "webextension-polyfill";
 
 browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
-  //do stuff
+  // Filter out subframes and any navigation events that don't have a URL
+  if (details.frameId !== 0 || !details.url) {
+    return;
+  }
+
+  // ...
 });
 ```
 
-This code would typically go into your `Background` file.
+### Use the `browser.tabs.onUpdated` API
 
-![Background file](https://user-images.githubusercontent.com/10101970/219277025-1a02f736-dbf0-4f63-84f6-611c9a502011.png)
+This approach requires adding the `tabs` permission to your `manifest.json` file.
+
+```json
+{
+  "permissions": ["tabs"]
+}
+```
+
+Then you can listen for the `onUpdated` event in your Background script:
+
+```ts
+import browser from "webextension-polyfill";
+
+browser.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
+  // Filter out any tab change events that aren't complete, aren't for the
+  // active tab, or tabs that don't have a URL
+  if (changeInfo.status !== "complete" || !tab.active || !tab.url) {
+    return;
+  }
+
+  // ...
+});
+```
+
+### Get the current URL from a content script
+
+If you're already using a content script in your extension, you can get the current
+URL from the `window.location` object without needing to add any additional permissions.
+
+```ts
+const url = window.location.href;
+```
+
+You can read this value at any time, but we recommend reading it either when the page
+first loads, or when the user attempts to initiate a transaction in your wallet app.
 
 ## Checking if the website is malicious
 
@@ -73,16 +128,6 @@ export const checkUrl = async (url: string) => {
 
   return data.status === "BLOCKED";
 };
-```
-
-### Extension Permissions Required
-
-To detect when the user visits a new site, you'll need to add the following permissions to your `manifest.json` file:
-
-```json
-{
-  "permissions": ["webNavigation"]
-}
 ```
 
 ## Displaying a warning to the user
