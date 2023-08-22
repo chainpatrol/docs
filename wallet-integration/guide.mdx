@@ -82,11 +82,13 @@ browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
 
 ### Option 2: Use the `browser.tabs.onUpdated` API
 
-This approach requires adding the `tabs` permission to your `manifest.json` file:
+This approach requires adding the `tabs` permission to your `manifest.json` file
+and requesting the `"<all_urls>"` host permission:
 
 ```json
 {
-  "permissions": ["tabs"]
+  "permissions": ["tabs"],
+  "host_permissions": ["<all_urls>"]
 }
 ```
 
