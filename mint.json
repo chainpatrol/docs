@@ -96,7 +96,11 @@
     },
     {
       "group": "Assets",
-      "pages": ["external-api/asset-check", "external-api/asset-list"]
+      "pages": [
+        "external-api/asset-check",
+        "external-api/asset-list",
+        "external-api/asset-details"
+      ]
     },
     {
       "group": "Reports",
