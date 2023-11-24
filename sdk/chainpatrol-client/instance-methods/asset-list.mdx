@@ -19,18 +19,22 @@ console.log(results);
 ```
 
 ```js Output
-[
-  {
-    type: "URL",
-    content: "example.com",
-    status: "BLOCKED",
-  },
-  {
-    type: "URL",
-    content: "scam-airdrop.net",
-    status: "BLOCKED",
-  },
-];
+{
+  assets: [
+    {
+      type: "URL",
+      content: "example.com",
+      status: "BLOCKED",
+      updatedAt: "2023-01-01T00:00:00.000Z",
+    },
+    {
+      type: "URL",
+      content: "scam-airdrop.net",
+      status: "BLOCKED",
+      updatedAt: "2023-01-01T00:00:00.000Z",
+    },
+  ]
+};
 ```
 
 </CodeGroup>
