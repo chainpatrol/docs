@@ -42,12 +42,12 @@
   ],
   "tabs": [
     {
-      "name": "JavaScript SDK",
-      "url": "sdk"
+      "name": "API Reference",
+      "url": "external-api"
     },
     {
-      "name": "External API",
-      "url": "external-api"
+      "name": "JavaScript SDK",
+      "url": "sdk"
     },
     {
       "name": "Glossary",
