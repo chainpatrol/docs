@@ -97,6 +97,7 @@
     {
       "group": "Assets",
       "pages": [
+        "external-api/asset-changelog",
         "external-api/asset-check",
         "external-api/asset-list",
         "external-api/asset-details"
