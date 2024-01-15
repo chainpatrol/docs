@@ -91,6 +91,10 @@
       ]
     },
     {
+      "group": "Security Integration",
+      "pages": ["security-integration/canary-tokens"]
+    },
+    {
       "group": "External API",
       "pages": ["external-api/overview", "external-api/authentication"]
     },
