@@ -68,7 +68,8 @@
       "pages": [
         "general/how-it-works",
         "general/concepts",
-        "general/discord-bot"
+        "general/discord-bot", 
+        "general/slack-bot"
       ]
     },
     {
