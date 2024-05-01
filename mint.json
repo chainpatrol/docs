@@ -63,6 +63,25 @@
       "group": "Getting Started",
       "pages": ["introduction", "faq"]
     },
+
+    {
+      "group": "General",
+      "pages": [
+        "general/how-it-works",
+        "general/concepts"
+      ]
+    },
+    {
+      "group": "Features",
+      "pages": [
+        "wallet-integration/guide",
+        "wallet-integration/check-vs-list",
+        "wallet-integration/proxy",
+        "wallet-integration/webhooks",
+        "wallet-integration/false-positives",
+        "security-integration/canary-tokens"
+      ]
+    },
     {
       "group": "Reporting Flow",
       "pages": [
@@ -73,27 +92,11 @@
       ]
     },
     {
-      "group": "General",
+      "group": "Community Bots",
       "pages": [
-        "general/how-it-works",
-        "general/concepts",
         "general/discord-bot", 
         "general/slack-bot"
       ]
-    },
-    {
-      "group": "Wallet Integration",
-      "pages": [
-        "wallet-integration/guide",
-        "wallet-integration/check-vs-list",
-        "wallet-integration/proxy",
-        "wallet-integration/webhooks",
-        "wallet-integration/false-positives"
-      ]
-    },
-    {
-      "group": "Security Integration",
-      "pages": ["security-integration/canary-tokens"]
     },
     {
       "group": "External API",
