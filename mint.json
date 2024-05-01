@@ -64,21 +64,21 @@
       "pages": ["introduction", "faq"]
     },
     {
-      "group": "General",
-      "pages": [
-        "general/how-it-works",
-        "general/concepts",
-        "general/discord-bot", 
-        "general/slack-bot"
-      ]
-    },
-    {
       "group": "Reporting Flow",
       "pages": [
         "reporting-flow/detect",
         "reporting-flow/report",
         "reporting-flow/review",
         "reporting-flow/protect"
+      ]
+    },
+    {
+      "group": "General",
+      "pages": [
+        "general/how-it-works",
+        "general/concepts",
+        "general/discord-bot", 
+        "general/slack-bot"
       ]
     },
     {
