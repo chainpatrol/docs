@@ -2,5 +2,105 @@
 icon: slack
 title: ChainPatrol Slack Bot
 sidebarTitle: Slack Bot
-description: A Slack bot that can be used submit scam reports to ChainPatrol
+description: A Slack bot that can be used to submit scam reports to ChainPatrol
 ---
+
+If you have a **Slack workspace**, you can use the ChainPatrol Slack Bot
+to let your workspace members submit scam reports to **ChainPatrol**. The bot will generate new
+reports that get sent to your admin dashboard for review.
+
+## Integration Setup
+
+<Tabs>
+  <Tab title="Step 1 - Dashboard">
+    Start by opening your dashboard on the [ChainPatrol app](https://app.chainpatrol.io/).
+
+    <Frame>![Step 1 - Dashboard](/images/dashboard-navbar.png)</Frame>
+
+  </Tab>
+  <Tab title="Step 2 - Organization Settings">
+    In the navbar, select **Settings** to go to your **Organization Settings** page.
+
+    <Frame>![Step 2 - Workspace Settings](/images/organization-settings.png)</Frame>
+
+  </Tab>
+  <Tab title="Step 3 - Integrations">
+    Once you are in the organization settings, navigate to the **Integrations** tab. This section contains options for the slack bot as well as other integrations.
+
+    <Frame>![Step 3 - Integrations Tab](/images/settings-integrations.png)</Frame>
+
+  </Tab>
+  <Tab title="Step 4 - Slack Auth">
+
+    In the Integrations tab, you will find an option to **Add to Slack**. Click this button, then you will be redirected to the slack authorization page. Click **Allow**.
+
+    <Frame>![Step 4 - Add Bot](/images/slack-integration-authorization.png)</Frame>
+    <Tip>
+    Remember to select the correct workspace at the top right of the authorization
+    page.
+    </Tip>
+
+  </Tab>
+</Tabs>
+---
+
+## Setup Confirmation
+
+The ChainPatrol Slack Bot should appear in your listed apps along with other allowed workspace apps
+
+<Frame>![Slack Apps](/images/slack-apps.png)</Frame>
+
+---
+
+## Finalizing Setup With ChainPatrol
+
+<Warning>
+  This step needs to be done with help from ChainPatrol staff in order for the
+  Slack Bot to work
+</Warning>
+
+**Please send ChainPatrol staff your workspace's Slack Team ID so that we can finish the automated pipeline**
+
+- Follow [Slack's documentation](https://slack.com/intl/en-gb/help/articles/221769328-Locate-your-Slack-URL-or-ID#free,-pro-and-business+-subscriptions-2) to locate your Team ID.
+
+<Tip>
+  Slack refers to the Team ID as "workspace or org ID".
+
+`https://app.slack.com/client/TXXXXXXX/CXXXXXXX`
+
+In the above url, the Team ID is the slug that begins with `T`
+
+</Tip>
+
+---
+
+## Usage
+
+Once the bot is added to your workspace, you can use the following commands:
+
+- ### Slash Command:
+
+        `/chainpatrol <url>` - Submit a scam report for the given URL
+
+- ### Slack Shortcut Action
+
+          For a given message, click on the kebab menu and then select the `Create Report` option
+
+          <CardGroup cols={2}>
+            <Card title='Kebab Menu' icon='square-1'>
+            <Frame>![Kebab Menu](/images/slack-kebab.png)</Frame>
+
+            </Card>
+            <Card title='Report Modal' icon='square-2'>
+                <Frame>![Kebab Menu](/images/report-modal.png)</Frame>
+            </Card>
+        </CardGroup>
+
+---
+
+## Privacy
+
+The bot does not collect any personal information. It only collects the URL and
+the Slack ID for the user that submitted the report (in case a moderator needs
+more information about why the URL is a scam). The bot does not store any sensitive information
+about the workspace it is added to.
