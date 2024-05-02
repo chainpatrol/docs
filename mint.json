@@ -66,37 +66,26 @@
 
     {
       "group": "General",
+
       "pages": [
         "general/how-it-works",
-        "general/concepts"
+        "general/concepts",
+        "general/false-positives"
       ]
     },
     {
-      "group": "Features",
+      "group": "Integration",
       "pages": [
         "wallet-integration/guide",
         "wallet-integration/check-vs-list",
         "wallet-integration/proxy",
         "wallet-integration/webhooks",
-        "wallet-integration/false-positives",
         "security-integration/canary-tokens"
       ]
     },
     {
-      "group": "Reporting Flow",
-      "pages": [
-        "reporting-flow/detect",
-        "reporting-flow/report",
-        "reporting-flow/review",
-        "reporting-flow/protect"
-      ]
-    },
-    {
-      "group": "Community Bots",
-      "pages": [
-        "general/discord-bot", 
-        "general/slack-bot"
-      ]
+      "group": "Bots",
+      "pages": ["general/discord-bot", "general/slack-bot"]
     },
     {
       "group": "External API",
