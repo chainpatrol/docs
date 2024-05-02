@@ -85,7 +85,7 @@
     },
     {
       "group": "Bots",
-      "pages": ["general/discord-bot", "general/slack-bot"]
+      "pages": ["bots/discord-bot", "bots/slack-bot"]
     },
     {
       "group": "External API",
@@ -173,6 +173,16 @@
           ]
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/wallet-integration/false-positives",
+      "destination": "/general/false-positives"
+    },
+    {
+      "source": "/general/discord-bot",
+      "destination": "/bots/discord-bot"
     }
   ],
   "backgroundImage": "/background.png",
