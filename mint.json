@@ -63,36 +63,29 @@
       "group": "Getting Started",
       "pages": ["introduction", "faq"]
     },
+
     {
       "group": "General",
+
       "pages": [
         "general/how-it-works",
         "general/concepts",
-        "general/discord-bot"
+        "general/false-positives"
       ]
     },
     {
-      "group": "Reporting Flow",
-      "pages": [
-        "reporting-flow/detect",
-        "reporting-flow/report",
-        "reporting-flow/review",
-        "reporting-flow/protect"
-      ]
-    },
-    {
-      "group": "Wallet Integration",
+      "group": "Integration",
       "pages": [
         "wallet-integration/guide",
         "wallet-integration/check-vs-list",
         "wallet-integration/proxy",
         "wallet-integration/webhooks",
-        "wallet-integration/false-positives"
+        "security-integration/canary-tokens"
       ]
     },
     {
-      "group": "Security Integration",
-      "pages": ["security-integration/canary-tokens"]
+      "group": "Bots",
+      "pages": ["bots/discord-bot", "bots/slack-bot"]
     },
     {
       "group": "External API",
@@ -180,6 +173,16 @@
           ]
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/wallet-integration/false-positives",
+      "destination": "/general/false-positives"
+    },
+    {
+      "source": "/general/discord-bot",
+      "destination": "/bots/discord-bot"
     }
   ],
   "backgroundImage": "/background.png",
