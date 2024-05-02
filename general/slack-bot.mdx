@@ -7,7 +7,9 @@ description: A Slack bot that can be used to submit scam reports to ChainPatrol
 
 If you have a **Slack workspace**, you can use the ChainPatrol Slack Bot to let your workspace members submit scam reports to **ChainPatrol**. The bot will generate new reports that get sent to your admin dashboard for review.
 
-## Integration Setup
+## Setup
+
+### Bot Installation
 
 <Steps>
   <Step title="Go to the Admin Dashboard">
@@ -28,7 +30,7 @@ If you have a **Slack workspace**, you can use the ChainPatrol Slack Bot to let 
     <Frame>![Step 3 - Integrations Tab](/images/settings-integrations.png)</Frame>
 
   </Step>
-  <Step title="Set up Slack OAuth">
+  <Step title="Complete Slack OAuth">
 
     In the Integrations tab, you will find an option to **Add to Slack**. Click this button, then you will be redirected to the Slack authorization page. Click **Allow**.
 
@@ -40,13 +42,13 @@ If you have a **Slack workspace**, you can use the ChainPatrol Slack Bot to let 
   </Step>
 </Steps>
 
-## Setup Confirmation
+### Confirmation
 
 The ChainPatrol Slack Bot should appear in your listed apps along with other allowed workspace apps.
 
 <Frame>![Slack Apps](/images/slack-apps.png)</Frame>
 
-## Finalizing Setup With ChainPatrol
+### Link Organization
 
 <Warning>
   This step needs to be done with help from ChainPatrol staff in order for the
@@ -70,22 +72,22 @@ In the above URL, the Team ID is the slug that begins with `T`.
 
 Once the bot is added to your workspace and you have **sent ChainPatrol your Team ID**, you can use the following actions:
 
-- ### Slash Command:
+### Slash Commands
 
-        `/chainpatrol <url>` - Submit a scam report for the given URL
+- `/chainpatrol <url>` - Submit a scam report for the given URL
 
-- ### Slack Shortcut Action
+### Shortcut Actions
 
-        For a given message, click on the kebab menu and then select the `Create Report` option.
+For a given message, click on the kebab menu and then select the `Create Report` option.
 
-        <CardGroup cols={2}>
-            <Card title='Kebab Menu' icon='square-1'>
-                <Frame>![Kebab Menu](/images/slack-kebab.png)</Frame>
-            </Card>
-            <Card title='Report Modal' icon='square-2'>
-                <Frame>![Report Modal](/images/report-modal.png)</Frame>
-            </Card>
-        </CardGroup>
+<CardGroup cols={2}>
+  <Card title="Kebab Menu" icon="square-1">
+    <Frame>![Kebab Menu](/images/slack-kebab.png)</Frame>
+  </Card>
+  <Card title="Report Modal" icon="square-2">
+    <Frame>![Report Modal](/images/report-modal.png)</Frame>
+  </Card>
+</CardGroup>
 
 ## Privacy
 
