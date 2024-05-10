@@ -85,12 +85,33 @@ Here is an example of how to use the bot to submit a scam report:
 
 <Frame>![no-response](/images/discord-application-no-response.png)</Frame>
 
-### Bot role may need elevated permission to view private channels
+### Custom Elevated Permissions
+
+- Bot role may need elevated permission to interact with private channels
 
 - If you are adding the bot to a channel that is not normally visible to `@everyone`, then you will need to
   Slash commands not visible to Discord members
 
-Embed links permission required for reports feed
+  <CardGroup cols={2}>
+    <Card title='Private Channel Permissions' icon='square-1'>
+      <Frame>![Kebab Menu](/images/discord-private-channel.png)</Frame>
+    </Card>
+    <Card title='Adding ChainPatrol Bot' icon='square-2'>
+      <Frame>![Report Modal](/images/discord-select-app.png)</Frame>
+    </Card>
+  </CardGroup>
+
+- Embed links permissions are required for your reports feed
+
+  <Frame>![channel embeds](/images/discord-channel-embed-links.png)</Frame>
+
+- Make application commands available to users
+  - Server members will not be able to use the ChainPatrol bot commands if they do not have access to application commands
+    <Frame>
+      ![application commands](/images/discord-application-comands.png)
+    </Frame>
+
+### Custom Elevated Permissions
 
 ## Privacy
 
