@@ -23,7 +23,7 @@
     "thumbsRating": true,
     "suggestEdit": true
   },
-  "openapi": "https://app.chainpatrol.io/api/v2/openapi.json",
+  "openapi": "http://localhost:3000/api/v2/openapi.json",
   "api": {
     "baseUrl": "https://app.chainpatrol.io/api/v2",
     "auth": {
@@ -85,7 +85,7 @@
     },
     {
       "group": "Bots",
-      "pages": ["bots/discord-bot", "bots/slack-bot"]
+      "pages": ["bots/discord-bot", "bots/slack-bot", "bots/telegram-bot"]
     },
     {
       "group": "External API",
