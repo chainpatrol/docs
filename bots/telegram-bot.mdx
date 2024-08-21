@@ -13,24 +13,33 @@ If you have a **Telegram group**, you can use the ChainPatrol Telegram Bot to le
 
 <Steps>
   <Step title="Add the Bot to Your Group Chat">
+    <Warning>
+      **Beware of impersonators!** The official ChainPatrol Telegram bot is `@ChainPatrol_Bot`. If you see any other bot claiming to be the ChainPatrol bot, please report it to us.
+    </Warning>
     Start by adding the ChainPatrol Telegram Bot to your group chat. You can find the bot by searching for its username in Telegram.
 
-    <Frame>![Step 1 - Add Bot](/images/telegram-add-bot.png)</Frame>
+    <Frame>![Step 1 - Add Bot](/images/telegram-bot-add.png)</Frame>
 
   </Step>
-  <Step title="Use the /setupconnect Command">
+  <Step title="View the bot inside your group">
     Once the bot is added to your group chat, use the `/setupconnect` command. This will notify a ChainPatrol staff member to finish the connection process.
 
-    <Frame>![Step 2 - Setup Connect](/images/telegram-setupconnect.png)</Frame>
+    <Frame>![Step 2 - Setup Connect](/images/telegram-group-info-after.png)</Frame>
+
+  </Step>
+  <Step title="Commands">
+    Once the bot is added to your group chat, use the `/help` command to see the available commands.
+
+    <Frame>![Step 2 - Setup Connect](/images/telegram-commands.png)</Frame>
 
   </Step>
 </Steps>
 
 ### Confirmation
 
-A ChainPatrol staff member will complete the setup process. You will receive a confirmation message in your group chat once the bot is fully connected and ready to use.
+A ChainPatrol staff member will complete the setup process with the `/setupconnect` command. You can confirm the connection by using `/setupstatus`.
 
-<Frame>![Confirmation Message](/images/telegram-confirmation.png)</Frame>
+<Frame>![Confirmation Message](/images/telegram-setupstatus.png)</Frame>
 
 ## Usage
 
@@ -39,20 +48,19 @@ Once the bot is added to your group and the connection process is complete, you 
 ### Commands
 
 - `/chainpatrol <url>` - Submit a scam report for the given URL
-
-### Shortcut Actions
-
-For a given message, click on the kebab menu and then select the `Create Report` option.
-
-<CardGroup cols={2}>
-  <Card title="Kebab Menu" icon="square-1">
-    <Frame>![Kebab Menu](/images/telegram-keggbab.png)</Frame>
-  </Card>
-  <Card title="Report Modal" icon="square-2">
-    <Frame>![Report Modal](/images/report-modadfl.png)</Frame>
-  </Card>
-</CardGroup>
+- `/report <url> <description>` - Submit a scam report for the given URL with a brief description of why it's suspicious
+- `/check <url>` - Check if a URL is on the block list
+- `/setupstatus` - Find out if this chat group is associated with an organization
+- `/setupconnect` - Generates the URL to link Telegram group to organization
+- `/help` - Display a list of available commands and their descriptions
 
 ## Privacy
 
 The bot does not collect any personal information. It only collects the URL and the Telegram ID of the user that submitted the report (in case a moderator needs more information about why the URL is a scam). The bot does not store any sensitive information about the group it is added to.
+
+<Tip>
+
+The ChainPatrol Telegram bot is like any group user. You can adjust permissions
+according to your group's needs.
+
+</Tip>
