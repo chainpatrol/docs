@@ -68,6 +68,11 @@ Once the bot is added to your server, you can use the following commands:
 - `/report <url>` - Submit a scam report for the given URL
 - `/check <url>` - Check if the given URL is a scam
 
+<Tip>
+  Check out the [common issues section](/bots/discord-bot#common-issues) below
+  to ensure proper setup
+</Tip>
+
 ## Example
 
 Here is an example of how to use the bot to submit a scam report:
@@ -75,6 +80,53 @@ Here is an example of how to use the bot to submit a scam report:
 ![Example of using the ChainPatrol Discord bot](/images/discord-bot-prompt.png)
 ![Loading of the ChainPatrol Discord bot](/images/discord-bot-loading.png)
 ![Success of the ChainPatrol Discord bot](/images/discord-bot-success.png)
+
+## Common Issues
+
+<Frame>![no-response](/images/discord-application-no-response.png)</Frame>
+
+### Custom Elevated Permissions
+
+- Bot role may need elevated permission to interact with private channels
+
+- If you are adding the bot to a channel that is not normally visible to `@everyone`, then you will need to
+  Slash commands not visible to Discord members
+
+  <CardGroup cols={2}>
+    <Card title='Private Channel Permissions' icon='square-1'>
+      <Frame>![Kebab Menu](/images/discord-private-channel.png)</Frame>
+    </Card>
+    <Card title='Adding ChainPatrol Bot' icon='square-2'>
+      <Frame>![Report Modal](/images/discord-select-app.png)</Frame>
+    </Card>
+  </CardGroup>
+
+- Embed links permissions are required for your reports feed
+
+  <Frame>![channel embeds](/images/discord-channel-embed-links.png)</Frame>
+
+- Make application commands available to users
+  - Server members will not be able to use the ChainPatrol bot commands if they do not have access to application commands
+    <Frame>
+      ![application commands](/images/discord-application-comands.png)
+    </Frame>
+
+## Debugging Tips
+
+### View Server As Role
+
+- You can right click the ChainPatrol role in server settings to see the server as the bot role
+
+  <Frame>![view as role](/images/discord-view-as-role.png)</Frame>
+
+<Tip>
+  Trying to access a feature in an inaccessible part of the server will lead to
+  an error. Make sure the bot's permissions can see and interact with what you
+  are debugging.
+
+Check out [Discord's Role Management 101](https://support.discord.com/hc/en-us/articles/214836687-Role-Management-101) Article for additional help!
+
+</Tip>
 
 ## Privacy
 
