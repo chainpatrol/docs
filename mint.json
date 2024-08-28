@@ -77,7 +77,8 @@
         "wallet-integration/check-vs-list",
         "wallet-integration/proxy",
         "wallet-integration/webhooks",
-        "security-integration/canary-tokens"
+        "security-integration/canary-tokens",
+        "security-integration/submit-assets-for-scanning"
       ]
     },
     {
