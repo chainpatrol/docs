@@ -23,7 +23,7 @@
     "thumbsRating": true,
     "suggestEdit": true
   },
-  "openapi": "http://localhost:3000/api/v2/openapi.json",
+  "openapi": "https://app.chainpatrol.io/api/v2/openapi.json",
   "api": {
     "baseUrl": "https://app.chainpatrol.io/api/v2",
     "auth": {
