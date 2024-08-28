@@ -25,10 +25,7 @@
   },
   "openapi": "https://app.chainpatrol.io/api/v2/openapi.json",
   "api": {
-    "baseUrl": "https://app.chainpatrol.io/api/v2",
-    "auth": {
-      "name": "X-API-KEY"
-    }
+    "baseUrl": "https://app.chainpatrol.io/api/v2"
   },
   "topbarCtaButton": {
     "name": "Sign In",
