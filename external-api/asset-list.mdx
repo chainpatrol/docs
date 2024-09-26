@@ -19,7 +19,7 @@ openapi: "POST /asset/list"
 
 To use pagination, include the `per_page` and `next_page` parameters in your request:
 
-- `per_page <number>`: Number of items to return per page (default: 100, max: 500)
+- `per_page <number>`: Number of items to return per page (max: 10000)
 - `next_page <string>`: Cursor for the next page of results
 
 ### Example implementation for pagination:
