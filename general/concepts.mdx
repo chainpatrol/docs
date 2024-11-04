@@ -22,13 +22,15 @@ If the asset has not been reviewed by ChainPatrol, it will have the following st
 
 - **Unknown** - The asset has not been reviewed by ChainPatrol.
 
+## Detections
+
+Detections are potential malicious activities that have been automatically identified by our system. Our automated detection system continuously monitors various platforms and networks to identify potential threats and suspicious activities related to your assets.
+
 ## Reports
 
-Reports are the way that users can change the status of an asset. When a user reports an asset, they submit
-one or more proposals that contain a request to change the asset status.
+Reports are submissions of potential scams or threats made by users or automated systems. They are the way that users can change the status of an asset. When a user reports an asset, they submit one or more proposals that contain a request to change the asset status.
 
-Reports can be submitted either by the org members through the organization's admin dashboard, or by the public
-through the organization's public security portal.
+Reports can be submitted either by the org members through the organization's admin dashboard, or by the public through the organization's public security portal.
 
 ### Report Status
 
@@ -44,19 +46,31 @@ For more information about how to create reports, see the [Report stage](/report
 
 ![Report Statuses](/images/report-statuses.png)
 
-## Proposals
+## Proposals & Asset Scans
 
-Proposals are the way that users can propose changes the status of an asset. When a user submits a report, they are actually
-submitting one or more proposals. Typically, a scam will have multiple URLs and contract addresses associated with it, so
-you can submit a report with separate proposals for each with some context about why you think it's a scam in the description.
+Proposals are the way that users can propose changes the status of an asset. When a user submits a report, they are actually submitting one or more proposals. Typically, a scam will have multiple URLs and contract addresses associated with it, so you can submit a report with separate proposals for each with some context about why you think it's a scam in the description.
+
+Asset scans are the way that we automatically identify potential threats and suspicious activities related to your assets.
+![Proposal](/images/proposal.png)
 
 ## Reviews
 
-Org admins and ChainPatrol staff **both** have to review a proposal to change the status of an asset. When a proposal is reviewed,
-the reviewer can either approve or reject the proposal. If the proposal is approved by both the org admin and ChainPatrol,
-the asset status will be updated. If the proposal is rejected by either the org admin or ChainPatrol, the asset status will
-not be updated, and the proposal will be closed.
+Org admins and ChainPatrol staff **both** have to review a proposal to change the status of an asset. When a proposal is reviewed, the reviewer can either approve or reject the proposal. If the proposal is approved by both the org admin and ChainPatrol, the asset status will be updated. If the proposal is rejected by either the org admin or ChainPatrol, the asset status will not be updated, and the proposal will be closed.
 
 For more information about how to review proposals, see the [Review stage](/reporting-flow/review) page.
 
 ![Review](/images/review.png)
+
+## Takedowns
+
+Takedowns are requests submitted to remove malicious content from various platforms. When malicious content is identified and confirmed, ChainPatrol can initiate takedown requests to have the content removed.
+
+### Takedown Status
+
+Takedowns can have two main states:
+
+- **To Do**: The takedown request is to be created. This is the initial state once we have confirmed malicious content.
+- **In Progress**: The takedown request has been submitted to the platform. ie. We have emailed a hosting provider to remove the malicious content and are waiting for them to respond.
+- **Completed**: Successfully removed malicious content based on our takedown requests
+
+The takedown process helps ensure that confirmed malicious content is removed from platforms, reducing the potential impact on users.
