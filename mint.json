@@ -7,6 +7,8 @@
     "href": "https://chainpatrol.io"
   },
   "favicon": "/favicon.svg",
+  "theme": "prism",
+  "layout": "sidenav",
   "font": {
     "headings": {
       "family": "IBM Plex Sans"
@@ -27,6 +29,12 @@
       "to": "#6622DC"
     }
   },
+  "modeToggle": {
+    "default": "dark"
+  },
+  "search": {
+    "location": "side"
+  },
   "feedback": {
     "thumbsRating": true,
     "suggestEdit": true
@@ -41,8 +49,12 @@
   },
   "topbarLinks": [
     {
-      "name": "Book a Demo",
-      "url": "https://chainpatrol.io/calendar"
+      "name": "Blog",
+      "url": "https://chainpatrol.io/blog"
+    },
+    {
+      "name": "Changelog",
+      "url": "https://chainpatrol.io/changelog"
     }
   ],
   "tabs": [
@@ -57,10 +69,6 @@
     {
       "name": "Glossary",
       "url": "glossary"
-    },
-    {
-      "name": "Changelog",
-      "url": "https://chainpatrol.io/changelog"
     }
   ],
   "navigation": [
