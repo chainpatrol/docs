@@ -7,10 +7,10 @@
     "href": "https://chainpatrol.io"
   },
   "favicon": "/favicon.svg",
-  "fonts": {
+  "font": {
     "headings": {
       "family": "IBM Plex Sans",
-      "weight": 400
+      "weight": 700
     },
     "body": {
       "family": "Inter"
