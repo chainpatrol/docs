@@ -9,7 +9,7 @@
   "favicon": "/favicon.svg",
   "fonts": {
     "headings": {
-      "family": "IBM Plex Sans",
+      "family": "IBMPlexSans",
       "weight": 400
     },
     "body": {
