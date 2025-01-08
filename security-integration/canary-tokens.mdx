@@ -20,42 +20,56 @@ You can read more about Cloned Website Tokens on the [Canary Tokens website](htt
 
 <Steps>
   <Step title="Create a new Canary Token">
-    Go to the [Canary Tokens generator](https://canarytokens.org/generate) and select the `Cloned Website` type from the dropdown.
+    Go to the [Canary Tokens Nest](https://canarytokens.org/nest/) and select the `JS cloned website` from the list.
 
     Fill the fields with the information below:
 
     | Field | Value |
     | ----- |:----- |
-    | Webhook URL | `https://app.chainpatrol.io/api/v2/canary/webhook` |
-    | Domain | `<YOUR DOMAIN>` |
-    | Reminder note | Any note you'd like (ex. `Cloned website token for <YOUR DOMAIN>`) |
+    | Domain of protected website | `<YOUR DOMAIN>` |
+    | Mail me here when the alert fires | `<YOUR EMAIL>` |
+    | Remind me of this when the alert fires | Any note you'd like (ex. `Token for <YOUR DOMAIN>`) |
+
+    Next, click **Add Webhook Notification**, and fill in the following information:
+
+    | Field | Value |
+    | ----- |:----- |
+    | Notify me here when the alert fires | `https://app.chainpatrol.io/api/v2/canary/webhook` |
 
     It should look something like this when you are done:
 
     ![Canary Generation](/images/canary.png)
 
-    Click **Create my Canarytoken** to create the token.
+    Click **Create Canarytoken**.
 
   </Step>
-  <Step title="Save the Token URL and send to ChainPatrol">
-    If the page was not automatically redirected, click on **Manage Token** in the top right. 
-    
-    You should save this current page's URL for future reference (we'll refer to this as the **"Token URL"** going forward). This is a uniquely generated URL that you can come back to see the history of the token.
+  <Step title="Navigate to Manage Token">
+    After the token is created, you will see the modal with the token information.
 
-    In order for ChainPatrol to automatically detect cloned websites, send the Token URL to ChainPatrol via a secure channel. We will connect your token to your organization's account.
+    ![Canary Success](/images/canary-success.png)
+
+    Click **Manage Canarytoken** to navigate to the token's page.
+  </Step>
+  <Step title="Save the URL and send it to ChainPatrol">    
+    You should save this current page's URL for future reference. This is a uniquely generated URL containing the token that you can come back to see the history of the your Canary Token.
+
+    Example: `https://canarytokens.org/nest/manage/<NEST_ID>/<TOKEN_ID>`
+
+    In order for ChainPatrol to automatically detect cloned websites, **send this URL to ChainPatrol via a secure channel**. We will connect your token to your organization's account.
   </Step>
   <Step title="Add the generated JavaScript snippet to your website">
     Finally, to complete the setup of the Canary Token, you need to add the generated JavaScript snippet to the domain that you indicated earlier.
     
-    Toggle ON the **"Obfuscate this script"** option and copy the generated code.
+    1. Toggle ON the **"Obfuscate this script"** option and copy the generated code.
+    2. Paste the code into your website's HTML code, preferably in the `<head>` tag on the homepage.
     
-    Paste the code into your website's HTML code, preferably in the `<head>` tag on the homepage.
-
+    > **Note:** We recommend turning OFF **Email Alerts**, since they may include localhost URLs and other false positives. We will handle the alerts via webhook.
   </Step>
 </Steps>
 
-## Result
+## What happens when a cloned website is detected?
 
-You will see new reports in your ChainPatrol dashboard when your website is cloned. ChainPatrol will proceed to block and takedown the malicious cloned site.
+When your website is cloned, we will create a new report in your ChainPatrol dashboard.
+ChainPatrol will proceed to block and takedown the malicious cloned site.
 
 ![Canary Report](/images/canary-report.png)
