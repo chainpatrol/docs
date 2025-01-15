@@ -70,7 +70,7 @@
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": ["introduction"]
+      "pages": ["introduction", "data-model"]
     },
 
     {

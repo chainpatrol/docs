@@ -1,14 +1,46 @@
 ---
-title: 'Data Model'
-description: 'An overview how data is structured in ChainPatrol.'
-icon: database
+title: "Data Model"
+description: "An overview how data is structured in ChainPatrol."
+icon: shapes
 ---
 
-# Workspace
+Within ChainPatrol, all data belongs to a Workspace. Within a workspace, you can have multiple
+Brands that represent different products/services/brands that belong to you.
 
-# Brand
+## Workspace
 
-# Asset
+Workspaces are the top-level entity in ChainPatrol. They are used to group all the data that belongs to you
+and your organization. You can have multiple workspaces, but typically you'll only have the one that we set up for you.
+You can think of a workspace similar to workspace in Slack or Linear where you can invite team members and view data at a high level.
 
-# Report
+## Brand
 
+Brands are used to represent different products/services/brands that belong to you. You can have multiple brands within a workspace.
+If you have a company that has multiple products, you can create a brand for each product. For example, a company called "Acme" that has
+two products "Acme Wallet" and "Acme Exchange" can create two brands "Acme Wallet" and "Acme Exchange" within the "Acme" workspace.
+
+There are two types of brands in ChainPatrol:
+
+1. Services
+2. People
+
+### Services
+
+Services represent products or services that are uniquely branded. Separating out brands allows you to configure specific detection settings
+and assets that are unique to that brand, which improves the accuracy of the detections.
+
+### People
+
+People represent important individuals that are part of your organization. This could be an executive like your CEO, CTO, or any other important person that
+you want to monitor for impersonation.
+
+## Asset
+
+Assets are the entities that you want to monitor for impersonation. Assets can be domains, social media accounts, or any other online entity
+that we support in ChainPatrol. You can add multiple assets to a brand, and we will use these assets to compare detections against to determine
+if there is evidence of impersonation or phishing.
+
+## Report
+
+Reports are the most important entity in ChainPatrol. Reports are created when we detect a potential impersonation or phishing attempt. Reports
+contain all the information about the detection and proposed actions that ChainPatrol will take on your behalf to remove the threat.
