@@ -61,10 +61,6 @@
     {
       "name": "JavaScript SDK",
       "url": "sdk"
-    },
-    {
-      "name": "Glossary",
-      "url": "glossary"
     }
   ],
   "navigation": [
@@ -74,27 +70,40 @@
     },
 
     {
-      "group": "General",
+      "group": "Platform",
       "pages": [
         "general/how-it-works",
         "general/concepts",
+        {
+          "group": "Asset Types",
+          "icon": "shapes",
+          "pages": [
+            "concepts/asset-types/url",
+            "concepts/asset-types/page",
+            "concepts/asset-types/address"
+          ]
+        },
         "general/false-positives"
       ]
     },
+
     {
       "group": "Integration",
       "pages": [
         "wallet-integration/guide",
         "wallet-integration/check-vs-list",
         "wallet-integration/proxy",
-        "wallet-integration/webhooks",
-        "security-integration/canary-tokens",
-        "security-integration/submit-assets-for-scanning"
+        "wallet-integration/webhooks"
       ]
     },
     {
-      "group": "Bots",
-      "pages": ["bots/discord-bot", "bots/slack-bot", "bots/telegram-bot"]
+      "group": "Integrations",
+      "pages": [
+        "security-integration/canary-tokens",
+        "bots/discord-bot",
+        "bots/slack-bot",
+        "bots/telegram-bot"
+      ]
     },
     {
       "group": "External API",
@@ -117,14 +126,6 @@
     {
       "group": "@chainpatrol/sdk",
       "pages": ["sdk/overview", "sdk/quickstart"]
-    },
-    {
-      "group": "Asset Types",
-      "pages": [
-        "glossary/asset-types/url",
-        "glossary/asset-types/page",
-        "glossary/asset-types/address"
-      ]
     },
     {
       "group": "API Reference",
