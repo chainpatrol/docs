@@ -31,9 +31,6 @@
   "modeToggle": {
     "default": "dark"
   },
-  "search": {
-    "location": "side"
-  },
   "feedback": {
     "thumbsRating": true,
     "suggestEdit": true
