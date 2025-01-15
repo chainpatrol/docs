@@ -80,7 +80,11 @@
           "pages": [
             "concepts/asset-types/url",
             "concepts/asset-types/page",
-            "concepts/asset-types/address"
+            "concepts/asset-types/address",
+            "concepts/asset-types/twitter",
+            "concepts/asset-types/telegram",
+            "concepts/asset-types/medium",
+            "concepts/asset-types/youtube"
           ]
         },
         "general/false-positives"
