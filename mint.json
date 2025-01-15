@@ -8,7 +8,6 @@
   },
   "favicon": "/favicon.svg",
   "theme": "venus",
-  "layout": "sidenav",
   "font": {
     "headings": {
       "family": "IBM Plex Sans"
