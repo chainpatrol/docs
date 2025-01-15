@@ -44,7 +44,7 @@
     "baseUrl": "https://app.chainpatrol.io/api/v2"
   },
   "topbarCtaButton": {
-    "name": "Sign In",
+    "name": "Dashboard",
     "url": "https://app.chainpatrol.io/"
   },
   "topbarLinks": [
