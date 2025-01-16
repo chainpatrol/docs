@@ -1,0 +1,87 @@
+---
+icon: bolt-lightning
+title: Zapier
+description: Use Zapier to automate your ChainPatrol workflows
+---
+
+# ChainPatrol Zapier App Guide
+
+Block malicious URLs instantly through Zapier automations.
+
+## Getting Started
+
+1. **Get Your API Key**
+
+   - Contact support@chainpatrol.io to get your ChainPatrol API key
+   - API key should start with `cp_`
+
+2. **Connect to Zapier**
+
+   - Use this invite link to access the ChainPatrol Zapier app: [https://zapier.com/developer/public-invite/218319/438734/23848bd6e68c1151aea214acd5f6136d/](https://zapier.com/developer/public-invite/218319/438734/23848bd6e68c1151aea214acd5f6136d/)
+
+3. **Find Your Organization Slug**
+   - This is the identifier in your ChainPatrol URL
+   - Example: If you access ChainPatrol at `app.chainpatrol.io/admin/companyname`, your slug is `companyname`
+
+## Available Actions
+
+### Create Report
+
+Creates a new report with URLs to block.
+
+#### Input Fields:
+
+1. **URLs to Block** (Required)
+
+   ```
+   # Option 1: One URL per line
+   scam1.com
+   scam2.com
+   scam3.com
+
+   # Option 2: Comma-separated
+   scam1.com, scam2.com, scam3.com
+   ```
+
+   - Supports URLs with or without 'https://'
+   - Can include email addresses and social media handles
+   - Invalid URLs will be skipped
+
+2. **Report Title** (Required)
+
+   - Example titles:
+     - "Phishing URLs from Discord #security channel"
+     - "Scam websites targeting our users"
+     - "Fake minting sites - Jan 2024"
+
+3. **Additional Details** (Optional)
+
+   - Add context about the URLs
+   - Suggested details:
+     - Where URLs were found
+     - How they were discovered
+     - Type of scam
+     - Additional evidence
+
+4. **Organization Slug** (Required)
+   - Your ChainPatrol organization identifier
+
+## Common Zap Examples
+
+1. **Discord → ChainPatrol**
+
+   - Trigger: New message in security channel
+   - Action: Create report with URLs
+
+2. **Google Form → ChainPatrol**
+
+   - Trigger: New form submission
+   - Action: Create report with submitted URLs
+
+3. **Slack → ChainPatrol**
+   - Trigger: Message with specific emoji reaction
+   - Action: Create report with URLs from message
+
+## Support
+
+Need help? Contact support@chainpatrol.io
