@@ -88,6 +88,7 @@
         "wallet-integration/check-vs-list",
         "wallet-integration/proxy",
         "wallet-integration/webhooks",
+        "wallet-integration/zapier",
         "security-integration/canary-tokens",
         "security-integration/submit-assets-for-scanning"
       ]
