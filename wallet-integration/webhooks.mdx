@@ -6,21 +6,29 @@ description: Use webhooks to notify your wallet about changes to ChainPatrol's g
 
 ## What is a webhook?
 
-A webhook is a way for applications to be notified of events in ChainPatrol in real-time. ChainPatrol uses webhooks to notify your wallet about changes to our global blocklist. This allows your wallet to update its blocklist in real-time, without having to wait for a scheduled cron job to run. This is especially useful if you opt to use our [Asset List](/external-api/asset-list) endpoint to sync our data as you can update your blocklist as soon as we update ours.
+ChainPatrol uses webhooks to notify you about changes to our global blocklist.
 
-## Steps to set up a webhook
+This allows you to update your blocklist in real-time, without having to wait for a scheduled cron job to run.
+This is especially useful if you opt to use our [Asset List](/external-api/asset-list) endpoint to sync our data as you can update your blocklist as soon as we update ours.
 
-1. Create a local endpoint to receive the webhook
-2. Contact us to register your test endpoint
-3. Test that your webhook is working correctly
-4. Deploy your webhook endpoint to production
-5. Contact us to enable your webhook in production
+## Managing Webhooks
 
-## Event types
+You can manage your webhooks through the [ChainPatrol dashboard](https://app.chainpatrol.io/admin) under `Settings > Webhooks`. From here you can:
+
+1. Create new webhooks
+2. View and monitor webhook deliveries
+3. Test webhooks with sample events
+4. Enable/disable webhooks
+5. Update webhook configurations
+6. Delete webhooks
+
+Each webhook delivery is logged and can be inspected for debugging purposes, including the full request and response details.
+
+## Event Types
 
 ### `debug.test`
 
-This event is used for testing your webhook endpoint. It is sent once when we register your webhook endpoint for the first time.
+This event is used for testing your webhook endpoint. It is sent when you click the "Test" button for a webhook in the dashboard.
 
 ```json
 {
@@ -46,6 +54,16 @@ This event is sent when the status of an asset changes. The `status` field can b
   }
 }
 ```
+
+## Webhook Configuration
+
+When creating a webhook, you'll need to provide:
+
+1. A HTTPS endpoint URL that will receive the webhook events
+2. An optional description to help identify the webhook's purpose
+3. Select which events you want to receive (currently only asset.status-updated is available)
+
+The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
 
 ## Signature Verification
 
@@ -74,10 +92,26 @@ if (signature !== expectedSignature) {
 }
 ```
 
-## Retry Policy
+## Delivery Status and Retries
+
+Each webhook delivery attempt is logged with one of the following statuses:
+
+- `PENDING`: The delivery is queued
+- `IN_PROGRESS`: The delivery is being attempted
+- `SUCCESS`: The delivery was successful (received 2xx response)
+- `FAILURE`: The delivery failed
 
 Webhooks will be retried up to 3 times with an exponential backoff if your endpoint returns a non-2xx status code. If your endpoint returns a 2xx status code, then the webhook will not be retried.
 
+You can view the delivery status, payload, request, and response details for each webhook attempt in the dashboard.
+
 ## Security
 
-Webhooks are sent over HTTPS and are signed with a secret that is unique to your account. You should treat your webhook secret like a password and keep it secure. If you suspect that your webhook secret has been compromised, then you should reach out to us immediately so that we can generate a new secret for you and invalidate the old one.
+Webhooks are sent over HTTPS and are signed with a secret that is unique to your account. You should:
+
+1. Only use HTTPS endpoints
+2. Keep your webhook secret secure and never commit it to version control
+3. Always verify the signature of incoming webhooks
+4. Contact us immediately if you suspect your webhook secret has been compromised
+
+If you need to rotate your webhook secret, you can delete the existing webhook and create a new one with the same configuration.
