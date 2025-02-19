@@ -89,6 +89,7 @@
         "wallet-integration/proxy",
         "wallet-integration/webhooks",
         "wallet-integration/zapier",
+        "wallet-integration/vercel",
         "security-integration/canary-tokens",
         "security-integration/submit-assets-for-scanning"
       ]
