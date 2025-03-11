@@ -77,6 +77,7 @@
       "group": "General",
       "pages": [
         "general/how-it-works",
+        "general/api-key",
         "general/concepts",
         "general/false-positives"
       ]
