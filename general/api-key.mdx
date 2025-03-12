@@ -1,0 +1,76 @@
+---
+icon: key
+title: Get Your API Key
+description: Learn how to obtain and use your ChainPatrol API key
+---
+
+## Getting Your API Key
+
+To access ChainPatrol's APIs and services, you'll need an API key. Here's how to get one:
+
+1. Go to your [Organization Dashboard](https://app.chainpatrol.io/admin)
+2. Navigate to the organization's `settings` page
+3. Navigate to `API keys`
+4. Click on `Create Key` and pick your settings
+
+## Types of API Keys
+
+### Organization vs User Keys
+
+- **Organization Keys**: Grant organization-level attribution
+
+  - Reports submitted with organization keys are attributed to a machine user
+  - Best for automated systems, integrations, and organization-level workflows
+  - Ideal for bots, automated reporting systems, and CI/CD pipelines
+
+- **User Keys**: Grant user-level attribution
+  - Reports submitted with user keys are attributed directly to your user account
+  - Best for personal use and when individual accountability is needed
+  - Ideal for manual reporting and personal tooling
+
+### Test vs Live Keys
+
+ChainPatrol provides both test and live environments to help you develop and test your integration safely.
+
+- **Test Keys**: For distinguishing when being used in development and testing
+
+  - Use in development environments
+  - **These keys still affect production data**
+
+- **Live Keys**: For production use
+  - Use in production environments
+  - Affects real data and reports
+  - Required for actual threat detection and reporting
+
+## API Key Format
+
+ChainPatrol API keys follow this format:
+
+- Always start with the prefix `cp_`
+- Are unique to your organization
+- Should be kept secure and not shared publicly
+
+## Using Your API Key
+
+When making API requests to ChainPatrol, include your API key in the request headers:
+
+```typescript
+const response = await fetch("https://app.chainpatrol.io/api/v2/asset/check", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-KEY": "YOUR_API_KEY",
+  },
+  body: JSON.stringify({
+    type: "URL",
+    content: "example.com",
+  }),
+});
+```
+
+## Support
+
+If you need help with your API key or have any questions, you can:
+
+- Email us at [engineering@chainpatrol.io](mailto:engineering@chainpatrol.io)
+- Visit our [documentation](/external-api/overview) for more information about our APIs
