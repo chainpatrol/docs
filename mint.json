@@ -85,12 +85,12 @@
     {
       "group": "Integration",
       "pages": [
-        "wallet-integration/guide",
-        "wallet-integration/check-vs-list",
-        "wallet-integration/proxy",
-        "wallet-integration/webhooks",
-        "wallet-integration/zapier",
-        "wallet-integration/vercel",
+        "integration/guide",
+        "integration/check-vs-list",
+        "integration/proxy",
+        "integration/webhooks",
+        "integration/zapier",
+        "integration/vercel",
         "security-integration/canary-tokens",
         "security-integration/submit-assets-for-scanning"
       ]
