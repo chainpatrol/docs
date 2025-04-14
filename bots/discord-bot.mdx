@@ -35,19 +35,39 @@ to your organization on ChainPatrol.
 To check that the bot is working, you can use the `/setup status` command to see if the bot is
 connected to your ChainPatrol organization.
 
+## Features
+
+### Scam Reports
+
+The bot allows server members to submit scam reports directly to ChainPatrol.
+
+#### Usage
+
+Once the bot is added to your server, you can use the following commands:
+
+- `/report <url>` - Submit a scam report for the given URL
+- `/check <url>` - Check if the given URL is a scam
+
+#### Example
+
+Here is an example of how to use the bot to submit a scam report:
+
+![Example of using the ChainPatrol Discord bot](/images/discord-bot-prompt.png)
+![Loading of the ChainPatrol Discord bot](/images/discord-bot-loading.png)
+![Success of the ChainPatrol Discord bot](/images/discord-bot-success.png)
+
 ### Reports Feed
 
-You can create a feed channel of all reports to your organization. To do this,
-create a new channel on your Discord server and name it something like `chainpatrol-reports`. This is where the
-bot will post messages when a new scam report is submitted.
+You can create a feed channel of all reports to your organization. This feature allows you to see all scam reports submitted through the bot in a dedicated channel.
 
-Then, you can use the following command to link the channel to your ChainPatrol organization:
+#### Setup
 
-```
-/setup feed <channel>
-```
-
-Follow the instructions in the bot's response to link the channel to your ChainPatrol organization.
+1. Create a new channel on your Discord server and name it something like `chainpatrol-reports`
+2. Use the following command to link the channel to your ChainPatrol organization:
+   ```
+   /setup feed <channel>
+   ```
+3. Follow the instructions in the bot's response to link the channel to your ChainPatrol organization
 
 ![Image showing the Discord bot's response to the setup feed command](/images/discord-bot-feed-setup.png)
 
@@ -61,11 +81,11 @@ in the feed channel with the scam report shortly after submitting.
 
 ![Example of the feed channel](/images/discord-bot-feed.png)
 
-## Link Monitoring
+### Link Monitoring
 
 ChainPatrol can monitor your Discord channels for suspicious links and automatically take action when they are detected. This feature helps protect your community from scams and malicious content.
 
-### Setup
+#### Setup
 
 To enable link monitoring in a channel:
 
@@ -78,7 +98,7 @@ To enable link monitoring in a channel:
   enable link monitoring
 </Tip>
 
-### How it Works
+#### How it Works
 
 Once enabled, ChainPatrol will:
 
@@ -97,7 +117,7 @@ Once enabled, ChainPatrol will:
   protecting against.
 </Tip>
 
-### Response Actions
+#### Response Actions
 
 When a suspicious link is detected, ChainPatrol can be configured to:
 
@@ -110,31 +130,11 @@ When a suspicious link is detected, ChainPatrol can be configured to:
   ChainPatrol dashboard
 </Tip>
 
-### Example
+#### Example
 
 Here's what happens when a suspicious link is detected:
 
 ![Example of link monitoring in action](/images/discord-bot-link-monitoring.png)
-
-## Usage
-
-Once the bot is added to your server, you can use the following commands:
-
-- `/report <url>` - Submit a scam report for the given URL
-- `/check <url>` - Check if the given URL is a scam
-
-<Tip>
-  Check out the [common issues section](/bots/discord-bot#common-issues) below
-  to ensure proper setup
-</Tip>
-
-## Example
-
-Here is an example of how to use the bot to submit a scam report:
-
-![Example of using the ChainPatrol Discord bot](/images/discord-bot-prompt.png)
-![Loading of the ChainPatrol Discord bot](/images/discord-bot-loading.png)
-![Success of the ChainPatrol Discord bot](/images/discord-bot-success.png)
 
 ## Common Issues
 
