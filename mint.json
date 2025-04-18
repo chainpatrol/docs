@@ -118,6 +118,10 @@
       "pages": ["external-api/report-create"]
     },
     {
+      "group": "Metrics",
+      "pages": ["external-api/organization-metrics"]
+    },
+    {
       "group": "@chainpatrol/sdk",
       "pages": ["sdk/overview", "sdk/quickstart"]
     },
