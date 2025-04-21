@@ -25,7 +25,7 @@ curl -X POST 'https://api.chainpatrol.io/public/getOrganizationMetrics' \
   -H 'Authorization: Bearer your_api_key' \
   -H 'Content-Type: application/json' \
   -d '{
-    "organizationSlugs": ["your-org"],
+    "organizationSlug": "your-org",
     "startDate": "2024-01-01T00:00:00Z",
     "endDate": "2024-03-01T00:00:00Z"
   }'
@@ -63,7 +63,7 @@ async function fetchOrganizationMetrics(organizationSlug, startDate, endDate) {
         Authorization: "Bearer YOUR_API_KEY_HERE",
       },
       body: JSON.stringify({
-        organizationSlugs: [organizationSlug],
+        organizationSlug,
         startDate,
         endDate,
       }),
@@ -112,7 +112,7 @@ async function fetchOrganizationMetrics(
         Authorization: "Bearer YOUR_API_KEY_HERE",
       },
       body: JSON.stringify({
-        organizationSlugs: [organizationSlug],
+        organizationSlug,
         startDate,
         endDate,
       }),
@@ -148,7 +148,7 @@ def fetch_organization_metrics(
             "Authorization": "Bearer YOUR_API_KEY_HERE",
         },
         json={
-            "organizationSlugs": [organization_slug],
+            "organizationSlug": organization_slug,
             "startDate": start_date,
             "endDate": end_date,
         },
@@ -173,11 +173,11 @@ except Exception as error:
 
 ### Request Parameters
 
-| Parameter         | Type     | Required | Description                                  |
-| ----------------- | -------- | -------- | -------------------------------------------- |
-| organizationSlugs | string[] | Yes      | Array containing a single organization slug  |
-| startDate         | Date     | No       | Start date for metrics (default: all time)   |
-| endDate           | Date     | No       | End date for metrics (default: current date) |
+| Parameter        | Type   | Required | Description                                  |
+| ---------------- | ------ | -------- | -------------------------------------------- |
+| organizationSlug | string | Yes      | Organization slug to query                   |
+| startDate        | Date   | No       | Start date for metrics (default: all time)   |
+| endDate          | Date   | No       | End date for metrics (default: current date) |
 
 ### Response Format
 
