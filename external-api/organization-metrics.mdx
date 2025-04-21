@@ -4,9 +4,8 @@ openapi: "POST /public/getOrganizationMetrics"
 ---
 
 <Warning>
-  This API requires an API key with appropriate permissions. Regular
-  organization API keys can only access metrics for their associated
-  organizations.
+  This API requires an API key with appropriate permissions. See [API Key
+  Documentation](https://chainpatrol.io/docs/general/api-key) for more details.
 </Warning>
 
 ## Quick Start
@@ -32,12 +31,29 @@ curl -X POST 'https://api.chainpatrol.io/public/getOrganizationMetrics' \
   }'
 ```
 
+## Access Control
+
+The API enforces strict access control based on your API key type:
+
+1. **Organization API Keys**:
+
+   - Can only access metrics for their associated organization
+   - Must match the `organizationSlug` exactly
+   - Example: An API key for "acme-org" can only query metrics for "acme-org"
+
+2. **User API Keys**:
+   - Can access metrics for any organization where the user is a member
+   - Requires the user to be an active member of the queried organization
+   - Example: A user who is a member of both "acme-org" and "beta-org" can query metrics for both organizations
+
+If you attempt to query an organization without proper permissions, you will receive a 403 Forbidden error with the message: "You do not have permission to access metrics for this organization"
+
 ## Example Implementation
 
 <CodeGroup>
 
 ```javascript JavaScript
-async function fetchOrganizationMetrics(organizationSlugs, startDate, endDate) {
+async function fetchOrganizationMetrics(organizationSlug, startDate, endDate) {
   const response = await fetch(
     "https://api.chainpatrol.io/public/getOrganizationMetrics",
     {
@@ -47,7 +63,7 @@ async function fetchOrganizationMetrics(organizationSlugs, startDate, endDate) {
         Authorization: "Bearer YOUR_API_KEY_HERE",
       },
       body: JSON.stringify({
-        organizationSlugs,
+        organizationSlugs: [organizationSlug],
         startDate,
         endDate,
       }),
@@ -58,7 +74,7 @@ async function fetchOrganizationMetrics(organizationSlugs, startDate, endDate) {
 
 // Example usage
 fetchOrganizationMetrics(
-  ["your-org"],
+  "your-org",
   "2024-01-01T00:00:00Z",
   "2024-03-01T00:00:00Z"
 )
@@ -68,7 +84,7 @@ fetchOrganizationMetrics(
 
 ```typescript TypeScript
 interface OrganizationMetrics {
-  combinedMetrics: {
+  metrics: {
     reportsCount: number;
     threatsBlockedCount: number;
     threatsBlockedByAssetType: Array<{
@@ -80,24 +96,10 @@ interface OrganizationMetrics {
     totalTakedownsFiledCount: number;
     totalTakedownsCompletedCount: number;
   };
-  perOrgMetrics: {
-    [organizationSlug: string]: {
-      reportsCount: number;
-      threatsBlockedCount: number;
-      threatsBlockedByAssetType: Array<{
-        assetType: string;
-        count: number;
-      }>;
-      domainsBlockedCount: number;
-      activeThreatsCount: number;
-      totalTakedownsFiledCount: number;
-      totalTakedownsCompletedCount: number;
-    };
-  };
 }
 
 async function fetchOrganizationMetrics(
-  organizationSlugs: string[],
+  organizationSlug: string,
   startDate?: string,
   endDate?: string
 ): Promise<OrganizationMetrics> {
@@ -110,7 +112,7 @@ async function fetchOrganizationMetrics(
         Authorization: "Bearer YOUR_API_KEY_HERE",
       },
       body: JSON.stringify({
-        organizationSlugs,
+        organizationSlugs: [organizationSlug],
         startDate,
         endDate,
       }),
@@ -121,7 +123,7 @@ async function fetchOrganizationMetrics(
 
 // Example usage
 fetchOrganizationMetrics(
-  ["your-org"],
+  "your-org",
   "2024-01-01T00:00:00Z",
   "2024-03-01T00:00:00Z"
 )
@@ -131,11 +133,11 @@ fetchOrganizationMetrics(
 
 ```python Python
 import requests
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 from datetime import datetime
 
 def fetch_organization_metrics(
-    organization_slugs: List[str],
+    organization_slug: str,
     start_date: Optional[str] = None,
     end_date: Optional[str] = None
 ) -> Dict:
@@ -146,7 +148,7 @@ def fetch_organization_metrics(
             "Authorization": "Bearer YOUR_API_KEY_HERE",
         },
         json={
-            "organizationSlugs": organization_slugs,
+            "organizationSlugs": [organization_slug],
             "startDate": start_date,
             "endDate": end_date,
         },
@@ -156,7 +158,7 @@ def fetch_organization_metrics(
 # Example usage
 try:
     metrics = fetch_organization_metrics(
-        ["your-org"],
+        "your-org",
         "2024-01-01T00:00:00Z",
         "2024-03-01T00:00:00Z"
     )
@@ -173,7 +175,7 @@ except Exception as error:
 
 | Parameter         | Type     | Required | Description                                  |
 | ----------------- | -------- | -------- | -------------------------------------------- |
-| organizationSlugs | string[] | Yes      | Array of organization slugs to query         |
+| organizationSlugs | string[] | Yes      | Array containing a single organization slug  |
 | startDate         | Date     | No       | Start date for metrics (default: all time)   |
 | endDate           | Date     | No       | End date for metrics (default: current date) |
 
@@ -181,46 +183,34 @@ except Exception as error:
 
 ```typescript
 {
-  combinedMetrics: {
-    reportsCount: number;                    // Total number of reports
-    threatsBlockedCount: number;             // Total number of threats blocked
-    threatsBlockedByAssetType: Array<{       // Threats blocked grouped by asset type
+  metrics: {
+    reportsCount: number; // Total number of reports
+    threatsBlockedCount: number; // Total number of threats blocked
+    threatsBlockedByAssetType: Array<{
+      // Threats blocked grouped by asset type
       assetType: string;
       count: number;
     }>;
-    domainsBlockedCount: number;             // Number of domains blocked
-    activeThreatsCount: number;              // Number of active threats
-    totalTakedownsFiledCount: number;        // Total number of takedowns filed
-    totalTakedownsCompletedCount: number;    // Total number of completed takedowns
-  };
-  perOrgMetrics: {                           // Same metrics as above, but per organization
-    [organizationSlug: string]: {
-      reportsCount: number;
-      threatsBlockedCount: number;
-      threatsBlockedByAssetType: Array<{
-        assetType: string;
-        count: number;
-      }>;
-      domainsBlockedCount: number;
-      activeThreatsCount: number;
-      totalTakedownsFiledCount: number;
-      totalTakedownsCompletedCount: number;
-    };
-  };
+    domainsBlockedCount: number; // Number of domains blocked
+    activeThreatsCount: number; // Number of active threats
+    totalTakedownsFiledCount: number; // Total number of takedowns filed
+    totalTakedownsCompletedCount: number; // Total number of completed takedowns
+  }
 }
 ```
 
 ## Error Handling
 
-| Status Code               | Description                                                           |
-| ------------------------- | --------------------------------------------------------------------- |
-| 401 Unauthorized          | Invalid or missing API key                                            |
-| 403 Forbidden             | API key does not have permission to query the requested organizations |
-| 500 Internal Server Error | Server error occurred while processing the request                    |
+| Status Code               | Description                                                          |
+| ------------------------- | -------------------------------------------------------------------- |
+| 401 Unauthorized          | Invalid or missing API key                                           |
+| 403 Forbidden             | API key does not have permission to query the requested organization |
+| 500 Internal Server Error | Server error occurred while processing the request                   |
 
 ## Notes
 
 - If no date range is provided, metrics will be returned for all time
-- The response includes both combined metrics across all requested organizations and per-organization breakdowns
-- Special organization API keys (Sui, Consensys) can query metrics for any organization
-- Regular organization API keys can only query their own organization's metrics
+- The API only returns metrics for a single organization per request
+- Organization API keys can only access metrics for their associated organization
+- User API keys can access metrics for any organization where the user is a member
+- To query multiple organizations, you must use a user API key and ensure the user is a member of all organizations you wish to query
