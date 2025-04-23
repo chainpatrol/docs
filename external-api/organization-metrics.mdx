@@ -92,7 +92,6 @@ interface OrganizationMetrics {
       count: number;
     }>;
     domainsBlockedCount: number;
-    activeThreatsCount: number;
     totalTakedownsFiledCount: number;
     totalTakedownsCompletedCount: number;
   };
@@ -192,7 +191,6 @@ except Exception as error:
       count: number;
     }>;
     domainsBlockedCount: number; // Number of domains blocked
-    activeThreatsCount: number; // Number of active threats
     totalTakedownsFiledCount: number; // Total number of takedowns filed
     totalTakedownsCompletedCount: number; // Total number of completed takedowns
   }
