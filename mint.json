@@ -118,6 +118,10 @@
       "pages": ["external-api/report-create"]
     },
     {
+      "group": "Disputes",
+      "pages": ["external-api/dispute-create"]
+    },
+    {
       "group": "Metrics",
       "pages": ["external-api/organization-metrics"]
     },
