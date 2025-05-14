@@ -100,6 +100,10 @@
       "pages": ["bots/discord-bot", "bots/slack-bot", "bots/telegram-bot"]
     },
     {
+      "group": "Extensions",
+      "pages": ["extensions/chrome-extension"]
+    },
+    {
       "group": "External API",
       "pages": ["external-api/overview", "external-api/authentication"]
     },
