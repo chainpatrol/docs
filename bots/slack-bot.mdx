@@ -118,6 +118,81 @@ For a given message, click on the kebab menu and then select the `Create Report`
   </Card>
 </CardGroup>
 
+## Threats Feed Configuration
+
+In addition to submitting reports, the ChainPatrol Slack Bot can also send automated notifications about threats and reports to your Slack channels. This creates a real-time threats feed that keeps your team informed about security activity.
+
+<Frame>![Blocklist Update Example](/images/blocklist-update.png)</Frame>
+
+### Setting Up Notification Settings
+
+<Steps>
+  <Step title="Create and Configure Notification Channel">
+    Create a dedicated channel in your Slack workspace for receiving ChainPatrol threat notifications. This channel will serve as your organization's security feed for real-time threat intelligence.
+
+    <Frame>![Add Bot to Channel](/images/add-to-channel.png)</Frame>
+
+    <Warning>
+      **Important**: You must add the ChainPatrol bot to this channel for notifications to work properly. The bot cannot automatically join channels for privacy and security reasons.
+    </Warning>
+
+  </Step>
+  <Step title="Provide Channel Information to ChainPatrol">
+    Contact ChainPatrol staff with your notification channel's Channel ID to complete the integration setup. The Channel ID is a unique identifier that begins with "C" and can be found in your channel's details.
+
+    <Tip>
+      To find your Channel ID, right-click on the channel name and select "View channel details" or check the URL when viewing the channel in your browser.
+    </Tip>
+
+  </Step>
+  <Step title="Access Integration Settings">
+    Navigate to your ChainPatrol dashboard and go to **Settings** > **Integrations** to configure your notification preferences.
+  </Step>
+  <Step title="Configure Notification Preferences">
+    Within the Integrations tab, locate the **Notification Settings** section to customize which types of security alerts your team receives.
+
+    <Frame>![Notification Settings](/images/notification-settings.png)</Frame>
+
+  </Step>
+  <Step title="Select Notification Types">
+    Choose which notifications you want to receive for your organization's reports and monitored assets. Each option serves different security monitoring needs as detailed below.
+  </Step>
+</Steps>
+
+### Notification Options
+
+<CardGroup cols={1}>
+  <Card title="New Reports for Blocked Assets" icon="shield-exclamation">
+    Receive notifications when new reports are created for assets that are
+    already on your blocklist. This helps you track ongoing threats and see when
+    community members are encountering known malicious content.
+  </Card>
+  <Card title="New Reports for Allowed Assets" icon="shield-check">
+    Receive notifications when new reports are created for assets that are
+    currently on your allowlist. This can help identify potential false
+    positives or assets that may need review if they're receiving multiple
+    reports.
+  </Card>
+  <Card title="Assets Added to Blocklist" icon="shield-slash">
+    Receive notifications when assets are confirmed as threats and added to the
+    blocklist. **This is the most critical notification type** - when you see
+    this alert, it means ChainPatrol's systems have confirmed a threat and are
+    actively working to process it for takedown and blocklist distribution.
+  </Card>
+</CardGroup>
+
+<Tip>
+  **Recommended Configuration**: We recommend enabling all three notification
+  types for comprehensive threat monitoring. However, if you want to focus on
+  the most critical alerts, option 3 (Assets Added to Blocklist) provides
+  notifications specifically for confirmed threats rather than just reports.
+</Tip>
+
+<Warning>
+  Notification settings only take effect if you have Discord or Slack reporting
+  feeds enabled through the bot integration.
+</Warning>
+
 ## Privacy
 
 The bot does not collect any personal information. It only collects the URL and the Slack ID of the user that submitted the report (in case a moderator needs more information about why the URL is a scam). The bot does not store any sensitive information about the workspace it is added to.
