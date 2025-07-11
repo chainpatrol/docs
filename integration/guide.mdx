@@ -10,7 +10,7 @@ description: In this guide, you'll learn how to integrate ChainPatrol API into y
 This guide assumes you're creating a wallet using a web browser extension, but the same principles apply
 to integrate our APIs for Mobile or Desktop wallets.
 
-[Let us know](mailto:nikita@chainpatrol.io) if you'd like to see a guide for a specific
+[Let us know](mailto:support@chainpatrol.io) if you'd like to see a guide for a specific
 use-case that's not covered here.
 
 </Note>
@@ -65,7 +65,7 @@ about optional permissions [here](https://developer.chrome.com/docs/extensions/r
 Then you can listen for the `onBeforeNavigate` event in your Background script:
 
 ```ts
-import browser from 'webextension-polyfill';
+import browser from "webextension-polyfill";
 
 browser.webNavigation.onBeforeNavigate.addListener(async function (details) {
   // Filter out subframes and any navigation events that don't have a URL
@@ -101,12 +101,12 @@ about optional permissions [here](https://developer.chrome.com/docs/extensions/r
 Then you can listen for the `onUpdated` event in your Background script:
 
 ```ts
-import browser from 'webextension-polyfill';
+import browser from "webextension-polyfill";
 
 browser.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
   // Filter out any tab change events that aren't complete, aren't for the
   // active tab, or tabs that don't have a URL
-  if (changeInfo.status !== 'complete' || !tab.active || !tab.url) {
+  if (changeInfo.status !== "complete" || !tab.active || !tab.url) {
     return;
   }
 
@@ -162,7 +162,7 @@ website is malicious. This can be done using message passing:
 const url = window.location.href;
 
 // send the URL to the background script
-browser.runtime.sendMessage({ type: 'CHAINPATROL_CHECK_URL', url });
+browser.runtime.sendMessage({ type: "CHAINPATROL_CHECK_URL", url });
 ```
 
 ```ts
@@ -170,7 +170,7 @@ browser.runtime.sendMessage({ type: 'CHAINPATROL_CHECK_URL', url });
 
 // listen for the message from the content script
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'CHAINPATROL_CHECK_URL') {
+  if (request.type === "CHAINPATROL_CHECK_URL") {
     // do something with request.url
   }
 });
@@ -185,20 +185,20 @@ with the ChainPatrol API.
 // check if a URL is blocked
 export const checkUrl = async (url: string) => {
   const response = await fetch(
-    'https://app.chainpatrol.io/api/v2/asset/check',
+    "https://app.chainpatrol.io/api/v2/asset/check",
     {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': 'YOUR API KEY',
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR API KEY",
       },
-      body: JSON.stringify({ type: 'URL', content: url }),
+      body: JSON.stringify({ type: "URL", content: url }),
     }
   );
 
   const data = await response.json();
 
-  return data.status === 'BLOCKED';
+  return data.status === "BLOCKED";
 };
 ```
 
@@ -248,7 +248,7 @@ and add the domain to a list of domains to ignore.
 ```ts
 // In your extension's background script
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'CHAINPATROL_CONTINUE_AT_OWN_RISK') {
+  if (request.type === "CHAINPATROL_CONTINUE_AT_OWN_RISK") {
     addToIgnoreList(request.domain);
   }
 });
@@ -296,7 +296,7 @@ We can display the warning by reading the `originUrl` query parameter:
 
 ```js
 const urlParams = new URLSearchParams(window.location.search);
-const originUrl = urlParams.get('originUrl');
+const originUrl = urlParams.get("originUrl");
 ```
 
 and displaying it on the page.

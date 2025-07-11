@@ -4,7 +4,7 @@
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg",
-    "href": "https://chainpatrol.io"
+    "href": "https://chainpatrol.com"
   },
   "favicon": "/favicon.svg",
   "theme": "venus",
@@ -46,11 +46,11 @@
   "topbarLinks": [
     {
       "name": "Blog",
-      "url": "https://chainpatrol.io/blog"
+      "url": "https://chainpatrol.com/blog"
     },
     {
       "name": "Changelog",
-      "url": "https://chainpatrol.io/changelog"
+      "url": "https://chainpatrol.com/changelog"
     }
   ],
   "tabs": [
