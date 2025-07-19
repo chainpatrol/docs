@@ -207,6 +207,10 @@
       "destination": "/general/false-positives"
     },
     {
+      "source": "/wallet-integration/check-vs-list",
+      "destination": "/integration/check-vs-list"
+    },
+    {
       "source": "/general/discord-bot",
       "destination": "/bots/discord-bot"
     }
