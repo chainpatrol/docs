@@ -216,7 +216,7 @@
     },
     {
       "source": "/api",
-      "destination": "/external-api/overview"
+      "destination": "/external-api"
     }
   ],
   "backgroundImage": "/background.png",
