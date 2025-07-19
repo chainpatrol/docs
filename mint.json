@@ -213,6 +213,10 @@
     {
       "source": "/general/discord-bot",
       "destination": "/bots/discord-bot"
+    },
+    {
+      "source": "/api",
+      "destination": "/external-api/overview"
     }
   ],
   "backgroundImage": "/background.png",
