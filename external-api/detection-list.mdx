@@ -12,19 +12,20 @@ openapi: "POST /detection/list"
 
 ### Authentication
 
-Include your API key in the `Authorization` header:
+Include your API key in the `X-API-KEY` header:
 
 ```bash
-Authorization: Bearer your_api_key
+X-API-KEY: <api-key>
 ```
 
 ### Example Request
 
 ```bash
-curl -X POST 'https://api.chainpatrol.io/detection/list' \
-  -H 'Authorization: Bearer your_api_key' \
-  -H 'Content-Type: application/json' \
-  -d '{
+curl --request POST \
+  --url https://api.chainpatrol.io/detection/list \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
     "slug": "your-org",
     "limit": 50,
     "query": "phishing",
@@ -264,7 +265,7 @@ async function fetchDetectionResults(params) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer YOUR_API_KEY_HERE",
+      "X-API-KEY": "<api-key>",
     },
     body: JSON.stringify(params),
   });
@@ -342,7 +343,7 @@ async function fetchDetectionResults(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer YOUR_API_KEY_HERE",
+      "X-API-KEY": "<api-key>",
     },
     body: JSON.stringify(params),
   });
