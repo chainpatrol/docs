@@ -1,0 +1,385 @@
+---
+title: List Threat Detection Results
+openapi: "POST /detection/list"
+---
+
+<Warning>
+  This API requires an API key with appropriate permissions. See [API Key
+  Documentation](https://chainpatrol.com/docs/general/api-key) for more details.
+</Warning>
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `Authorization` header:
+
+```bash
+Authorization: Bearer your_api_key
+```
+
+### Example Request
+
+```bash
+curl -X POST 'https://api.chainpatrol.io/detection/list' \
+  -H 'Authorization: Bearer your_api_key' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "slug": "your-org",
+    "limit": 50,
+    "query": "phishing",
+    "filters": [
+      {
+        "property": "source",
+        "operator": "in",
+        "value": ["EXTERNAL", "GOOGLE_SEARCH"]
+      },
+      {
+        "property": "assetStatus",
+        "operator": "in",
+        "value": ["BLOCKED"]
+      }
+    ]
+  }'
+```
+
+## Request Schema
+
+### Request Body
+
+| Field       | Type       | Required | Default | Constraints      | Description                                        |
+| ----------- | ---------- | -------- | ------- | ---------------- | -------------------------------------------------- |
+| `slug`      | `string`   | ✅ Yes   | -       | -                | Organization slug identifier                       |
+| `cursor`    | `number`   | ❌ No    | -       | -                | Pagination cursor from previous response           |
+| `limit`     | `number`   | ❌ No    | `50`    | Min: 1, Max: 100 | Number of results to return                        |
+| `filters`   | `Filter[]` | ❌ No    | `[]`    | -                | Array of filter objects                            |
+| `query`     | `string`   | ❌ No    | `""`    | -                | Search query for threat content (case-insensitive) |
+| `startDate` | `string`   | ❌ No    | -       | ISO 8601 format  | Start date for filtering results                   |
+| `endDate`   | `string`   | ❌ No    | -       | ISO 8601 format  | End date for filtering results                     |
+
+### Filter Schema
+
+Each filter object must have the following structure:
+
+| Field      | Type       | Required | Description                         |
+| ---------- | ---------- | -------- | ----------------------------------- |
+| `property` | `string`   | ✅ Yes   | Filter property (see options below) |
+| `operator` | `string`   | ✅ Yes   | `"in"` or `"notIn"`                 |
+| `value`    | `string[]` | ✅ Yes   | Array of values to filter by        |
+
+#### Filter Properties
+
+**1. Source Filter (`"source"`)**
+
+```typescript
+{
+  "property": "source",
+  "operator": "in" | "notIn",
+  "value": ThreatDetectionSourceKey[]
+}
+```
+
+<Accordion title="Available Source Values">
+
+- `"ASSET_CHECK"` - Asset verification checks
+- `"BING_SEARCH"` - Bing search results
+- `"CERTSTREAM"` - Certificate transparency logs
+- `"DNS_TWIST"` - DNS twist detection
+- `"DUCK_DUCK_GO_SEARCH"` - DuckDuckGo search results
+- `"EXTERNAL"` - External threat submissions
+- `"GOOGLE_SEARCH"` - Google search results
+- `"GUESTBOOK"` - Guestbook submissions
+- `"MEDIUM_TAG_RSS"` - Medium RSS feeds
+- `"MOZILLA_ADDON_SEARCH"` - Mozilla addon searches
+- `"REDDIT_SUBREDDIT_SEARCH"` - Reddit subreddit searches
+- `"TWITTER"` - Twitter monitoring
+- `"TWITTER_POST_SEARCH"` - Twitter post searches
+- `"TWITTER_SEARCH"` - Twitter search results
+- `"URLSCAN"` - URLScan.io results
+- `"YAHOO_SEARCH"` - Yahoo search results
+- `"YOUTUBE_SEARCH"` - YouTube search results
+
+</Accordion>
+
+**2. Asset Status Filter (`"assetStatus"`)**
+
+```typescript
+{
+  "property": "assetStatus",
+  "operator": "in" | "notIn",
+  "value": AssetStatus[]
+}
+```
+
+**Available Asset Status Values:**
+
+- `"UNKNOWN"` - Status not yet determined
+- `"ALLOWED"` - Asset is legitimate/allowed
+- `"BLOCKED"` - Asset is blocked/malicious
+
+**3. Asset Type Filter (`"assetType"`)**
+
+```typescript
+{
+  "property": "assetType",
+  "operator": "in" | "notIn",
+  "value": AssetType[]
+}
+```
+
+<Accordion title="Available Asset Type Values">
+
+- `"URL"` - Website URLs
+- `"PAGE"` - Web pages
+- `"ADDRESS"` - Blockchain addresses
+- `"TWITTER"` - Twitter profiles/posts
+- `"FACEBOOK"` - Facebook profiles/pages
+- `"YOUTUBE"` - YouTube channels/videos
+- `"REDDIT"` - Reddit posts/subreddits
+- `"TELEGRAM"` - Telegram channels/groups
+- `"DISCORD"` - Discord servers (deprecated)
+- `"DISCORD_USER"` - Discord users
+- `"LINKEDIN"` - LinkedIn profiles
+- `"INSTAGRAM"` - Instagram profiles
+- `"THREADS"` - Threads profiles
+- `"TIKTOK"` - TikTok profiles
+- `"MEDIUM"` - Medium articles/profiles
+- `"EMAIL"` - Email addresses
+- `"WHATSAPP"` - WhatsApp contacts
+- `"GOOGLE_APP_STORE"` - Google Play Store apps
+- `"APPLE_APP_STORE"` - Apple App Store apps
+- `"AMAZON_APP_STORE"` - Amazon App Store apps
+- `"MICROSOFT_APP_STORE"` - Microsoft Store apps
+- `"CHROME_WEB_STORE"` - Chrome extensions
+- `"MOZILLA_ADDONS"` - Firefox addons
+- `"OPERA_ADDONS"` - Opera addons
+- `"PATREON"` - Patreon profiles
+- `"OPENSEA"` - OpenSea collections/profiles
+- `"FARCASTER"` - Farcaster profiles
+- `"IPFS"` - IPFS hashes
+- `"GOOGLE_FORM"` - Google Forms
+- `"QUORA"` - Quora profiles/posts
+- `"GITHUB"` - GitHub repositories/profiles
+- `"TEACHABLE"` - Teachable courses
+- `"SUBSTACK"` - Substack publications
+- `"DEBANK"` - DeBank profiles
+- `"TAWK_TO"` - Tawk.to chat widgets
+- `"JOTFORM"` - JotForm forms
+- `"PRIMAL"` - Primal profiles
+- `"BLUESKY"` - Bluesky profiles
+- `"SNAPCHAT"` - Snapchat profiles
+- `"DESO"` - DeSo profiles
+
+</Accordion>
+
+## Response Schema
+
+### Response Body
+
+```typescript
+{
+  items: DetectionResult[];
+  nextCursor?: number;
+}
+```
+
+### Detection Result Object
+
+Each item in the `items` array has the following structure:
+
+| Field           | Type          | Description                                               |
+| --------------- | ------------- | --------------------------------------------------------- |
+| `id`            | `number`      | Unique threat detection result identifier                 |
+| `threatContent` | `string`      | Content that was detected as threatening                  |
+| `source`        | `string`      | Source of the threat detection (ThreatDetectionSourceKey) |
+| `createdAt`     | `string`      | ISO 8601 timestamp of when threat was detected            |
+| `asset`         | `AssetObject` | Associated asset information                              |
+
+### Asset Object
+
+| Field     | Type     | Description                                   |
+| --------- | -------- | --------------------------------------------- |
+| `id`      | `number` | Unique asset identifier                       |
+| `content` | `string` | Asset content (URL, address, username, etc.)  |
+| `type`    | `string` | Asset type (AssetType enum value)             |
+| `status`  | `string` | Current asset status (AssetStatus enum value) |
+
+### Complete Response Example
+
+```json
+{
+  "items": [
+    {
+      "id": 12345,
+      "threatContent": "Phishing site detected mimicking legitimate service",
+      "source": "GOOGLE_SEARCH",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "asset": {
+        "id": 67890,
+        "content": "https://fake-site.com",
+        "type": "URL",
+        "status": "BLOCKED"
+      }
+    },
+    {
+      "id": 12346,
+      "threatContent": "Suspicious crypto address found in scam report",
+      "source": "EXTERNAL",
+      "createdAt": "2024-01-15T09:15:00Z",
+      "asset": {
+        "id": 67891,
+        "content": "0x1234567890123456789012345678901234567890",
+        "type": "ADDRESS",
+        "status": "BLOCKED"
+      }
+    }
+  ],
+  "nextCursor": 12347
+}
+```
+
+## Access Control
+
+The API enforces strict access control based on your API key:
+
+1. **Organization API Keys**:
+
+   - Can only access detection results for their associated organization
+   - Must match the `slug` parameter exactly
+   - Example: An API key for "acme-org" can only query results for "acme-org"
+
+2. **User API Keys**:
+   - Can access detection results for any organization where the user is a member
+   - Requires the user to be an active member of the queried organization
+
+If you attempt to query an organization without proper permissions, you will receive a 403 Forbidden error with the message: "API key does not have access to this organization"
+
+## Example Implementation
+
+<CodeGroup>
+
+```javascript JavaScript
+async function fetchDetectionResults(params) {
+  const response = await fetch("https://api.chainpatrol.io/detection/list", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify(params),
+  });
+  return response.json();
+}
+
+// Example usage
+fetchDetectionResults({
+  slug: "your-org",
+  limit: 50,
+  query: "phishing",
+  filters: [
+    {
+      property: "assetStatus",
+      operator: "in",
+      value: ["BLOCKED"],
+    },
+    {
+      property: "assetType",
+      operator: "in",
+      value: ["URL", "ADDRESS"],
+    },
+  ],
+  startDate: "2024-01-01T00:00:00Z",
+  endDate: "2024-03-01T00:00:00Z",
+})
+  .then((data) => {
+    console.log("Detection results:", data.items);
+    console.log("Next cursor:", data.nextCursor);
+  })
+  .catch((error) => console.error("Error fetching results:", error));
+```
+
+```typescript TypeScript
+interface DetectionFilter {
+  property: "source" | "assetStatus" | "assetType";
+  operator: "in" | "notIn";
+  value: string[];
+}
+
+interface DetectionListParams {
+  slug: string;
+  cursor?: number;
+  limit?: number;
+  filters?: DetectionFilter[];
+  query?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+interface AssetObject {
+  id: number;
+  content: string;
+  type: string;
+  status: string;
+}
+
+interface DetectionResult {
+  id: number;
+  threatContent: string;
+  source: string;
+  createdAt: string;
+  asset: AssetObject;
+}
+
+interface DetectionListResponse {
+  items: DetectionResult[];
+  nextCursor?: number;
+}
+
+async function fetchDetectionResults(
+  params: DetectionListParams
+): Promise<DetectionListResponse> {
+  const response = await fetch("https://api.chainpatrol.io/detection/list", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify(params),
+  });
+  return response.json();
+}
+
+// Example usage
+fetchDetectionResults({
+  slug: "your-org",
+  limit: 50,
+  filters: [
+    {
+      property: "source",
+      operator: "in",
+      value: ["GOOGLE_SEARCH", "EXTERNAL"],
+    },
+    {
+      property: "assetStatus",
+      operator: "in",
+      value: ["BLOCKED"],
+    },
+  ],
+})
+  .then((data) => {
+    console.log(`Found ${data.items.length} detection results`);
+    data.items.forEach((item) => {
+      console.log(`Threat: ${item.threatContent}`);
+      console.log(`Asset: ${item.asset.content} (${item.asset.type})`);
+      console.log(`Status: ${item.asset.status}`);
+      console.log("---");
+    });
+
+    if (data.nextCursor) {
+      console.log("More results available with cursor:", data.nextCursor);
+    }
+  })
+  .catch((error) => console.error("Error fetching results:", error));
+```
+
+</CodeGroup>
