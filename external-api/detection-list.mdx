@@ -51,7 +51,7 @@ curl --request POST \
 | Field       | Type       | Required | Default | Constraints      | Description                                        |
 | ----------- | ---------- | -------- | ------- | ---------------- | -------------------------------------------------- |
 | `slug`      | `string`   | ✅ Yes   | -       | -                | Organization slug identifier                       |
-| `cursor`    | `number`   | ❌ No    | -       | -                | Pagination cursor from previous response           |
+| `cursor`    | `string`   | ❌ No    | -       | -                | Pagination cursor from previous response           |
 | `limit`     | `number`   | ❌ No    | `50`    | Min: 1, Max: 100 | Number of results to return                        |
 | `filters`   | `Filter[]` | ❌ No    | `[]`    | -                | Array of filter objects                            |
 | `query`     | `string`   | ❌ No    | `""`    | -                | Search query for threat content (case-insensitive) |
@@ -179,14 +179,14 @@ Each filter object must have the following structure:
 
 ```typescript
 {
-  items: DetectionResult[];
-  nextCursor?: number;
+  detections: DetectionResult[];
+  next_page: string | null;
 }
 ```
 
 ### Detection Result Object
 
-Each item in the `items` array has the following structure:
+Each item in the `detections` array has the following structure:
 
 | Field           | Type          | Description                                               |
 | --------------- | ------------- | --------------------------------------------------------- |
@@ -209,7 +209,7 @@ Each item in the `items` array has the following structure:
 
 ```json
 {
-  "items": [
+  "detections": [
     {
       "id": 12345,
       "threatContent": "Phishing site detected mimicking legitimate service",
@@ -235,7 +235,7 @@ Each item in the `items` array has the following structure:
       }
     }
   ],
-  "nextCursor": 12347
+  "next_page": "12347"
 }
 ```
 
@@ -293,8 +293,8 @@ fetchDetectionResults({
   endDate: "2024-03-01T00:00:00Z",
 })
   .then((data) => {
-    console.log("Detection results:", data.items);
-    console.log("Next cursor:", data.nextCursor);
+    console.log("Detection results:", data.detections);
+    console.log("Next page:", data.next_page);
   })
   .catch((error) => console.error("Error fetching results:", error));
 ```
@@ -308,7 +308,7 @@ interface DetectionFilter {
 
 interface DetectionListParams {
   slug: string;
-  cursor?: number;
+  cursor?: string;
   limit?: number;
   filters?: DetectionFilter[];
   query?: string;
@@ -332,8 +332,8 @@ interface DetectionResult {
 }
 
 interface DetectionListResponse {
-  items: DetectionResult[];
-  nextCursor?: number;
+  detections: DetectionResult[];
+  next_page: string | null;
 }
 
 async function fetchDetectionResults(
@@ -368,16 +368,16 @@ fetchDetectionResults({
   ],
 })
   .then((data) => {
-    console.log(`Found ${data.items.length} detection results`);
-    data.items.forEach((item) => {
+    console.log(`Found ${data.detections.length} detection results`);
+    data.detections.forEach((item) => {
       console.log(`Threat: ${item.threatContent}`);
       console.log(`Asset: ${item.asset.content} (${item.asset.type})`);
       console.log(`Status: ${item.asset.status}`);
       console.log("---");
     });
 
-    if (data.nextCursor) {
-      console.log("More results available with cursor:", data.nextCursor);
+    if (data.next_page) {
+      console.log("More results available with cursor:", data.next_page);
     }
   })
   .catch((error) => console.error("Error fetching results:", error));
