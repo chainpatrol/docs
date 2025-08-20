@@ -55,6 +55,21 @@ This event is sent when the status of an asset changes. The `status` field can b
 }
 ```
 
+### `organization.threat-detection-added`
+
+This event is sent when a new threat detection is added for your organization detection tab.
+
+```json
+{
+  "type": "organization.threat-detection-added",
+  "created_at": "2025-08-20T14:35:39.062Z",
+  "data": {
+    "organization_id": 12,
+    "threat_detection_result_id": 16525556
+  }
+}
+```
+
 ## Webhook Configuration
 
 When creating a webhook, you'll need to provide:
