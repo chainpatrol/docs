@@ -91,6 +91,7 @@
         "integration/webhooks",
         "integration/zapier",
         "integration/vercel",
+        "integration/intercom",
         "integration/github",
         "security-integration/canary-tokens",
         "security-integration/submit-assets-for-scanning"
