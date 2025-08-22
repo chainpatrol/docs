@@ -39,6 +39,11 @@ curl --request POST \
         "property": "assetStatus",
         "operator": "in",
         "value": ["BLOCKED"]
+      },
+      {
+        "property": "confidence",
+        "operator": "in",
+        "value": ["high", "medium"]
       }
     ]
   }'
@@ -51,7 +56,7 @@ curl --request POST \
 | Field       | Type       | Required | Default | Constraints      | Description                                        |
 | ----------- | ---------- | -------- | ------- | ---------------- | -------------------------------------------------- |
 | `slug`      | `string`   | ✅ Yes   | -       | -                | Organization slug identifier                       |
-| `cursor`    | `string`   | ❌ No    | -       | -                | Pagination cursor from previous response           |
+| `cursor`    | `number`   | ❌ No    | -       | -                | Pagination cursor from previous response           |
 | `limit`     | `number`   | ❌ No    | `50`    | Min: 1, Max: 100 | Number of results to return                        |
 | `filters`   | `Filter[]` | ❌ No    | `[]`    | -                | Array of filter objects                            |
 | `query`     | `string`   | ❌ No    | `""`    | -                | Search query for threat content (case-insensitive) |
@@ -118,7 +123,24 @@ Each filter object must have the following structure:
 - `"ALLOWED"` - Asset is legitimate/allowed
 - `"BLOCKED"` - Asset is blocked/malicious
 
-**3. Asset Type Filter (`"assetType"`)**
+**3. Confidence Filter (`"confidence"`)**
+
+```typescript
+{
+  "property": "confidence",
+  "operator": "in" | "notIn",
+  "value": ConfidenceLevel[]
+}
+```
+
+**Available Confidence Level Values:**
+
+- `"none"` - No confidence threshold met
+- `"low"` - Low confidence threat detection
+- `"medium"` - Medium confidence threat detection
+- `"high"` - High confidence threat detection
+
+**4. Asset Type Filter (`"assetType"`)**
 
 ```typescript
 {
@@ -180,7 +202,7 @@ Each filter object must have the following structure:
 ```typescript
 {
   detections: DetectionResult[];
-  next_page: string | null;
+  nextCursor: number | null;
 }
 ```
 
@@ -194,6 +216,8 @@ Each item in the `detections` array has the following structure:
 | `threatContent` | `string`      | Content that was detected as threatening                  |
 | `source`        | `string`      | Source of the threat detection (ThreatDetectionSourceKey) |
 | `createdAt`     | `string`      | ISO 8601 timestamp of when threat was detected            |
+| `confidence`    | `string`      | Confidence level: "none", "low", "medium", or "high"      |
+| `reportStatus`  | `string`      | Report status: "REPORTED" or "NOT_REPORTED"               |
 | `asset`         | `AssetObject` | Associated asset information                              |
 
 ### Asset Object
@@ -215,6 +239,8 @@ Each item in the `detections` array has the following structure:
       "threatContent": "Phishing site detected mimicking legitimate service",
       "source": "GOOGLE_SEARCH",
       "createdAt": "2024-01-15T10:30:00Z",
+      "confidence": "high",
+      "reportStatus": "REPORTED",
       "asset": {
         "id": 67890,
         "content": "https://fake-site.com",
@@ -227,6 +253,8 @@ Each item in the `detections` array has the following structure:
       "threatContent": "Suspicious crypto address found in scam report",
       "source": "EXTERNAL",
       "createdAt": "2024-01-15T09:15:00Z",
+      "confidence": "medium",
+      "reportStatus": "NOT_REPORTED",
       "asset": {
         "id": 67891,
         "content": "0x1234567890123456789012345678901234567890",
@@ -235,7 +263,7 @@ Each item in the `detections` array has the following structure:
       }
     }
   ],
-  "next_page": "12347"
+  "nextCursor": 12347
 }
 ```
 
@@ -294,21 +322,21 @@ fetchDetectionResults({
 })
   .then((data) => {
     console.log("Detection results:", data.detections);
-    console.log("Next page:", data.next_page);
+    console.log("Next cursor:", data.nextCursor);
   })
   .catch((error) => console.error("Error fetching results:", error));
 ```
 
 ```typescript TypeScript
 interface DetectionFilter {
-  property: "source" | "assetStatus" | "assetType";
+  property: "source" | "assetStatus" | "assetType" | "confidence";
   operator: "in" | "notIn";
   value: string[];
 }
 
 interface DetectionListParams {
   slug: string;
-  cursor?: string;
+  cursor?: number;
   limit?: number;
   filters?: DetectionFilter[];
   query?: string;
@@ -328,12 +356,14 @@ interface DetectionResult {
   threatContent: string;
   source: string;
   createdAt: string;
+  confidence: "none" | "low" | "medium" | "high";
+  reportStatus: "REPORTED" | "NOT_REPORTED";
   asset: AssetObject;
 }
 
 interface DetectionListResponse {
   detections: DetectionResult[];
-  next_page: string | null;
+  nextCursor: number | null;
 }
 
 async function fetchDetectionResults(
@@ -373,11 +403,13 @@ fetchDetectionResults({
       console.log(`Threat: ${item.threatContent}`);
       console.log(`Asset: ${item.asset.content} (${item.asset.type})`);
       console.log(`Status: ${item.asset.status}`);
+      console.log(`Confidence: ${item.confidence}`);
+      console.log(`Report Status: ${item.reportStatus}`);
       console.log("---");
     });
 
-    if (data.next_page) {
-      console.log("More results available with cursor:", data.next_page);
+    if (data.nextCursor) {
+      console.log("More results available with cursor:", data.nextCursor);
     }
   })
   .catch((error) => console.error("Error fetching results:", error));
