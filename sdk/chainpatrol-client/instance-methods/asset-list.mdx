@@ -1,99 +1,424 @@
 ---
-title: asset.list()
-description: The `asset.list()` method gets the status of all assets that ChainPatrol has reviewed in bulk.
+title: "asset.list"
+description: "Retrieve lists of assets with filtering options"
 ---
 
-## Example
+The `asset.list` method allows you to retrieve bulk lists of assets that ChainPatrol has reviewed, with powerful filtering options by type, status, and date range. This method is ideal for bulk analysis and reporting.
 
-<CodeGroup>
+## API Reference
 
-```js Code
-const results = await chainpatrol.asset.list({
-  type: "URL",
-  status: "BLOCKED",
-  startDate: "2023-01-01",
-  endDate: "2023-12-31",
-});
+### Method Signature
 
-console.log(results);
+```typescript
+client.asset.list(request: AssetListInput): Promise<AssetListOutput>
 ```
 
-```js Output
-{
-  assets: [
-    {
-      type: "URL",
-      content: "example.com",
-      status: "BLOCKED",
-      updatedAt: "2023-01-01T00:00:00.000Z",
-    },
-    {
-      type: "URL",
-      content: "scam-airdrop.net",
-      status: "BLOCKED",
-      updatedAt: "2023-01-01T00:00:00.000Z",
-    },
-  ]
-};
-```
+### Parameters
 
-</CodeGroup>
+<ParamField path="request" type="AssetListInput" required>
+  The asset list request object with filtering criteria.
 
-## Parameters
-
-<ParamField body="options" type="object" required>
-<Expandable title="properties" defaultOpen>
-    <ParamField body="type" type="enum<string>" required>
-        The `type` property specifies what type of asset you are querying for. 
-        
-        The following types are supported: `URL`, `PAGE`, `ADDRESS`.
+  <Expandable title="AssetListInput Properties">
+    <ParamField path="type" type="enum<string>" required>
+      The type of assets to retrieve.
+      
+      Supported types: `URL`, `PAGE`, `ADDRESS`.
     </ParamField>
 
-    <ParamField body="status" type="enum<string>" required>
-        The `status` property specifies the status of the asset you are querying for.
+    <ParamField path="status" type="enum<string>" required>
+      Filter assets by their threat status.
 
-        The following statuses are supported: `BLOCKED`, `ALLOWED`, `UNKNOWN`.
+      Supported statuses: `BLOCKED`, `ALLOWED`, `UNKNOWN`.
     </ParamField>
 
-    <ParamField body="startDate" type="string" required>
-        The `startDate` property specifies the start date of the time range you are querying for. The date must be in the format `YYYY-MM-DD`.
+    <ParamField path="startDate" type="string" required>
+      Start date for the query range in `YYYY-MM-DD` format.
     </ParamField>
 
-    <ParamField body="endDate" type="string" required>
-        The `endDate` property specifies the end date of the time range you are querying for. The date must be in the format `YYYY-MM-DD`.
+    <ParamField path="endDate" type="string" required>
+      End date for the query range in `YYYY-MM-DD` format.
 
-        The `endDate` must be greater than or equal to the `startDate`.
+      Must be greater than or equal to `startDate`.
     </ParamField>
 
-</Expandable>
+    <ParamField path="organizationSlug" type="string">
+      Optional organization slug to filter assets for a specific organization.
+    </ParamField>
+
+  </Expandable>
 </ParamField>
 
-## Return Value
+### Returns
 
-The `asset.list()` method returns a `Promise` that resolves to an array of objects with the following properties:
+<ResponseField name="assets" type="array" required>
+  Array of asset objects matching the filter criteria.
 
-<ResponseField name="results" type="object[]" required>
-  <Expandable title="properties" defaultOpen>
-
+  <Expandable title="Asset Object Properties">
     <ResponseField name="type" type="enum<string>" required>
-        The `type` property specifies the type of the asset.
-
-        The following types are supported: `URL`, `PAGE`, `ADDRESS`.
+      The type of the asset: `URL`, `PAGE`, or `ADDRESS`.
     </ResponseField>
 
     <ResponseField name="content" type="string" required>
-      The `content` property contains the content of the asset.
-
-      - In the case of a `URL` or `PAGE` asset, this is the URL of the asset.
-      - In the case of an `ADDRESS` asset, this is the wallet or contract address of the asset.
+      The content of the asset:
+      - For `URL`/`PAGE`: The URL of the asset
+      - For `ADDRESS`: The wallet or contract address
     </ResponseField>
 
     <ResponseField name="status" type="enum<string>" required>
-      The `status` property contains the status of the asset.
+      The threat status: `UNKNOWN`, `ALLOWED`, or `BLOCKED`.
+    </ResponseField>
 
-      The following statuses are supported: `UNKNOWN`, `ALLOWED`, `BLOCKED`.
+    <ResponseField name="updatedAt" type="string" required>
+      ISO timestamp when the asset was last updated.
+    </ResponseField>
 
+    <ResponseField name="reason" type="string">
+      The reason for the status classification (if available).
     </ResponseField>
 
   </Expandable>
 </ResponseField>
+
+### Filtering Options
+
+<CardGroup cols={2}>
+  <Card title="By Asset Type" icon="filter">
+    Filter by `URL`, `PAGE`, or `ADDRESS` to focus on specific asset categories.
+  </Card>
+
+{" "}
+<Card title="By Status" icon="shield">
+  Filter by `BLOCKED`, `ALLOWED`, or `UNKNOWN` status.
+</Card>
+
+{" "}
+<Card title="By Date Range" icon="calendar">
+  Specify start and end dates to analyze specific time periods.
+</Card>
+
+  <Card title="By Organization" icon="building">
+    Use `organizationSlug` to get organization-specific results.
+  </Card>
+</CardGroup>
+
+## Getting Started
+
+### Quick Start
+
+<CodeGroup>
+```typescript Basic List Query
+import { ChainPatrolClient } from "@chainpatrol/sdk";
+
+const client = new ChainPatrolClient({
+apiKey: "cp_live_your_api_key_here",
+});
+
+const result = await client.asset.list({
+type: "URL",
+status: "BLOCKED",
+startDate: "2023-01-01",
+endDate: "2023-12-31",
+});
+
+console.log(`Found ${result.assets.length} blocked URLs`);
+
+````
+
+```typescript Organization-Specific Query
+const result = await client.asset.list({
+  type: "ADDRESS",
+  status: "BLOCKED",
+  startDate: "2024-01-01",
+  endDate: "2024-01-31",
+  organizationSlug: "ethereum-foundation",
+});
+
+result.assets.forEach(asset => {
+  console.log(`Blocked address: ${asset.content}`);
+  console.log(`Updated: ${asset.updatedAt}`);
+});
+````
+
+```json Example Response
+{
+  "assets": [
+    {
+      "type": "URL",
+      "content": "phishing-site.com",
+      "status": "BLOCKED",
+      "updatedAt": "2023-06-15T10:30:00.000Z",
+      "reason": "reported"
+    },
+    {
+      "type": "URL",
+      "content": "scam-airdrop.net",
+      "status": "BLOCKED",
+      "updatedAt": "2023-06-14T15:45:00.000Z",
+      "reason": "eth-phishing-detect"
+    }
+  ]
+}
+```
+
+</CodeGroup>
+
+### Basic Usage Patterns
+
+```typescript
+// Get recent threats
+async function getRecentThreats(days: number = 7) {
+  const endDate = new Date().toISOString().split("T")[0];
+  const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+
+  return await client.asset.list({
+    type: "URL",
+    status: "BLOCKED",
+    startDate,
+    endDate,
+  });
+}
+
+// Count assets by status
+async function getAssetStats(dateRange: { start: string; end: string }) {
+  const [blocked, allowed] = await Promise.all([
+    client.asset.list({
+      type: "URL",
+      status: "BLOCKED",
+      startDate: dateRange.start,
+      endDate: dateRange.end,
+    }),
+    client.asset.list({
+      type: "URL",
+      status: "ALLOWED",
+      startDate: dateRange.start,
+      endDate: dateRange.end,
+    }),
+  ]);
+
+  return {
+    blocked: blocked.assets.length,
+    allowed: allowed.assets.length,
+  };
+}
+```
+
+## Implementation Guide
+
+### Use Cases & Patterns
+
+<AccordionGroup>
+  <Accordion title="Threat Intelligence Reports">
+    Generate periodic reports on blocked assets for security analysis.
+    
+    ```typescript
+    async function generateThreatReport(month: string) {
+      const startDate = `${month}-01`;
+      const endDate = `${month}-31`;
+      
+      const threats = await client.asset.list({
+        type: "URL",
+        status: "BLOCKED",
+        startDate,
+        endDate,
+      });
+      
+      // Group by reason
+      const byReason = threats.assets.reduce((acc, asset) => {
+        const reason = asset.reason || "unknown";
+        acc[reason] = (acc[reason] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      
+      return {
+        total: threats.assets.length,
+        breakdown: byReason,
+        period: `${startDate} to ${endDate}`,
+      };
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Compliance Auditing">
+    Export asset data for compliance and audit requirements.
+    
+    ```typescript
+    async function exportComplianceData(orgSlug: string, year: string) {
+      const result = await client.asset.list({
+        type: "ADDRESS",
+        status: "BLOCKED",
+        startDate: `${year}-01-01`,
+        endDate: `${year}-12-31`,
+        organizationSlug: orgSlug,
+      });
+      
+      return result.assets.map(asset => ({
+        address: asset.content,
+        blockedDate: asset.updatedAt,
+        reason: asset.reason,
+        organization: orgSlug,
+      }));
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Trend Analysis">
+    Analyze threat trends over time by comparing different date ranges.
+    
+    ```typescript
+    async function analyzeTrends() {
+      const currentMonth = await client.asset.list({
+        type: "URL",
+        status: "BLOCKED",
+        startDate: "2024-02-01",
+        endDate: "2024-02-29",
+      });
+      
+      const previousMonth = await client.asset.list({
+        type: "URL", 
+        status: "BLOCKED",
+        startDate: "2024-01-01",
+        endDate: "2024-01-31",
+      });
+      
+      const change = currentMonth.assets.length - previousMonth.assets.length;
+      const percentChange = (change / previousMonth.assets.length) * 100;
+      
+      return {
+        current: currentMonth.assets.length,
+        previous: previousMonth.assets.length,
+        change,
+        percentChange: Math.round(percentChange * 100) / 100,
+      };
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Bulk Analysis
+
+```typescript
+async function analyzeThreats(timeRange: { start: string; end: string }) {
+  const [blockedUrls, blockedAddresses, allowedUrls] = await Promise.all([
+    client.asset.list({
+      type: "URL",
+      status: "BLOCKED",
+      startDate: timeRange.start,
+      endDate: timeRange.end,
+    }),
+    client.asset.list({
+      type: "ADDRESS",
+      status: "BLOCKED",
+      startDate: timeRange.start,
+      endDate: timeRange.end,
+    }),
+    client.asset.list({
+      type: "URL",
+      status: "ALLOWED",
+      startDate: timeRange.start,
+      endDate: timeRange.end,
+    }),
+  ]);
+
+  return {
+    blockedUrls: blockedUrls.assets.length,
+    blockedAddresses: blockedAddresses.assets.length,
+    allowedUrls: allowedUrls.assets.length,
+  };
+}
+```
+
+### Data Export & Processing
+
+```typescript
+async function exportThreats(outputFormat: "csv" | "json" = "json") {
+  const threats = await client.asset.list({
+    type: "URL",
+    status: "BLOCKED",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+  });
+
+  const processedData = threats.assets.map((asset) => ({
+    url: asset.content,
+    status: asset.status,
+    reason: asset.reason || "N/A",
+    lastUpdated: asset.updatedAt,
+  }));
+
+  if (outputFormat === "csv") {
+    // Convert to CSV format
+    const headers = Object.keys(processedData[0]).join(",");
+    const rows = processedData.map((row) => Object.values(row).join(","));
+    return [headers, ...rows].join("\n");
+  }
+
+  return processedData;
+}
+```
+
+## Technical Details
+
+### Format Requirements
+
+<Warning>
+  **Date Format Requirements** - Dates must be in `YYYY-MM-DD` format -
+  `endDate` must be greater than or equal to `startDate` - Maximum date range
+  may be limited depending on your plan
+</Warning>
+
+### Error Handling
+
+```typescript
+import { ChainPatrolClientError } from "@chainpatrol/sdk";
+
+try {
+  const result = await client.asset.list({
+    type: "URL",
+    status: "BLOCKED",
+    startDate: "2024-01-01",
+    endDate: "2024-01-31",
+  });
+} catch (error) {
+  if (error instanceof ChainPatrolClientError) {
+    console.error("API Error:", error.message);
+  } else {
+    console.error("Unexpected error:", error);
+  }
+}
+```
+
+### Rate Limits & Performance
+
+<Note>
+  **Rate Limits** - Paginated requests: Up to 5 requests per second - Results
+  are paginated for large datasets - Consider caching results for frequently
+  accessed data
+</Note>
+
+<Warning>
+  **Performance Tips** - Use specific date ranges to limit response size - Cache
+  results when possible to reduce API calls - Consider pagination for very large
+  datasets
+</Warning>
+
+## Related Resources
+
+### Related Methods
+
+<CardGroup cols={2}>
+  <Card title="asset.check" icon="magnifying-glass" href="../asset-check">
+    Check individual asset threat status
+  </Card>
+
+  <Card title="asset.submit" icon="upload" href="../asset-submit">
+    Submit assets for threat classification
+  </Card>
+</CardGroup>
+
+### Additional Documentation
+
+- [Asset Types Guide](/glossary/asset-types/page)
+- [Organization Management](/general/concepts)
+- [API Authentication](/external-api/authentication)

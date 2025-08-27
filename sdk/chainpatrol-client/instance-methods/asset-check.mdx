@@ -1,72 +1,304 @@
 ---
-title: asset.check()
-description: The `asset.check()` method checks the status of an asset.
+title: "asset.check"
+description: "Check the threat status of individual assets"
 ---
 
-## Example
+The `asset.check` method allows you to check the current threat status of a single asset. This method is ideal for real-time protection and individual asset verification.
 
-<CodeGroup>
+## API Reference
 
-```js Code
-const result = await chainpatrol.asset.check({
-  type: "URL",
-  content: "https://my-website.scam.com",
-});
+### Method Signature
 
-console.log(results);
+```typescript
+client.asset.check(request: AssetCheckInput): Promise<AssetCheckOutput>
 ```
 
-```js Output
-{
-  status: "BLOCKED",
-  reason: "eth-phishing-detect"
-}
-```
+### Parameters
 
-</CodeGroup>
+<ParamField path="request" type="AssetCheckInput" required>
+  The asset check request object containing the asset type and content.
 
-## Parameters
-
-<ParamField body="options" type="object" required>
-  <Expandable title="properties" defaultOpen>
-    <ParamField body="type" type="enum<string>" required>
-        The `type` property specifies what type of asset you are querying for. 
-        
-        The following types are supported: `URL`, `PAGE`, `ADDRESS`.
+  <Expandable title="AssetCheckInput Properties">
+    <ParamField path="type" type="enum<string>" required>
+      The type of asset you are checking. 
+      
+      Supported types: `URL`, `PAGE`, `ADDRESS`.
     </ParamField>
 
-    <ParamField body="content" type="string" required>
-      The `content` property contains the actual asset you are querying for.
+    <ParamField path="content" type="string" required>
+      The actual asset content you are checking.
 
-      - In the case of a `URL` or `PAGE` asset, this is the URL of the asset.
-      - In the case of an `ADDRESS` asset, this is the wallet or contract address of the asset.
+      - For `URL` or `PAGE` assets: The URL of the asset
+      - For `ADDRESS` assets: The wallet or contract address
     </ParamField>
 
   </Expandable>
 </ParamField>
 
-## Return Value
+### Returns
 
-The `asset.check()` method returns a `Promise` that resolves to an object with the following properties:
+<ResponseField name="status" type="enum<string>" required>
+  The threat status of the asset.
 
-<ResponseField name="result" type="object" required>
-  <Expandable title="properties" defaultOpen>
-    <ResponseField name="status" type="enum<string>" required>
-      The `status` property contains the status of the asset.
+Possible values: `UNKNOWN`, `ALLOWED`, `BLOCKED`.
 
-      The following statuses are supported: `UNKNOWN`, `ALLOWED`, `BLOCKED`.
-
-    </ResponseField>
-
-    <ResponseField name="reason" type="string">
-        If the asset is allowed or blocked, this will be the reason why.
-        ChainPatrol aggregates data from multiple sources, so this will
-        tell you which source blocked or allowed the asset.
-
-        - `eth-phishing-detect` - the asset is on MetaMask's blocklist
-        - `reported` - the asset is on ChainPatrol's blocklist because it was reported by a user
-
-    </ResponseField>
-
-  </Expandable>
 </ResponseField>
+
+<ResponseField name="reason" type="string">
+  The reason why the asset was allowed or blocked (if applicable). ChainPatrol
+  aggregates data from multiple sources: - `eth-phishing-detect` - Asset is on
+  MetaMask's blocklist - `reported` - Asset was reported by users and added to
+  ChainPatrol's blocklist
+</ResponseField>
+
+### Supported Asset Types
+
+<CardGroup cols={3}>
+  <Card title="URL" icon="globe">
+    Web URLs and domains
+    
+    `https://example.com`
+  </Card>
+
+{" "}
+<Card title="PAGE" icon="file">
+  Specific web pages `https://site.com/login`
+</Card>
+
+  <Card title="ADDRESS" icon="wallet">
+    Crypto addresses
+    
+    `0x1234...abcd`
+  </Card>
+</CardGroup>
+
+### Status Types
+
+<AccordionGroup>
+  <Accordion title="BLOCKED">
+    The asset has been identified as malicious or suspicious and should be blocked.
+  </Accordion>
+
+{" "}
+<Accordion title="ALLOWED">
+  The asset has been verified as safe and can be trusted.
+</Accordion>
+
+  <Accordion title="UNKNOWN">
+    The asset hasn't been classified yet. Use your own discretion or additional verification.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Started
+
+### Quick Start
+
+<CodeGroup>
+```typescript Basic Check
+import { ChainPatrolClient } from "@chainpatrol/sdk";
+
+const client = new ChainPatrolClient({
+apiKey: "cp_live_your_api_key_here",
+});
+
+const result = await client.asset.check({
+type: "URL",
+content: "https://suspicious-site.com",
+});
+
+console.log(result);
+
+````
+
+```typescript Address Check
+const result = await client.asset.check({
+  type: "ADDRESS",
+  content: "0x1234567890abcdef1234567890abcdef12345678",
+});
+
+if (result.status === "BLOCKED") {
+  console.warn(`🚨 Blocked address: ${result.reason}`);
+} else {
+  console.log("✅ Address appears safe");
+}
+````
+
+```json Example Response
+{
+  "status": "BLOCKED",
+  "reason": "eth-phishing-detect"
+}
+```
+
+</CodeGroup>
+
+### Basic Usage Patterns
+
+```typescript
+// Simple safety check
+async function isSafe(url: string): Promise<boolean> {
+  const result = await client.asset.check({
+    type: "URL",
+    content: url,
+  });
+
+  return result.status !== "BLOCKED";
+}
+
+// Detailed threat analysis
+async function analyzeThreat(asset: string, type: "URL" | "ADDRESS") {
+  const result = await client.asset.check({ type, content: asset });
+
+  return {
+    isSafe: result.status !== "BLOCKED",
+    status: result.status,
+    reason: result.reason,
+    recommendation:
+      result.status === "BLOCKED" ? "Block access" : "Allow access",
+  };
+}
+```
+
+## Implementation Guide
+
+### Real-time Protection
+
+```typescript
+async function checkAssetSafety(url: string): Promise<boolean> {
+  try {
+    const result = await client.asset.check({
+      type: "URL",
+      content: url,
+    });
+
+    switch (result.status) {
+      case "BLOCKED":
+        console.warn(`🚨 Blocked: ${url} (${result.reason})`);
+        return false;
+      case "ALLOWED":
+        console.log(`✅ Allowed: ${url}`);
+        return true;
+      case "UNKNOWN":
+        console.log(`❓ Unknown: ${url} - proceed with caution`);
+        return true; // Or implement your own logic
+      default:
+        return true;
+    }
+  } catch (error) {
+    console.error("Asset check failed:", error);
+    return false; // Fail safe
+  }
+}
+```
+
+### Browser Extension Integration
+
+```typescript
+// Content script for browser extension
+class URLMonitor {
+  private client: ChainPatrolClient;
+
+  constructor(apiKey: string) {
+    this.client = new ChainPatrolClient({ apiKey });
+  }
+
+  async checkCurrentPage(): Promise<void> {
+    const currentUrl = window.location.href;
+
+    const result = await this.client.asset.check({
+      type: "URL",
+      content: currentUrl,
+    });
+
+    if (result.status === "BLOCKED") {
+      this.showWarning(result.reason);
+    }
+  }
+
+  private showWarning(reason: string): void {
+    // Display warning to user
+    console.warn(`⚠️ This site may be dangerous: ${reason}`);
+  }
+}
+```
+
+### Batch Checking with Rate Limiting
+
+```typescript
+async function checkMultipleAssets(assets: string[]) {
+  const results = [];
+
+  for (const asset of assets) {
+    try {
+      const result = await client.asset.check({
+        type: "URL",
+        content: asset,
+      });
+
+      results.push({ asset, ...result });
+
+      // Rate limiting - wait between requests
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    } catch (error) {
+      console.error(`Failed to check ${asset}:`, error);
+    }
+  }
+
+  return results;
+}
+```
+
+## Technical Details
+
+### Error Handling
+
+```typescript
+import { ChainPatrolClientError } from "@chainpatrol/sdk";
+
+try {
+  const result = await client.asset.check({
+    type: "URL",
+    content: "example.com",
+  });
+} catch (error) {
+  if (error instanceof ChainPatrolClientError) {
+    console.error("API Error:", error.message);
+  } else {
+    console.error("Unexpected error:", error);
+  }
+}
+```
+
+### Rate Limits & Performance
+
+<Note>
+  **Rate Limits** - Individual requests: Up to 10 requests per second -
+  Recommended for real-time checking - For bulk operations, use `asset.list`
+  instead
+</Note>
+
+<Warning>
+  **Performance Considerations** - Cache results when possible to reduce API
+  calls - Implement exponential backoff for failed requests - Consider using
+  `asset.list` for bulk checking scenarios
+</Warning>
+
+## Related Resources
+
+### Related Methods
+
+<CardGroup cols={2}>
+  <Card title="asset.submit" icon="upload" href="../asset-submit">
+    Submit assets for threat classification
+  </Card>
+
+  <Card title="asset.list" icon="list" href="../asset-list">
+    Retrieve lists of assets with filtering
+  </Card>
+</CardGroup>
+
+### Additional Documentation
+
+- [Asset Types Guide](/glossary/asset-types/page)
+- [Error Handling Best Practices](/general/api-key)
+- [Rate Limiting Guidelines](/external-api/overview)
