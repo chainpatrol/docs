@@ -1,0 +1,25 @@
+---
+title: Get Organization Reports
+openapi: "POST /public/getOrganizationReports"
+---
+
+<Warning>
+  This API requires an API key with appropriate permissions. See [API Key
+  Documentation](https://chainpatrol.com/docs/general/api-key) for more details.
+</Warning>
+
+# Pagination
+
+Make sure to use the `limit` and `cursor` parameters to paginate through the results.
+
+# Filtering
+
+## Dates
+
+When filtering by dates you need to provide both the `startDate` and `endDate` parameters.
+
+## Only Rejected
+
+You can filter for only reports with a rejected proposals by setting the `onlyRejected` parameter to `true`.
+
+The reports returned will have proposals inside, however not all proposals will be rejected, as a report can have multiple proposals inside, and some may be rejected while others are approved. So you need to look through the data if you want only rejected proposals.
