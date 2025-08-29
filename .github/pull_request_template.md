@@ -1,14 +1,14 @@
 # Description
 
-<!-- Please include a summary of the change and which issue is fixed. Also, list any dependencies that are required for this change. -->
+{/_ Please include a summary of the change and which issue is fixed. Also, list any dependencies that are required for this change. _/}
 
 Fixes ENG-XXX
 Resolves ENG-XXX
 
 ## Screenshots, Videos (if applicable)
 
-<!-- Include any relevant screenshots or GIFs here. -->
+{/_ Include any relevant screenshots or GIFs here. _/}
 
 ## Additional Notes
 
-<!-- Add any other notes about the PR here. -->
+{/_ Add any other notes about the PR here. _/}

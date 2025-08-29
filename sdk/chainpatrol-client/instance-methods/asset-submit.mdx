@@ -1,0 +1,413 @@
+---
+title: "asset.submit"
+description: "Submit assets for threat classification and organization assignment"
+---
+
+The `asset.submit` method allows you to bulk submit assets (domains, URLs, social profiles, blockchain addresses) to ChainPatrol for automated threat classification and assignment to appropriate organizations.
+
+## API Reference
+
+### Method Signature
+
+```typescript
+client.asset.submit(request: AssetSubmitInput): Promise<AssetSubmitOutput>
+```
+
+### Parameters
+
+<ParamField path="request" type="AssetSubmitInput" required>
+  The submission request object containing assets and optional organization targeting.
+
+  <Expandable title="AssetSubmitInput Properties">
+    <ParamField path="assets" type="string[]" required>
+      Array of asset strings to submit (maximum 100 per request). Supports domains, URLs, blockchain addresses, and social media profiles.
+    </ParamField>
+    
+    <ParamField path="organizationSlug" type="string">
+      Optional organization slug for targeted classification. When provided, assets are classified specifically for that organization and may receive immediate scanning.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+### Returns
+
+<ResponseField name="submittedAssets" type="array" required>
+  Array of submitted asset details with ChainPatrol IDs and scan information.
+
+  <Expandable title="Submitted Asset Object">
+    <ResponseField name="asset" type="string">
+      The original asset content that was submitted
+    </ResponseField>
+    
+    <ResponseField name="assetId" type="number">
+      ChainPatrol's internal ID for the asset (used for tracking and future references)
+    </ResponseField>
+    
+    <ResponseField name="scanId" type="number">
+      ID of the security scan (only present if scan was immediately created, more common when organizationSlug is provided)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Supported Asset Types
+
+<CardGroup cols={2}>
+  <Card title="Domains & URLs" icon="globe">
+    - `malicious-site.com`
+    - `https://phishing-page.net/login`
+    - `subdomain.suspicious-domain.org`
+  </Card>
+
+{" "}
+
+<Card title="Crypto Addresses" icon="coins">
+  - `0x1234...abcd` (Ethereum) - `bc1q...` (Bitcoin) - `cosmos1abc...` (Cosmos)
+</Card>
+
+{" "}
+
+<Card title="Social Profiles" icon="users">
+  - `@scammer_account` - `https://twitter.com/fake_support` -
+  `discord.gg/phishing_server`
+</Card>
+
+  <Card title="Other Assets" icon="shield">
+    - Email addresses
+    - Phone numbers
+    - Custom identifiers
+  </Card>
+</CardGroup>
+
+### Organization Behavior
+
+<Tabs>
+  <Tab title="With Organization Slug">
+    When `organizationSlug` is provided: ✅ Assets are classified specifically
+    for that organization ✅ Immediate scanning workflow is triggered ✅
+    `scanId` is more likely to be returned ✅ Results are optimized for the
+    organization's threat profile ✅ Faster processing and priority handling
+  </Tab>
+
+  <Tab title="Without Organization Slug">
+    When `organizationSlug` is omitted: 📋 Assets are processed for general
+    threat detection 📋 Background processing via Redis queue 📋 `scanId` may
+    not be immediately available 📋 Results benefit all ChainPatrol users 📋
+    Standard processing priority
+  </Tab>
+</Tabs>
+
+## Getting Started
+
+### Quick Start
+
+<CodeGroup>
+```typescript Basic Submission
+import { ChainPatrolClient } from "@chainpatrol/sdk";
+
+const client = new ChainPatrolClient({
+apiKey: "cp_live_your_api_key_here",
+});
+
+const result = await client.asset.submit({
+assets: [
+"suspicious-domain.com",
+"https://fake-site.net",
+"0x1234567890abcdef1234567890abcdef12345678",
+],
+});
+
+console.log(`Submitted ${result.submittedAssets.length} assets`);
+
+````
+
+```typescript Organization-Specific
+const result = await client.asset.submit({
+  assets: ["phishing-site.com", "scam-token.org"],
+  organizationSlug: "your-organization",
+});
+
+// Assets will be classified specifically for your organization
+result.submittedAssets.forEach((asset) => {
+  console.log(`Asset: ${asset.asset} -> ID: ${asset.assetId}`);
+  if (asset.scanId) {
+    console.log(`Immediate scan created: ${asset.scanId}`);
+  }
+});
+````
+
+```json Example Response
+{
+  "submittedAssets": [
+    {
+      "asset": "suspicious-domain.com",
+      "assetId": 12345,
+      "scanId": 67890
+    },
+    {
+      "asset": "0x1234567890abcdef1234567890abcdef12345678",
+      "assetId": 12346
+    },
+    {
+      "asset": "https://fake-exchange.net",
+      "assetId": 12347,
+      "scanId": 67891
+    }
+  ]
+}
+```
+
+</CodeGroup>
+
+### Basic Usage Patterns
+
+```typescript
+// Simple threat submission
+async function submitThreats(assets: string[]) {
+  const result = await client.asset.submit({ assets });
+
+  console.log(`✅ Submitted ${result.submittedAssets.length} assets`);
+
+  const withScans = result.submittedAssets.filter((a) => a.scanId);
+  if (withScans.length > 0) {
+    console.log(`🔬 ${withScans.length} assets have immediate scans`);
+  }
+
+  return result;
+}
+
+// Organization-specific submission
+async function submitForOrganization(assets: string[], orgSlug: string) {
+  return await client.asset.submit({
+    assets,
+    organizationSlug: orgSlug,
+  });
+}
+```
+
+## Implementation Guide
+
+### Bulk Threat Intelligence Processing
+
+```typescript
+async function processThreatFeed(threatFeed: string[]) {
+  const chunkSize = 100; // API limit
+  const results = [];
+
+  for (let i = 0; i < threatFeed.length; i += chunkSize) {
+    const chunk = threatFeed.slice(i, i + chunkSize);
+
+    try {
+      const result = await client.asset.submit({
+        assets: chunk,
+        organizationSlug: "security-team",
+      });
+
+      results.push(result);
+      console.log(`Processed chunk ${Math.floor(i / chunkSize) + 1}`);
+
+      // Rate limiting - wait between requests
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.error(`Failed to process chunk starting at ${i}:`, error);
+    }
+  }
+
+  return results;
+}
+```
+
+### Automated Security Monitor
+
+```typescript
+import { ChainPatrolClient } from "@chainpatrol/sdk";
+
+class SecurityMonitor {
+  private client: ChainPatrolClient;
+
+  constructor(apiKey: string) {
+    this.client = new ChainPatrolClient({
+      apiKey,
+      fetchOptions: {
+        headers: {
+          "User-Agent": "SecurityMonitor/1.0",
+        },
+      },
+    });
+  }
+
+  async submitNewThreats(assets: string[], source: string) {
+    try {
+      const result = await this.client.asset.submit({
+        assets,
+        organizationSlug: "internal-security",
+      });
+
+      // Log successful submission
+      console.log(
+        `[${source}] Submitted ${result.submittedAssets.length} assets`
+      );
+
+      // Track assets with immediate scans
+      const withScans = result.submittedAssets.filter((a) => a.scanId);
+      if (withScans.length > 0) {
+        console.log(`${withScans.length} assets have immediate scans`);
+      }
+
+      return result;
+    } catch (error) {
+      console.error(`[${source}] Failed to submit assets:`, error);
+      throw error;
+    }
+  }
+}
+```
+
+### Integration Examples
+
+<AccordionGroup>
+  <Accordion title="Webhook Integration">
+    ```typescript
+    // Express.js webhook handler
+    app.post("/security-alert", async (req, res) => {
+      const { threats } = req.body;
+
+      try {
+        await client.asset.submit({
+          assets: threats,
+          organizationSlug: "webhook-alerts",
+        });
+
+        res.json({ status: "submitted" });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+    ```
+
+  </Accordion>
+
+  <Accordion title="Scheduled Monitoring">
+    ```typescript
+    import cron from "node-cron";
+
+    // Daily threat feed processing
+    cron.schedule("0 2 * * *", async () => {
+      console.log("Processing daily threat feeds...");
+
+      const threatFeeds = await fetchThreatFeeds();
+      await processThreatFeed(threatFeeds);
+
+      console.log("Daily processing complete");
+    });
+    ```
+
+  </Accordion>
+
+  <Accordion title="Real-time Stream Processing">
+    ```typescript
+    // Process incoming threat stream
+    async function processThreatsStream(stream: AsyncIterable<string[]>) {
+      for await (const batch of stream) {
+        try {
+          const result = await client.asset.submit({
+            assets: batch,
+            organizationSlug: "stream-processor",
+          });
+          
+          console.log(`Processed batch: ${result.submittedAssets.length} assets`);
+        } catch (error) {
+          console.error("Batch processing failed:", error);
+        }
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Technical Details
+
+### Rate Limits & Constraints
+
+<Warning>
+  **Important Limits** - **Max assets per request**: 100 - **Asset string
+  length**: 1-1000 characters - **Recommended delay**: 500-1000ms between
+  requests - **Daily limits**: Contact support for high-volume usage plans
+</Warning>
+
+<Note>
+  **Performance Tips** - Batch submissions for efficiency - Use organization
+  slug for faster processing - Implement proper error handling and retries -
+  Monitor API quotas and rate limits
+</Note>
+
+### Error Handling
+
+```typescript
+import {
+  ChainPatrolClientError,
+  ChainPatrolClientErrorCodes,
+} from "@chainpatrol/sdk";
+
+async function safeAssetSubmit(assets: string[]) {
+  try {
+    return await client.asset.submit({ assets });
+  } catch (error) {
+    if (error instanceof ChainPatrolClientError) {
+      switch (error.code) {
+        case ChainPatrolClientErrorCodes.MISSING_API_KEY:
+          console.error("API key is missing or invalid");
+          break;
+        case ChainPatrolClientErrorCodes.API_ERROR:
+          console.error("API error:", error.message);
+          break;
+      }
+    } else {
+      console.error("Unexpected error:", error);
+    }
+    throw error;
+  }
+}
+```
+
+### Testing
+
+Use this pattern to test the asset submit functionality:
+
+```typescript
+async function testAssetSubmit() {
+  const timestamp = Date.now();
+  const testAssets = [
+    `https://test-${timestamp}-1.example.com`,
+    `https://test-${timestamp}-2.example.org`,
+  ];
+
+  const result = await client.asset.submit({
+    assets: testAssets,
+    organizationSlug: "your-org-slug", // Optional
+  });
+
+  console.log("✅ Test successful:", result);
+  return result;
+}
+```
+
+## Related Resources
+
+### Related Methods
+
+<CardGroup cols={2}>
+  <Card title="asset.check" icon="magnifying-glass" href="../asset-check">
+    Check the threat status of individual assets
+  </Card>
+
+  <Card title="asset.list" icon="list" href="../asset-list">
+    Retrieve lists of assets with filtering options
+  </Card>
+</CardGroup>
+
+### Additional Documentation
+
+- [Asset Submit Quick Start](/asset-submit-quickstart)
+- [API Authentication](/external-api/authentication)
+- [Organization Management](/general/concepts)
+- [Integration Guide](/integration/guide)
