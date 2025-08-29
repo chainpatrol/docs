@@ -72,8 +72,8 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
       ISO timestamp when the asset was last updated.
     </ResponseField>
 
-    <ResponseField name="reason" type="string">
-      The reason for the status classification (if available).
+    <ResponseField name="reason" type="string" deprecated>
+      **Deprecated:** The reason for the status classification. This field is deprecated and should not be used in new implementations.
     </ResponseField>
 
   </Expandable>
@@ -146,15 +146,13 @@ result.assets.forEach(asset => {
       "type": "URL",
       "content": "phishing-site.com",
       "status": "BLOCKED",
-      "updatedAt": "2023-06-15T10:30:00.000Z",
-      "reason": "reported"
+      "updatedAt": "2023-06-15T10:30:00.000Z"
     },
     {
       "type": "URL",
       "content": "scam-airdrop.net",
       "status": "BLOCKED",
-      "updatedAt": "2023-06-14T15:45:00.000Z",
-      "reason": "eth-phishing-detect"
+      "updatedAt": "2023-06-14T15:45:00.000Z"
     }
   ]
 }
@@ -224,16 +222,16 @@ async function getAssetStats(dateRange: { start: string; end: string }) {
         endDate,
       });
       
-      // Group by reason
-      const byReason = threats.assets.reduce((acc, asset) => {
-        const reason = asset.reason || "unknown";
-        acc[reason] = (acc[reason] || 0) + 1;
+      // Group by update date
+      const byDate = threats.assets.reduce((acc, asset) => {
+        const date = asset.updatedAt.split('T')[0];
+        acc[date] = (acc[date] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
       
       return {
         total: threats.assets.length,
-        breakdown: byReason,
+        dailyBreakdown: byDate,
         period: `${startDate} to ${endDate}`,
       };
     }
@@ -256,7 +254,6 @@ async function getAssetStats(dateRange: { start: string; end: string }) {
       return result.assets.map(asset => ({
         address: asset.content,
         blockedDate: asset.updatedAt,
-        reason: asset.reason,
         organization: orgSlug,
       }));
     }
@@ -343,7 +340,6 @@ async function exportThreats(outputFormat: "csv" | "json" = "json") {
   const processedData = threats.assets.map((asset) => ({
     url: asset.content,
     status: asset.status,
-    reason: asset.reason || "N/A",
     lastUpdated: asset.updatedAt,
   }));
 
