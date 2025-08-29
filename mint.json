@@ -121,7 +121,10 @@
     },
     {
       "group": "Reports",
-      "pages": ["external-api/report-create"]
+      "pages": [
+        "external-api/report-create",
+        "external-api/organization-reports"
+      ]
     },
     {
       "group": "Disputes",
