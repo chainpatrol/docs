@@ -223,6 +223,18 @@
     {
       "source": "/api",
       "destination": "/external-api"
+    },
+    {
+      "source": "/bots/slack",
+      "destination": "/bots/slack-bot"
+    },
+    {
+      "source": "/bots/discord",
+      "destination": "/bots/discord-bot"
+    },
+    {
+      "source": "/bots/telegram",
+      "destination": "/bots/telegram-bot"
     }
   ],
   "backgroundImage": "/background.png",
