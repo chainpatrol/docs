@@ -127,6 +127,10 @@
       ]
     },
     {
+      "group": "Threats",
+      "pages": ["external-api/threats-list", "external-api/detection-list"]
+    },
+    {
       "group": "Disputes",
       "pages": ["external-api/dispute-create"]
     },

@@ -1,0 +1,316 @@
+---
+title: List Threats
+openapi: "POST /threats/list"
+---
+
+<Warning>
+  This API requires an API key with appropriate permissions. See [API Key
+  Documentation](https://chainpatrol.com/docs/general/api-key) for more details.
+</Warning>
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+### Example Request
+
+```bash
+curl --request POST \
+  --url https://api.chainpatrol.io/threats/list \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "query": "phishing",
+    "assetType": ["URL", "ADDRESS"],
+    "startDate": "2024-01-01",
+    "endDate": "2024-01-31",
+    "per_page": 50,
+    "sorting": [
+      {
+        "key": "blockedAt",
+        "direction": "desc"
+      }
+    ]
+  }'
+```
+
+## Request Schema
+
+### Request Body
+
+| Field       | Type              | Required | Default                           | Constraints       | Description                                  |
+| ----------- | ----------------- | -------- | --------------------------------- | ----------------- | -------------------------------------------- |
+| `query`     | `string`          | ❌ No    | -                                 | -                 | Search query to filter threats by content    |
+| `startDate` | `string`          | ❌ No    | 1 day ago                         | YYYY-MM-DD format | Start date for filtering threats (inclusive) |
+| `endDate`   | `string`          | ❌ No    | today                             | YYYY-MM-DD format | End date for filtering threats (inclusive)   |
+| `assetType` | `AssetType[]`     | ❌ No    | -                                 | -                 | Array of asset types to filter by            |
+| `sorting`   | `SortingConfig[]` | ❌ No    | `[{key: "id", direction: "asc"}]` | -                 | Array of sorting configurations              |
+| `per_page`  | `number`          | ❌ No    | `10`                              | Min: 1, Max: 100  | Number of threats to return per page         |
+| `next_page` | `string`          | ❌ No    | -                                 | Positive integer  | Cursor for fetching the next page of results |
+
+### Sorting Configuration
+
+Each sorting object must have the following structure:
+
+| Field       | Type                | Required | Description                          |
+| ----------- | ------------------- | -------- | ------------------------------------ |
+| `key`       | `string`            | ✅ Yes   | Field to sort by (see options below) |
+| `direction` | `"asc"` \| `"desc"` | ✅ Yes   | Sort direction                       |
+
+#### Available Sort Fields
+
+- `"id"` - Sort by threat ID
+- `"blockedAt"` - Sort by when the asset was blocked
+- `"content"` - Sort by threat content
+- `"type"` - Sort by asset type
+
+### Asset Type Filter
+
+The `assetType` parameter accepts an array of asset types to filter by:
+
+<Accordion title="Available Asset Type Values">
+
+- `"URL"` - Website URLs
+- `"PAGE"` - Web pages
+- `"ADDRESS"` - Blockchain addresses
+- `"LINKEDIN"` - LinkedIn profiles
+- `"TWITTER"` - Twitter profiles/posts
+- `"FACEBOOK"` - Facebook profiles/pages
+- `"YOUTUBE"` - YouTube channels/videos
+- `"REDDIT"` - Reddit posts/subreddits
+- `"TELEGRAM"` - Telegram channels/groups
+- `"GOOGLE_APP_STORE"` - Google Play Store apps
+- `"APPLE_APP_STORE"` - Apple App Store apps
+- `"AMAZON_APP_STORE"` - Amazon App Store apps
+- `"MICROSOFT_APP_STORE"` - Microsoft Store apps
+- `"TIKTOK"` - TikTok profiles
+- `"INSTAGRAM"` - Instagram profiles
+- `"THREADS"` - Threads profiles
+- `"MEDIUM"` - Medium articles/profiles
+- `"CHROME_WEB_STORE"` - Chrome extensions
+- `"MOZILLA_ADDONS"` - Firefox addons
+- `"OPERA_ADDONS"` - Opera addons
+- `"EMAIL"` - Email addresses
+- `"PATREON"` - Patreon profiles
+- `"OPENSEA"` - OpenSea collections/profiles
+- `"FARCASTER"` - Farcaster profiles
+- `"IPFS"` - IPFS hashes
+- `"GOOGLE_FORM"` - Google Forms
+- `"WHATSAPP"` - WhatsApp contacts
+- `"DISCORD_USER"` - Discord users
+- `"QUORA"` - Quora profiles/posts
+- `"GITHUB"` - GitHub repositories/profiles
+- `"TEACHABLE"` - Teachable courses
+- `"SUBSTACK"` - Substack publications
+- `"DEBANK"` - DeBank profiles
+- `"TAWK_TO"` - Tawk.to chat widgets
+- `"JOTFORM"` - JotForm forms
+- `"PRIMAL"` - Primal profiles
+- `"BLUESKY"` - Bluesky profiles
+- `"SNAPCHAT"` - Snapchat profiles
+- `"DESO"` - DeSo profiles
+- `"PINTEREST"` - Pinterest profiles/pins
+
+</Accordion>
+
+## Response Schema
+
+### Response Body
+
+```typescript
+{
+  threats: ThreatResult[];
+  next_page: string | null;
+}
+```
+
+### Threat Result Object
+
+Each item in the `threats` array has the following structure:
+
+| Field       | Type     | Description                                   |
+| ----------- | -------- | --------------------------------------------- |
+| `id`        | `number` | Unique threat identifier                      |
+| `content`   | `string` | Threat content (URL, address, username, etc.) |
+| `type`      | `string` | Asset type (AssetType enum value)             |
+| `blockedAt` | `string` | ISO 8601 timestamp of when asset was blocked  |
+
+### Complete Response Example
+
+```json
+{
+  "threats": [
+    {
+      "id": 12345,
+      "content": "https://fake-site.com",
+      "type": "URL",
+      "blockedAt": "2024-01-15T10:30:00.000Z"
+    },
+    {
+      "id": 12346,
+      "content": "eip155:1:0x1234567890123456789012345678901234567890",
+      "type": "ADDRESS",
+      "blockedAt": "2024-01-15T09:15:00.000Z"
+    },
+    {
+      "id": 12347,
+      "content": "twitter.com/fake_account",
+      "type": "TWITTER",
+      "blockedAt": "2024-01-15T08:45:00.000Z"
+    }
+  ],
+  "next_page": "12348"
+}
+```
+
+## Access Control
+
+The API enforces strict access control based on your API key:
+
+1. **Organization API Keys**:
+
+   - Can only access threats for their associated organization
+   - Returns only threats that were blocked by the organization
+   - Example: An API key for "acme-org" can only query threats blocked by "acme-org"
+
+2. **User API Keys**:
+   - Can access threats for any organization where the user is a member
+   - Requires the user to be an active member of the queried organization
+
+If you attempt to access threats without proper permissions, you will receive a 401 Unauthorized error with the message: "Valid API key required"
+
+## Default Behavior
+
+- **Date Range**: If no `startDate` or `endDate` is provided, the API defaults to returning threats from the last 1 day
+- **Pagination**: If no `next_page` is provided, returns the first page of results
+- **Sorting**: Defaults to sorting by `id` in ascending order
+- **Page Size**: Defaults to 10 results per page (max 100)
+
+## Example Implementation
+
+<CodeGroup>
+
+```javascript JavaScript
+async function fetchThreats(params) {
+  const response = await fetch("https://api.chainpatrol.io/threats/list", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "<api-key>",
+    },
+    body: JSON.stringify(params),
+  });
+  return response.json();
+}
+
+// Example usage
+fetchThreats({
+  query: "phishing",
+  assetType: ["URL", "ADDRESS"],
+  startDate: "2024-01-01",
+  endDate: "2024-01-31",
+  per_page: 50,
+  sorting: [
+    {
+      key: "blockedAt",
+      direction: "desc",
+    },
+  ],
+})
+  .then((data) => {
+    console.log("Threats found:", data.threats.length);
+    data.threats.forEach((threat) => {
+      console.log(`ID: ${threat.id}`);
+      console.log(`Content: ${threat.content}`);
+      console.log(`Type: ${threat.type}`);
+      console.log(`Blocked At: ${threat.blockedAt}`);
+      console.log("---");
+    });
+
+    if (data.next_page) {
+      console.log("More results available with next_page:", data.next_page);
+    }
+  })
+  .catch((error) => console.error("Error fetching threats:", error));
+```
+
+```typescript TypeScript
+interface SortingConfig {
+  key: "id" | "blockedAt" | "content" | "type";
+  direction: "asc" | "desc";
+}
+
+interface ThreatListParams {
+  query?: string;
+  startDate?: string;
+  endDate?: string;
+  assetType?: string[];
+  sorting?: SortingConfig[];
+  per_page?: number;
+  next_page?: string;
+}
+
+interface ThreatResult {
+  id: number;
+  content: string;
+  type: string;
+  blockedAt: string;
+}
+
+interface ThreatListResponse {
+  threats: ThreatResult[];
+  next_page: string | null;
+}
+
+async function fetchThreats(
+  params: ThreatListParams
+): Promise<ThreatListResponse> {
+  const response = await fetch("https://api.chainpatrol.io/threats/list", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "<api-key>",
+    },
+    body: JSON.stringify(params),
+  });
+  return response.json();
+}
+
+// Example usage with pagination
+async function getAllThreats(params: ThreatListParams) {
+  const allThreats: ThreatResult[] = [];
+  let nextPage: string | null = null;
+
+  do {
+    const response = await fetchThreats({
+      ...params,
+      next_page: nextPage || undefined,
+    });
+
+    allThreats.push(...response.threats);
+    nextPage = response.next_page;
+  } while (nextPage);
+
+  return allThreats;
+}
+
+// Get all URL threats from the last week
+getAllThreats({
+  assetType: ["URL"],
+  startDate: "2024-01-01",
+  endDate: "2024-01-07",
+  per_page: 100,
+})
+  .then((threats) => {
+    console.log(`Found ${threats.length} URL threats in the last week`);
+  })
+  .catch((error) => console.error("Error fetching all threats:", error));
+```
+
+</CodeGroup>
