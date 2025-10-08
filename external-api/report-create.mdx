@@ -2,3 +2,313 @@
 title: Report Create
 openapi: "POST /report/create"
 ---
+
+<Warning>
+  This API requires an API key with appropriate permissions. See [API Key
+  Documentation](https://chainpatrol.com/docs/general/api-key) for more details.
+</Warning>
+
+## Overview
+
+The Report Create endpoint allows you to submit assets (URLs, domains, blockchain addresses, etc.) for review by the Chain Patrol team. This endpoint handles bulk submissions and provides detailed error reporting for validation failures.
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/report/create",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      organizationSlug: "your-organization",
+      assets: [
+        "https://scam-site.com",
+        "phishing.example",
+        "eip155:1:0x1234567890abcdef1234567890abcdef12345678",
+      ],
+      reason: "phishing",
+      description: "Optional description of the threat",
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/report/create",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      organizationSlug: "your-organization",
+      assets: [
+        "https://scam-site.com",
+        "phishing.example",
+        "eip155:1:0x1234567890abcdef1234567890abcdef12345678",
+      ],
+      reason: "phishing",
+      description: "Optional description of the threat",
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/report/create",
+    headers={
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    json={
+        "organizationSlug": "your-organization",
+        "assets": [
+            "https://scam-site.com",
+            "phishing.example",
+            "eip155:1:0x1234567890abcdef1234567890abcdef12345678"
+        ],
+        "reason": "phishing",
+        "description": "Optional description of the threat"
+    },
+)
+
+data = response.json()
+print(data)
+```
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/report/create' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "organizationSlug": "your-organization",
+    "assets": [
+      "https://scam-site.com",
+      "phishing.example",
+      "eip155:1:0x1234567890abcdef1234567890abcdef12345678"
+    ],
+    "reason": "phishing",
+    "description": "Optional description of the threat"
+  }'
+```
+
+</CodeGroup>
+
+## Request Parameters
+
+| Parameter        | Type     | Required | Description                                  |
+| ---------------- | -------- | -------- | -------------------------------------------- |
+| organizationSlug | string   | Yes      | Your organization identifier                 |
+| assets           | string[] | Yes      | Array of assets to report                    |
+| reason           | string   | No       | Classification of the threat type            |
+| description      | string   | No       | Additional context about the reported assets |
+
+## Response
+
+### Success Response
+
+```json
+{
+  "success": true,
+  "reportId": "rpt_1234567890abcdef",
+  "message": "Report created successfully",
+  "assetsProcessed": 3
+}
+```
+
+## Error Responses
+
+### 422 Unprocessable Content
+
+Returned when the request is syntactically valid but contains validation errors or duplicate assets. This is the most common error type and provides detailed per-asset error information.
+
+| Error Type               | Description                                           | Resolution                                           |
+| ------------------------ | ----------------------------------------------------- | ---------------------------------------------------- |
+| `DUPLICATE_ASSETS`       | Same asset appears multiple times in the report       | Remove duplicate assets from submission              |
+| `INVALID_FORMAT`         | Asset format is invalid                               | Use valid URLs, domains, or blockchain addresses     |
+| `ASSET_NOT_FOUND`        | Asset could not be located or created                 | Verify asset format and accessibility                |
+| `ASSET_ALREADY_CORRECT`  | Asset already has the requested status                | No action needed - asset is already in desired state |
+| `ALREADY_PENDING_REVIEW` | Asset has a pending proposal for the requested status | Wait for existing proposal to be processed           |
+| `REPORT_ALREADY_EXISTS`  | A pending report/proposal for this asset exists       | Check existing reports or wait for processing        |
+| `PROCESSING_FAILED`      | Technical error occurred during asset processing      | Retry the request or contact support                 |
+| `DOMAIN_NOT_ALLOWED`     | Asset's domain is on the ignore list                  | Domain is excluded from reports per content policy   |
+| `VALIDATION_ERROR`       | Generic validation error                              | Check asset format and requirements                  |
+
+#### Example: Duplicate Assets
+
+```json
+{
+  "message": "Report creation failed: Duplicate assets found. 2 asset(s) appear multiple times in the same report.",
+  "code": "UNPROCESSABLE_CONTENT",
+  "data": {
+    "errors": [
+      {
+        "asset": "scam.example",
+        "errorType": "DUPLICATE_ASSETS",
+        "message": "This asset appears multiple times in the same report",
+        "suggestion": "Remove duplicate assets from your submission - each asset should only appear once per report"
+      }
+    ]
+  }
+}
+```
+
+#### Example: Multiple Validation Errors
+
+```json
+{
+  "message": "Report creation failed: 2 of 3 assets are invalid. All assets must be valid to create a report.",
+  "code": "UNPROCESSABLE_CONTENT",
+  "data": {
+    "errors": [
+      {
+        "asset": "http",
+        "errorType": "INVALID_FORMAT",
+        "message": "This asset couldn't be processed due to invalid format",
+        "suggestion": "Use valid URLs (https://example.com), domains (example.com), or blockchain addresses (eip155:1:0x123...)"
+      },
+      {
+        "asset": "decen-masters.com",
+        "errorType": "DOMAIN_NOT_ALLOWED",
+        "message": "This domain cannot be reported as it's on the ignore list",
+        "suggestion": "This domain is currently excluded from reports based on our content policy. Please reach out to us if you believe this is an error"
+      }
+    ]
+  }
+}
+```
+
+### 500 Internal Server Error
+
+Returned for unexpected server conditions, including database errors and other technical failures. The response uses safe, generic messages to avoid exposing internal system details.
+
+#### Standard Error Response
+
+```json
+{
+  "message": "Unable to process your report. Please try again or contact support if the issue persists.",
+  "code": "INTERNAL_SERVER_ERROR"
+}
+```
+
+#### Database Error Response
+
+```json
+{
+  "message": "A database error occurred. This has been reported internally - please contact support@chainpatrol.io for assistance.",
+  "code": "INTERNAL_SERVER_ERROR"
+}
+```
+
+## Best Practices
+
+### Asset Validation
+
+**URLs**: Include the full protocol (`https://` or `http://`)
+
+**Domains**: Use clean domain names without protocols or paths
+
+**Blockchain Addresses**: Use EIP-155 format for Ethereum addresses
+
+**Avoid Duplicates**: Each asset should appear only once per report
+
+### Error Handling
+
+Always check the `data.errors` array in 422 responses for per-asset details
+
+Use the `suggestion` field in error responses to guide users
+
+Implement retry logic for 500 errors with exponential backoff
+
+### Performance Tips
+
+Batch multiple assets in a single request when possible
+
+Validate asset formats client-side before submission
+
+Handle rate limiting appropriately
+
+## Troubleshooting
+
+### Common Issues
+
+**"INVALID_FORMAT" errors:**
+
+Ensure URLs include protocol (`https://` or `http://`)
+
+Verify domain names don't include protocols or paths
+
+Check blockchain address format matches EIP-155 standard
+
+**"DUPLICATE_ASSETS" errors:**
+
+Remove duplicate entries from the assets array
+
+Check for case sensitivity differences
+
+Verify URL normalization (trailing slashes, etc.)
+
+**"DOMAIN_NOT_ALLOWED" errors:**
+
+The domain is on Chain Patrol's ignore list
+
+Contact support if you believe this is incorrect
+
+Consider reporting specific URLs instead of the entire domain
+
+**"ASSET_ALREADY_CORRECT" errors:**
+
+The asset already has the status you're requesting
+
+Check the current asset status before reporting
+
+No action needed - the asset is already in the desired state
+
+### Rate Limiting
+
+The endpoint implements rate limiting to prevent abuse. If you encounter rate limit errors:
+
+Implement exponential backoff in your retry logic
+
+Consider batching requests to reduce API calls
+
+Contact support for higher rate limits if needed
+
+## Notes
+
+Error payload shape is stable across 422 errors; check `data.errors` for per-asset details
+
+Provide the `organizationSlug` and valid `assets` to minimize 500s caused by invalid state
+
+All assets must be valid for the report to be created
+
+A report can only be created once per email address for a specific asset
+
+For technical issues or questions about error responses, contact support@chainpatrol.io and include the full error response in your request.
