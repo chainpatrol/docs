@@ -229,8 +229,8 @@
       "destination": "/external-api"
     },
     {
-      "source": "/api/*",
-      "destination": "/external-api/*"
+      "source": "/api/:slug*",
+      "destination": "/external-api/:slug*"
     },
     {
       "source": "/bots/slack",
