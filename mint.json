@@ -124,6 +124,7 @@
       "group": "Reports",
       "pages": [
         "external-api/report-create",
+        "external-api/report-search",
         "external-api/organization-reports"
       ]
     },
