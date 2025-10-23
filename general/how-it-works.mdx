@@ -1,14 +1,112 @@
 ---
 icon: gear
-title: How it works
+title: How ChainPatrol Works
+description: End‑to‑end overview of detection, reporting, blocking, and takedowns across 50+ platforms.
 ---
 
-For Web3 project operators, ChainPatrol provides a security portal that allows you to monitor
-your community for malicious activity. The security portal provides a dashboard that shows you
-the latest scams targeting your community. You can also whitelist your own links and addresses
-to prevent false positives.
+### Why ChainPatrol
 
-For wallets and security apps, ChainPatrol provides a allow/blocklist of malicious URLs, contract
-addresses, and wallet addresses through our free API.
+ChainPatrol combines automated detection, AI‑assisted analysis, and human review to protect brands and users from phishing and abuse — across 50+ platforms — and pushes block decisions to the places your users actually are (wallets, browsers, DNS resolvers, hosting providers).
 
-![Diagram highlighting the Reporting Flow on ChainPatrol](/images/how-it-works.png)
+Fast path to protection: suspicious content is detected, analyzed, reviewed, and when confirmed as a threat, protection is deployed across all major platforms within seconds to minutes.
+
+![Threat Detection Pipeline](/images/how-it-works-new.png)
+
+## 1) How threats enter the system
+
+- **Human reports (web & Slack)**
+
+  - Your team can submit suspicious URLs, addresses, and profiles through our web interface or directly from Slack
+  - We verify submissions and provide instant feedback if content is already being monitored
+  - Each submission becomes a report for our team to review
+
+- **Automated detection (50+ platforms)**
+  - We continuously scan major platforms (Google, YouTube, Twitter, app stores, Telegram, TikTok, and Web3 sources) for threats targeting your brand
+  - When we find suspicious content, we automatically create reports for review
+
+## 2) Content processing
+
+- We analyze and categorize all submitted content (URLs, addresses, social profiles, etc.) into our threat database
+- We identify relationships between different pieces of content to build a complete picture of threats
+- Duplicate submissions are automatically merged to avoid redundant work
+- Invalid or inappropriate submissions are filtered out automatically
+
+## 3) Report creation and tracking
+
+- Each threat becomes a report that our team reviews and tracks through completion
+- Reports include all relevant evidence (screenshots, metadata, related content)
+- You can see the status of all reports in your dashboard (Pending → In Review → Completed)
+- Reports are processed immediately, even for automatically detected threats
+
+## 4) Threat analysis
+
+- We gather additional information about each threat (website content, domain details, social media activity, etc.)
+- Our AI analyzes the content to determine threat type (phishing, brand impersonation, etc.) and confidence level
+- We set custom threat thresholds for your organization to match your risk tolerance
+- We automatically discover and analyze related threats to build a complete threat picture
+
+## 5) Block decisions
+
+- When we confirm a threat, we immediately update our blocklist and begin the process of protecting your users
+- This decision triggers automatic distribution to all our partner platforms and services
+
+## 6) Protection distribution
+
+- **Public blocklist**
+  - We maintain a public list of blocked threats that any service can use
+- **Direct integration with major platforms**
+  - MetaMask wallet protection
+  - Google Safe Browsing
+  - Community security lists
+  - DNS resolvers like Quad9
+- All updates are safe and tested before going live
+
+## 7) Protection verification
+
+- We continuously monitor that our blocks are active across all partner platforms
+- You can see exactly where your threats are being blocked and how quickly protection was deployed
+- This gives you confidence that your users are protected everywhere they go
+
+## 8) Automated takedowns
+
+- We automatically request takedowns from hosting providers, domain registrars, and social platforms
+- We work with major providers including Cloudflare, Vercel, GoDaddy, Squarespace, Firebase, and many others
+- For social platforms like Telegram and Twitter, we use automated reporting systems
+- We track takedown progress and avoid duplicate requests
+
+## 9) Executive reporting
+
+- We generate clear, executive-ready reports showing threats detected and actions taken
+- Reports use plain language suitable for sharing with stakeholders and management
+- You can customize reporting frequency and content to match your needs
+
+## 10) 24/7 infrastructure
+
+- Our systems run continuously with automatic failover and redundancy
+- We use rate limiting and security measures to protect against abuse
+- All actions are logged and auditable for compliance and transparency
+- We maintain strict security standards for all data and operations
+
+---
+
+### What to expect as a customer
+
+- **Coverage**: 50+ platforms with rapid additions upon request.
+- **Speed**: seconds to minutes from approval to ecosystem propagation, depending on partner SLAs.
+- **Control**: per‑org thresholds, allow/block decisions, and automated takedowns toggles.
+- **Clarity**: snapshots and dashboards that speak in plain language, ready to forward to stakeholders.
+
+### Glossary
+
+- **Asset**: normalized representation of content (URL, address, profile, etc.).
+- **Proposal**: a requested status change (Block/Allow/Unknown) on an Asset.
+- **Enrichment**: structured metadata collected during scans (DNS/HTTP/WHOIS/etc.).
+- **Consumption**: evidence that a downstream consumer has adopted our block.
+
+### Integrations (sample)
+
+- Wallets/browsers/resolvers: MetaMask (Eth‑Phishing‑Detect), Google Safe Browsing, Quad9
+- Hosting/DNS: Cloudflare, Vercel, GoDaddy, Registrar.eu, Hostinger, Porkbun, OpenProvider, OVH, Webflow, Weebly, Netlify, Firebase, Squarespace, and more
+- Community lists: SEAL‑ISAC, Polkadot Phishing
+
+If you need a new provider or platform covered, reach out — we typically add integrations in days, not weeks.
