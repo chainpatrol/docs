@@ -3,17 +3,15 @@ title: Asset List
 openapi: "POST /asset/list"
 ---
 
-<Warning>
-  The `/asset/list` API will soon require an API Key, whereas previously this
-  API was usable without an API Key. Please double check you are using a
-  ChainPatrol issued API key.
-</Warning>
+## Quick Start
 
-<Info>
-  We've recently updated this endpoint to support pagination. If you encounter
-  errors related to payload size, please consider using the pagination feature
-  as described below.
-</Info>
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: <api-key>
+```
 
 ## Pagination
 
