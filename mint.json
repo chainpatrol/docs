@@ -37,7 +37,11 @@
   },
   "openapi": "https://app.chainpatrol.io/api/v2/openapi.json",
   "api": {
-    "baseUrl": "https://app.chainpatrol.io/api/v2"
+    "baseUrl": "https://app.chainpatrol.io/api/v2",
+    "auth": {
+      "method": "key",
+      "name": "X-API-KEY"
+    }
   },
   "topbarCtaButton": {
     "name": "Dashboard",
