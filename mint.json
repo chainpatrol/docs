@@ -140,6 +140,10 @@
       "pages": ["external-api/dispute-create"]
     },
     {
+      "group": "Takedowns",
+      "pages": ["external-api/takedowns-list"]
+    },
+    {
       "group": "Metrics",
       "pages": ["external-api/organization-metrics"]
     },
