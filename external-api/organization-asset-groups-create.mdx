@@ -1,0 +1,462 @@
+---
+title: Create Asset Group
+openapi: "POST /organization/asset-groups"
+---
+
+## Overview
+
+Create a new asset group for organizing your organization's assets. Groups help you categorize assets by type, project, purpose, or any other criteria that makes sense for your use case.
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      name: "New Group",
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      name: "New Group",
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    headers={
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    json={
+        "name": "New Group",
+    },
+)
+
+data = response.json()
+print(data)
+```
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/organization/asset-groups' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "New Group"
+  }'
+```
+
+</CodeGroup>
+
+## Request Body
+
+| Field | Type   | Required | Description                                                |
+| ----- | ------ | -------- | ---------------------------------------------------------- |
+| name  | string | Yes      | Name for the new group (1-255 characters)                  |
+
+## Response
+
+### Success Response
+
+```json
+{
+  "id": 4,
+  "name": "New Group"
+}
+```
+
+### Response Fields
+
+| Field | Type   | Description                       |
+| ----- | ------ | --------------------------------- |
+| id    | number | Unique identifier for the group   |
+| name  | string | Name of the created group         |
+
+## Error Responses
+
+### 400 Bad Request
+
+Returned when the request is malformed or validation fails:
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Group name is required"
+  }
+}
+```
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Group name must be between 1 and 255 characters"
+  }
+}
+```
+
+### 401 Unauthorized
+
+Returned when the API key is missing, invalid, or doesn't have organization access:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "API key with organization access required"
+  }
+}
+```
+
+### 409 Conflict
+
+Returned when a group with the same name already exists:
+
+```json
+{
+  "error": {
+    "code": "CONFLICT",
+    "message": "A group with this name already exists"
+  }
+}
+```
+
+## Best Practices
+
+### Naming Conventions
+
+Use clear, descriptive names that reflect the group's purpose:
+
+```typescript
+// Good examples
+await createGroup("Official Websites");
+await createGroup("Treasury Wallets");
+await createGroup("Social Media Accounts");
+await createGroup("Smart Contracts - Production");
+await createGroup("Smart Contracts - Testnet");
+
+// Avoid
+await createGroup("Group1"); // Not descriptive
+await createGroup("Misc"); // Too vague
+await createGroup("test"); // Not professional
+```
+
+### Check for Existing Groups
+
+Before creating a group, check if one with the same name already exists:
+
+```typescript
+async function createGroupIfNotExists(groupName: string) {
+  // Check if group already exists
+  const listResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await listResponse.json();
+  const existingGroup = groups.find(
+    (g) => g.name.toLowerCase() === groupName.toLowerCase()
+  );
+
+  if (existingGroup) {
+    console.log(`Group "${groupName}" already exists with ID ${existingGroup.id}`);
+    return existingGroup;
+  }
+
+  // Create new group
+  const createResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({ name: groupName }),
+    }
+  );
+
+  const newGroup = await createResponse.json();
+  console.log(`Created new group "${groupName}" with ID ${newGroup.id}`);
+  return newGroup;
+}
+```
+
+### Batch Group Creation
+
+Create multiple groups in sequence:
+
+```typescript
+async function createMultipleGroups(groupNames: string[]) {
+  const results = [];
+
+  for (const name of groupNames) {
+    try {
+      const response = await fetch(
+        "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
+          },
+          body: JSON.stringify({ name }),
+        }
+      );
+
+      if (response.ok) {
+        const group = await response.json();
+        results.push({ name, success: true, id: group.id });
+      } else {
+        const error = await response.json();
+        results.push({ name, success: false, error: error.error.message });
+      }
+    } catch (error) {
+      results.push({ name, success: false, error: String(error) });
+    }
+  }
+
+  return results;
+}
+
+// Usage
+const groupNames = ["Websites", "Wallets", "Social Media", "Contracts"];
+createMultipleGroups(groupNames).then((results) => {
+  const successful = results.filter((r) => r.success).length;
+  console.log(`Created ${successful} of ${results.length} groups`);
+  
+  results.forEach((r) => {
+    if (r.success) {
+      console.log(`✓ ${r.name} (ID: ${r.id})`);
+    } else {
+      console.log(`✗ ${r.name}: ${r.error}`);
+    }
+  });
+});
+```
+
+## Use Cases
+
+### Initialize Group Structure
+
+Set up a standard group structure for a new organization:
+
+```typescript
+async function initializeGroupStructure() {
+  const standardGroups = [
+    "Official Websites",
+    "Documentation Sites",
+    "Blockchain Addresses",
+    "Smart Contracts",
+    "Twitter Accounts",
+    "Discord Servers",
+    "Telegram Channels",
+    "GitHub Repositories",
+    "Email Addresses",
+    "Other Assets",
+  ];
+
+  console.log("Initializing group structure...");
+
+  for (const groupName of standardGroups) {
+    const response = await fetch(
+      "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({ name: groupName }),
+      }
+    );
+
+    if (response.ok) {
+      const group = await response.json();
+      console.log(`✓ Created "${groupName}" (ID: ${group.id})`);
+    } else {
+      console.log(`✗ Failed to create "${groupName}"`);
+    }
+  }
+
+  console.log("Group structure initialization complete");
+}
+```
+
+### Project-Based Groups
+
+Create groups for different projects:
+
+```typescript
+async function createProjectGroups(projectName: string) {
+  const groupTypes = ["URLs", "Wallets", "Contracts", "Socials"];
+
+  const groups = [];
+
+  for (const type of groupTypes) {
+    const groupName = `${projectName} - ${type}`;
+    
+    const response = await fetch(
+      "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({ name: groupName }),
+      }
+    );
+
+    if (response.ok) {
+      const group = await response.json();
+      groups.push(group);
+      console.log(`Created group: ${groupName}`);
+    }
+  }
+
+  return groups;
+}
+
+// Usage
+createProjectGroups("DeFi Protocol").then((groups) => {
+  console.log(`Created ${groups.length} groups for project`);
+});
+```
+
+### Environment-Based Groups
+
+Organize by environment (production, staging, development):
+
+```typescript
+async function createEnvironmentGroups() {
+  const environments = ["Production", "Staging", "Development"];
+  const categories = ["URLs", "APIs", "Contracts"];
+
+  for (const env of environments) {
+    for (const category of categories) {
+      const groupName = `${env} - ${category}`;
+      
+      await fetch(
+        "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
+          },
+          body: JSON.stringify({ name: groupName }),
+        }
+      );
+
+      console.log(`Created: ${groupName}`);
+    }
+  }
+}
+```
+
+### Dynamic Group Creation
+
+Create groups dynamically based on asset type:
+
+```typescript
+async function ensureGroupForAssetType(assetType: string) {
+  const groupName = `${assetType} Assets`;
+
+  // Check if group exists
+  const listResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await listResponse.json();
+  const existingGroup = groups.find((g) => g.name === groupName);
+
+  if (existingGroup) {
+    return existingGroup.id;
+  }
+
+  // Create new group
+  const createResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({ name: groupName }),
+    }
+  );
+
+  const newGroup = await createResponse.json();
+  return newGroup.id;
+}
+
+// Usage: Automatically create groups as needed
+const urlGroupId = await ensureGroupForAssetType("URL");
+const addressGroupId = await ensureGroupForAssetType("ADDRESS");
+```
+
+## Common Error Messages
+
+| Error Message                               | Cause                                        | Resolution                              |
+| ------------------------------------------- | -------------------------------------------- | --------------------------------------- |
+| Group name is required                      | Missing `name` field in request              | Provide a `name` field                  |
+| Group name must be between 1 and 255 characters | Name is too short or too long          | Use a name with 1-255 characters        |
+| A group with this name already exists       | Duplicate group name                         | Use a different name or use existing group |
+
+## Notes
+
+- Group names must be unique within your organization
+- Names are case-sensitive for uniqueness checks
+- Group names have a maximum length of 255 characters
+- Organization is automatically determined from your API key
+- Newly created groups start with zero assets
+- Groups can be renamed later using the update endpoint
+- There is no hard limit on the number of groups per organization

@@ -125,6 +125,24 @@
       ]
     },
     {
+      "group": "Organization Assets",
+      "pages": [
+        "external-api/organization-assets-list",
+        "external-api/organization-assets-add",
+        "external-api/organization-assets-update",
+        "external-api/organization-assets-remove"
+      ]
+    },
+    {
+      "group": "Organization Asset Groups",
+      "pages": [
+        "external-api/organization-asset-groups-list",
+        "external-api/organization-asset-groups-create",
+        "external-api/organization-asset-groups-update",
+        "external-api/organization-asset-groups-delete"
+      ]
+    },
+    {
       "group": "Reports",
       "pages": [
         "external-api/report-create",

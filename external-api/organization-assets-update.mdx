@@ -1,0 +1,462 @@
+---
+title: Update Organization Asset
+openapi: "PATCH /organization/assets/{assetId}"
+---
+
+## Overview
+
+Update an asset's name, description, or group assignment. This endpoint allows you to modify metadata for assets belonging to your organization. The asset's content and type cannot be changed - create a new asset if you need to modify these fields.
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+      name: "Updated Name",
+      description: "Updated description",
+      groupId: 2,
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+      name: "Updated Name",
+      description: "Updated description",
+      groupId: 2,
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.patch(
+    "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+    headers={
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    json={
+        "assetId": 12345,
+        "name": "Updated Name",
+        "description": "Updated description",
+        "groupId": 2,
+    },
+)
+
+data = response.json()
+print(data)
+```
+
+```bash cURL
+curl -X PATCH 'https://app.chainpatrol.io/api/v2/organization/assets/12345' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "assetId": 12345,
+    "name": "Updated Name",
+    "description": "Updated description",
+    "groupId": 2
+  }'
+```
+
+</CodeGroup>
+
+## Path Parameters
+
+| Parameter | Type   | Required | Description                          |
+| --------- | ------ | -------- | ------------------------------------ |
+| assetId   | number | Yes      | ID of the asset to update            |
+
+## Request Body
+
+| Field       | Type            | Required | Description                                                                      |
+| ----------- | --------------- | -------- | -------------------------------------------------------------------------------- |
+| assetId     | number          | Yes      | ID of the asset to update (must match path parameter)                            |
+| name        | string          | No       | New display name for the asset. Omit to leave unchanged.                         |
+| description | string \| null  | No       | New description for the asset. Pass `null` to clear. Omit to leave unchanged.    |
+| groupId     | number \| null  | No       | New group ID to assign. Pass `null` to ungroup. Omit to leave unchanged.         |
+
+<Note>
+  At least one of `name`, `description`, or `groupId` must be provided to update the asset.
+</Note>
+
+## Response
+
+### Success Response
+
+```json
+{
+  "id": 12345,
+  "content": "https://example.com",
+  "name": "Updated Name",
+  "description": "Updated description",
+  "groupId": 2
+}
+```
+
+### Response Fields
+
+| Field       | Type          | Description                                             |
+| ----------- | ------------- | ------------------------------------------------------- |
+| id          | number        | Asset ID                                                |
+| content     | string        | Asset content (unchanged)                               |
+| name        | string        | Updated display name                                    |
+| description | string \| null | Updated description (null if cleared)                  |
+| groupId     | number \| null | Updated group ID (null if ungrouped)                   |
+
+## Update Operations
+
+### Update Name Only
+
+```typescript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+      name: "New Display Name",
+    }),
+  }
+);
+```
+
+### Update Description Only
+
+```typescript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+      description: "Updated asset description",
+    }),
+  }
+);
+```
+
+### Clear Description
+
+```typescript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+      description: null,
+    }),
+  }
+);
+```
+
+### Change Group Assignment
+
+Move asset to a different group:
+
+```typescript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+      groupId: 3,
+    }),
+  }
+);
+```
+
+### Ungroup Asset
+
+Remove asset from all groups:
+
+```typescript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+      groupId: null,
+    }),
+  }
+);
+```
+
+### Update Multiple Fields
+
+```typescript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+      name: "Treasury Multi-Sig",
+      description: "Main treasury wallet with 3/5 multisig",
+      groupId: 2,
+    }),
+  }
+);
+```
+
+## Error Responses
+
+### 400 Bad Request
+
+Returned when the request is malformed or contains invalid data:
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "At least one field (name, description, or groupId) must be provided"
+  }
+}
+```
+
+### 401 Unauthorized
+
+Returned when the API key is missing, invalid, or doesn't have organization access:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "API key with organization access required"
+  }
+}
+```
+
+### 403 Forbidden
+
+Returned when the asset doesn't belong to your organization:
+
+```json
+{
+  "error": {
+    "code": "FORBIDDEN",
+    "message": "Asset does not belong to your organization"
+  }
+}
+```
+
+### 404 Not Found
+
+Returned when the asset ID or group ID doesn't exist:
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Asset with ID 12345 not found"
+  }
+}
+```
+
+## Common Error Messages
+
+| Error Message                                  | Cause                                        | Resolution                                    |
+| ---------------------------------------------- | -------------------------------------------- | --------------------------------------------- |
+| Asset with ID {id} not found                   | Invalid asset ID                             | Verify the asset ID exists                    |
+| Asset does not belong to your organization     | Asset belongs to a different organization    | Use an asset ID from your organization        |
+| Group with ID {id} not found                   | Invalid group ID                             | Use a valid group ID from your organization   |
+| At least one field must be provided            | Empty update request                         | Provide at least one field to update          |
+| Path parameter assetId does not match body     | Mismatch between URL and body asset IDs      | Ensure both asset IDs match                   |
+
+## Best Practices
+
+### Field Updates
+
+- **Partial updates**: Only include fields you want to change
+- **Null vs. omit**: 
+  - Pass `null` to clear a field (description, groupId)
+  - Omit the field to leave it unchanged
+- **Validation**: Validate group IDs exist before updating
+
+### Bulk Updates
+
+When updating multiple assets, process them sequentially or in small batches:
+
+```typescript
+async function updateMultipleAssets(updates: Array<{ id: number; data: any }>) {
+  const results = [];
+
+  for (const update of updates) {
+    try {
+      const response = await fetch(
+        `https://app.chainpatrol.io/api/v2/organization/assets/${update.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
+          },
+          body: JSON.stringify({
+            assetId: update.id,
+            ...update.data,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      results.push({ id: update.id, success: true, data });
+    } catch (error) {
+      results.push({ id: update.id, success: false, error });
+    }
+  }
+
+  return results;
+}
+
+// Update multiple assets
+const updates = [
+  { id: 12345, data: { name: "Updated Name 1" } },
+  { id: 12346, data: { groupId: 2 } },
+  { id: 12347, data: { description: null } },
+];
+
+updateMultipleAssets(updates)
+  .then((results) => console.log("Update results:", results));
+```
+
+### Error Handling
+
+- Verify asset ownership before updating (check if asset belongs to your organization)
+- Validate group IDs before assignment
+- Handle 404 errors gracefully (asset may have been deleted)
+- Log failed updates for auditing
+
+## Use Cases
+
+### Organize Assets into Groups
+
+```typescript
+// Move all URL assets to "Websites" group
+async function organizeURLAssets() {
+  // First, get all URL assets
+  const listResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/assets?type=URL",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+  const { assets } = await listResponse.json();
+
+  // Then update each to assign to group
+  for (const asset of assets) {
+    await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/assets/${asset.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({
+          assetId: asset.id,
+          groupId: 1, // Websites group
+        }),
+      }
+    );
+  }
+}
+```
+
+### Add Descriptions to Assets
+
+```typescript
+// Add descriptions to assets that don't have them
+async function addDescriptions(assetDescriptions: Map<number, string>) {
+  for (const [assetId, description] of assetDescriptions) {
+    await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/assets/${assetId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({
+          assetId,
+          description,
+        }),
+      }
+    );
+  }
+}
+```
+
+## Notes
+
+- Asset content and type cannot be modified - create a new asset if needed
+- Only assets belonging to your organization can be updated
+- Organization is automatically determined from your API key
+- All update operations are atomic - either all fields update or none do
+- The response contains the updated asset information
+- Asset's `updatedAt` timestamp will be updated when any field changes
