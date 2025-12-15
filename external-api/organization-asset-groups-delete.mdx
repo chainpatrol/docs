@@ -1,0 +1,640 @@
+---
+title: Delete Asset Group
+openapi: "DELETE /organization/asset-groups/{groupId}"
+---
+
+## Overview
+
+Delete an asset group from your organization. When a group is deleted, all assets assigned to that group become ungrouped. The assets themselves are not deleted - only their group assignment is removed.
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/asset-groups/4",
+  {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      groupId: 4,
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/asset-groups/4",
+  {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      groupId: 4,
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.delete(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups/4",
+    headers={
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    json={
+        "groupId": 4,
+    },
+)
+
+data = response.json()
+print(data)
+```
+
+```bash cURL
+curl -X DELETE 'https://app.chainpatrol.io/api/v2/organization/asset-groups/4' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "groupId": 4
+  }'
+```
+
+</CodeGroup>
+
+## Path Parameters
+
+| Parameter | Type   | Required | Description                    |
+| --------- | ------ | -------- | ------------------------------ |
+| groupId   | number | Yes      | ID of the group to delete      |
+
+## Request Body
+
+| Field   | Type   | Required | Description                                           |
+| ------- | ------ | -------- | ----------------------------------------------------- |
+| groupId | number | Yes      | ID of the group to delete (must match path parameter) |
+
+## Response
+
+### Success Response
+
+```json
+{
+  "success": true,
+  "id": 4,
+  "unassignedAssetCount": 5
+}
+```
+
+### Response Fields
+
+| Field                | Type    | Description                                          |
+| -------------------- | ------- | ---------------------------------------------------- |
+| success              | boolean | Always `true` for successful deletions               |
+| id                   | number  | ID of the deleted group                              |
+| unassignedAssetCount | number  | Number of assets that were in the group (now ungrouped) |
+
+## Error Responses
+
+### 400 Bad Request
+
+Returned when the request is malformed:
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Group ID is required"
+  }
+}
+```
+
+### 401 Unauthorized
+
+Returned when the API key is missing, invalid, or doesn't have organization access:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "API key with organization access required"
+  }
+}
+```
+
+### 403 Forbidden
+
+Returned when the group doesn't belong to your organization:
+
+```json
+{
+  "error": {
+    "code": "FORBIDDEN",
+    "message": "Group does not belong to your organization"
+  }
+}
+```
+
+### 404 Not Found
+
+Returned when the group doesn't exist or was already deleted:
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Group with ID 4 not found"
+  }
+}
+```
+
+## Best Practices
+
+### Confirm Before Deletion
+
+Always confirm before deleting a group, especially if it contains assets:
+
+```typescript
+async function safeDeleteGroup(groupId: number) {
+  // First, get group details
+  const listResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await listResponse.json();
+  const group = groups.find((g) => g.id === groupId);
+
+  if (!group) {
+    console.error("Group not found");
+    return;
+  }
+
+  console.log(`About to delete group: "${group.name}"`);
+  console.log(`This will unassign ${group.assetCount} asset(s)`);
+
+  // In production, add user confirmation here
+  // const confirmed = await getUserConfirmation();
+  // if (!confirmed) return;
+
+  const deleteResponse = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/asset-groups/${groupId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({ groupId }),
+    }
+  );
+
+  const result = await deleteResponse.json();
+  console.log(
+    `✓ Deleted group "${group.name}", unassigned ${result.unassignedAssetCount} assets`
+  );
+}
+```
+
+### Reassign Assets Before Deletion
+
+Move assets to a different group before deleting:
+
+```typescript
+async function deleteGroupWithReassignment(
+  groupId: number,
+  targetGroupId: number | null
+) {
+  // Get all assets in the group
+  const assetsResponse = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/assets?groupId=${groupId}`,
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { assets } = await assetsResponse.json();
+
+  console.log(`Found ${assets.length} assets to reassign`);
+
+  // Reassign each asset
+  for (const asset of assets) {
+    await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/assets/${asset.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({
+          assetId: asset.id,
+          groupId: targetGroupId,
+        }),
+      }
+    );
+  }
+
+  console.log(`Reassigned ${assets.length} assets`);
+
+  // Now delete the group
+  const deleteResponse = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/asset-groups/${groupId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({ groupId }),
+    }
+  );
+
+  const result = await deleteResponse.json();
+  console.log(`✓ Deleted group ${groupId}`);
+  return result;
+}
+
+// Usage: Move assets to group 2 before deleting group 4
+await deleteGroupWithReassignment(4, 2);
+
+// Usage: Ungroup all assets before deleting
+await deleteGroupWithReassignment(4, null);
+```
+
+### Bulk Delete with Filtering
+
+Delete multiple groups based on criteria:
+
+```typescript
+async function deleteEmptyGroups() {
+  // Get all groups
+  const listResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await listResponse.json();
+
+  // Filter for empty groups
+  const emptyGroups = groups.filter((g) => g.assetCount === 0);
+
+  console.log(`Found ${emptyGroups.length} empty groups to delete`);
+
+  const results = [];
+
+  for (const group of emptyGroups) {
+    try {
+      const deleteResponse = await fetch(
+        `https://app.chainpatrol.io/api/v2/organization/asset-groups/${group.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
+          },
+          body: JSON.stringify({ groupId: group.id }),
+        }
+      );
+
+      if (deleteResponse.ok) {
+        const result = await deleteResponse.json();
+        results.push({ id: group.id, name: group.name, success: true });
+        console.log(`✓ Deleted empty group: "${group.name}"`);
+      } else {
+        const error = await deleteResponse.json();
+        results.push({
+          id: group.id,
+          name: group.name,
+          success: false,
+          error: error.error.message,
+        });
+      }
+    } catch (error) {
+      results.push({
+        id: group.id,
+        name: group.name,
+        success: false,
+        error: String(error),
+      });
+    }
+  }
+
+  return results;
+}
+
+// Usage
+deleteEmptyGroups().then((results) => {
+  const successful = results.filter((r) => r.success).length;
+  console.log(`\nDeleted ${successful} of ${results.length} empty groups`);
+});
+```
+
+### Audit Trail
+
+Log group deletions for compliance:
+
+```typescript
+async function deleteGroupWithAudit(
+  groupId: number,
+  deletedBy: string,
+  reason: string
+) {
+  // Get group details before deletion
+  const listResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await listResponse.json();
+  const group = groups.find((g) => g.id === groupId);
+
+  if (!group) {
+    throw new Error("Group not found");
+  }
+
+  // Perform deletion
+  const deleteResponse = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/asset-groups/${groupId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({ groupId }),
+    }
+  );
+
+  const result = await deleteResponse.json();
+
+  // Create audit log
+  const auditLog = {
+    timestamp: new Date().toISOString(),
+    action: "GROUP_DELETED",
+    groupId: group.id,
+    groupName: group.name,
+    assetCount: group.assetCount,
+    unassignedAssetCount: result.unassignedAssetCount,
+    deletedBy: deletedBy,
+    reason: reason,
+    success: result.success,
+  };
+
+  console.log("Audit log:", JSON.stringify(auditLog));
+  // await sendToAuditSystem(auditLog);
+
+  return result;
+}
+
+// Usage
+await deleteGroupWithAudit(4, "admin@example.com", "Consolidating group structure");
+```
+
+## Use Cases
+
+### Clean Up Unused Groups
+
+Remove groups that haven't been used in a while:
+
+```typescript
+async function cleanupUnusedGroups() {
+  const listResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await listResponse.json();
+
+  // Delete groups with 0 or very few assets
+  const threshold = 3;
+  const groupsToDelete = groups.filter((g) => g.assetCount <= threshold);
+
+  console.log(`Found ${groupsToDelete.length} groups with ≤${threshold} assets`);
+
+  for (const group of groupsToDelete) {
+    console.log(`Deleting "${group.name}" (${group.assetCount} assets)...`);
+
+    await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/asset-groups/${group.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({ groupId: group.id }),
+      }
+    );
+  }
+
+  console.log("Cleanup complete");
+}
+```
+
+### Consolidate Groups
+
+Delete old groups and merge their assets into a new group:
+
+```typescript
+async function consolidateGroups(
+  oldGroupIds: number[],
+  newGroupName: string
+) {
+  // Create new group
+  const createResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({ name: newGroupName }),
+    }
+  );
+
+  const newGroup = await createResponse.json();
+  console.log(`Created new group "${newGroup.name}" (ID: ${newGroup.id})`);
+
+  // Move all assets from old groups to new group
+  for (const oldGroupId of oldGroupIds) {
+    const assetsResponse = await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/assets?groupId=${oldGroupId}`,
+      {
+        headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+      }
+    );
+
+    const { assets } = await assetsResponse.json();
+    console.log(`Moving ${assets.length} assets from group ${oldGroupId}...`);
+
+    for (const asset of assets) {
+      await fetch(
+        `https://app.chainpatrol.io/api/v2/organization/assets/${asset.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
+          },
+          body: JSON.stringify({
+            assetId: asset.id,
+            groupId: newGroup.id,
+          }),
+        }
+      );
+    }
+
+    // Delete old group
+    await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/asset-groups/${oldGroupId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({ groupId: oldGroupId }),
+      }
+    );
+
+    console.log(`Deleted old group ${oldGroupId}`);
+  }
+
+  console.log("Consolidation complete");
+}
+
+// Usage: Merge groups 2, 3, and 4 into "Consolidated Assets"
+await consolidateGroups([2, 3, 4], "Consolidated Assets");
+```
+
+### Interactive Deletion
+
+Provide an interactive interface for group deletion:
+
+```typescript
+import * as readline from "readline";
+
+async function interactiveDeleteGroup(groupId: number) {
+  // Get group details
+  const listResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await listResponse.json();
+  const group = groups.find((g) => g.id === groupId);
+
+  if (!group) {
+    console.error("Group not found");
+    return;
+  }
+
+  console.log("\nGroup to be deleted:");
+  console.log(`  ID: ${group.id}`);
+  console.log(`  Name: ${group.name}`);
+  console.log(`  Asset count: ${group.assetCount}\n`);
+
+  if (group.assetCount > 0) {
+    console.log(
+      `⚠️  Warning: This group contains ${group.assetCount} asset(s) that will become ungrouped.\n`
+    );
+  }
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  rl.question(
+    'Type the group name to confirm deletion (or press Enter to cancel): ',
+    async (confirmation) => {
+      if (confirmation !== group.name) {
+        console.log("Deletion cancelled");
+        rl.close();
+        return;
+      }
+
+      const deleteResponse = await fetch(
+        `https://app.chainpatrol.io/api/v2/organization/asset-groups/${groupId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
+          },
+          body: JSON.stringify({ groupId }),
+        }
+      );
+
+      if (deleteResponse.ok) {
+        const result = await deleteResponse.json();
+        console.log(
+          `\n✓ Group deleted successfully. Unassigned ${result.unassignedAssetCount} assets.`
+        );
+      } else {
+        const error = await deleteResponse.json();
+        console.error(`\n✗ Failed to delete: ${error.error.message}`);
+      }
+
+      rl.close();
+    }
+  );
+}
+```
+
+## Common Error Messages
+
+| Error Message                               | Cause                                     | Resolution                            |
+| ------------------------------------------- | ----------------------------------------- | ------------------------------------- |
+| Group with ID {id} not found                | Invalid group ID or already deleted       | Verify the group ID exists            |
+| Group does not belong to your organization  | Group belongs to a different organization | Use a group ID from your organization |
+| Group ID is required                        | Missing `groupId` field in request        | Provide a `groupId` field             |
+| Path parameter groupId does not match body  | Mismatch between URL and body group IDs   | Ensure both group IDs match           |
+
+## Notes
+
+- Deleting a group does **not** delete the assets - they become ungrouped
+- The `unassignedAssetCount` in the response shows how many assets were affected
+- Organization is automatically determined from your API key
+- The group ID must match in both the URL path and request body
+- Empty groups (with 0 assets) can be safely deleted without side effects
+- This operation cannot be undone - consider exporting group data before deletion
+- Ungrouped assets can be reassigned to groups at any time using the update asset endpoint

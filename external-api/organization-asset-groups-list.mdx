@@ -1,0 +1,385 @@
+---
+title: List Asset Groups
+openapi: "GET /organization/asset-groups"
+---
+
+## Overview
+
+List all asset groups belonging to your organization. Asset groups help you organize your assets by category, project, or purpose. Each group includes a count of assigned assets for easy inventory management.
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+  {
+    method: "GET",
+    headers: {
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+  }
+);
+
+const data = await response.json();
+console.log(data.groups);
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+  {
+    method: "GET",
+    headers: {
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+  }
+);
+
+const data = await response.json();
+console.log(data.groups);
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    headers={
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+)
+
+data = response.json()
+print(data["groups"])
+```
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/asset-groups' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+</CodeGroup>
+
+## Response
+
+### Success Response
+
+```json
+{
+  "groups": [
+    {
+      "id": 1,
+      "name": "URLs",
+      "assetCount": 25
+    },
+    {
+      "id": 2,
+      "name": "Wallets",
+      "assetCount": 10
+    },
+    {
+      "id": 3,
+      "name": "Socials",
+      "assetCount": 15
+    },
+    {
+      "id": 4,
+      "name": "Empty Group",
+      "assetCount": 0
+    }
+  ]
+}
+```
+
+### Response Fields
+
+| Field               | Type   | Description                                          |
+| ------------------- | ------ | ---------------------------------------------------- |
+| groups              | array  | Array of group objects belonging to your organization |
+| groups[].id         | number | Unique identifier for the group                       |
+| groups[].name       | string | Display name of the group                             |
+| groups[].assetCount | number | Number of assets currently assigned to this group     |
+
+## Error Responses
+
+### 401 Unauthorized
+
+Returned when the API key is missing, invalid, or doesn't have organization access:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "API key with organization access required"
+  }
+}
+```
+
+## Use Cases
+
+### Display Group Statistics
+
+```typescript
+async function displayGroupStats() {
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await response.json();
+
+  console.log("Asset Group Statistics:");
+  console.log("========================");
+
+  groups.forEach((group) => {
+    console.log(`${group.name}: ${group.assetCount} assets`);
+  });
+
+  const totalAssets = groups.reduce((sum, g) => sum + g.assetCount, 0);
+  console.log(`\nTotal: ${totalAssets} assets across ${groups.length} groups`);
+}
+```
+
+### Find Group by Name
+
+```typescript
+async function findGroupByName(groupName: string) {
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await response.json();
+  const group = groups.find((g) => g.name.toLowerCase() === groupName.toLowerCase());
+
+  if (group) {
+    console.log(`Found group "${group.name}" (ID: ${group.id}) with ${group.assetCount} assets`);
+    return group;
+  } else {
+    console.log(`Group "${groupName}" not found`);
+    return null;
+  }
+}
+
+// Usage
+findGroupByName("Wallets");
+```
+
+### Identify Empty Groups
+
+```typescript
+async function findEmptyGroups() {
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await response.json();
+  const emptyGroups = groups.filter((g) => g.assetCount === 0);
+
+  if (emptyGroups.length > 0) {
+    console.log(`Found ${emptyGroups.length} empty groups:`);
+    emptyGroups.forEach((g) => console.log(`  - ${g.name} (ID: ${g.id})`));
+  } else {
+    console.log("No empty groups found");
+  }
+
+  return emptyGroups;
+}
+```
+
+### Build Group Selector UI
+
+```typescript
+interface GroupOption {
+  value: number;
+  label: string;
+  count: number;
+}
+
+async function getGroupOptions(): Promise<GroupOption[]> {
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await response.json();
+
+  return groups.map((group) => ({
+    value: group.id,
+    label: `${group.name} (${group.assetCount})`,
+    count: group.assetCount,
+  }));
+}
+
+// Usage in a UI framework
+async function renderGroupSelector() {
+  const options = await getGroupOptions();
+  
+  // Example for React/similar framework
+  // return (
+  //   <select>
+  //     {options.map(opt => (
+  //       <option key={opt.value} value={opt.value}>
+  //         {opt.label}
+  //       </option>
+  //     ))}
+  //   </select>
+  // );
+}
+```
+
+### Export Group Summary
+
+```typescript
+async function exportGroupSummary() {
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await response.json();
+
+  // Create CSV content
+  const csvHeader = "Group ID,Group Name,Asset Count\n";
+  const csvRows = groups
+    .map((g) => `${g.id},"${g.name}",${g.assetCount}`)
+    .join("\n");
+  const csvContent = csvHeader + csvRows;
+
+  // Save to file (Node.js)
+  const fs = require("fs");
+  fs.writeFileSync("group-summary.csv", csvContent);
+  console.log("Group summary exported to group-summary.csv");
+}
+```
+
+### Monitor Group Growth
+
+```typescript
+async function monitorGroupGrowth() {
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { groups } = await response.json();
+
+  // Sort by asset count
+  const sortedGroups = [...groups].sort((a, b) => b.assetCount - a.assetCount);
+
+  console.log("Groups by size (largest first):");
+  sortedGroups.forEach((group, index) => {
+    const percentage = groups.reduce((sum, g) => sum + g.assetCount, 0);
+    const groupPercentage = ((group.assetCount / percentage) * 100).toFixed(1);
+    console.log(
+      `${index + 1}. ${group.name}: ${group.assetCount} assets (${groupPercentage}%)`
+    );
+  });
+}
+```
+
+## Best Practices
+
+### Caching
+
+- Cache group lists when building UI dropdowns to reduce API calls
+- Invalidate cache when groups are created, updated, or deleted
+- Consider a cache TTL of 5-10 minutes for typical use cases
+
+### Performance
+
+- This endpoint returns all groups in a single request (no pagination needed)
+- Groups are typically small in number (< 100 for most organizations)
+- Use this endpoint to build lookup tables for group ID to name mappings
+
+### Integration
+
+```typescript
+// Create a helper class for group management
+class GroupManager {
+  private apiKey: string;
+  private cache: Map<number, { name: string; assetCount: number }> = new Map();
+  private cacheTime: number = 0;
+  private cacheTTL: number = 5 * 60 * 1000; // 5 minutes
+
+  constructor(apiKey: string) {
+    this.apiKey = apiKey;
+  }
+
+  async getGroups(forceRefresh: boolean = false) {
+    if (!forceRefresh && Date.now() - this.cacheTime < this.cacheTTL) {
+      return Array.from(this.cache.values());
+    }
+
+    const response = await fetch(
+      "https://app.chainpatrol.io/api/v2/organization/asset-groups",
+      {
+        headers: { "X-API-KEY": this.apiKey },
+      }
+    );
+
+    const { groups } = await response.json();
+    
+    this.cache.clear();
+    groups.forEach((g) => {
+      this.cache.set(g.id, { name: g.name, assetCount: g.assetCount });
+    });
+    this.cacheTime = Date.now();
+
+    return groups;
+  }
+
+  async getGroupName(groupId: number): Promise<string | null> {
+    if (this.cache.has(groupId)) {
+      return this.cache.get(groupId)!.name;
+    }
+
+    await this.getGroups();
+    return this.cache.get(groupId)?.name || null;
+  }
+
+  invalidateCache() {
+    this.cache.clear();
+    this.cacheTime = 0;
+  }
+}
+
+// Usage
+const manager = new GroupManager("YOUR_API_KEY_HERE");
+const groups = await manager.getGroups();
+const groupName = await manager.getGroupName(1);
+```
+
+## Notes
+
+- Organization is automatically determined from your API key
+- All groups belonging to your organization are returned in a single response
+- The `assetCount` reflects the current number of assets assigned to each group
+- Groups with zero assets are still included in the response
+- Group IDs are unique within your organization
+- This endpoint does not support pagination as the number of groups is typically small

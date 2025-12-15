@@ -1,0 +1,359 @@
+---
+title: List Organization Assets
+openapi: "GET /organization/assets"
+---
+
+## Overview
+
+List all assets belonging to your organization with optional filtering by type, group, and search query. The organization is automatically inferred from your API key. This endpoint supports pagination for efficient handling of large asset collections.
+
+## Quick Start
+
+### Authentication
+
+All organization endpoints require an API key with organization access. Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets?type=URL&per_page=100",
+  {
+    method: "GET",
+    headers: {
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+  }
+);
+
+const data = await response.json();
+console.log(data.assets);
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets?type=URL&per_page=100",
+  {
+    method: "GET",
+    headers: {
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+  }
+);
+
+const data = await response.json();
+console.log(data.assets);
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://app.chainpatrol.io/api/v2/organization/assets",
+    headers={
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    params={
+        "type": "URL",
+        "per_page": 100,
+    },
+)
+
+data = response.json()
+print(data["assets"])
+```
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?type=URL&per_page=100' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+</CodeGroup>
+
+## Query Parameters
+
+| Parameter | Type   | Required | Description                                                                                                                                                                              |
+| --------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type      | string | No       | Filter by asset type: `URL`, `ADDRESS`, `PAGE`, `DISCORD`, `TELEGRAM`, `TWITTER`, `INSTAGRAM`, `MEDIUM`, `GITHUB`, `YOUTUBE`, `LINKEDIN`, `TWITCH`, `TIKTOK`, `EMAIL`                  |
+| groupId   | number | No       | Filter by group ID. Use `-1` for ungrouped assets only. Omit to include all assets regardless of group assignment.                                                                      |
+| query     | string | No       | Search query to filter assets by content. Performs a case-insensitive search across asset content, name, and description fields.                                                        |
+| per_page  | number | No       | Number of assets to return per page. Valid range: 1-1000. Default: 100. Use larger values for bulk operations and smaller values for responsive UI pagination.                         |
+| next_page | string | No       | Cursor token for fetching the next page of results. This value is returned in the response when more results are available. Pass it in subsequent requests to continue pagination.     |
+
+## Response
+
+### Success Response
+
+```json
+{
+  "assets": [
+    {
+      "id": 12345,
+      "content": "https://example.com",
+      "type": "URL",
+      "status": "ALLOWED",
+      "name": "Main Website",
+      "description": "Our official website",
+      "group": {
+        "id": 1,
+        "name": "URLs"
+      },
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    },
+    {
+      "id": 12346,
+      "content": "0x1234567890abcdef1234567890abcdef12345678",
+      "type": "ADDRESS",
+      "status": "ALLOWED",
+      "name": "Treasury Wallet",
+      "description": null,
+      "group": null,
+      "createdAt": "2024-01-15T11:00:00.000Z",
+      "updatedAt": "2024-01-15T11:00:00.000Z"
+    }
+  ],
+  "next_page": "12347"
+}
+```
+
+### Response Fields
+
+| Field                | Type   | Description                                                                                   |
+| -------------------- | ------ | --------------------------------------------------------------------------------------------- |
+| assets               | array  | Array of asset objects belonging to your organization                                         |
+| assets[].id          | number | Unique identifier for the asset                                                               |
+| assets[].content     | string | The actual asset content (URL, address, handle, etc.)                                         |
+| assets[].type        | string | Asset type classification                                                                     |
+| assets[].status      | string | Asset status, typically `ALLOWED` for organization assets                                     |
+| assets[].name        | string | Display name for the asset (optional)                                                         |
+| assets[].description | string | Description of the asset (optional, can be null)                                              |
+| assets[].group       | object | Group object containing `id` and `name` if asset is assigned to a group, null if ungrouped   |
+| assets[].createdAt   | string | ISO 8601 timestamp when the asset was created                                                 |
+| assets[].updatedAt   | string | ISO 8601 timestamp when the asset was last updated                                            |
+| next_page            | string | Cursor token for the next page of results. Undefined/null when no more results are available. |
+
+## Pagination
+
+To fetch all assets, use the `next_page` cursor returned in each response:
+
+<CodeGroup>
+
+```typescript TypeScript
+async function fetchAllAssets() {
+  let allAssets = [];
+  let nextPage: string | undefined = undefined;
+
+  while (true) {
+    const params = new URLSearchParams({
+      per_page: "500",
+      ...(nextPage && { next_page: nextPage }),
+    });
+
+    const response = await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/assets?${params}`,
+      {
+        method: "GET",
+        headers: {
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+      }
+    );
+
+    const data = await response.json();
+    allAssets = allAssets.concat(data.assets);
+    nextPage = data.next_page;
+
+    if (!nextPage) {
+      break;
+    }
+  }
+
+  return allAssets;
+}
+
+fetchAllAssets()
+  .then((assets) => console.log(`Total assets: ${assets.length}`))
+  .catch((error) => console.error("Error:", error));
+```
+
+```javascript JavaScript
+async function fetchAllAssets() {
+  let allAssets = [];
+  let nextPage = undefined;
+
+  while (true) {
+    const params = new URLSearchParams({
+      per_page: "500",
+      ...(nextPage && { next_page: nextPage }),
+    });
+
+    const response = await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/assets?${params}`,
+      {
+        method: "GET",
+        headers: {
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+      }
+    );
+
+    const data = await response.json();
+    allAssets = allAssets.concat(data.assets);
+    nextPage = data.next_page;
+
+    if (!nextPage) {
+      break;
+    }
+  }
+
+  return allAssets;
+}
+
+fetchAllAssets()
+  .then((assets) => console.log(`Total assets: ${assets.length}`))
+  .catch((error) => console.error("Error:", error));
+```
+
+```python Python
+import requests
+
+def fetch_all_assets():
+    all_assets = []
+    next_page = None
+
+    while True:
+        params = {"per_page": 500}
+        if next_page:
+            params["next_page"] = next_page
+
+        response = requests.get(
+            "https://app.chainpatrol.io/api/v2/organization/assets",
+            headers={"X-API-KEY": "YOUR_API_KEY_HERE"},
+            params=params,
+        )
+
+        data = response.json()
+        all_assets.extend(data["assets"])
+        next_page = data.get("next_page")
+
+        if not next_page:
+            break
+
+    return all_assets
+
+try:
+    assets = fetch_all_assets()
+    print(f"Total assets: {len(assets)}")
+except Exception as error:
+    print(f"Error: {str(error)}")
+```
+
+</CodeGroup>
+
+## Filtering Examples
+
+### Filter by Type
+
+Get only URL assets:
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?type=URL' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+### Filter by Group
+
+Get assets in a specific group:
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?groupId=1' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+Get only ungrouped assets:
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?groupId=-1' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+### Search Assets
+
+Search for assets containing "wallet":
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?query=wallet' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+### Combine Filters
+
+Get URL assets in group 1 containing "main":
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?type=URL&groupId=1&query=main' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+## Error Responses
+
+### 401 Unauthorized
+
+Returned when the API key is missing, invalid, or doesn't have organization access:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "API key with organization access required"
+  }
+}
+```
+
+### 400 Bad Request
+
+Returned when query parameters are invalid:
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Invalid asset type provided"
+  }
+}
+```
+
+## Best Practices
+
+### Pagination
+
+- Use `per_page=500` or higher for bulk operations to minimize API calls
+- Use `per_page=50-100` for UI pagination for responsive user experience
+- Always check for `next_page` in the response to determine if more results exist
+
+### Filtering
+
+- Apply filters server-side rather than fetching all assets and filtering client-side
+- Combine filters to narrow down results efficiently
+- Use the `query` parameter for user-driven search features
+
+### Performance
+
+- Cache asset lists when appropriate to reduce API calls
+- Use appropriate `per_page` values based on your use case
+- Consider implementing incremental loading for large datasets
+
+## Notes
+
+- Organization is automatically determined from your API key
+- All timestamps are in ISO 8601 format with UTC timezone
+- Asset `status` for organization assets is typically `ALLOWED`
+- The `group` field is `null` when an asset is not assigned to any group
+- The `next_page` cursor is opaque and should not be parsed or modified

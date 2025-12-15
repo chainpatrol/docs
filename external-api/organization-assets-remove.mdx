@@ -1,0 +1,494 @@
+---
+title: Remove Organization Asset
+openapi: "DELETE /organization/assets/{assetId}"
+---
+
+## Overview
+
+Remove an asset from your organization's allowlist. This operation removes the association between the asset and your organization - the asset itself remains in the ChainPatrol system but is no longer tied to your organization. The asset must belong to your organization to be removed.
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+  {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 12345,
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.delete(
+    "https://app.chainpatrol.io/api/v2/organization/assets/12345",
+    headers={
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    json={
+        "assetId": 12345,
+    },
+)
+
+data = response.json()
+print(data)
+```
+
+```bash cURL
+curl -X DELETE 'https://app.chainpatrol.io/api/v2/organization/assets/12345' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "assetId": 12345
+  }'
+```
+
+</CodeGroup>
+
+## Path Parameters
+
+| Parameter | Type   | Required | Description                    |
+| --------- | ------ | -------- | ------------------------------ |
+| assetId   | number | Yes      | ID of the asset to remove      |
+
+## Request Body
+
+| Field   | Type   | Required | Description                                       |
+| ------- | ------ | -------- | ------------------------------------------------- |
+| assetId | number | Yes      | ID of the asset to remove (must match path parameter) |
+
+## Response
+
+### Success Response
+
+```json
+{
+  "success": true,
+  "id": 12345
+}
+```
+
+### Response Fields
+
+| Field   | Type    | Description                              |
+| ------- | ------- | ---------------------------------------- |
+| success | boolean | Always `true` for successful removals    |
+| id      | number  | ID of the asset removed from organization |
+
+## Error Responses
+
+### 400 Bad Request
+
+Returned when the request is malformed:
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Asset ID is required"
+  }
+}
+```
+
+### 401 Unauthorized
+
+Returned when the API key is missing, invalid, or doesn't have organization access:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "API key with organization access required"
+  }
+}
+```
+
+### 403 Forbidden
+
+Returned when the asset doesn't belong to your organization:
+
+```json
+{
+  "error": {
+    "code": "FORBIDDEN",
+    "message": "Asset does not belong to your organization"
+  }
+}
+```
+
+### 404 Not Found
+
+Returned when the asset doesn't exist or was already removed from your organization:
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Asset with ID 12345 not found"
+  }
+}
+```
+
+## Best Practices
+
+### Verification Before Removal
+
+Always verify the asset before removal to prevent accidental operations:
+
+```typescript
+async function safeRemoveAsset(assetId: number) {
+  // First, fetch the asset to verify it exists and belongs to your org
+  const getResponse = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/assets?query=${assetId}`,
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { assets } = await getResponse.json();
+  const asset = assets.find((a) => a.id === assetId);
+
+  if (!asset) {
+    console.error("Asset not found or doesn't belong to organization");
+    return;
+  }
+
+  // Show confirmation
+  console.log(`About to remove from organization: ${asset.content} (${asset.name})`);
+  
+  // Proceed with removal
+  const deleteResponse = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/assets/${assetId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({ assetId }),
+    }
+  );
+
+  const result = await deleteResponse.json();
+  console.log("Asset removed from organization:", result);
+}
+```
+
+### Bulk Removal
+
+When removing multiple assets from your organization, process them sequentially with error handling:
+
+```typescript
+async function bulkRemoveAssets(assetIds: number[]) {
+  const results = [];
+
+  for (const assetId of assetIds) {
+    try {
+      const response = await fetch(
+        `https://app.chainpatrol.io/api/v2/organization/assets/${assetId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
+          },
+          body: JSON.stringify({ assetId }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        results.push({ id: assetId, success: true });
+      } else {
+        const error = await response.json();
+        results.push({ id: assetId, success: false, error: error.error.message });
+      }
+    } catch (error) {
+      results.push({ id: assetId, success: false, error: String(error) });
+    }
+  }
+
+  return results;
+}
+
+// Usage
+const assetIds = [12345, 12346, 12347];
+bulkRemoveAssets(assetIds).then((results) => {
+  const successful = results.filter((r) => r.success).length;
+  const failed = results.filter((r) => !r.success).length;
+  console.log(`Removed ${successful} assets from organization, ${failed} failed`);
+  
+  // Log failures
+  results
+    .filter((r) => !r.success)
+    .forEach((r) => console.error(`Failed to remove ${r.id}: ${r.error}`));
+});
+```
+
+### Audit Logging
+
+Implement logging for removal operations for compliance and debugging:
+
+```typescript
+async function removeAssetWithAudit(
+  assetId: number,
+  reason: string,
+  removedBy: string
+) {
+  // Fetch asset details for audit log
+  const getResponse = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/assets",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+  const { assets } = await getResponse.json();
+  const asset = assets.find((a) => a.id === assetId);
+
+  if (!asset) {
+    throw new Error("Asset not found");
+  }
+
+  // Perform removal
+  const deleteResponse = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/assets/${assetId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({ assetId }),
+    }
+  );
+
+  const result = await deleteResponse.json();
+
+  // Log to your audit system
+  const auditLog = {
+    timestamp: new Date().toISOString(),
+    action: "ASSET_REMOVED_FROM_ORGANIZATION",
+    assetId: asset.id,
+    assetContent: asset.content,
+    assetName: asset.name,
+    assetType: asset.type,
+    removedBy,
+    reason,
+    success: result.success,
+  };
+
+  console.log("Audit log:", JSON.stringify(auditLog));
+  // await sendToAuditSystem(auditLog);
+
+  return result;
+}
+
+// Usage
+await removeAssetWithAudit(
+  12345,
+  "Asset no longer in use",
+  "admin@example.com"
+);
+```
+
+## Use Cases
+
+### Remove Outdated Assets
+
+```typescript
+// Remove assets that haven't been updated in over a year
+async function removeStaleAssets() {
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+  // Fetch all assets
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/assets",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { assets } = await response.json();
+
+  // Filter for stale assets
+  const staleAssets = assets.filter((asset) => {
+    const updatedAt = new Date(asset.updatedAt);
+    return updatedAt < oneYearAgo;
+  });
+
+  console.log(`Found ${staleAssets.length} stale assets`);
+
+  // Delete each stale asset
+  for (const asset of staleAssets) {
+    await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/assets/${asset.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({ assetId: asset.id }),
+      }
+    );
+    console.log(`Removed stale asset: ${asset.content}`);
+  }
+}
+```
+
+### Remove Assets by Group
+
+```typescript
+// Remove all assets in a specific group
+async function removeAssetsByGroup(groupId: number) {
+  // Fetch all assets in the group
+  const response = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/assets?groupId=${groupId}`,
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { assets } = await response.json();
+
+  console.log(`Removing ${assets.length} assets from group ${groupId}`);
+
+  // Delete each asset
+  const results = await Promise.all(
+    assets.map(async (asset) => {
+      const deleteResponse = await fetch(
+        `https://app.chainpatrol.io/api/v2/organization/assets/${asset.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
+          },
+          body: JSON.stringify({ assetId: asset.id }),
+        }
+      );
+      return deleteResponse.json();
+    })
+  );
+
+  const successCount = results.filter((r) => r.success).length;
+  console.log(`Successfully removed ${successCount} assets`);
+}
+```
+
+### Interactive Removal with Confirmation
+
+```typescript
+import * as readline from "readline";
+
+async function removeAssetInteractive(assetId: number) {
+  // Fetch asset details
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/assets",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+  const { assets } = await response.json();
+  const asset = assets.find((a) => a.id === assetId);
+
+  if (!asset) {
+    console.error("Asset not found");
+    return;
+  }
+
+  // Display asset details
+  console.log("\nAsset to be removed from organization:");
+  console.log(`  ID: ${asset.id}`);
+  console.log(`  Content: ${asset.content}`);
+  console.log(`  Name: ${asset.name}`);
+  console.log(`  Type: ${asset.type}`);
+  console.log(`  Group: ${asset.group?.name || "None"}\n`);
+
+  // Ask for confirmation
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  rl.question("Are you sure you want to remove this asset from your organization? (yes/no): ", async (answer) => {
+    if (answer.toLowerCase() === "yes") {
+      const deleteResponse = await fetch(
+        `https://app.chainpatrol.io/api/v2/organization/assets/${assetId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
+          },
+          body: JSON.stringify({ assetId }),
+        }
+      );
+
+      const result = await deleteResponse.json();
+      if (result.success) {
+        console.log("Asset successfully removed from organization");
+      } else {
+        console.error("Failed to remove asset");
+      }
+    } else {
+      console.log("Removal cancelled");
+    }
+    rl.close();
+  });
+}
+```
+
+## Notes
+
+- This operation removes the association between the asset and your organization - the asset itself remains in the ChainPatrol system
+- The asset will no longer appear in your organization's asset lists after removal
+- Only assets belonging to your organization can be removed
+- Organization is automatically determined from your API key
+- Asset ID must match in both the URL path and request body
+- You can re-add the same asset to your organization later if needed using the Add Assets endpoint
+- Removing an asset does not affect its existence in the ChainPatrol database or its status for other organizations
