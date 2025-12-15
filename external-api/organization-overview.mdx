@@ -81,7 +81,7 @@ If you have a user API key with access to multiple organizations, you cannot use
 
 ## Available Endpoints
 
-### Organization Assets
+### Assets
 
 Manage your organization's allowlist of trusted assets:
 
@@ -119,18 +119,21 @@ Organize your assets into groups by category, project, or purpose:
   </Card>
 </CardGroup>
 
-### Reporting & Metrics
+### Reporting
 
-Access your organization's security reports and metrics:
+Access your organization's security reports:
 
-<CardGroup cols={2}>
-  <Card title="Organization Reports" icon="file-lines" href="/external-api/organization-reports">
-    Retrieve security reports for your organization
-  </Card>
-  <Card title="Organization Metrics" icon="chart-line" href="/external-api/organization-metrics">
-    Get threat detection and blocking metrics
-  </Card>
-</CardGroup>
+<Card title="List Reports" icon="file-lines" href="/external-api/organization-reports-rest">
+  Retrieve security reports for your organization with filtering and pagination
+</Card>
+
+### Metrics
+
+Track your organization's security metrics and analytics:
+
+<Card title="Get Metrics" icon="chart-line" href="/external-api/organization-metrics-rest">
+  Get comprehensive threat detection and blocking metrics
+</Card>
 
 ## Getting Started
 

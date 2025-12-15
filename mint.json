@@ -126,7 +126,10 @@
     },
     {
       "group": "Reports",
-      "pages": ["external-api/report-create"]
+      "pages": [
+        "external-api/report-create",
+        "external-api/organization-reports"
+      ]
     },
     {
       "group": "Threats",
@@ -141,11 +144,15 @@
       "pages": ["external-api/takedowns-list"]
     },
     {
+      "group": "Metrics",
+      "pages": ["external-api/organization-metrics"]
+    },
+    {
       "group": "Organization API",
       "pages": ["external-api/organization-overview"]
     },
     {
-      "group": "Organization Assets",
+      "group": "Assets",
       "pages": [
         "external-api/organization-assets-list",
         "external-api/organization-assets-add",
@@ -163,11 +170,12 @@
       ]
     },
     {
-      "group": "Reporting & Metrics",
-      "pages": [
-        "external-api/organization-reports",
-        "external-api/organization-metrics"
-      ]
+      "group": "Reporting",
+      "pages": ["external-api/organization-reports-list"]
+    },
+    {
+      "group": "Metrics",
+      "pages": ["external-api/organization-metrics-list"]
     },
     {
       "group": "@chainpatrol/sdk",
