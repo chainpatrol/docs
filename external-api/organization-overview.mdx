@@ -240,14 +240,6 @@ console.log(`Added ${result.successCount} assets`);
 - Rotate API keys periodically
 - Never commit API keys to version control
 
-## CORS Considerations
-
-If you're using these endpoints from a frontend application, note that they use GET, PATCH, and DELETE HTTP methods in addition to POST. Ensure your CORS configuration allows these methods:
-
-```
-Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS
-```
-
 ## Rate Limiting
 
 Organization Management API endpoints are subject to rate limiting to ensure service stability. If you encounter rate limit errors:
