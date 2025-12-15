@@ -1,0 +1,283 @@
+---
+title: Organization API
+sidebarTitle: Overview
+---
+
+## Introduction
+
+The Organization API provides endpoints for managing your organization's assets, groups, reports, and metrics within ChainPatrol. These endpoints are designed specifically for organization administrators to maintain their allowlists and track security metrics.
+
+## Key Differences from Public API
+
+The Organization Management API differs from the Public ChainPatrol API in several important ways:
+
+### API Design Pattern
+
+| Feature | Organization API | Public API |
+|---------|-----------------|------------|
+| **HTTP Methods** | RESTful (GET, PATCH, DELETE, POST) | POST-only |
+| **Organization Selection** | Inferred from API key | `organizationSlug` in request body |
+| **Multi-org Access** | Single organization per API key | Multiple organizations with user API keys |
+| **Use Case** | Managing your organization's assets | Querying public threat data |
+
+### REST Convention
+
+The Organization API follows REST conventions with semantic HTTP verbs:
+
+- **GET** - Retrieve resources (list assets, groups)
+- **POST** - Create new resources (add assets, create groups)
+- **PATCH** - Update existing resources (modify asset metadata)
+- **DELETE** - Remove resources (delete from organization)
+
+This makes the API more intuitive and self-documenting for CRUD operations on your organization's resources.
+
+## Authentication & Organization Scoping
+
+### Organization-Scoped API Keys Required
+
+All Organization API endpoints require an **organization-scoped API key**. These keys are:
+
+- Tied to a specific organization
+- Generated from your organization settings in the ChainPatrol dashboard
+- Automatically scope all requests to your organization
+
+```bash
+X-API-KEY: your-organization-api-key
+```
+
+### No organizationSlug Parameter
+
+Unlike Public API endpoints, you do **not** need to provide an `organizationSlug` parameter. The organization is automatically inferred from your API key, simplifying request payloads and reducing errors.
+
+**Example comparison:**
+
+```javascript
+// Public API - requires organizationSlug
+await fetch("https://app.chainpatrol.io/api/v2/public/getOrganizationMetrics", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer your-api-key",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    organizationSlug: "your-org",  // Required
+    startDate: "2024-01-01",
+    endDate: "2024-12-31"
+  })
+});
+
+// Organization API - org inferred from API key
+await fetch("https://app.chainpatrol.io/api/v2/organization/assets", {
+  method: "GET",
+  headers: {
+    "X-API-KEY": "your-api-key"  // Organization determined automatically
+  }
+});
+```
+
+### User API Keys Not Supported
+
+If you have a user API key with access to multiple organizations, you cannot use it with these endpoints. You must generate separate organization-specific API keys for each organization you want to manage.
+
+## Available Endpoints
+
+### Organization Assets
+
+Manage your organization's allowlist of trusted assets:
+
+<CardGroup cols={2}>
+  <Card title="List Assets" icon="list" href="/external-api/organization-assets-list">
+    Retrieve all assets with filtering and pagination
+  </Card>
+  <Card title="Add Assets" icon="plus" href="/external-api/organization-assets-add">
+    Batch add up to 1,000 assets to your allowlist
+  </Card>
+  <Card title="Update Asset" icon="pen" href="/external-api/organization-assets-update">
+    Modify asset name, description, or group
+  </Card>
+  <Card title="Remove Asset" icon="trash" href="/external-api/organization-assets-remove">
+    Remove asset from your organization
+  </Card>
+</CardGroup>
+
+### Asset Groups
+
+Organize your assets into groups by category, project, or purpose:
+
+<CardGroup cols={2}>
+  <Card title="List Groups" icon="folder" href="/external-api/organization-asset-groups-list">
+    Get all groups with asset counts
+  </Card>
+  <Card title="Create Group" icon="folder-plus" href="/external-api/organization-asset-groups-create">
+    Create a new organizational group
+  </Card>
+  <Card title="Update Group" icon="pen-to-square" href="/external-api/organization-asset-groups-update">
+    Rename an existing group
+  </Card>
+  <Card title="Delete Group" icon="folder-minus" href="/external-api/organization-asset-groups-delete">
+    Remove a group (assets become ungrouped)
+  </Card>
+</CardGroup>
+
+### Reporting & Metrics
+
+Access your organization's security reports and metrics:
+
+<CardGroup cols={2}>
+  <Card title="Organization Reports" icon="file-lines" href="/external-api/organization-reports">
+    Retrieve security reports for your organization
+  </Card>
+  <Card title="Organization Metrics" icon="chart-line" href="/external-api/organization-metrics">
+    Get threat detection and blocking metrics
+  </Card>
+</CardGroup>
+
+## Getting Started
+
+### 1. Obtain Your API Key
+
+Navigate to your organization settings in the ChainPatrol dashboard and generate an organization API key.
+
+### 2. Make Your First Request
+
+List your organization's assets:
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets",
+  {
+    method: "GET",
+    headers: {
+      "X-API-KEY": "your-api-key-here",
+    },
+  }
+);
+
+const data = await response.json();
+console.log(data.assets);
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://app.chainpatrol.io/api/v2/organization/assets",
+    headers={
+        "X-API-KEY": "your-api-key-here",
+    }
+)
+
+data = response.json()
+print(data["assets"])
+```
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets' \
+  -H 'X-API-KEY: your-api-key-here'
+```
+
+</CodeGroup>
+
+### 3. Add Assets to Your Allowlist
+
+Batch add multiple assets:
+
+```typescript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "your-api-key-here",
+    },
+    body: JSON.stringify({
+      assets: [
+        {
+          content: "https://yourwebsite.com",
+          name: "Main Website",
+          description: "Official company website"
+        },
+        {
+          content: "0x1234567890abcdef1234567890abcdef12345678",
+          name: "Treasury Wallet"
+        }
+      ]
+    }),
+  }
+);
+
+const result = await response.json();
+console.log(`Added ${result.successCount} assets`);
+```
+
+## Best Practices
+
+### Batch Operations
+
+- Add up to 1,000 assets per request for efficient bulk imports
+- Use pagination when listing large asset collections
+- Process bulk updates sequentially with proper error handling
+
+### Organization Structure
+
+- Use groups to organize assets by type, project, or environment
+- Add descriptive names and descriptions to assets for easier management
+- Regularly review and clean up unused assets
+
+### Error Handling
+
+- Always check both `successCount` and `errorCount` in batch responses
+- Handle partial failures gracefully
+- Log failed operations for debugging and auditing
+
+### Security
+
+- Store API keys securely (environment variables, secret managers)
+- Use separate API keys for different environments (production, staging)
+- Rotate API keys periodically
+- Never commit API keys to version control
+
+## CORS Considerations
+
+If you're using these endpoints from a frontend application, note that they use GET, PATCH, and DELETE HTTP methods in addition to POST. Ensure your CORS configuration allows these methods:
+
+```
+Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS
+```
+
+## Rate Limiting
+
+Organization Management API endpoints are subject to rate limiting to ensure service stability. If you encounter rate limit errors:
+
+- Implement exponential backoff in your retry logic
+- Use batch operations to reduce API calls
+- Cache responses when appropriate
+- Contact support if you need higher rate limits
+
+## Common Questions
+
+**Q: Can I use a user API key with these endpoints?**  
+A: No, you must use an organization-scoped API key generated from your organization settings.
+
+**Q: How do I access assets for multiple organizations?**  
+A: You need separate organization API keys for each organization. Make separate requests with the appropriate API key for each organization.
+
+**Q: What happens to assets when I delete a group?**  
+A: Assets in the deleted group become ungrouped but remain in your organization. The assets themselves are not deleted.
+
+**Q: Can I restore a deleted asset?**  
+A: Yes, you can re-add the same asset using the Add Assets endpoint. Removing an asset only removes the association with your organization.
+
+**Q: Why does this API use different HTTP methods than the Public API?**  
+A: The Organization Management API follows REST conventions to provide semantic clarity for resource management operations. This makes the API more intuitive for CRUD operations on your organization's data.
+
+## Support
+
+For questions or issues with the Organization API:
+
+- 📖 Explore the detailed endpoint documentation
+- 💬 Contact support@chainpatrol.io
+- 🐛 Report issues through your organization dashboard
