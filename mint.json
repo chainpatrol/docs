@@ -121,7 +121,12 @@
         "external-api/asset-submit",
         "external-api/asset-list",
         "external-api/asset-changelog",
-        "external-api/asset-parse",
+        "external-api/asset-parse"
+      ]
+    },
+    {
+      "group": "Organization Assets",
+      "pages": [
         "external-api/organization-assets-list",
         "external-api/organization-assets-add",
         "external-api/organization-assets-update",
@@ -139,8 +144,11 @@
     },
     {
       "group": "Reports",
+      "pages": ["external-api/report-create"]
+    },
+    {
+      "group": "Organization Reports",
       "pages": [
-        "external-api/report-create",
         "external-api/organization-reports",
         "external-api/organization-reports-list"
       ]
@@ -158,7 +166,7 @@
       "pages": ["external-api/takedowns-list"]
     },
     {
-      "group": "Metrics",
+      "group": "Organization Metrics",
       "pages": [
         "external-api/organization-metrics",
         "external-api/organization-metrics-list"
