@@ -134,7 +134,7 @@
       ]
     },
     {
-      "group": "Asset Groups",
+      "group": "Organization Asset Groups",
       "pages": [
         "external-api/organization-asset-groups-list",
         "external-api/organization-asset-groups-create",
