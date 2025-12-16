@@ -1,0 +1,471 @@
+---
+title: Get Organization Metrics
+openapi: "GET /organization/metrics"
+---
+
+## Overview
+
+Retrieve security metrics for your organization, including threat detections, blocked assets, takedowns, and more. This endpoint provides comprehensive analytics about your organization's security posture. The organization is automatically inferred from your API key.
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/metrics?startDate=2024-01-01T00:00:00Z&endDate=2024-12-31T23:59:59Z",
+  {
+    method: "GET",
+    headers: {
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+  }
+);
+
+const data = await response.json();
+console.log(data.metrics);
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/metrics?startDate=2024-01-01T00:00:00Z&endDate=2024-12-31T23:59:59Z",
+  {
+    method: "GET",
+    headers: {
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+  }
+);
+
+const data = await response.json();
+console.log(data.metrics);
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://app.chainpatrol.io/api/v2/organization/metrics",
+    headers={
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    params={
+        "startDate": "2024-01-01T00:00:00Z",
+        "endDate": "2024-12-31T23:59:59Z",
+    },
+)
+
+data = response.json()
+print(data["metrics"])
+```
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/metrics?startDate=2024-01-01T00:00:00Z&endDate=2024-12-31T23:59:59Z' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+</CodeGroup>
+
+## Query Parameters
+
+| Parameter | Type   | Required | Description                                                |
+| --------- | ------ | -------- | ---------------------------------------------------------- |
+| brandSlug | string | No       | Filter metrics by specific brand. Requires brands-metrics feature flag.                  |
+| startDate | string | No       | Start date for metrics (ISO 8601 format). Defaults to beginning of time if not provided. |
+| endDate   | string | No       | End date for metrics (ISO 8601 format). Defaults to current date if not provided.        |
+
+## Response
+
+### Success Response
+
+```json
+{
+  "metrics": {
+    "reports": 150,
+    "newThreats": 245,
+    "threatsWatchlisted": 18,
+    "takedownsFiled": 45,
+    "takedownsCompleted": 32,
+    "domainThreats": 120,
+    "twitterThreats": 40,
+    "telegramThreats": 25,
+    "otherThreats": 60
+  },
+  "blockedByType": [
+    {
+      "type": "URL",
+      "count": 120
+    },
+    {
+      "type": "ADDRESS",
+      "count": 85
+    },
+    {
+      "type": "TWITTER",
+      "count": 40
+    }
+  ],
+  "blockedByDay": [
+    {
+      "date": "2024-01-15",
+      "count": 12
+    },
+    {
+      "date": "2024-01-16",
+      "count": 8
+    }
+  ]
+}
+```
+
+### Response Fields
+
+| Field                          | Type   | Description                                                |
+| ------------------------------ | ------ | ---------------------------------------------------------- |
+| metrics                        | object | Metrics object containing all security statistics          |
+| metrics.reports                | number | Total number of reports filed                              |
+| metrics.newThreats             | number | Number of new threats blocked                              |
+| metrics.threatsWatchlisted     | number | Number of threats watchlisted (0 for brand-filtered queries) |
+| metrics.takedownsFiled         | number | Total number of takedown requests filed                    |
+| metrics.takedownsCompleted     | number | Total number of takedowns successfully completed           |
+| metrics.domainThreats          | number | Number of URL/domain threats blocked                       |
+| metrics.twitterThreats         | number | Number of Twitter threats blocked                          |
+| metrics.telegramThreats        | number | Number of Telegram threats blocked                         |
+| metrics.otherThreats           | number | Number of other asset type threats blocked                 |
+| blockedByType                  | array  | Breakdown of blocked threats by asset type                 |
+| blockedByType[].type           | string | Type of asset (URL, ADDRESS, TWITTER, etc.)                |
+| blockedByType[].count          | number | Number of threats blocked for this asset type              |
+| blockedByDay                   | array  | Time series data showing threats blocked per day           |
+| blockedByDay[].date            | string | Date in YYYY-MM-DD format                                  |
+| blockedByDay[].count           | number | Number of threats blocked on this date                     |
+
+## Metric Types
+
+### Organization-Level Metrics (Default)
+
+When no `brandSlug` is provided, returns organization-wide metrics:
+- Aggregates all proposals, reports, and takedowns for the organization
+- Includes threats with status BLOCKED, APPROVED, and AUTO_APPROVED
+- Date filtering applies to `createdAt` timestamps
+- Includes all brands under the organization
+
+### Brand-Level Metrics (Optional)
+
+When `brandSlug` is provided (requires brands-metrics feature flag):
+- Filters metrics to specific brand via review history
+- Queries asset status history to find brand-specific blocked threats
+- Uses status history table with brand reviews
+- Date filtering for takedowns uses `updatedAt` timestamps
+- **Note:** `threatsWatchlisted` always returns 0 for brand-scoped queries
+
+## Use Cases
+
+### Get All-Time Metrics
+
+Retrieve metrics for your organization's entire history:
+
+```typescript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/metrics",
+  {
+    headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+  }
+);
+
+const { metrics, blockedByType, blockedByDay } = await response.json();
+console.log(`Total new threats: ${metrics.newThreats}`);
+console.log(`Blocked by type:`, blockedByType);
+```
+
+### Get Brand-Specific Metrics
+
+Retrieve metrics filtered to a specific brand:
+
+```typescript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/metrics?brandSlug=my-brand",
+  {
+    headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+  }
+);
+
+const { metrics } = await response.json();
+console.log(`Brand threats blocked: ${metrics.newThreats}`);
+```
+
+### Get Monthly Metrics
+
+```typescript
+async function getMonthlyMetrics(year: number, month: number) {
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0, 23, 59, 59);
+
+  const response = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/metrics?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { metrics } = await response.json();
+  return metrics;
+}
+
+// Get metrics for January 2024
+const janMetrics = await getMonthlyMetrics(2024, 1);
+console.log("January 2024 metrics:", janMetrics);
+```
+
+### Compare Time Periods
+
+```typescript
+async function compareMetrics(period1Start: string, period1End: string, period2Start: string, period2End: string) {
+  const [period1Response, period2Response] = await Promise.all([
+    fetch(
+      `https://app.chainpatrol.io/api/v2/organization/metrics?startDate=${period1Start}&endDate=${period1End}`,
+      { headers: { "X-API-KEY": "YOUR_API_KEY_HERE" } }
+    ),
+    fetch(
+      `https://app.chainpatrol.io/api/v2/organization/metrics?startDate=${period2Start}&endDate=${period2End}`,
+      { headers: { "X-API-KEY": "YOUR_API_KEY_HERE" } }
+    ),
+  ]);
+
+  const period1 = await period1Response.json();
+  const period2 = await period2Response.json();
+
+  const change = {
+    reportsCount: period2.metrics.reportsCount - period1.metrics.reportsCount,
+    threatsBlocked: period2.metrics.threatsBlockedCount - period1.metrics.threatsBlockedCount,
+    detections: period2.metrics.totalDetections - period1.metrics.totalDetections,
+  };
+
+  console.log("Period-over-period change:", change);
+  return change;
+}
+```
+
+### Analyze Threat Distribution
+
+```typescript
+async function analyzeThreats() {
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/organization/metrics",
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { metrics, blockedByType } = await response.json();
+
+  // Calculate percentages by asset type
+  const total = metrics.newThreats;
+  const distribution = blockedByType.map((item) => ({
+    type: item.type,
+    count: item.count,
+    percentage: ((item.count / total) * 100).toFixed(2),
+  }));
+
+  console.log("Threat distribution:", distribution);
+  return distribution;
+}
+```
+
+### Visualize Threats Over Time
+
+```typescript
+async function getThreatsTimeSeries(days: number = 30) {
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+
+  const response = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/metrics?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { blockedByDay } = await response.json();
+
+  // Use blockedByDay for time series visualization
+  console.log("Threats per day:", blockedByDay);
+  return blockedByDay;
+}
+```
+
+### Generate Security Dashboard
+
+```typescript
+async function generateDashboard(days: number = 30) {
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+
+  const response = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/metrics?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { metrics } = await response.json();
+
+  const { metrics, blockedByType } = await response.json();
+
+  const dashboard = {
+    period: `Last ${days} days`,
+    summary: {
+      totalReports: metrics.reports,
+      newThreats: metrics.newThreats,
+      threatsWatchlisted: metrics.threatsWatchlisted,
+      takedownSuccessRate: 
+        metrics.takedownsFiled > 0
+          ? ((metrics.takedownsCompleted / metrics.takedownsFiled) * 100).toFixed(1) + "%"
+          : "N/A",
+      breakdown: {
+        domains: metrics.domainThreats,
+        twitter: metrics.twitterThreats,
+        telegram: metrics.telegramThreats,
+        other: metrics.otherThreats,
+      }
+    },
+    topThreats: blockedByType
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3),
+  };
+
+  return dashboard;
+}
+
+// Usage
+const dashboard = await generateDashboard(30);
+console.log("Security Dashboard:", dashboard);
+```
+
+### Export Metrics Report
+
+```typescript
+async function exportMetricsReport(startDate: string, endDate: string) {
+  const response = await fetch(
+    `https://app.chainpatrol.io/api/v2/organization/metrics?startDate=${startDate}&endDate=${endDate}`,
+    {
+      headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    }
+  );
+
+  const { metrics } = await response.json();
+
+  const { metrics, blockedByType } = await response.json();
+
+  const report = `
+Security Metrics Report
+Period: ${startDate} to ${endDate}
+Generated: ${new Date().toISOString()}
+
+Overview:
+- Reports Filed: ${metrics.reports}
+- New Threats Blocked: ${metrics.newThreats}
+- Threats Watchlisted: ${metrics.threatsWatchlisted}
+- Domain Threats: ${metrics.domainThreats}
+- Twitter Threats: ${metrics.twitterThreats}
+- Telegram Threats: ${metrics.telegramThreats}
+- Other Threats: ${metrics.otherThreats}
+
+Takedowns:
+- Filed: ${metrics.takedownsFiled}
+- Completed: ${metrics.takedownsCompleted}
+- Success Rate: ${metrics.takedownsFiled > 0 ? ((metrics.takedownsCompleted / metrics.takedownsFiled) * 100).toFixed(1) : 0}%
+
+Threats by Asset Type:
+${blockedByType
+  .map((item) => `- ${item.type}: ${item.count}`)
+  .join("\n")}
+  `;
+
+  return report;
+}
+```
+
+## Error Responses
+
+### 401 Unauthorized
+
+Returned when the API key is missing, invalid, or doesn't have organization access:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "API key with organization access required"
+  }
+}
+```
+
+### 400 Bad Request
+
+Returned when query parameters are invalid:
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Invalid date format. Use ISO 8601 format."
+  }
+}
+```
+
+### 404 Not Found
+
+Returned when brand slug is not found or doesn't belong to your organization:
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Brand not found"
+  }
+}
+```
+
+## Best Practices
+
+### Date Ranges
+- Always use ISO 8601 format for dates: `YYYY-MM-DDTHH:mm:ss.sssZ`
+- Include timezone information (typically UTC with `Z` suffix)
+- Omit both dates to get all-time metrics
+- Use consistent date ranges when comparing periods
+
+### Performance
+- Cache metrics data with appropriate TTL (e.g., 1 hour for dashboards)
+- Use date filters to query specific time periods rather than filtering client-side
+- Consider scheduling periodic metric snapshots for historical tracking
+
+### Analysis
+- Compare metrics across different time periods to identify trends
+- Monitor the takedown success rate to assess enforcement effectiveness
+- Track threats by asset type to understand attack patterns
+
+## Notes
+
+- Organization is automatically determined from your API key
+- All timestamps are in ISO 8601 format with UTC timezone
+- If no date range is provided, all-time metrics are returned
+- Metrics are calculated in real-time based on the specified date range
+- The `blockedByType` array includes all asset types that have blocked threats
+- The `blockedByDay` array provides time series data for visualization
+- Brand filtering requires the brands-metrics feature flag
+- All queries exclude soft-deleted records
+- Date ranges are inclusive
+- For brand-filtered queries, `threatsWatchlisted` always returns 0
+- Date filtering for takedowns uses different timestamps for brand vs organization queries

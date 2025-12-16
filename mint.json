@@ -144,9 +144,13 @@
     },
     {
       "group": "Reports",
+      "pages": ["external-api/report-create"]
+    },
+    {
+      "group": "Organization Reports",
       "pages": [
-        "external-api/report-create",
-        "external-api/organization-reports"
+        "external-api/organization-reports",
+        "external-api/organization-reports-list"
       ]
     },
     {
@@ -162,8 +166,11 @@
       "pages": ["external-api/takedowns-list"]
     },
     {
-      "group": "Metrics",
-      "pages": ["external-api/organization-metrics"]
+      "group": "Organization Metrics",
+      "pages": [
+        "external-api/organization-metrics",
+        "external-api/organization-metrics-list"
+      ]
     },
     {
       "group": "@chainpatrol/sdk",
