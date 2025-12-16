@@ -121,39 +121,7 @@
         "external-api/asset-submit",
         "external-api/asset-list",
         "external-api/asset-changelog",
-        "external-api/asset-parse"
-      ]
-    },
-    {
-      "group": "Reports",
-      "pages": [
-        "external-api/report-create",
-        "external-api/organization-reports"
-      ]
-    },
-    {
-      "group": "Threats",
-      "pages": ["external-api/threats-list", "external-api/detection-list"]
-    },
-    {
-      "group": "Disputes",
-      "pages": ["external-api/dispute-create"]
-    },
-    {
-      "group": "Takedowns",
-      "pages": ["external-api/takedowns-list"]
-    },
-    {
-      "group": "Metrics",
-      "pages": ["external-api/organization-metrics"]
-    },
-    {
-      "group": "Organization API",
-      "pages": ["external-api/organization-overview"]
-    },
-    {
-      "group": "Assets",
-      "pages": [
+        "external-api/asset-parse",
         "external-api/organization-assets-list",
         "external-api/organization-assets-add",
         "external-api/organization-assets-update",
@@ -170,12 +138,31 @@
       ]
     },
     {
-      "group": "Reporting",
-      "pages": ["external-api/organization-reports-list"]
+      "group": "Reports",
+      "pages": [
+        "external-api/report-create",
+        "external-api/organization-reports",
+        "external-api/organization-reports-list"
+      ]
+    },
+    {
+      "group": "Threats",
+      "pages": ["external-api/threats-list", "external-api/detection-list"]
+    },
+    {
+      "group": "Disputes",
+      "pages": ["external-api/dispute-create"]
+    },
+    {
+      "group": "Takedowns",
+      "pages": ["external-api/takedowns-list"]
     },
     {
       "group": "Metrics",
-      "pages": ["external-api/organization-metrics-list"]
+      "pages": [
+        "external-api/organization-metrics",
+        "external-api/organization-metrics-list"
+      ]
     },
     {
       "group": "@chainpatrol/sdk",
