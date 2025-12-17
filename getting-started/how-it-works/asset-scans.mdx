@@ -1,0 +1,224 @@
+---
+title: "Asset Scans"
+description: "How ChainPatrol automatically evaluates and monitors potential threats across the web"
+---
+
+## What is an Asset Scan
+
+An **asset scan** is an automated security check ChainPatrol runs on an online surface that could be used in a scam, like a website, a social profile, an app-store listing, or a crypto address. Each scan records what we observed at a specific moment in time and evaluates risk using a mix of detection rules and AI signals.
+
+<Info>
+Asset scans solve a simple problem: the internet changes constantly, attackers iterate fast, and manual review doesn't scale. Scans let us monitor large volumes of assets, catch newly emerging threats, and track whether risky content is still live.
+</Info>
+
+## What We Scan
+
+ChainPatrol supports many asset types across the digital landscape:
+
+<CardGroup cols={2}>
+  <Card title="Web Properties" icon="globe">
+    URLs and hosted pages (including redirect chains and landing pages)
+  </Card>
+  
+  <Card title="Social & Content Profiles" icon="share-nodes">
+    Twitter/X, Telegram, YouTube, Reddit, Medium, Farcaster, and more
+  </Card>
+  
+  <Card title="App Listings & Extensions" icon="mobile">
+    Google Play, Apple App Store, Mozilla Add-ons, and other marketplaces
+  </Card>
+  
+  <Card title="Crypto Addresses" icon="wallet">
+    Normalized contract/address identifiers (e.g., CAIP-2 style) with chain context
+  </Card>
+</CardGroup>
+
+## Asset vs. Asset Scan
+
+Understanding the difference is key to how our monitoring works:
+
+<Tabs>
+  <Tab title="Asset" icon="link">
+    An **asset** is the thing itself—a URL, handle, listing, or address.
+    
+    Example: `https://fake-metamask.com`
+  </Tab>
+  
+  <Tab title="Asset Scan" icon="magnifying-glass">
+    An **asset scan** is a **time-stamped snapshot** of that asset. The same asset may be scanned many times, and scans form a timeline of changes.
+    
+    Example: Scan #1 (Jan 1), Scan #2 (Jan 3), Scan #3 (Jan 5)
+  </Tab>
+</Tabs>
+
+<Note>
+Multiple scans of the same asset create a historical timeline, allowing us to track changes, detect when threats go live or are taken down, and monitor asset behavior over time.
+</Note>
+
+## When Scans Run
+
+Scans are triggered in three main ways:
+
+<AccordionGroup>
+  <Accordion title="Automatically" icon="robot">
+    Scans run automatically in several scenarios:
+    
+    - When ChainPatrol detection sources surface something relevant
+    - When an asset is added (e.g., via report, onboarding, or API ingestion)
+    - During **watchlist monitoring**, where assets are rescanned on a schedule that adapts over time:
+      - More frequent early on
+      - Less frequent as an asset stays stable
+      - Blocked assets may be scanned less often to reduce noise
+  </Accordion>
+  
+  <Accordion title="On Demand" icon="hand-pointer">
+    Manual or API-triggered scans:
+    
+    - When a team member triggers a rescan from the UI
+    - When your systems submit assets via API
+  </Accordion>
+  
+  <Accordion title="Ongoing Liveness Checks" icon="heartbeat">
+    For certain platform-hosted assets (e.g., specific site builders or marketplaces), ChainPatrol periodically re-checks whether a previously-blocked asset is still reachable.
+  </Accordion>
+</AccordionGroup>
+
+## How Scans Work
+
+Our scanning process follows a systematic approach to evaluate threats efficiently and accurately:
+
+<Steps>
+  <Step title="Normalize and Prepare">
+    We normalize the input (e.g., resolve canonical URLs or identifiers), create a scan record, and run a first pass of checks that don't require external enrichment.
+  </Step>
+  
+  <Step title="Enrich with Context">
+    Depending on asset type, we collect relevant data:
+    
+    **Web URL / Page Enrichments:**
+    - HTTP fetch results (status, redirects, extracted links, basic metadata like title/description)
+    - Optional browser capture (screenshot/DOM signals when available)
+    - Network and registration context (e.g., DNS, TLS, WHOIS/RDAP when enabled)
+    
+    **Platform/API Enrichments:**
+    - Profile/listing details (descriptions, author/publisher fields, follower/engagement signals, etc.)
+    
+    <Tip>
+    Some enrichments run only when earlier signals suggest elevated risk to keep scans efficient.
+    </Tip>
+  </Step>
+  
+  <Step title="Security Analysis">
+    We evaluate the asset using rules and AI/ML signals for patterns like phishing, impersonation, and scam mechanics. This includes both content-based and visual/behavioral indicators when available.
+  </Step>
+  
+  <Step title="Labels, Scores, and Liveness">
+    Each scan is tagged with **labels** and produces **scores** for prioritization:
+    
+    **Common Labels:**
+    - Captcha detected
+    - Parked domain
+    - Provider suspended
+    - Brand impersonation
+    - Wallet drainer detected
+    
+    **Liveness Status:**
+    - **ALIVE** - Asset is active and accessible
+    - **DEAD** - Asset is no longer reachable
+    - **UNKNOWN** - Inconclusive (not "safe")
+  </Step>
+  
+  <Step title="Relationship Discovery">
+    For supported web and social surfaces, scans can extract outbound links and redirects to help you trace related infrastructure and uncover threat networks.
+  </Step>
+</Steps>
+
+## How Scan Results Are Used
+
+<CardGroup cols={3}>
+  <Card title="Triage and Review" icon="clipboard-check">
+    Scans provide evidence (metadata, redirects, links, screenshots) so reviewers can decide to block, allow, investigate further, or initiate takedowns
+  </Card>
+  
+  <Card title="Detections & Automation" icon="bolt">
+    High-risk scans feed detection workflows and monitoring pipelines; actions vary by configuration and policy
+  </Card>
+  
+  <Card title="Monitoring Hygiene" icon="broom">
+    Watchlist and liveness workflows keep your monitoring set current and highlight meaningful changes over time
+  </Card>
+</CardGroup>
+
+## What You See in the Product
+
+Our platform provides comprehensive visibility into scan results and asset history:
+
+<Tabs>
+  <Tab title="Per-Asset Timeline" icon="timeline">
+    A complete history of scans for each asset, including:
+    - Liveness status changes
+    - Notable changes in content or behavior
+    - Risk score evolution
+    - Label additions/removals
+  </Tab>
+  
+  <Tab title="Scan Detail Views" icon="magnifying-glass-chart">
+    Deep dive into individual scans with:
+    - Evidence artifacts (screenshots, metadata)
+    - Applied labels and their sources
+    - Scoring signals and rule matches
+    - Enrichment data (redirects, links, network info)
+  </Tab>
+  
+  <Tab title="Org/Brand Dashboards" icon="chart-line">
+    High-level overview showing:
+    - Recent activity and new threats
+    - Top-risk assets requiring attention
+    - Monitoring coverage across platforms
+    - Trend analysis over time
+  </Tab>
+  
+  <Tab title="Reporting & Metrics" icon="chart-bar">
+    Actionable insights including:
+    - Scan volume and frequency
+    - Detection speed metrics
+    - Number of risky assets still live
+    - Takedown success rates
+  </Tab>
+</Tabs>
+
+---
+
+## Scan Efficiency & Scale
+
+<CardGroup cols={2}>
+  <Card title="Smart Scheduling" icon="calendar-check">
+    Adaptive scan frequency based on asset risk and stability
+  </Card>
+  
+  <Card title="Selective Enrichment" icon="filter">
+    Deep analysis triggered only when risk signals warrant it
+  </Card>
+  
+  <Card title="Parallel Processing" icon="layer-group">
+    Multiple assets scanned simultaneously for faster coverage
+  </Card>
+  
+  <Card title="Historical Context" icon="clock-rotate-left">
+    Timeline-based analysis to detect behavioral changes
+  </Card>
+</CardGroup>
+
+<Check>
+Our scanning infrastructure processes thousands of assets daily, providing real-time threat intelligence while maintaining accuracy and minimizing false positives.
+</Check>
+
+---
+
+<Card
+  title="View Your Asset Scans"
+  icon="magnifying-glass"
+  href="https://app.chainpatrol.io"
+>
+  Access detailed scan results and asset timelines in your ChainPatrol dashboard
+</Card>

@@ -1,0 +1,323 @@
+---
+title: "Detection Sources"
+description: "Automated monitoring systems that continuously scan the internet for threats to your brand"
+---
+
+Detection sources are automated monitoring systems that continuously scan the internet for potential threats to your brand. Each source monitors a specific platform or data stream, searching for suspicious assets that may be impersonating your organization or attempting to defraud your users.
+
+## How Detection Sources Work
+
+Detection sources operate on automated schedules, running searches across various platforms using your organization's **included terms** (brand names, products, keywords you want to monitor) and **excluded terms** (legitimate domains you want to filter out). When a source finds a potential threat, it automatically submits the asset for analysis through ChainPatrol's threat detection pipeline.
+
+### The Detection Flow
+
+<Steps>
+  <Step title="Scheduled Execution">
+    Each detection source runs on a predefined schedule (e.g., every 15 minutes, hourly, daily)
+  </Step>
+  
+  <Step title="Platform Scanning">
+    The source searches its platform (ex. Twitter, Google Ads, Reddit) using your organization's keywords and monitoring rules
+  </Step>
+  
+  <Step title="Asset Discovery">
+    Matching results are collected as potential threats
+  </Step>
+  
+  <Step title="Automatic Processing">
+    Discovered assets are automatically submitted to the threat detection system
+  </Step>
+  
+  <Step title="Enrichment & Analysis">
+    Assets are scanned, enriched with additional data, and evaluated by the rules engine
+  </Step>
+  
+  <Step title="Threat Scoring">
+    A threat score is calculated based on multiple detection rules
+  </Step>
+  
+  <Step title="Action Taken">
+    If the score exceeds your organization's detection thresholds, the threat can be automatically reported or flagged for review
+  </Step>
+</Steps>
+
+## Available Detection Sources
+
+<Info>
+ChainPatrol supports **28 different detection sources** across multiple categories
+</Info>
+
+<Tabs>
+  <Tab title="Search Engines" icon="magnifying-glass">
+    Monitor search results for phishing sites and scam pages.
+    
+    <CardGroup cols={2}>
+      <Card title="Google Search" icon="google">
+        Scans Google search results
+      </Card>
+      
+      <Card title="Bing Search" icon="microsoft">
+        Monitors Bing search results
+      </Card>
+      
+      <Card title="Yahoo Search" icon="yahoo">
+        Tracks Yahoo search results
+      </Card>
+      
+      <Card title="DuckDuckGo Search" icon="duck">
+        Monitors DuckDuckGo search results
+      </Card>
+      
+      <Card title="Google Ads Search" icon="rectangle-ad">
+        Monitors Google Ads for malicious content
+      </Card>
+    </CardGroup>
+  </Tab>
+  
+  <Tab title="Social Media" icon="share-nodes">
+    Track social media for impersonation accounts and fraudulent posts.
+    
+    <AccordionGroup>
+      <Accordion title="Twitter/X Monitoring" icon="x-twitter">
+        - **Twitter Post Search** - Searches Twitter posts for threats
+        - **Twitter User Search** - Monitors Twitter user profiles
+        - **Twitter Profile Monitoring** - Tracks replies on posts from specific Twitter profiles
+      </Accordion>
+      
+      <Accordion title="Reddit Monitoring" icon="reddit">
+        - **Reddit Subreddit Search** - Searches for Reddit communities by name
+      </Accordion>
+      
+      <Accordion title="YouTube Monitoring" icon="youtube">
+        - **YouTube Search** - Searches YouTube videos and channels
+      </Accordion>
+      
+      <Accordion title="Medium Monitoring" icon="medium">
+        - **Medium Tag RSS** - Monitors Medium articles by tags
+      </Accordion>
+      
+      <Accordion title="Telegram Monitoring" icon="telegram">
+        - **Telegram Channels Search** - Searches for Telegram channels
+        - **Telegram User Search** - Searches for Telegram user accounts
+      </Accordion>
+      
+      <Accordion title="TikTok Monitoring" icon="tiktok">
+        - **TikTok Video Search** - Searches TikTok videos
+        - **TikTok User Search** - Searches TikTok user profiles
+      </Accordion>
+    </AccordionGroup>
+  </Tab>
+  
+  <Tab title="App Stores" icon="mobile">
+    Monitor mobile app stores and browser extension marketplaces.
+    
+    <CardGroup cols={3}>
+      <Card title="Google Play" icon="google-play">
+        Monitors Google Play Store apps
+      </Card>
+      
+      <Card title="Apple App Store" icon="app-store-ios">
+        Tracks iOS App Store applications
+      </Card>
+      
+      <Card title="Mozilla Add-ons" icon="firefox">
+        Monitors Firefox browser extensions
+      </Card>
+    </CardGroup>
+  </Tab>
+  
+  <Tab title="Web3 & Blockchain" icon="link">
+    Specialized sources for cryptocurrency and blockchain threats.
+    
+    <Card title="DexScreener Search" icon="chart-candlestick">
+      Monitors DeFi protocols and tokens for impersonation
+    </Card>
+  </Tab>
+  
+  <Tab title="Specialized" icon="gear">
+    Additional monitoring capabilities for comprehensive protection.
+    
+    <AccordionGroup>
+      <Accordion title="URLScan" icon="globe">
+        Leverages URLScan.io's database to find threats
+      </Accordion>
+      
+      <Accordion title="DNS Twist" icon="rotate">
+        Detects typosquatting domains using homoglyph analysis
+      </Accordion>
+      
+      <Accordion title="Certstream" icon="certificate">
+        Monitors certificate transparency logs for newly issued TLS/SSL certificates
+      </Accordion>
+      
+      <Accordion title="Guestbook" icon="book">
+        Monitors community guestbook submissions
+      </Accordion>
+      
+      <Accordion title="Blocked IP Scan" icon="ban">
+        Scans for assets hosted on known malicious IPs
+      </Accordion>
+      
+      <Accordion title="Asset Check" icon="arrows-rotate">
+        Re-checks existing assets for status changes
+      </Accordion>
+      
+      <Accordion title="External" icon="arrow-right-to-bracket">
+        Handles external threat submissions via API
+      </Accordion>
+    </AccordionGroup>
+  </Tab>
+</Tabs>
+
+## Source Configuration
+
+Each detection source can be customized with:
+
+<CardGroup cols={3}>
+  <Card title="Status Options" icon="toggle-on">
+    Enable or disable sources
+  </Card>
+  
+  <Card title="Scope Settings" icon="layer-group">
+    Organization or global level
+  </Card>
+  
+  <Card title="Schedule Configuration" icon="clock">
+    Custom timing and frequency
+  </Card>
+</CardGroup>
+
+### Status Options
+
+- **Enabled** - Source runs automatically on schedule
+- **Disabled** - Source does not run
+
+### Scope Settings
+
+Detection sources can operate at two levels:
+
+<Tabs>
+  <Tab title="Organization Level">
+    Uses your specific keywords and monitoring settings
+  </Tab>
+  
+  <Tab title="Global Level">
+    Runs system-wide monitoring for all organizations
+  </Tab>
+</Tabs>
+
+### Schedule Configuration
+
+Sources run on automated schedules that vary by:
+
+- **Organization Priority** - Higher priority organizations get more frequent scans
+- **Source Type** - Different sources have different default intervals based on their data freshness and rate limits
+
+<Tip>
+**Custom Schedules:** You can override default schedules with custom cron expressions for fine-tuned control over when each source runs.
+</Tip>
+
+## Best Practices
+
+### Setting Up Detection Sources
+
+<Steps>
+  <Step title="Start with core sources">
+    Enable search engines and social media sources first
+  </Step>
+  
+  <Step title="Configure included terms">
+    Add all your brand names, product names, and common misspellings
+  </Step>
+  
+  <Step title="Set excluded terms">
+    Add your legitimate domains to reduce false positives
+  </Step>
+  
+  <Step title="Adjust thresholds">
+    Set appropriate auto-reporting thresholds based on your risk tolerance
+  </Step>
+  
+  <Step title="Monitor results">
+    Review initial detections to fine-tune your configuration
+  </Step>
+</Steps>
+
+### Optimizing Detection Coverage
+
+<CardGroup cols={2}>
+  <Card title="Use Multiple Sources" icon="layer-group">
+    Different sources catch different types of threats
+  </Card>
+  
+  <Card title="Monitor App Stores" icon="mobile">
+    Essential if you have mobile applications
+  </Card>
+  
+  <Card title="Add Official Assets" icon="x-twitter">
+    Add official Twitter assets to monitor replies
+  </Card>
+  
+  <Card title="Regular Reviews" icon="magnifying-glass-chart">
+    Periodically review and adjust your configuration
+  </Card>
+</CardGroup>
+
+### Managing False Positives
+
+<AccordionGroup>
+  <Accordion title="Refine Excluded Terms" icon="filter">
+    Add legitimate mentions to your excluded terms list to filter out false positives
+  </Accordion>
+  
+  <Accordion title="Adjust Similarity Thresholds" icon="sliders">
+    Fine-tune keyword similarity thresholds for token monitoring
+  </Accordion>
+  
+  <Accordion title="Use Evaluate Status" icon="clipboard-check">
+    Manually review results before enabling automatic actions
+  </Accordion>
+  
+  <Accordion title="Review Rules Dashboard" icon="chart-line">
+    Identify rules that generate false positives and adjust accordingly
+  </Accordion>
+</AccordionGroup>
+
+## Performance Considerations
+
+<Tabs>
+  <Tab title="Rate Limits" icon="gauge">
+    Each detection source respects platform-specific rate limits. The system automatically handles rate limiting by:
+    
+    - Adjusting request timing
+    - Batching operations where possible
+    - Logging when limits are reached
+    
+    <Note>
+    Rate limiting ensures compliance with platform APIs while maintaining consistent monitoring coverage.
+    </Note>
+  </Tab>
+  
+  <Tab title="Resource Usage" icon="server">
+    Detection sources are optimized for efficiency:
+    
+    - Results are processed in batches to avoid overwhelming the system
+    - Duplicate assets are automatically filtered out
+    - Sources run in parallel when possible
+    - Failed detections are logged but don't block other sources
+    
+    <Check>
+    Our infrastructure is designed to handle high-volume monitoring without impacting detection speed or accuracy.
+    </Check>
+  </Tab>
+</Tabs>
+
+---
+
+<Card
+  title="Configure Your Detection Sources"
+  icon="gear"
+  href="https://app.chainpatrol.io"
+>
+  Log in to your dashboard to customize detection sources for your organization
+</Card>

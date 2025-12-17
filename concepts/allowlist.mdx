@@ -1,0 +1,414 @@
+---
+title: "Allowlist"
+description: "Understanding how ChainPatrol identifies and protects legitimate assets"
+---
+
+## What Is an Allowlist?
+
+An **allowlist** is a curated list of known, trusted assets that are explicitly recognized as legitimate within ChainPatrol.
+
+<Info>
+Assets added to the allowlist are considered **official or approved** and are treated differently from unknown or suspicious assets during threat detection and analysis.
+</Info>
+
+Allowlisting helps ChainPatrol distinguish between genuine brand-owned content and potential impersonation or abuse.
+
+<Check>
+Unlike blocklists, which focus on malicious content, allowlists define what is **known to be safe**.
+</Check>
+
+## Why We Use an Allowlist at ChainPatrol
+
+Allowlists play a critical role in improving both **detection accuracy** and **signal quality**.
+
+### Dual Purpose
+
+<Tabs>
+  <Tab title="Exclusion from Detection" icon="shield-check">
+    **Preventing false positives**
+    
+    When an asset is allowlisted, it is excluded from automatic threat detection.
+    
+    **Benefits:**
+    - Prevents legitimate brand-owned assets from being mistakenly flagged as impersonation
+    - Reduces false positives
+    - Eliminates unnecessary investigations
+    - Improves team efficiency
+    
+    **Example:**
+    Your official website `example.com` is allowlisted, so it will never be flagged as a phishing site, even if detection rules would normally trigger on brand-related keywords.
+  </Tab>
+  
+  <Tab title="Reference Baseline" icon="ruler">
+    **Comparison for threat analysis**
+    
+    Allowlisted assets are used as **reference points** when analyzing potentially malicious content.
+    
+    **How it works:**
+    ChainPatrol can compare a suspected phishing page against an allowlisted official website to determine whether:
+    - Branding is being copied
+    - Layout is being imitated
+    - Content is being duplicated
+    - Visual elements are being stolen
+    
+    **Example:**
+    A suspicious site `examp1e.com` is detected. ChainPatrol compares it against your allowlisted `example.com` and identifies:
+    - 95% visual similarity
+    - Identical logo usage
+    - Copied page structure
+    - **Result:** High-confidence brand impersonation detection
+  </Tab>
+</Tabs>
+
+<Note>
+This dual role—exclusion from detection and use as a trusted baseline—makes allowlists essential for reliable brand impersonation analysis.
+</Note>
+
+## What Can Be Allowlisted?
+
+In ChainPatrol, **any asset type can be allowlisted**.
+
+<CardGroup cols={3}>
+  <Card title="Domains and URLs" icon="globe">
+    Official websites and web applications
+  </Card>
+  
+  <Card title="Social Media Accounts" icon="share-nodes">
+    Verified brand and employee accounts
+  </Card>
+  
+  <Card title="Application Pages" icon="mobile">
+    App store listings and hosted content
+  </Card>
+  
+  <Card title="Development Environments" icon="code">
+    Testing, staging, and QA environments
+  </Card>
+  
+  <Card title="Preview Deployments" icon="eye">
+    Vercel, Netlify, and other preview URLs
+  </Card>
+  
+  <Card title="Blockchain Addresses" icon="wallet">
+    Official smart contracts and wallets
+  </Card>
+  
+  <Card title="Email Addresses" icon="envelope">
+    Official company and team emails
+  </Card>
+  
+  <Card title="Other Assets" icon="link">
+    Any asset legitimately controlled by your organization
+  </Card>
+</CardGroup>
+
+<Info>
+Allowlisting is not limited by platform or asset category, as long as the asset is known to be legitimately controlled by the organization or brand.
+</Info>
+
+## What Should and Shouldn't Be Allowlisted?
+
+### Should Be Allowlisted ✅
+
+Assets that are **owned, controlled, or intentionally operated** by the organization or its brands:
+
+<AccordionGroup>
+  <Accordion title="Official Websites" icon="globe">
+    - Primary company website
+    - Product websites
+    - Documentation sites
+    - Support portals
+    - Marketing landing pages
+    
+    **Example:** `company.com`, `docs.company.com`, `support.company.com`
+  </Accordion>
+  
+  <Accordion title="Verified Social Media Accounts" icon="badge-check">
+    - Official Twitter/X accounts
+    - Official Discord servers
+    - Official Telegram channels
+    - Official YouTube channels
+    - Verified employee accounts
+    
+    **Example:** `@CompanyOfficial`, `discord.gg/company-official`
+  </Accordion>
+  
+  <Accordion title="Internal Testing Environments" icon="flask">
+    - QA environments
+    - Staging servers
+    - Internal testing sites
+    - Employee development environments
+    
+    **Example:** `staging.company.com`, `qa-env.company.com`
+  </Accordion>
+  
+  <Accordion title="Development and Preview Pages" icon="code">
+    - Vercel deployments owned by the company
+    - Netlify preview URLs
+    - GitHub Pages for official repositories
+    - CI/CD preview environments
+    
+    **Example:** `company-app.vercel.app`, `preview-123.netlify.app`
+  </Accordion>
+  
+  <Accordion title="Official Blockchain Assets" icon="link">
+    - Official smart contracts
+    - Treasury wallets
+    - Multisig addresses
+    - Token contracts
+    
+    **Example:** `0x1234...` (official token contract)
+  </Accordion>
+</AccordionGroup>
+
+### Should NOT Be Allowlisted ❌
+
+<AccordionGroup>
+  <Accordion title="Third-Party Content" icon="users">
+    Content that is merely tolerated but not controlled by your organization.
+    
+    **Examples:**
+    - Partner websites mentioning your brand
+    - News articles about your company
+    - Third-party reviews or comparisons
+    - Affiliate or reseller sites
+    
+    <Warning>
+    Even if the content is positive or authorized, if you don't control it, don't allowlist it.
+    </Warning>
+  </Accordion>
+  
+  <Accordion title="User-Generated Content" icon="comments">
+    Content created by users, even on your platforms.
+    
+    **Examples:**
+    - User profiles on your platform
+    - Community-submitted content
+    - User comments or posts
+    - Customer testimonials on external sites
+  </Accordion>
+  
+  <Accordion title="Assets Not Fully Controlled" icon="question">
+    Assets where you don't have complete control or ownership.
+    
+    **Examples:**
+    - Shared hosting environments
+    - Third-party integrations
+    - External widgets or embeds
+    - Temporary or borrowed infrastructure
+    
+    <Note>
+    If there's any doubt about control or ownership, err on the side of caution and don't allowlist.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+**Important:** Allowlisting an asset implicitly signals trust. Because allowlisted assets are excluded from automatic detection, incorrectly allowlisting an asset can reduce visibility into real threats.
+</Warning>
+
+## Risk Handling and Escalation
+
+Allowlisting does not permanently exempt an asset from scrutiny.
+
+<Info>
+If an allowlisted asset shows suspicious behavior or is believed to be compromised, it can still be escalated, investigated, and acted upon.
+</Info>
+
+### Compromise Scenarios
+
+<Tabs>
+  <Tab title="Account Compromise" icon="user-lock">
+    **Scenario:** Your official Twitter account is hacked
+    
+    **What happens:**
+    1. Asset is allowlisted, so automatic detection doesn't flag it
+    2. Community reports suspicious activity
+    3. Manual investigation reveals compromise
+    4. Asset is temporarily removed from allowlist
+    5. Threat is blocked and reported
+    6. After recovery, asset is re-allowlisted
+  </Tab>
+  
+  <Tab title="Domain Hijacking" icon="globe">
+    **Scenario:** Your domain is hijacked or DNS is compromised
+    
+    **What happens:**
+    1. Asset is allowlisted, so automatic detection doesn't flag it
+    2. Monitoring detects unusual behavior or content changes
+    3. Security team investigates
+    4. Asset is removed from allowlist during incident
+    5. Malicious content is blocked
+    6. After resolution, asset is re-allowlisted
+  </Tab>
+  
+  <Tab title="Infrastructure Breach" icon="server">
+    **Scenario:** Your hosting infrastructure is compromised
+    
+    **What happens:**
+    1. Allowlisted assets start serving malicious content
+    2. User reports or automated monitoring detect anomalies
+    3. Incident response is triggered
+    4. Affected assets are removed from allowlist
+    5. Threats are contained and remediated
+    6. Assets are re-allowlisted after verification
+  </Tab>
+</Tabs>
+
+<Check>
+This ensures that trust is not absolute and that compromised official assets do not become blind spots.
+</Check>
+
+## Granularity of Allowlists
+
+Allowlists in ChainPatrol can be configured at different levels.
+
+<Tabs>
+  <Tab title="Organization Level" icon="building">
+    **Applies across all brands**
+    
+    Assets allowlisted at the organization level are trusted for the entire organization, regardless of which brand they're associated with.
+    
+    **Use cases:**
+    - Corporate websites
+    - Shared infrastructure
+    - Company-wide social accounts
+    - Central authentication systems
+    
+    **Example:**
+    `company.com` is allowlisted at the organization level, protecting it for all brands under the organization.
+  </Tab>
+  
+  <Tab title="Brand Level" icon="tag">
+    **Applies only to a specific brand**
+    
+    Assets allowlisted at the brand level are trusted only for that specific brand within the organization.
+    
+    **Use cases:**
+    - Product-specific websites
+    - Brand-specific social accounts
+    - Individual product infrastructure
+    - Brand-specific campaigns
+    
+    **Example:**
+    `product-a.com` is allowlisted for "Product A" brand but not for "Product B" brand.
+  </Tab>
+</Tabs>
+
+<Info>
+This flexibility allows teams managing multiple brands to tailor trust appropriately.
+</Info>
+
+### Hierarchy Example
+
+```
+Organization: Acme Corp
+├── Brand: Acme Protocol
+│   ├── acme-protocol.com (Brand-level allowlist)
+│   └── @AcmeProtocol (Brand-level allowlist)
+├── Brand: Acme Wallet
+│   ├── acme-wallet.com (Brand-level allowlist)
+│   └── @AcmeWallet (Brand-level allowlist)
+└── Organization-level allowlist:
+    ├── acme.com (All brands)
+    ├── @AcmeCorp (All brands)
+    └── support@acme.com (All brands)
+```
+
+## Who Can Update the Allowlist?
+
+Allowlist management is restricted to **organization administrators and authorized staff members**.
+
+<CardGroup cols={2}>
+  <Card title="Organization Administrators" icon="user-shield">
+    Full control over organization-level and brand-level allowlists
+  </Card>
+  
+  <Card title="Authorized Staff" icon="user-check">
+    ChainPatrol staff can assist with allowlist management
+  </Card>
+  
+  <Card title="Limited Access" icon="lock">
+    Standard users cannot modify allowlists
+  </Card>
+  
+  <Card title="Audit Trail" icon="list-check">
+    All allowlist changes are logged and tracked
+  </Card>
+</CardGroup>
+
+<Warning>
+Limiting access helps ensure that allowlists remain accurate, intentional, and aligned with security best practices.
+</Warning>
+
+### Best Practices for Allowlist Management
+
+<Steps>
+  <Step title="Be Conservative">
+    Only allowlist assets you definitively control and trust
+  </Step>
+  
+  <Step title="Regular Reviews">
+    Periodically review your allowlist (quarterly recommended) to remove outdated or deprecated assets
+  </Step>
+  
+  <Step title="Document Decisions">
+    Maintain internal documentation of why assets were allowlisted
+  </Step>
+  
+  <Step title="Remove Compromised Assets">
+    Immediately remove any asset suspected of being compromised
+  </Step>
+  
+  <Step title="Re-add After Verification">
+    Only re-allowlist assets after confirming they're secure and under your control
+  </Step>
+</Steps>
+
+---
+
+## Key Takeaways
+
+<CardGroup cols={2}>
+  <Card title="Known Safe Assets" icon="shield-check">
+    Allowlists define what is explicitly trusted
+  </Card>
+  
+  <Card title="Dual Purpose" icon="arrows-split-up-and-left">
+    Excludes from detection and serves as reference baseline
+  </Card>
+  
+  <Card title="Any Asset Type" icon="layer-group">
+    Domains, social accounts, apps, blockchain addresses, and more
+  </Card>
+  
+  <Card title="Conservative Approach" icon="hand">
+    Only allowlist assets you definitively control
+  </Card>
+  
+  <Card title="Not Permanent Immunity" icon="shield-xmark">
+    Compromised assets can still be investigated and blocked
+  </Card>
+  
+  <Card title="Flexible Granularity" icon="sliders">
+    Organization-level or brand-level allowlisting
+  </Card>
+  
+  <Card title="Restricted Access" icon="lock">
+    Only administrators can modify allowlists
+  </Card>
+  
+  <Card title="Regular Maintenance" icon="arrows-rotate">
+    Periodic reviews keep allowlists accurate and current
+  </Card>
+</CardGroup>
+
+---
+
+<Card
+  title="Manage Your Allowlist"
+  icon="list-check"
+  href="https://app.chainpatrol.io"
+>
+  Access your organization settings to view and update your allowlist
+</Card>

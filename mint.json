@@ -74,40 +74,83 @@
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": ["introduction"]
-    },
-
-    {
-      "group": "General",
       "pages": [
-        "general/how-it-works",
-        "general/api-key",
-        "general/concepts",
-        "general/false-positives"
+        {
+          "group": "What do we do?",
+          "pages": [
+            "getting-started/what-we-do/introduction",
+            "getting-started/what-we-do/brand-impersonation",
+            "getting-started/what-we-do/general-phishing"
+          ]
+        },
+        {
+          "group": "How it works",
+          "pages": [
+            "getting-started/how-it-works/how-we-use-ai",
+            "getting-started/how-it-works/detection-sources",
+            "getting-started/how-it-works/asset-scans",
+            "getting-started/how-it-works/review",
+            "getting-started/how-it-works/blocklist",
+            "getting-started/how-it-works/takedown",
+            "getting-started/how-it-works/watchlist"
+          ]
+        }
       ]
     },
     {
-      "group": "Integration",
+      "group": "Protect Your Brand",
       "pages": [
-        "integration/guide",
-        "integration/check-vs-list",
-        "integration/proxy",
-        "integration/webhooks",
-        "integration/zapier",
+        "protect-your-brand/onboarding-requirements",
+        "protect-your-brand/who-should-be-involved",
+        "protect-your-brand/services-setup",
+        "protect-your-brand/ongoing-communication"
+      ]
+    },
+    {
+      "group": "Concepts",
+      "pages": [
+        "concepts/organizations",
+        "concepts/brands",
+        "concepts/reports",
+        "concepts/reviews",
+        "concepts/detections",
+        "concepts/asset-scans",
+        "concepts/blocklist",
+        "concepts/allowlist",
+        "concepts/watchlist",
+        "concepts/takedowns",
+        "concepts/legal-docs",
+        "concepts/metrics",
+        "concepts/security-portal"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "bots/discord-bot",
+        "bots/telegram-bot",
+        "bots/slack-bot",
         "integration/vercel",
         "integration/intercom",
         "integration/github",
         "security-integration/canary-tokens",
-        "security-integration/submit-assets-for-scanning"
+        "integration/webhooks",
+        "integration/zapier"
       ]
     },
     {
-      "group": "Bots",
-      "pages": ["bots/discord-bot", "bots/slack-bot", "bots/telegram-bot"]
-    },
-    {
-      "group": "Extensions",
-      "pages": ["extensions/chrome-extension"]
+      "group": "Guides",
+      "pages": [
+        "guides/api-keys",
+        "guides/enabling-disabling-services",
+        "guides/gathering-allowlist",
+        "guides/setting-up-brands",
+        "guides/false-positives",
+        "guides/public-reports",
+        "guides/sso",
+        "guides/unflagging-your-assets",
+        "guides/communicating-with-chainpatrol"
+      ]
     },
     {
       "group": "External API",

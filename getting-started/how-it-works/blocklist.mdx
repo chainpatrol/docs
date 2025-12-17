@@ -1,0 +1,357 @@
+---
+title: "Blocklist"
+description: "Real-time, community-powered database of confirmed phishing sites and malicious assets"
+---
+
+ChainPatrol's Blocklist is a real-time, community-powered database of confirmed phishing sites, scams, and malicious assets that protects users across the web3 ecosystem.
+
+## What is the ChainPatrol Blocklist?
+
+The ChainPatrol Blocklist is a continuously updated list of **350,000+ malicious websites**, social media accounts, and blockchain addresses that have been confirmed as threats through our expert review process. When an asset is added to the blocklist, it's automatically distributed to our network of security integrations to protect users in real-time.
+
+### Key Features
+
+<CardGroup cols={2}>
+  <Card title="Global Coverage" icon="globe">
+    Combines threat intelligence from 100+ organizations using ChainPatrol
+  </Card>
+  
+  <Card title="Rapid Response" icon="bolt">
+    Assets blocklisted and distributed in 15-30 minutes after confirmation
+  </Card>
+  
+  <Card title="Freely Accessible" icon="unlock">
+    Available via public API to maximize distribution and protection
+  </Card>
+  
+  <Card title="20+ Integrations" icon="plug">
+    Automatically distributed to wallets, browsers, and security tools
+  </Card>
+</CardGroup>
+
+<Info>
+Traditional takedown processes take hours or days. ChainPatrol provides protection in **15-30 minutes**.
+</Info>
+
+## How Assets Get Blocklisted
+
+Assets are added to the blocklist through a rigorous review process:
+
+<Steps>
+  <Step title="Detection">
+    Potential threats are identified through automated detection, community reports, or partner submissions
+  </Step>
+  
+  <Step title="Analysis">
+    Our AI-powered scanning engine analyzes assets using 50+ detection rules
+  </Step>
+  
+  <Step title="Review">
+    A BLOCK proposal is created and reviewed by our security team
+  </Step>
+  
+  <Step title="Approval">
+    After review approval, the asset status changes to BLOCKED
+  </Step>
+  
+  <Step title="Distribution">
+    The blocked asset is automatically submitted to our integration partners
+  </Step>
+</Steps>
+
+<Note>
+Only assets that pass through this review and approval process are added to the blocklist.
+</Note>
+
+## Blocklist Integrations
+
+ChainPatrol's blocklist is integrated with 20+ wallets, browsers, and security platforms:
+
+<Tabs>
+  <Tab title="Browser Security" icon="browser">
+    <CardGroup cols={2}>
+      <Card title="Google Safe Browsing" icon="chrome">
+        Protects Chrome, Safari, Edge, and Firefox users
+      </Card>
+      
+      <Card title="Cloudflare Gateway" icon="cloud">
+        Network-level protection for enterprises
+      </Card>
+    </CardGroup>
+  </Tab>
+  
+  <Tab title="Wallet Providers" icon="wallet">
+    **Major Integrations:**
+    
+    <AccordionGroup>
+      <Accordion title="MetaMask" icon="fox">
+        Direct integration via Eth-Phishing-Detect
+      </Accordion>
+      
+      <Accordion title="Phantom" icon="ghost">
+        Real-time API integration
+      </Accordion>
+      
+      <Accordion title="Coinbase Wallet" icon="coinbase">
+        Via multiple blocklist sources
+      </Accordion>
+      
+      <Accordion title="Rainbow Wallet" icon="rainbow">
+        Via WalletConnect and direct APIs
+      </Accordion>
+      
+      <Accordion title="Trust Wallet" icon="shield">
+        Via multiple blocklist sources
+      </Accordion>
+      
+      <Accordion title="Ledger Live" icon="usb-drive">
+        Via blocklist APIs
+      </Accordion>
+      
+      <Accordion title="WalletConnect" icon="link">
+        Real-time API protecting 20+ wallets
+      </Accordion>
+    </AccordionGroup>
+    
+    <Note>
+    And 15+ additional wallet providers
+    </Note>
+  </Tab>
+  
+  <Tab title="Threat Intelligence" icon="shield-halved">
+    <CardGroup cols={2}>
+      <Card title="SEAL-ISAC" icon="users">
+        Security Alliance's information sharing network
+      </Card>
+      
+      <Card title="Crypto-ISAC" icon="bitcoin">
+        Cryptocurrency industry threat sharing
+      </Card>
+      
+      <Card title="Eth-Phishing-Detect" icon="ethereum">
+        Ethereum ecosystem blocklist (ChainPatrol is a core contributor)
+      </Card>
+      
+      <Card title="Polkadot Phishing List" icon="link">
+        Cross-chain with Polkadot ecosystem
+      </Card>
+    </CardGroup>
+  </Tab>
+  
+  <Tab title="Applications & Services" icon="grid">
+    <CardGroup cols={2}>
+      <Card title="Polymarket" icon="chart-line">
+        Content moderation API
+      </Card>
+      
+      <Card title="Snapshot" icon="camera">
+        Governance platform protection
+      </Card>
+      
+      <Card title="Enterprise Custom" icon="building">
+        Custom integrations for enterprise customers
+      </Card>
+    </CardGroup>
+  </Tab>
+</Tabs>
+
+## Accessing the Blocklist
+
+<Tabs>
+  <Tab title="Web Dashboard" icon="browser">
+    Your organization's blocklist page shows all assets that have been added to the blocklist by your team:
+    
+    <Steps>
+      <Step title="Navigate to Blocklist">
+        Access the **Blocklist** section in your organization dashboard
+      </Step>
+      
+      <Step title="View and Filter">
+        View assets filtered by type, date, and status
+      </Step>
+      
+      <Step title="Search Assets">
+        Search for specific assets or domains
+      </Step>
+      
+      <Step title="Export Data">
+        Export blocklist data as a CSV file for reporting purposes
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab title="API Access" icon="code">
+    The blocklist is publicly accessible via our API and SDK.
+    
+    <CardGroup cols={2}>
+      <Card title="API Documentation" icon="book" href="/external-api/overview">
+        Learn how to access the blocklist via REST API
+      </Card>
+      
+      <Card title="SDK Documentation" icon="code" href="/sdk/overview">
+        Use our JavaScript SDK for easy integration
+      </Card>
+    </CardGroup>
+  </Tab>
+</Tabs>
+
+## False Positives
+
+We take false positives seriously. If you believe an asset has been incorrectly blocklisted:
+
+<Tabs>
+  <Tab title="For Asset Owners" icon="user">
+    If your legitimate website or asset has been blocklisted:
+    
+    <Steps>
+      <Step title="Submit a Dispute">
+        Visit [chainpatrol.com/dispute](https://chainpatrol.com/dispute) to submit a dispute
+      </Step>
+      
+      <Step title="Provide Evidence">
+        Include documentation proving your asset is legitimate:
+        - Business registration
+        - Domain age and history
+        - Verified social media accounts
+        - SSL certificates
+        - Other legitimacy indicators
+      </Step>
+      
+      <Step title="Review Process">
+        Our team will review your dispute within 24 hours
+      </Step>
+      
+      <Step title="Resolution">
+        If approved, your asset will be removed from the blocklist and marked as ALLOWED
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab title="For ChainPatrol Users" icon="users">
+    If you've reported an asset that turns out to be legitimate:
+    
+    <Steps>
+      <Step title="Navigate to Report">
+        Find the asset's report in your dashboard
+      </Step>
+      
+      <Step title="Submit ALLOW Proposal">
+        Create an ALLOW proposal with your reasoning
+      </Step>
+      
+      <Step title="Team Review">
+        Our team will review and update the status if appropriate
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+<Check>
+When an asset is removed from the blocklist, the update is distributed to all integration partners within the same **15-30 minute timeframe**.
+</Check>
+
+## Blocklist Distribution
+
+When an asset is blocklisted, it's automatically distributed to multiple platforms:
+
+<AccordionGroup>
+  <Accordion title="Google Safe Browsing" icon="chrome">
+    All asset types eligible for browser protection
+  </Accordion>
+  
+  <Accordion title="SEAL-ISAC" icon="users">
+    URLs hosted on 50+ hosting providers (Vercel, Cloudflare, AWS, etc.)
+  </Accordion>
+  
+  <Accordion title="Crypto-ISAC" icon="bitcoin">
+    All URL and domain assets
+  </Accordion>
+  
+  <Accordion title="Eth-Phishing-Detect" icon="ethereum">
+    Ethereum-related phishing sites
+  </Accordion>
+  
+  <Accordion title="Polkadot Phishing" icon="link">
+    Cross-network phishing domains
+  </Accordion>
+  
+  <Accordion title="Direct Partners" icon="plug">
+    Real-time API updates to wallet providers
+  </Accordion>
+</AccordionGroup>
+
+<Info>
+Distribution happens automatically through our integration workflows. There's no manual step required.
+</Info>
+
+<Tip>
+In the case of a false positive, we will submit retraction requests for ChainPatrol's submissions to these partners.
+</Tip>
+
+## Why Distribution Matters
+
+Traditional cybersecurity relies on **takedowns** — requesting hosting providers or domain registrars to remove malicious content.
+
+### Traditional Takedown Timeline
+
+<CardGroup cols={3}>
+  <Card title="Hosting Provider" icon="server">
+    4-48 hours for takedown
+  </Card>
+  
+  <Card title="Domain Registrar" icon="globe">
+    24-72 hours for takedown
+  </Card>
+  
+  <Card title="No Response" icon="circle-xmark">
+    Some providers never respond
+  </Card>
+</CardGroup>
+
+### ChainPatrol's Blocklist Approach
+
+ChainPatrol provides **immediate protection** by:
+
+<CardGroup cols={2}>
+  <Card title="Browser & Wallet Blocking" icon="shield">
+    Block access at the browser and wallet level
+  </Card>
+  
+  <Card title="Always-On Protection" icon="shield-check">
+    Protect users even if the site remains online
+  </Card>
+  
+  <Card title="Universal Coverage" icon="globe">
+    Works across all hosting providers and jurisdictions
+  </Card>
+  
+  <Card title="15-30 Minute Response" icon="bolt">
+    Users protected in minutes, not days
+  </Card>
+</CardGroup>
+
+<Check>
+This **"blocklist-first, takedown-second"** approach means users are protected within minutes, not days.
+</Check>
+
+---
+
+## Blocklist vs. Takedown Comparison
+
+| Aspect | ChainPatrol Blocklist | Traditional Takedown |
+|--------|----------------------|---------------------|
+| **Response Time** | 15-30 minutes | 4-72 hours (or never) |
+| **Coverage** | 20+ integrations | Single hosting provider |
+| **User Protection** | Immediate | Delayed until removal |
+| **Jurisdiction** | Global | Provider-dependent |
+| **Success Rate** | 100% distribution | Varies by provider |
+
+---
+
+<Card
+  title="View Your Organization's Blocklist"
+  icon="list"
+  href="https://app.chainpatrol.io"
+>
+  Access your blocklist dashboard to view and manage blocked assets
+</Card>
