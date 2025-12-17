@@ -185,6 +185,12 @@
       ]
     },
     {
+      "group": "Threat Types",
+      "pages": [
+        "glossary/brand-impersonation"
+      ]
+    },
+    {
       "group": "API Reference",
       "pages": [
         {
