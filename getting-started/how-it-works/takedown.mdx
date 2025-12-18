@@ -7,39 +7,16 @@ description: "How ChainPatrol removes malicious content through coordinated take
 
 Every takedown follows a clear lifecycle inside ChainPatrol:
 
-<Steps>
-  <Step title="TODO" icon="circle">
-    A takedown has been created and is waiting to be processed
-  </Step>
-  
-  <Step title="IN PROGRESS" icon="spinner">
-    ChainPatrol is actively working on the takedown (submitting it to the appropriate provider and monitoring the request)
-  </Step>
-  
-  <Step title="COMPLETED" icon="circle-check">
-    The provider removed the harmful content
-  </Step>
-</Steps>
+1. **TODO** - A takedown has been created and is waiting to be processed
+2. **IN PROGRESS** - ChainPatrol is actively working on the takedown (submitting it to the appropriate provider and monitoring the request)
+3. **COMPLETED** - The provider removed the harmful content
 
 ### Alternative Outcomes
 
-<CardGroup cols={2}>
-  <Card title="CANCELED" icon="circle-xmark" color="#ef4444">
-    The takedown was stopped (e.g., content turned out to be invalid or unnecessary)
-  </Card>
-  
-  <Card title="PENDING RETRACTION" icon="clock" color="#f59e0b">
-    Identified as false positive, marked for retraction but not yet sent to provider
-  </Card>
-  
-  <Card title="RETRACTION SENT" icon="paper-plane" color="#8b5cf6">
-    Formal retraction request submitted to provider to halt or reverse the takedown
-  </Card>
-  
-  <Card title="RETRACTED" icon="rotate-left" color="#10b981">
-    Provider confirmed retraction—takedown fully stopped or reversed
-  </Card>
-</CardGroup>
+- **CANCELED** - The takedown was stopped (e.g., content turned out to be invalid or unnecessary)
+- **PENDING RETRACTION** - Identified as false positive, marked for retraction but not yet sent to provider
+- **RETRACTION SENT** - Formal retraction request submitted to provider to halt or reverse the takedown
+- **RETRACTED** - Provider confirmed retraction—takedown fully stopped or reversed
 
 ## How ChainPatrol Processes a Takedown
 
@@ -51,19 +28,9 @@ A takedown is automatically created for every asset that is blocked, provided th
 
 Each takedown is directly linked to the blocked asset and contains all essential context required for further action:
 
-<CardGroup cols={3}>
-  <Card title="Asset Reference" icon="link">
-    URL, social profile, IPFS hash, or app listing
-  </Card>
-  
-  <Card title="Supporting Evidence" icon="file-lines">
-    Explanation of why the asset was classified as harmful
-  </Card>
-  
-  <Card title="Provider Information" icon="server">
-    Platform or host responsible for the content
-  </Card>
-</CardGroup>
+- **Asset Reference** - URL, social profile, IPFS hash, or app listing
+- **Supporting Evidence** - Explanation of why the asset was classified as harmful
+- **Provider Information** - Platform or host responsible for the content
 
 After creation, the takedown is placed into the **TODO** state, indicating that it has been generated and is ready to be reviewed and processed.
 
@@ -71,38 +38,21 @@ After creation, the takedown is placed into the **TODO** state, indicating that 
 
 ChainPatrol determines which platform, hosting company, registrar, or channel is responsible for the content.
 
-<Tabs>
-  <Tab title="Hosting & Domains" icon="server">
-    - Hosting providers (AWS, Cloudflare, Vercel, etc.)
-    - Domain registrars (GoDaddy, Namecheap, etc.)
-    - **TLD registrars** (for top-level domains like `.com`, `.xyz`, etc.)
-  </Tab>
-  
-  <Tab title="Social Media" icon="share-nodes">
-    - Twitter/X
-    - Facebook
-    - Instagram
-    - YouTube
-    - **Telegram**
-    - Discord
-    - Reddit
-  </Tab>
-  
-  <Tab title="App Stores" icon="mobile">
-    - Google Play Store
-    - Apple App Store
-    - Browser extension marketplaces
-  </Tab>
-  
-  <Tab title="Distributed Storage" icon="database">
-    - **IPFS** gateways and pinning services
-    - Decentralized hosting platforms
-  </Tab>
-</Tabs>
+**Hosting & Domains:**
+- Hosting providers (AWS, Cloudflare, Vercel, etc.)
+- Domain registrars (GoDaddy, Namecheap, etc.)
+- TLD registrars (for top-level domains like `.com`, `.xyz`, etc.)
 
-<Note>
+**Social Media:**
+Twitter/X, Facebook, Instagram, YouTube, Telegram, Discord, Reddit
+
+**App Stores:**
+Google Play Store, Apple App Store, Browser extension marketplaces
+
+**Distributed Storage:**
+IPFS gateways and pinning services, decentralized hosting platforms
+
 We maintain an up-to-date record of **100+ abuse contacts** for both submission of takedowns and retraction of requests made in error.
-</Note>
 
 ### Submitting the Takedown
 
@@ -110,43 +60,21 @@ ChainPatrol prepares and submits the takedown request to the appropriate provide
 
 **What's Included in a Submission:**
 
-<AccordionGroup>
-  <Accordion title="Clear Explanation" icon="file-lines">
-    Detailed description of why the content is considered harmful, including evidence and context
-  </Accordion>
-  
-  <Accordion title="Legal Documentation" icon="scale-balanced">
-    Supporting legal documents required to justify the removal (when applicable)
-  </Accordion>
-  
-  <Accordion title="Provider-Specific Format" icon="envelope">
-    Submissions use each provider's preferred reporting channel to ensure highest likelihood of success
-  </Accordion>
-</AccordionGroup>
+- **Clear Explanation** - Detailed description of why the content is considered harmful, including evidence and context
+- **Legal Documentation** - Supporting legal documents required to justify the removal (when applicable)
+- **Provider-Specific Format** - Submissions use each provider's preferred reporting channel to ensure highest likelihood of success
 
 Once submitted, the takedown transitions into the **IN PROGRESS** state.
 
-<Check>
 **Full Transparency:** Customers have real-time visibility including status updates and provider responses. Copies of provider communications are surfaced directly in the takedown events timeline.
-</Check>
 
 ### Monitoring
 
 After submission, ChainPatrol continuously monitors the takedown to track its progress and outcome:
 
-<CardGroup cols={3}>
-  <Card title="Content Verification" icon="magnifying-glass">
-    Verifying whether targeted content has been removed
-  </Card>
-  
-  <Card title="Provider Responses" icon="messages">
-    Reviewing and interpreting responses from the provider
-  </Card>
-  
-  <Card title="Escalation" icon="arrow-up">
-    Automatically retrying or escalating when needed
-  </Card>
-</CardGroup>
+- **Content Verification** - Verifying whether targeted content has been removed
+- **Provider Responses** - Reviewing and interpreting responses from the provider
+- **Escalation** - Automatically retrying or escalating when needed
 
 <Tip>
 The takedown remains active until a final outcome is reached. Continuous monitoring ensures takedowns are not prematurely closed.
@@ -156,40 +84,13 @@ The takedown remains active until a final outcome is reached. Continuous monitor
 
 A takedown ends in one of the following states:
 
-<Tabs>
-  <Tab title="COMPLETED" icon="circle-check">
-    **The provider removed the content.**
-    
-    Examples include:
-    - Websites becoming inaccessible
-    - Social media profiles or messages being removed
-    - Telegram channels being shut down
-    - IPFS content becoming unavailable via gateways
-    - Scam apps being delisted
-  </Tab>
-  
-  <Tab title="CANCELED" icon="circle-xmark">
-    **The takedown request cannot proceed.**
-    
-    Reasons include:
-    - Invalid content
-    - Missing required documentation
-    - Asset no longer meets takedown criteria
-  </Tab>
-  
-  <Tab title="RETRACTED" icon="rotate-left">
-    **The takedown was formally withdrawn after submission.**
-    
-    Typically because:
-    - Asset identified as false positive
-    - Content determined to be legitimate
-    - Organization requested retraction
-  </Tab>
-</Tabs>
+**COMPLETED** - The provider removed the content. Examples include websites becoming inaccessible, social media profiles or messages being removed, Telegram channels being shut down, IPFS content becoming unavailable via gateways, and scam apps being delisted.
 
-<Info>
+**CANCELED** - The takedown request cannot proceed. Reasons include invalid content, missing required documentation, and asset no longer meets takedown criteria.
+
+**RETRACTED** - The takedown was formally withdrawn after submission. Typically because asset identified as false positive, content determined to be legitimate, or organization requested retraction.
+
 All outcomes are logged clearly and shown to customers for transparency.
-</Info>
 
 ## Takedown Retraction
 
@@ -209,155 +110,61 @@ A retraction is typically initiated when ChainPatrol determines that the origina
 
 ### Retraction Process
 
-<Steps>
-  <Step title="Identification">
-    Asset is identified as legitimate or false positive
-  </Step>
-  
-  <Step title="PENDING RETRACTION">
-    Takedown marked for retraction but request not yet sent
-  </Step>
-  
-  <Step title="RETRACTION SENT">
-    Formal request submitted to provider to halt or reverse the takedown
-  </Step>
-  
-  <Step title="RETRACTED">
-    Provider confirms—takedown stopped or reversed
-  </Step>
-</Steps>
+1. **Identification** - Asset is identified as legitimate or false positive
+2. **PENDING RETRACTION** - Takedown marked for retraction but request not yet sent
+3. **RETRACTION SENT** - Formal request submitted to provider to halt or reverse the takedown
+4. **RETRACTED** - Provider confirms—takedown stopped or reversed
 
-<Note>
 Takedown retractions are handled with the same level of care, structure, and transparency as takedown submissions.
-</Note>
 
 ## Types of Takedowns
 
 ChainPatrol supports multiple takedown categories, each with a clear expected outcome:
 
-<AccordionGroup>
-  <Accordion title="Website Takedowns" icon="globe">
-    **Targets:** Hosting providers, domain registrars, and TLD registries
-    
-    **Outcome:** The website becomes inaccessible or the domain is suspended
-    
-    **Examples:**
-    - Phishing sites hosted on cloud providers
-    - Malicious domains registered through registrars
-    - Typosquatting domains
-  </Accordion>
-  
-  <Accordion title="Social Media Takedowns" icon="share-nodes">
-    **Platforms:** X/Twitter, Facebook, Instagram, YouTube, Telegram, Discord, Reddit
-    
-    **Outcome:** The impersonating profile, channel, post, or video is removed or suspended
-    
-    **Examples:**
-    - Fake brand accounts
-    - Impersonation profiles
-    - Scam posts and videos
-    - Malicious Telegram channels
-  </Accordion>
-  
-  <Accordion title="App Store Takedowns" icon="mobile">
-    **Targets:** Mobile app platforms and extension marketplaces
-    
-    **Outcome:** Fraudulent apps are removed from the marketplace
-    
-    **Examples:**
-    - Fake wallet apps
-    - Malicious browser extensions
-    - Impersonation applications
-  </Accordion>
-  
-  <Accordion title="IPFS Takedowns" icon="database">
-    **Targets:** IPFS gateway operators or pinning services
-    
-    **Outcome:** The malicious IPFS content is unpinned or becomes inaccessible through common gateways
-    
-    **Examples:**
-    - Phishing sites hosted on IPFS
-    - Malicious content distributed via decentralized storage
-  </Accordion>
-</AccordionGroup>
+**Website Takedowns** - Targets hosting providers, domain registrars, and TLD registries. Outcome: The website becomes inaccessible or the domain is suspended. Examples include phishing sites hosted on cloud providers, malicious domains registered through registrars, and typosquatting domains.
+
+**Social Media Takedowns** - Platforms include X/Twitter, Facebook, Instagram, YouTube, Telegram, Discord, Reddit. Outcome: The impersonating profile, channel, post, or video is removed or suspended. Examples include fake brand accounts, impersonation profiles, scam posts and videos, and malicious Telegram channels.
+
+**App Store Takedowns** - Targets mobile app platforms and extension marketplaces. Outcome: Fraudulent apps are removed from the marketplace. Examples include fake wallet apps, malicious browser extensions, and impersonation applications.
+
+**IPFS Takedowns** - Targets IPFS gateway operators or pinning services. Outcome: The malicious IPFS content is unpinned or becomes inaccessible through common gateways. Examples include phishing sites hosted on IPFS and malicious content distributed via decentralized storage.
 
 ## Customer Visibility & Status Updates
 
 Inside ChainPatrol, customers have clear visibility into each takedown:
 
-<CardGroup cols={2}>
-  <Card title="Current State" icon="traffic-light">
-    Real-time status: TODO, IN PROGRESS, COMPLETED, CANCELED, or retraction states
-  </Card>
-  
-  <Card title="Timestamps" icon="clock">
-    Complete timeline of all major actions and state changes
-  </Card>
-  
-  <Card title="Provider Responses" icon="envelope">
-    Full copies of emails and communications from providers
-  </Card>
-  
-  <Card title="Evidence of Removal" icon="check-double">
-    Confirmation when content has been successfully removed
-  </Card>
-</CardGroup>
+- **Current State** - Real-time status: TODO, IN PROGRESS, COMPLETED, CANCELED, or retraction states
+- **Timestamps** - Complete timeline of all major actions and state changes
+- **Provider Responses** - Full copies of emails and communications from providers
+- **Evidence of Removal** - Confirmation when content has been successfully removed
 
-<Check>
 This gives customers a full understanding of progress and outcomes throughout the entire takedown lifecycle.
-</Check>
 
 ## Security & Compliance
 
 ChainPatrol ensures that all takedown-related data is handled securely and responsibly:
 
-<CardGroup cols={2}>
-  <Card title="Secure Storage" icon="lock">
-    Legal documents stored using secure systems and access controls
-  </Card>
-  
-  <Card title="Limited Sharing" icon="shield">
-    Data only shared with providers when explicitly required
-  </Card>
-  
-  <Card title="Industry Standards" icon="certificate">
-    Following best practices to protect customer data
-  </Card>
-  
-  <Card title="Confidentiality" icon="user-lock">
-    Maintaining strict confidentiality throughout the process
-  </Card>
-</CardGroup>
+- **Secure Storage** - Legal documents stored using secure systems and access controls
+- **Limited Sharing** - Data only shared with providers when explicitly required
+- **Industry Standards** - Following best practices to protect customer data
+- **Confidentiality** - Maintaining strict confidentiality throughout the process
 
 ## Frequently Asked Questions
 
-<AccordionGroup>
-  <Accordion title="How do I know if my takedown was successful?" icon="circle-question">
-    The takedown will move to the **COMPLETED** state, and you'll see confirmation from the provider in the takedown timeline.
-  </Accordion>
-  
-  <Accordion title="Why did my takedown take longer than expected?" icon="clock">
-    Response times vary across platforms. Some act quickly, while others require legal documentation or take several days to respond. Hosting providers typically respond within 4-48 hours, while domain registrars may take 24-72 hours or longer.
-  </Accordion>
-  
-  <Accordion title="What happens if the content appears again?" icon="rotate">
-    If previously removed content reappears, the existing takedown is **reactivated** by returning to the **TODO** state. ChainPatrol will then act on it again, re-filing requests until the content is completely taken down.
-  </Accordion>
-  
-  <Accordion title="Can ChainPatrol guarantee removal?" icon="shield-check">
-    No provider guarantees removal in all cases, but ChainPatrol works to maximize success through consistent, accurate submissions and continuous monitoring. Our success rates vary by provider but are typically very high for legitimate threats.
-  </Accordion>
-  
-  <Accordion title="What documentation do I need to provide?" icon="file-lines">
-    Most takedowns require legal documents such as:
-    - Letter of Authorization
-    - Power of Attorney
-    - Trademark registration
-    - Business registration documents
-    
-    Requirements vary by provider and will be communicated during onboarding.
-  </Accordion>
-</AccordionGroup>
+**How do I know if my takedown was successful?**
+The takedown will move to the **COMPLETED** state, and you'll see confirmation from the provider in the takedown timeline.
+
+**Why did my takedown take longer than expected?**
+Response times vary across platforms. Some act quickly, while others require legal documentation or take several days to respond. Hosting providers typically respond within 4-48 hours, while domain registrars may take 24-72 hours or longer.
+
+**What happens if the content appears again?**
+If previously removed content reappears, the existing takedown is **reactivated** by returning to the **TODO** state. ChainPatrol will then act on it again, re-filing requests until the content is completely taken down.
+
+**Can ChainPatrol guarantee removal?**
+No provider guarantees removal in all cases, but ChainPatrol works to maximize success through consistent, accurate submissions and continuous monitoring. Our success rates vary by provider but are typically very high for legitimate threats.
+
+**What documentation do I need to provide?**
+Most takedowns require legal documents such as Letter of Authorization, Power of Attorney, Trademark registration, and Business registration documents. Requirements vary by provider and will be communicated during onboarding.
 
 ---
 

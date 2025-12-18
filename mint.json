@@ -59,6 +59,10 @@
   ],
   "tabs": [
     {
+      "name": "Integrations",
+      "url": "integration"
+    },
+    {
       "name": "API Reference",
       "url": "external-api"
     },
@@ -94,16 +98,16 @@
             "getting-started/how-it-works/takedown",
             "getting-started/how-it-works/watchlist"
           ]
+        },
+        {
+          "group": "How do I get started?",
+          "pages": [
+            "protect-your-brand/onboarding-requirements",
+            "protect-your-brand/who-should-be-involved",
+            "protect-your-brand/services-setup",
+            "protect-your-brand/ongoing-communication"
+          ]
         }
-      ]
-    },
-    {
-      "group": "Protect Your Brand",
-      "pages": [
-        "protect-your-brand/onboarding-requirements",
-        "protect-your-brand/who-should-be-involved",
-        "protect-your-brand/services-setup",
-        "protect-your-brand/ongoing-communication"
       ]
     },
     {
@@ -127,13 +131,13 @@
     {
       "group": "Integrations",
       "pages": [
-        "bots/discord-bot",
-        "bots/telegram-bot",
-        "bots/slack-bot",
+        "integration/discord",
+        "integration/telegram",
+        "integration/slack",
         "integration/vercel",
         "integration/intercom",
         "integration/github",
-        "security-integration/canary-tokens",
+        "integration/canary-tokens",
         "integration/webhooks",
         "integration/zapier"
       ]
@@ -298,7 +302,23 @@
     },
     {
       "source": "/general/discord-bot",
-      "destination": "/bots/discord-bot"
+      "destination": "/integration/discord"
+    },
+    {
+      "source": "/bots/discord-bot",
+      "destination": "/integration/discord"
+    },
+    {
+      "source": "/bots/telegram-bot",
+      "destination": "/integration/telegram"
+    },
+    {
+      "source": "/bots/slack-bot",
+      "destination": "/integration/slack"
+    },
+    {
+      "source": "/security-integration/canary-tokens",
+      "destination": "/integration/canary-tokens"
     },
     {
       "source": "/api",
@@ -310,15 +330,15 @@
     },
     {
       "source": "/bots/slack",
-      "destination": "/bots/slack-bot"
+      "destination": "/integration/slack"
     },
     {
       "source": "/bots/discord",
-      "destination": "/bots/discord-bot"
+      "destination": "/integration/discord"
     },
     {
       "source": "/bots/telegram",
-      "destination": "/bots/telegram-bot"
+      "destination": "/integration/telegram"
     }
   ],
   "backgroundImage": "/background.png",
