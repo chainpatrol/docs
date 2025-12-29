@@ -55,6 +55,25 @@ This event is sent when the status of an asset changes. The `status` field can b
 }
 ```
 
+### `asset.status-escalated`
+
+This event is sent when an asset's status is escalated, typically through a proposal process.
+
+```json
+{
+  "type": "asset.status-escalated",
+  "created_at": "2025-01-15T10:30:00.000Z",
+  "data": {
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "url",
+    "status": "BLOCKED",
+    "proposal_id": 67890,
+    "organization_id": 100
+  }
+}
+```
+
 ### `organization.threat-detection-added`
 
 This event is sent when a new threat detection is added for your organization detection tab.
@@ -76,7 +95,7 @@ When creating a webhook, you'll need to provide:
 
 1. A HTTPS endpoint URL that will receive the webhook events
 2. An optional description to help identify the webhook's purpose
-3. Select which events you want to receive (currently only asset.status-updated is available)
+3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, and `organization.threat-detection-added`)
 4. Optional custom HTTP headers for authentication or integration requirements
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
