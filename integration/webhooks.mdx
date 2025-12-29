@@ -96,26 +96,18 @@ When creating a webhook, you'll need to provide:
 1. A HTTPS endpoint URL that will receive the webhook events
 2. An optional description to help identify the webhook's purpose
 3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, and `organization.threat-detection-added`)
-4. Optional custom HTTP headers for authentication or integration requirements
+4. Optional HTTP headers for supported integrations (currently Google SecOps headers are available)
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
 
 ### Custom HTTP Headers
 
-You can configure custom HTTP headers that will be included with every webhook request. This is useful for:
-
-- Adding authentication headers required by your SIEM or integration endpoints
-- Including API keys or access tokens needed by your webhook receiver
-- Meeting specific requirements from third-party services
-
-**Example: Google SecOps Integration**
-
-When integrating with Google SecOps, you may need to include the following custom headers:
+ChainPatrol supports specific hardcoded HTTP headers that can be configured for webhook requests. Currently, the following headers are available for Google SecOps integration:
 
 - `X-goog-api-key`: Your Google API key
 - `X-Webhook-Access-Key`: Your webhook access key
 
-These headers will be automatically included in all webhook requests sent to your endpoint, allowing Google SecOps to authenticate and process the webhook events.
+When configuring a webhook for Google SecOps, you can provide values for these headers, and they will be automatically included in all webhook requests sent to your endpoint, allowing Google SecOps to authenticate and process the webhook events.
 
 ## Signature Verification
 
