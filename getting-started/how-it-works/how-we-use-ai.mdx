@@ -17,44 +17,39 @@ We've engineered the optimal balance between speed and accuracy:
 
 | Detection Type | How It Works |
 | --- | --- |
-| **Fully Automated** (44.74%) | Threats that meet all AI confidence thresholds are blocked instantly |
-| **AI + Human Review** (55.26%) | Edge cases are flagged for immediate analyst review |
+| **Fully Automated**  | Threats that meet all AI confidence thresholds are blocked instantly |
+| **Human Review**  | Edge cases are flagged for immediate analyst review |
 
 <Note>
 **Why this matters:** Multiple AI and rule-based thresholds must pass before any action is taken. This layered approach prevents false positives while ensuring legitimate threats are caught quickly.
 </Note>
 
-## Our AI Technology Stack
+## How Our AI Detects Threats
 
-ChainPatrol uses a multi-model approach, combining the best AI technologies for comprehensive threat detection.
+ChainPatrol uses a multi-layered AI approach, combining multiple detection methods for comprehensive threat protection.
 
-- **Large Language Models** - Advanced text and content analysis
-- **Visual & Structural Analysis** - Screenshot comparison and DOM analysis
-- **Custom-Trained Models** - Specialized Web3 threat detection
-- **Decision Engine** - Multi-model score aggregation
+### Content Analysis
 
-### 1. Large Language Models
+Our AI analyzes text content across platforms to identify threats:
 
-We leverage state-of-the-art LLMs for content analysis:
+- **Language Pattern Detection** - Identifies phishing language, scam indicators, and social engineering tactics in posts, messages, and web content
+- **Context Understanding** - Recognizes subtle impersonation attempts and fraudulent claims that might fool traditional filters
+- **Multi-Platform Monitoring** - Analyzes content across social media, websites, messaging apps, and more
 
-**OpenAI GPT-4** - Analyzes text content, social media posts, and communications to identify phishing language patterns and scam indicators
-
-**Gemini 2.0** - Enables multi-modal analysis, processing both text and visual content simultaneously for faster, more accurate detection
-
-### 2. Visual & Structural Analysis
+### Visual Detection
 
 Phishing sites often look identical to legitimate ones. Our visual AI catches them:
 
-1. **Visual Similarity Detection** - Compares screenshots against your legitimate sites to catch pixel-perfect impersonation attempts
-2. **Structural Analysis** - Examines DOM structure, code patterns, and page layouts to identify known phishing templates—even when visuals differ
-3. **URLScan Integration** - Real-time visual and structural scanning of suspicious URLs
+- **Visual Similarity Analysis** - Compares page appearance against your legitimate sites to catch pixel-perfect impersonation attempts
+- **Structural Pattern Matching** - Examines page structure, code patterns, and layouts to identify known phishing templates—even when visuals differ
+- **Real-Time Scanning** - Continuously monitors suspicious URLs for visual indicators of threats
 
-### 3. Custom-Trained Models
+### Web3-Specialized Detection
 
-Our models are tuned specifically for Web3 threats:
+Our models are trained specifically for Web3 threats:
 
-- Trained on **500,000+ real threat examples** from across the ecosystem
-- Continuously updated with new attack patterns
+- Trained on hundreds of thousands of real threat examples from across the ecosystem
+- Continuously updated with new attack patterns as they emerge
 - Fine-tuned for Web3-specific threats like wallet drainers, fake airdrops, and impersonation scams
 
 ## How Detection Works
@@ -67,14 +62,14 @@ Here's what happens when a potential threat is identified:
 4. **Action** - High-confidence threats are blocked; edge cases go to analysts
 5. **Distribution** - Confirmed threats are pushed to all integrated platforms
 
-### The Decision Engine
+### The Decision Process
 
-At the core of our system is a proprietary decision engine that:
+At the core of our system is a sophisticated decision engine that:
 
-- **Model Aggregation** - Aggregates outputs from all AI models
-- **Weighted Scoring** - Applies confidence-based scoring
-- **Cross-Reference** - Checks against known threat databases
-- **Fast Decisions** - Makes final disposition in milliseconds
+- **Multi-Signal Aggregation** - Combines outputs from all detection methods
+- **Confidence-Based Scoring** - Weighs evidence to determine threat likelihood
+- **Cross-Reference Validation** - Checks against known threat databases and patterns
+- **Instant Decisions** - Makes final determinations in seconds
 
 <Tip>
 **No single point of failure:** A threat must pass multiple independent checks before being actioned, ensuring accuracy while maintaining speed.
@@ -93,7 +88,7 @@ Our AI monitors threats across **50+ platforms**—and we can add new integratio
 **Web3 Platforms:** OpenSea, ENS, IPFS, Farcaster, Blur, Magic Eden, DeBank, Bluesky, Primal, DeSo
 
 <Info>
-**Need coverage for a platform we don't list?** Contact us—new integrations can be added within days.
+**Need coverage for a platform we don't list?** Contact us, new integrations can be added within days.
 </Info>
 
 ## Real-Time Threat Distribution
@@ -102,33 +97,29 @@ When our AI detects a threat, it doesn't just sit in a database. We push it dire
 
 ### Browser Protection
 
-**Google Safe Browsing** - Integration means threats are blocked in Chrome, Edge, and Safari—reaching billions of users. We maintain a **68.32% acceptance rate**, among the highest in the industry.
+**Google Safe Browsing** - Our integration means threats are blocked in Chrome, Edge, and Safari—reaching billions of users worldwide.
 
 ### Wallet Protection
 
-Direct API integrations with leading wallets provide real-time warnings:
+Direct integrations with leading wallets provide real-time warnings at the point of transaction:
 
-- **MetaMask** - Core integration partner
-- **Phantom** - Direct API for Solana ecosystem
-- **WalletConnect** - Real-time threat API
-- **20+ More Wallets** - Ecosystem-wide protection
+- **MetaMask** - Core integration partner protecting millions of users
+- **Phantom** - Protecting the Solana ecosystem
+- **WalletConnect** - Real-time threat prevention
+- **20+ More Wallets** - Comprehensive ecosystem coverage
 
-### Infrastructure Partners
 
-- **Cloudflare** - Direct threat reporting for faster takedowns
-- **Polymarket** - Moderation API integration
-
-**The result:** Threats detected by ChainPatrol can be blocked across the entire Web3 ecosystem within seconds.
+**The result:** Threats detected by ChainPatrol are blocked across the entire Web3 ecosystem within seconds.
 
 ## Continuous Learning & Improvement
 
 Our AI gets smarter every day through:
 
-**Human-in-the-Loop Training** - Every analyst decision feeds back into our models. When our team reviews edge cases, that knowledge improves future detection accuracy.
+**Human-in-the-Loop Training** - Every analyst decision feeds back into our AI. When our team reviews edge cases, that knowledge improves future detection accuracy.
 
-**Threat Intelligence Networks** - We're core contributors to Eth-Phishing-Detect with elevated permissions, and active members of SEAL-ISAC. This gives us early access to emerging threats and allows us to share our detections with the broader security community.
+**Threat Intelligence Networks** - We're active contributors to major threat intelligence communities, giving us early access to emerging threats and allowing us to share our detections with the broader security ecosystem.
 
-**Expanding Datasets** - Our threat database grows daily with new examples, ensuring our models stay ahead of evolving attack techniques.
+**Expanding Datasets** - Our threat database grows daily with new examples, ensuring our AI stays ahead of evolving attack techniques.
 
 ---
 

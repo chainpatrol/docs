@@ -40,16 +40,8 @@ Our automated review system calculates a **risk score** to determine whether an 
 
 1. **Rule Execution** - During an Asset Scan, multiple detection rules are executed against the asset
 2. **Score Calculation** - The risk score is a weighted sum of all individual scores from each successful rule execution
-3. **Threshold Evaluation** - The final risk score is compared against our approval threshold (1.0)
-4. **Decision** - Assets meeting the threshold are automatically approved; others are escalated
-
-#### Risk Score Example
-
-**High Risk (Auto-Approved):**
-Asset has 10 rules executed. 6 rules contribute a score of 0.2 each (= 1.2 total), 4 rules contribute a score of 0.1 each (= 0.4 total). Total Risk Score: 1.6. Since 1.6 ≥ 1.0, the Proposal is automatically approved.
-
-**Medium Risk (Escalated):**
-Asset has 10 rules executed. 4 rules contribute a score of 0.1 each (= 0.4 total), 2 rules contribute a score of 0.2 each (= 0.4 total). Total Risk Score: 0.8. Since 0.8 < 1.0, the Proposal is escalated for human review.
+3. **Threshold Evaluation** - The final risk score is compared against our approval threshold
+4. **Decision** - Assets meeting the threshold are automatically approved; others are escalated for human review
 
 ### Legitimacy Rules
 
@@ -59,7 +51,7 @@ Asset has 10 rules executed. 4 rules contribute a score of 0.1 each (= 0.4 total
 
 Legitimacy Rules are special detection rules that identify when an asset is **not malicious**. If a Legitimacy Rule with "Very High" confidence passes, automation will **not** automatically approve the Proposal, regardless of the Risk Score.
 
-**Example:** An asset might have a risk score of 1.5, but if it matches a Very High confidence Legitimacy Rule (e.g., verified official domain), the Proposal will be escalated for human review instead of being auto-blocked.
+**Example:** An asset might have a high risk score, but if it matches a Very High confidence Legitimacy Rule (e.g., verified official domain), the Proposal will be escalated for human review instead of being auto-blocked.
 
 ### Automatically Approving the Proposal
 
@@ -72,18 +64,18 @@ For a Proposal to be automatically approved, **all** of the following must be tr
 - No Legitimacy Rules of "Very High" confidence have passed
 
 **Approval Triggers (at least one must be true):**
-- **Option 1:** Risk Score ≥ 1.0 (the overall Risk Score of the Asset is at or above 1.0)
+- **Option 1:** High Risk Score (the overall Risk Score of the Asset meets our confidence threshold)
 - **Option 2:** Trusted Reporter (the Asset was part of a Report created by a Trusted Reporter)
 
 ## Human Review
 
 Humans are essential for making decisions about Proposals that fall outside automated approval criteria.
 
-Since automation only handles Proposals to block Assets with a Risk Score ≥ 1.0, human analysts evaluate all other cases.
+Since automation only handles Proposals to block Assets with high confidence scores, human analysts evaluate all other cases.
 
 ### When Humans Are Involved
 
-- **Low Risk Blocks** - Proposals to Block an Asset with a Risk Score < 1.0
+- **Lower Confidence Blocks** - Proposals to Block an Asset that doesn't meet the automated threshold
 - **Allow Proposals** - All Proposals to Allow an Asset
 - **Unknown Status** - Proposals to set an Asset to Unknown
 
