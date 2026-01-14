@@ -118,6 +118,7 @@
       "pages": [
         "external-api/asset-check",
         "external-api/asset-details",
+        "external-api/asset-search",
         "external-api/asset-submit",
         "external-api/asset-list",
         "external-api/asset-changelog",
