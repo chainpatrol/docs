@@ -38,26 +38,26 @@ Each detection contains:
 7. **Auto-Reporting (Optional)** - If your organization has auto-reporting enabled and the detection score exceeds your medium threshold, the system can automatically create a report with the detected asset, mark the asset as blocked, submit takedown requests (if configured), and send notifications to your team.
 
 <Warning>
-**Auto-Reporting Requirements:** Score must meet or exceed your medium threshold (typically 0.6-0.7), detection source must be enabled, asset must not already be blocked, and asset must not have been previously rejected multiple times.
+**Auto-Reporting Requirements:** Score must meet or exceed your medium threshold, detection source must be enabled, asset must not already be blocked, and asset must not have been previously rejected multiple times.
 </Warning>
 
 ## Confidence Levels
 
 Detections are categorized into confidence levels based on your organization's thresholds:
 
-### None (Score 0 to Low Threshold, typically < 0.4)
+### None (Score 0 to Low Threshold)
 
 Low confidence detections. May be false positives or tangentially related to your brand. Useful for monitoring trends but rarely require action. Examples include generic mention of your brand in unrelated context, weak keyword matches, and minimal similarity indicators.
 
-### Low (Low Threshold to Medium Threshold, typically 0.4 - 0.6)
+### Low (Low Threshold to Medium Threshold)
 
 Some indicators suggest a potential threat, but evidence is limited. Requires manual review to confirm. Common scenarios include domain contains your brand name but has legitimate business purpose, social media mentions your brand in neutral context, and weak visual or textual similarity.
 
-### Medium (Medium Threshold to High Threshold, typically 0.6 - 0.8)
+### Medium (Medium Threshold to High Threshold)
 
 Strong indicators of malicious intent. Multiple detection rules triggered with reasonable confidence. Common scenarios include new domain with brand name and suspicious keywords, social media account impersonating your brand with stolen logo, and token contract with similar name on blockchain. This is the typical threshold for automatic reporting and blocking.
 
-### High (High Threshold and above, typically > 0.8)
+### High (High Threshold and above)
 
 Very strong evidence of malicious activity. Multiple high-confidence rules triggered. Common scenarios include perfect visual replica of your website, domain nearly identical to yours (typosquatting), known phishing infrastructure, and contains wallet drainer code. High confidence detections require immediate attention and rapid response.
 
@@ -91,9 +91,7 @@ The system automatically handles duplicate detections to prevent alert fatigue:
 
 ## Key Takeaways
 
-- **Automated Discovery** - Detections are automatically identified by monitoring sources
-- **Analysis + Rules Engine** - Scans and rules evaluate threat indicators and evidence
-- **Confidence Scoring** - A 0-1 score indicates likelihood of being malicious
-- **Group Tracking** - Related threats linked via group IDs
-- **Smart Deduplication** - Prevents alert fatigue while maintaining visibility
-- **Auto-Reporting** - High-confidence threats can be automatically reported
+- Detection is the entry point, not the decision: A detection indicates potential threat, but review and approval are required before blocking to prevent false positives
+- Group IDs reveal campaign scope: When one detection links to multiple related assets, you can identify and report entire phishing campaigns instead of blocking sites one at a time
+- Threshold configuration balances coverage and noise: Lower thresholds catch more threats but require more review, while higher thresholds miss edge cases but reduce workload
+- Deduplication across sources increases confidence: When multiple independent detection sources flag the same asset, it provides stronger evidence of malicious intent

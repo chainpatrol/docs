@@ -20,7 +20,7 @@ Every takedown follows a clear lifecycle inside ChainPatrol:
 - **CANCELED** - The takedown was stopped (e.g., content turned out to be invalid or unnecessary)
 - **PENDING RETRACTION** - Identified as false positive, marked for retraction but not yet sent to provider
 - **RETRACTION SENT** - Formal retraction request submitted to provider to halt or reverse the takedown
-- **RETRACTED** - Provider confirmed retraction—takedown fully stopped or reversed
+- **RETRACTED** - Provider confirmed retraction, takedown fully stopped or reversed
 
 ## How ChainPatrol Processes a Takedown
 
@@ -45,7 +45,7 @@ ChainPatrol determines which platform, hosting company, registrar, or channel is
 **Hosting & Domains:**
 - Hosting providers (AWS, Cloudflare, Vercel, etc.)
 - Domain registrars (GoDaddy, Namecheap, etc.)
-- TLD registrars (for top-level domains like `.com`, `.xyz`, etc.)
+- TLD registries (for top-level domains like `.com`, `.xyz`, etc.)
 
 **Social Media:**
 Twitter/X, Facebook, Instagram, YouTube, Telegram, Discord, Reddit
@@ -115,7 +115,7 @@ A retraction is typically initiated when ChainPatrol determines that the origina
 1. **Identification** - Asset is identified as legitimate or false positive
 2. **PENDING RETRACTION** - Takedown marked for retraction but request not yet sent
 3. **RETRACTION SENT** - Formal request submitted to provider to halt or reverse the takedown
-4. **RETRACTED** - Provider confirms—takedown stopped or reversed
+4. **RETRACTED** - Provider confirms takedown stopped or reversed
 
 Takedown retractions are handled with the same level of care, structure, and transparency as takedown submissions.
 
@@ -157,7 +157,7 @@ ChainPatrol ensures that all takedown-related data is handled securely and respo
 The takedown will move to the **COMPLETED** state, and you'll see confirmation from the provider in the takedown timeline.
 
 **Why did my takedown take longer than expected?**
-Response times vary across platforms. Some act quickly, while others require legal documentation or take several days to respond. Hosting providers typically respond within 4-48 hours, while domain registrars may take 24-72 hours or longer.
+Response times vary across platforms. Some act quickly, while others require legal documentation or take several days to respond. Hosting providers and domain registrars have different response times, and some platforms may take longer than others.
 
 **What happens if the content appears again?**
 If previously removed content reappears, the existing takedown is **reactivated** by returning to the **TODO** state. ChainPatrol will then act on it again, re-filing requests until the content is completely taken down.
@@ -170,8 +170,7 @@ Most takedowns require legal documents such as Letter of Authorization, Power of
 
 ## Key Takeaways
 
-- Takedowns move through clear states (TODO → IN PROGRESS → COMPLETED) with alternative outcomes
-- A takedown is created automatically for blocked assets when the Takedowns service is enabled
-- ChainPatrol assigns the correct provider and submits provider-specific requests with evidence
-- Monitoring and follow-up continue until a final outcome is reached
-- Retractions help stop or reverse takedowns for false positives or legitimate content
+- Takedowns happen automatically after blocking: Every blocked asset with Takedowns enabled gets a takedown request without manual intervention
+- Watchlist monitoring confirms success: Assets are watchlisted during takedowns so we automatically detect when they go offline
+- Retractions protect against false positives: If an asset is identified as legitimate after a takedown starts, we send formal retraction requests to prevent wrongful removal
+- Provider-specific formatting increases success: Different platforms require different submission formats, and we handle this automatically to maximize removal rates

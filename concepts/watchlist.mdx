@@ -8,7 +8,7 @@ description: "Understanding how ChainPatrol monitors assets for future action"
 The watchlist is a set of assets that we monitor to see if we can action on them further in the future.
 
 <Info>
-Think of the watchlist as a "middle ground" between blocking and allowing—assets that need continued observation before a final decision can be made.
+Think of the watchlist as a "middle ground" between blocking and allowing: assets that need continued observation before a final decision can be made.
 </Info>
 
 ## Why Would We Need to Watchlist Something?
@@ -70,7 +70,7 @@ Who can do this: ChainPatrol security analysts, customer administrators (for the
 
 ### Automatic Watchlisting
 
-Every asset is automatically added to the watchlist when a takedown is initiated. Triggers include takedown request submitted, takedown status changes to "IN_PROGRESS", and asset needs monitoring for completion. No manual intervention required—system automatically adds to watchlist, monitoring begins immediately, and removal happens automatically when offline.
+Every asset is automatically added to the watchlist when a takedown is initiated. Triggers include takedown request submitted, takedown status changes to "IN_PROGRESS", and asset needs monitoring for completion. No manual intervention required: system automatically adds to watchlist, monitoring begins immediately, and removal happens automatically when offline.
 
 ## How the Watchlist Works
 
@@ -121,9 +121,7 @@ Assets are automatically removed from the watchlist when:
 
 ## Key Takeaways
 
-- **Middle Ground** - Watchlist is for assets between blocking and allowing
-- **Two Main Purposes** - Inconclusive evidence and takedown monitoring
-- **Adaptive Monitoring** - Scan frequency adjusts based on time and status
-- **Automatic + Manual** - Assets can be watchlisted automatically for takedowns or manually during review
-- **Multiple Exit Paths** - Assets leave watchlist when status becomes clear
-- **Time-Based Decay** - Long-term uncertain assets are eventually removed
+- Watchlist solves the gray area problem: When you suspect an asset might be malicious but lack evidence to block, watchlisting lets you monitor for changes without premature action
+- Automatic takedown monitoring saves manual work: Every takedown automatically adds the asset to watchlist, eliminating the need to manually check if content has been removed
+- Adaptive frequency optimizes resources: Recent additions scan frequently to catch rapid changes, while stable assets scan less often to avoid wasting resources on unlikely updates
+- 30-day decay prevents bloat: Assets that stay UNKNOWN for a month without becoming malicious are automatically removed, keeping monitoring focused on active threats

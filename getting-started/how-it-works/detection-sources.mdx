@@ -159,8 +159,7 @@ Our infrastructure is designed to handle high-volume monitoring without impactin
 
 ## Key Takeaways
 
-- Detection sources continuously scan specific platforms and data streams for threats
-- Sources run on schedules and submit discovered assets into the analysis pipeline
-- Coverage spans search engines, social platforms, app stores, and Web3 surfaces
-- Configuration controls status, scope, and schedule (including custom schedules)
-- Best results come from good included/excluded terms and iterative tuning
+- Start broad, then refine: Enable core sources first (search engines and social media), then expand to specialized sources based on where your threats appear
+- Quality over quantity: Well-configured included and excluded terms on fewer sources beats poorly configured monitoring across all platforms
+- Different sources catch different threats: A domain might not show in Google Search but appear in Certstream, so layer your coverage for comprehensive protection
+- Auto-reporting works best after calibration: Review initial detections manually to fine-tune your thresholds before enabling automatic blocking

@@ -125,13 +125,11 @@ A social profile claiming to be one of your employees is discovered. The profile
 
 - **Not a Human Report** - Asset scans are system-generated. Reports are created by users or external systems raising issues.
 - **Not a Case** - A scan can be clean or suspicious. A threat or incident record is created only when risk crosses thresholds or a human escalates it.
-- **Not a Configuration** - Scans use your rules, thresholds, and service settings, but they are not where you configure behavior—they are the evidence those settings produce.
+- **Not a Configuration** - Scans use your rules, thresholds, and service settings, but they are not where you configure behavior. They are the evidence those settings produce.
 
 ## Key Takeaways
 
-- **Point-in-Time Snapshot** - Each scan captures asset state at a specific moment
-- **Rich Context** - Enrichments provide comprehensive asset intelligence
-- **Labels + Scores** - Findings summarize what the scan detected and how risky it appears
-- **Timeline History** - Multiple scans show how an asset evolves over time
-- **Evidence Base** - Scan data supports reviews, decisions, and takedown requests
-- **Relationship Mapping** - Links and redirects can reveal broader campaigns
+- One asset, many scans creates a timeline: Scanning the same URL multiple times shows how threats evolve, when they go live, and when takedowns succeed
+- Selective enrichment balances speed and depth: Basic scans are fast, but when risk signals appear, deeper analysis triggers automatically to gather decisive evidence
+- Liveness tracking enables automated workflows: Knowing when assets change from ALIVE to DEAD lets watchlist monitoring confirm takedown success without manual checking
+- Relationship extraction reveals campaigns: Links and redirects discovered during scans help trace entire threat networks instead of treating each malicious site as isolated

@@ -25,7 +25,7 @@ Allowlists play a critical role in improving both **detection accuracy** and **s
 
 **Reference Baseline** - Allowlisted assets are used as reference points when analyzing potentially malicious content. ChainPatrol can compare a suspected phishing page against an allowlisted official website to determine whether branding is being copied, layout is being imitated, content is being duplicated, and visual elements are being stolen. For example, a suspicious site `examp1e.com` is detected. ChainPatrol compares it against your allowlisted `example.com` and identifies 95% visual similarity, identical logo usage, and copied page structure, resulting in high-confidence brand impersonation detection.
 
-This dual role—exclusion from detection and use as a trusted baseline—makes allowlists essential for reliable brand impersonation analysis.
+This dual role (exclusion from detection and use as a trusted baseline) makes allowlists essential for reliable brand impersonation analysis.
 
 ## What Can Be Allowlisted?
 
@@ -133,9 +133,7 @@ Limiting access helps ensure that allowlists remain accurate, intentional, and a
 
 ## Key Takeaways
 
-- **Known Safe Assets** - Allowlists define what is explicitly trusted
-- **Dual Purpose** - Excludes from detection and serves as reference baseline
-- **Conservative Approach** - Only allowlist assets you definitively control
-- **Not Permanent Immunity** - Compromised assets can still be investigated and blocked
-- **Flexible Granularity** - Organization-level or brand-level allowlisting
-- **Restricted Access** - Only administrators can modify allowlists
+- Allowlisting reduces false positive noise: Adding your official assets filters them from detection sources, letting your team focus review time on actual threats
+- Conservative allowlisting prevents blind spots: Only add assets you definitively control because allowlisted assets that get compromised won't trigger automatic alerts
+- Domain allowlisting uses smart matching: Adding `example.com` automatically trusts all subdomains, reducing maintenance while maintaining protection
+- Allowlist changes require administrator privileges: This restriction prevents accidental or malicious allowlisting that could create security gaps

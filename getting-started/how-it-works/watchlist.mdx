@@ -103,7 +103,7 @@ Blocked assets are scanned less frequently since they're already protected:
 | < 2 months | Every 6 days |
 | > 2 months | Every 12 days |
 
-**Why the difference?** UNKNOWN/ALLOWED assets need closer monitoring to catch when they become malicious. BLOCKED assets are already protected, so we primarily monitor to confirm takedown success.
+**Why the difference?** UNKNOWN and ALLOWED assets need closer monitoring to catch when they become malicious. BLOCKED assets are already protected, so we primarily monitor to confirm takedown success.
 
 ## Removing Assets from the Watchlist
 
@@ -134,8 +134,7 @@ If an asset's liveness status changes from `DEAD` to `ALIVE` or `UNKNOWN`, we re
 
 ## Key Takeaways
 
-- The watchlist tracks assets that aren’t blocked or allowed but need monitoring
-- Assets are watchlisted for review uncertainty or to confirm takedown completion
-- Eligibility is limited to asset types ChainPatrol can monitor reliably
-- Adaptive scan frequency balances fast detection with efficient resource use
-- Assets leave the watchlist when status becomes clear or after time-based decay
+- Watchlist is for the gray area: Use it when you suspect an asset might be malicious but don't have enough evidence to block yet
+- Automatic takedown monitoring saves time: Every takedown automatically watchlists the asset to detect when it goes offline, eliminating manual checking
+- Adaptive frequency optimizes resources: Recent additions scan hourly while stable assets scan less often, so you catch changes quickly without wasting scans
+- 30-day decay prevents watchlist bloat: UNKNOWN assets that haven't become malicious after a month are automatically removed, keeping your monitoring focused

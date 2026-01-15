@@ -11,17 +11,17 @@ A blocklist (also known as a denylist) is a database of confirmed malicious enti
 ChainPatrol's blocklist functions as a **threat intelligence database** that's continuously updated and distributed in real-time.
 </Info>
 
-Unlike traditional security databases that may update daily or weekly, our blocklist provides immediate updates as threats are confirmed, ensuring protection is deployed within **15-30 minutes** rather than hours or days.
+Unlike traditional security databases that may update daily or weekly, our blocklist provides immediate updates as threats are confirmed, ensuring protection is deployed within minutes rather than hours or days.
 
-The blocklist serves as the foundation of proactive security—instead of waiting for users to encounter threats, we identify, verify, and distribute threat intelligence to prevent exposure before it happens.
+The blocklist serves as the foundation of proactive security. Instead of waiting for users to encounter threats, we identify, verify, and distribute threat intelligence to prevent exposure before it happens.
 
 ## Why Do We Use a Blocklist and Why Is It Effective?
 
 ### The Problem with Traditional Takedowns
 
-Traditional cybersecurity approaches rely heavily on **takedowns**—requesting hosting providers or domain registrars to remove malicious content. However, this approach has critical limitations:
+Traditional cybersecurity approaches rely heavily on **takedowns**, requesting hosting providers or domain registrars to remove malicious content. However, this approach has critical limitations:
 
-- **Slow Response Times** - 4-48 hours for hosting providers, 24-72 hours for domain takedowns
+- **Slow Response Times** - Hours to days for hosting providers and domain takedowns
 - **Incomplete Coverage** - Some providers never respond or operate in non-cooperative jurisdictions
 - **Attack Window** - Scammers can steal funds within minutes of launching a phishing site
 - **Whack-a-Mole** - Attackers quickly spin up new domains or move to different providers
@@ -30,9 +30,9 @@ Traditional cybersecurity approaches rely heavily on **takedowns**—requesting 
 
 ChainPatrol's blocklist provides **immediate protection** through a "blocklist-first, takedown-second" approach:
 
-1. **Speed** - Assets are blocklisted and distributed in 15-30 minutes after confirmation
+1. **Speed** - Assets are blocklisted and distributed within minutes after confirmation
 2. **Universal Coverage** - Protection works regardless of hosting provider, jurisdiction, or whether the malicious content remains online
-3. **Point-of-Access Protection** - Blocks are enforced at the browser, wallet, and network level—where users actually interact with threats
+3. **Point-of-Access Protection** - Blocks are enforced at the browser, wallet, and network level where users actually interact with threats
 4. **Persistent Protection** - Even if a scammer sets up 100 copycat sites, each one gets blocklisted as soon as it's detected
 
 <Warning>
@@ -41,7 +41,7 @@ In web3, where transactions are irreversible and scams can drain wallets in seco
 
 ### Network Effects
 
-The effectiveness of our blocklist increases exponentially with distribution. One confirmation protects millions of users across browsers, 20+ wallets, enterprise networks, and partner organizations.
+The effectiveness of our blocklist increases exponentially with distribution. One confirmation protects millions of users across browsers, wallets, enterprise networks, and partner organizations.
 
 ## Who Contributes to the Blocklist?
 
@@ -53,11 +53,11 @@ Anyone can report suspicious assets through our public reporting interface. Web3
 
 ### Partner Organizations
 
-100+ organizations using ChainPatrol for brand protection contribute threat intelligence. Wallet providers like MetaMask, Phantom, and Coinbase Wallet share detected threats. Security alliances including SEAL-ISAC, Crypto-ISAC, and other information sharing networks contribute, as do blockchain projects and DAOs monitoring for impersonation attacks.
+Organizations using ChainPatrol for brand protection contribute threat intelligence. Wallet providers like MetaMask, Phantom, and Coinbase Wallet share detected threats. Security alliances including SEAL-ISAC, Crypto-ISAC, and other information sharing networks contribute, as do blockchain projects and DAOs monitoring for impersonation attacks.
 
 ### Automated Detection
 
-Our AI-powered scanning detection engine continuously monitors using 50+ detection rules. We perform real-time monitoring of newly registered domains through Certificate Transparency, automated detection of impersonation accounts and scam posts through social media monitoring, and use honeypots—intentional traps that identify and track attacker infrastructure.
+Our AI-powered scanning detection engine continuously monitors using detection rules. We perform real-time monitoring of newly registered domains through Certificate Transparency, automated detection of impersonation accounts and scam posts through social media monitoring, and use honeypots (intentional traps that identify and track attacker infrastructure).
 
 ### Expert Review Team
 
@@ -137,7 +137,7 @@ Google Safe Browsing powers protection in Chrome, Safari, Edge, Firefox, and oth
 
 ### Wallet Providers
 
-MetaMask (direct integration via Eth-Phishing-Detect), Phantom (real-time API integration), Coinbase Wallet, Trust Wallet, Rainbow, Ledger, WalletConnect, and 15+ additional wallets. Wallets warn users before connecting to malicious sites or interacting with scam contracts, preventing fund loss at the point of transaction.
+MetaMask (direct integration via Eth-Phishing-Detect), Phantom (real-time API integration), Coinbase Wallet, Trust Wallet, Rainbow, Ledger, WalletConnect, and additional wallets across the ecosystem. Wallets warn users before connecting to malicious sites or interacting with scam contracts, preventing fund loss at the point of transaction.
 
 ### Web3 Applications
 
@@ -145,7 +145,7 @@ Polymarket (content moderation and user protection), Snapshot (governance platfo
 
 ### Threat Intelligence
 
-SEAL-ISAC (600+ members), Crypto-ISAC, Eth-Phishing-Detect (ChainPatrol is a core contributor), and Polkadot Phishing List for cross-chain threat sharing. Our blocklist feeds into the broader security ecosystem, creating a network effect where threats are shared across organizations and platforms.
+SEAL-ISAC, Crypto-ISAC, Eth-Phishing-Detect (ChainPatrol is a core contributor), and Polkadot Phishing List for cross-chain threat sharing. Our blocklist feeds into the broader security ecosystem, creating a network effect where threats are shared across organizations and platforms.
 
 ### Enterprise Security
 
@@ -157,9 +157,7 @@ A public API provides freely accessible blocklist data for developers and securi
 
 ## Key Takeaways
 
-- **Real-Time Protection** - 15-30 minute response time vs. hours or days for takedowns
-- **Network Distribution** - One confirmation can protect users across browsers, wallets, and partner ecosystems
-- **Diverse Contributors** - Community, partners, automation, and expert review
-- **Evidence-Based** - Requires both malicious intent and confirmation
-- **Multi-Asset Support** - URLs, social accounts, blockchain addresses, and more
-- **Publicly Accessible** - Open API and SDK for developers and researchers
+- Immediate protection beats slow removal: Blocklisting provides user protection within minutes, while traditional takedowns can take hours or days (if they succeed at all)
+- Network effects multiply protection value: Each confirmed threat automatically protects users across browsers, wallets, and partner platforms without requiring separate submissions
+- Evidence-based verification prevents false positives: Requiring both malicious intent and confirmation ensures blocklist accuracy while human review catches edge cases
+- Public accessibility enables ecosystem security: Open API access lets any wallet, browser, or security tool integrate blocklist protection without licensing barriers

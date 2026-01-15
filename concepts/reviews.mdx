@@ -72,14 +72,14 @@ The ChainPatrol automation system automatically reviews proposals under specific
 A proposal is automatically approved when:
 
 1. **Trusted Reporter Submissions** - Reports from trusted reporters are auto-approved if they don't trigger legitimacy warnings
-2. **High Threat Score** - Reports with a threat score of 1.0 or higher are auto-approved if no legitimacy checks indicate the asset is legitimate, the organization doesn't require customer approval, and there's no active dispute on the report
+2. **High Threat Score** - Reports with sufficiently high threat scores are auto-approved if no legitimacy checks indicate the asset is legitimate, the organization doesn't require customer approval, and there's no active dispute on the report
 
 ### Auto-Skip Criteria
 
 A proposal is automatically skipped (sent for manual review) when:
 
 - High-confidence rules indicate the asset appears legitimate
-- The threat score is below 1.0
+- The threat score is below the auto-approval threshold
 - Organization settings require manual approval from their team
 - Someone has disputed the report
 - Too many auto-approvals in a short time period
@@ -92,7 +92,7 @@ The automation system calculates a threat score by analyzing multiple factors.
 
 **General Phishing** indicators include credential harvesting forms, suspicious URL patterns, malicious links, social engineering tactics, and wallet connection scams (score range 0.0 - 1.0+).
 
-**Score Calculation** - The system takes the maximum score from each category and adds them together. For example: Brand impersonation 0.6 + General phishing 0.8 = Total score 1.4 (auto-approved). This ensures multiple detections don't artificially inflate the total.
+**Score Calculation** - The system combines scores from different detection categories. Multiple detections across categories increase confidence while preventing artificial score inflation.
 
 ## Evidence Reviewed
 
@@ -155,9 +155,7 @@ This approach ensures we block real threats quickly while maintaining accuracy a
 
 ## Key Takeaways
 
-- **Decision Points** - Reviews approve, reject, skip, or escalate proposals
-- **Hybrid Approach** - Combines automation with human expertise
-- **Threat Scoring** - Automated scoring determines auto-approval
-- **Multiple Evidence Types** - Rules, scans, context, and history inform decisions
-- **Safety Window** - 5-minute revert window for mistakes
-- **Escalation Paths** - Complex cases go to customers or senior analysts
+- Four decision types prevent deadlock: Unlike binary approve/reject systems, Skip and Escalate ensure unclear threats get proper attention without forcing premature decisions
+- Trusted reporters enable fast response: Pre-verified security researchers can submit high-confidence reports that bypass standard review, accelerating protection for known threats
+- Five-minute revert window catches mistakes: This safety buffer lets reviewers undo accidental decisions before changes propagate, balancing speed with accuracy
+- Escalation paths preserve expertise: Customer escalations leverage brand context for ambiguous cases, while team escalations route complex threats to senior analysts

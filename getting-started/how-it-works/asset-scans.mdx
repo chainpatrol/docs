@@ -24,7 +24,7 @@ ChainPatrol supports many asset types across the digital landscape:
 
 Understanding the difference is key to how our monitoring works:
 
-**Asset** - An asset is the thing itself—a URL, handle, listing, or address. Example: `https://fake-metamask.com`
+**Asset** - An asset is the thing itself: a URL, handle, listing, or address. Example: `https://fake-metamask.com`
 
 **Asset Scan** - An asset scan is a time-stamped snapshot of that asset. The same asset may be scanned many times, and scans form a timeline of changes. Example: Scan #1 (Jan 1), Scan #2 (Jan 3), Scan #3 (Jan 5)
 
@@ -49,12 +49,12 @@ Our scanning process follows a systematic approach to evaluate threats efficient
 2. **Enrich with Context** - Depending on asset type, we collect relevant data:
 
    **Web URL / Page Enrichments:**
-   - HTTP fetch results (status, redirects, extracted links, basic metadata like title/description)
-   - Optional browser capture (screenshot/DOM signals when available)
-   - Network and registration context (e.g., DNS, TLS, WHOIS/RDAP when enabled)
+   - HTTP fetch results (status, redirects, extracted links, basic metadata like title and description)
+   - Optional browser capture (screenshot and DOM signals when available)
+   - Network and registration context (DNS, TLS, WHOIS/RDAP when enabled)
 
    **Platform/API Enrichments:**
-   - Profile/listing details (descriptions, author/publisher fields, follower/engagement signals, etc.)
+   - Profile and listing details (descriptions, author and publisher fields, follower and engagement signals)
 
    <Tip>
    Some enrichments run only when earlier signals suggest elevated risk to keep scans efficient.
@@ -106,8 +106,7 @@ Our scanning infrastructure processes thousands of assets daily, providing real-
 
 ## Key Takeaways
 
-- Asset scans are time-stamped snapshots that help track risk and change over time
-- Scans can be triggered by sources, manual/API requests, and ongoing monitoring
-- The scan pipeline includes normalization, enrichment, analysis, scoring, and relationships
-- Results support review decisions, automation, and ongoing monitoring hygiene
-- Efficient scanning relies on adaptive scheduling and selective enrichment
+- One asset, many scans: The same URL can be scanned multiple times to create a timeline showing how threats evolve or when they're taken down
+- Selective enrichment saves resources: Deep analysis only triggers when initial signals suggest elevated risk, keeping scans fast for low-risk assets
+- Liveness tracking enables automation: Knowing when an asset goes from ALIVE to DEAD lets us automatically confirm successful takedowns
+- Relationship discovery reveals campaigns: Extracting links and redirects from scans helps you trace entire threat networks instead of blocking sites one at a time

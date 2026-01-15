@@ -64,8 +64,8 @@ For a Proposal to be automatically approved, **all** of the following must be tr
 - No Legitimacy Rules of "Very High" confidence have passed
 
 **Approval Triggers (at least one must be true):**
-- **Option 1:** High Risk Score (the overall Risk Score of the Asset meets our confidence threshold)
-- **Option 2:** Trusted Reporter (the Asset was part of a Report created by a Trusted Reporter)
+- High Risk Score - the overall Risk Score of the Asset meets our confidence threshold
+- Trusted Reporter - the Asset was part of a Report created by a Trusted Reporter
 
 ## Human Review
 
@@ -98,7 +98,7 @@ Since automation only handles Proposals to block Assets with high confidence sco
 
 ## Key Takeaways
 
-- Reviews evaluate proposals that change an asset’s status (blocked/allowed/unknown)
-- Proposals can be approved, rejected, skipped, or escalated
-- Automation handles high-confidence blocks under specific conditions
-- Human reviewers handle lower-confidence cases and all allow/unknown proposals
+- Legitimacy rules protect you from overblocking: If a Very High confidence legitimacy rule passes, the proposal goes to human review regardless of risk score
+- Escalate unclear cases strategically: Use "Skip" when you need more information, "Escalate to Team" for expertise, and "Escalate to Customer" when brand context matters
+- Automation learns from humans: Every manual review decision feeds back into the system, improving future automatic detection accuracy
+- The four-decision model prevents deadlock: Unlike binary approve/reject systems, Skip and Escalate ensure unclear threats get proper attention without forcing premature decisions
