@@ -1,0 +1,127 @@
+---
+title: "Watchlist"
+description: "Understanding how ChainPatrol monitors assets for future action"
+---
+
+## Overview
+
+The watchlist is a set of assets that we monitor to see if we can action on them further in the future.
+
+<Info>
+Think of the watchlist as a "middle ground" between blocking and allowing: assets that need continued observation before a final decision can be made.
+</Info>
+
+## Why Would We Need to Watchlist Something?
+
+Assets are added to the watchlist for two primary reasons:
+
+### Inconclusive Evidence
+
+Sometimes when we process an asset to see if it's malicious, we don't find enough red flags to block the asset, but we also don't find enough green flags to allow the asset.
+
+**The Gray Area:**
+
+- **Not Enough to Block** - Insufficient evidence of malicious intent, weak or ambiguous threat indicators, could be legitimate but suspicious
+- **Not Enough to Allow** - Asset isn't clearly official or trusted, some concerning patterns detected, uncertainty about legitimacy
+
+In this situation, if we suspect that the asset may become malicious in the future, we keep tabs on the asset to see if it changes.
+
+We can act and remove the asset from the watchlist when it becomes clearly malicious, becomes clearly legitimate, or changes status (goes offline, gets suspended, or undergoes significant changes).
+
+**Common Scenarios:**
+
+**Parking Page** - Domain is registered but shows only a parking page. The domain name is suspicious (contains brand name + "airdrop") but there's no active content to analyze yet. We monitor when content appears and what type of content is added.
+
+**Dead Asset** - Website or profile is currently offline. The URL structure suggests brand impersonation but we can't analyze content that doesn't exist. We monitor when it comes back online and what content appears.
+
+**Ambiguous Content** - Asset has some concerning elements but unclear intent. Uses brand-related keywords but purpose is unclear, design has some similarities but not exact copy. We monitor content changes over time and addition of phishing forms or wallet drainers.
+
+### Monitoring for Takedowns
+
+When we start the takedown process, we want to make sure that we keep tabs on the asset in order to determine when the takedown has been completed.
+
+We place every asset onto the watchlist when the takedown is in progress. This enables automated monitoring (continuous scanning to detect when asset goes offline), completion detection (automatically mark takedown as complete when asset is inaccessible), resource efficiency (no manual checking required for takedown status), and faster response (immediate notification when takedown succeeds).
+
+**The Takedown Monitoring Flow:**
+
+1. Takedown request submitted to hosting provider or platform
+2. Asset automatically added to watchlist for monitoring
+3. Asset is scanned periodically to check liveness status
+4. Asset goes offline, gets suspended, or becomes inaccessible
+5. Takedown marked as complete, asset removed from watchlist
+
+**What We Monitor:**
+
+- **Liveness Status** - Is the asset still accessible, HTTP status codes, DNS resolution failures, server responses
+- **Provider Actions** - "Suspended by provider" messages, account termination notices, content removal confirmations, domain suspension indicators
+- **Content Changes** - Malicious content removed, page replaced with error message, redirect to different content, complete site removal
+
+This allows us to monitor the asset and see if it goes offline, at which point we can take the asset off of the watchlist.
+
+## Who Would Watchlist Something?
+
+Watchlisting can be done either manually or automatically:
+
+### Manual Watchlisting
+
+When an analyst reviews a reported asset and encounters inconclusive evidence, they can manually add it to the watchlist. Decision factors include threat indicators present but not conclusive, asset appears suspicious but needs more time to develop, waiting for asset to become accessible, and need to observe behavior over time.
+
+Who can do this: ChainPatrol security analysts, customer administrators (for their organization), and trusted reviewers.
+
+### Automatic Watchlisting
+
+Every asset is automatically added to the watchlist when a takedown is initiated. Triggers include takedown request submitted, takedown status changes to "IN_PROGRESS", and asset needs monitoring for completion. No manual intervention required: system automatically adds to watchlist, monitoring begins immediately, and removal happens automatically when offline.
+
+## How the Watchlist Works
+
+### Monitoring Frequency
+
+Assets on the watchlist are scanned at different frequencies based on how long they've been monitored and their current status:
+
+**UNKNOWN/ALLOWED Assets** (more frequent monitoring for uncertain assets):
+
+| Time on Watchlist | Scan Frequency |
+|-------------------|----------------|
+| < 6 hours | Hourly |
+| < 24 hours | Every 2 hours |
+| < 2 days | Every 4 hours |
+| < 7 days | Every 6 hours |
+| < 2 weeks | Every 12 hours |
+| < 1 month | Daily |
+| < 2 months | Every 2 days |
+| > 2 months | Every 4 days |
+
+Frequent early scans catch rapid changes; frequency decreases if asset remains stable.
+
+**BLOCKED Assets** (less frequent monitoring):
+
+| Time on Watchlist | Scan Frequency |
+|-------------------|----------------|
+| < 6 hours | Every 3 hours |
+| < 24 hours | Every 6 hours |
+| < 2 days | Every 12 hours |
+| < 7 days | Every 18 hours |
+| < 2 weeks | Every 36 hours |
+| < 1 month | Every 3 days |
+| < 2 months | Every 6 days |
+| > 2 months | Every 12 days |
+
+Blocked assets are already protected, so monitoring focuses on confirming takedown success.
+
+### Removal from Watchlist
+
+Assets are automatically removed from the watchlist when:
+
+- **Status Changes to ALLOWED** - Asset confirmed as legitimate
+- **Asset Comes Online** - Previously dead asset becomes accessible (pushed to review queue)
+- **30 Days in UNKNOWN** - Decay factor removes long-term uncertain assets
+- **Takedown Success** - Asset goes offline during takedown
+- **Provider Suspension** - Hosting provider suspends the asset
+- **Manual Removal** - Analyst decides monitoring is no longer needed
+
+## Key Takeaways
+
+- Watchlist solves the gray area problem: When you suspect an asset might be malicious but lack evidence to block, watchlisting lets you monitor for changes without premature action
+- Automatic takedown monitoring saves manual work: Every takedown automatically adds the asset to watchlist, eliminating the need to manually check if content has been removed
+- Adaptive frequency optimizes resources: Recent additions scan frequently to catch rapid changes, while stable assets scan less often to avoid wasting resources on unlikely updates
+- 30-day decay prevents bloat: Assets that stay UNKNOWN for a month without becoming malicious are automatically removed, keeping monitoring focused on active threats

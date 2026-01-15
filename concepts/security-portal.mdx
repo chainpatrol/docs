@@ -1,0 +1,119 @@
+---
+title: "Security Portal"
+description: "Understanding your organization's public-facing threat reporting page"
+---
+
+## Overview
+
+The **Security Portal** is your organization's public-facing page where people outside your team can report suspicious activity directly to ChainPatrol.
+
+<Info>
+It's a branded landing page that shows your organization's name and gives anyone with the link an easy way to submit threats they've encountered, whether that's a phishing site, a fake social profile, or a malicious app pretending to be yours.
+</Info>
+
+When the Security Portal is enabled, it can also display:
+
+- **Public Reports** - Show what threats have been reported and what action was taken
+- **Public Metrics** - Display high-level statistics about threats detected and addressed
+
+This gives your community and stakeholders transparency into how actively threats are being detected and addressed for your organization.
+
+## Who Uses It?
+
+The Security Portal is designed for **your community**:
+
+### External Users
+
+**Users and Customers** - People who use your products or services and encounter suspicious content. They report phishing sites, fake social media accounts, scam messages claiming to be from your brand, and suspicious apps or extensions.
+
+**Community Members** - Discord moderators, Telegram admins, and active community participants who report impersonation in community channels, scam posts targeting your community, fake support accounts, and coordinated attack campaigns.
+
+**Partners** - Business partners, affiliates, and ecosystem participants who report threats affecting shared users, cross-brand impersonation, supply chain threats, and industry-wide campaigns.
+
+**Security Researchers** - Independent researchers and white-hat hackers who report newly discovered threats, sophisticated attack patterns, zero-day phishing campaigns, and technical vulnerabilities.
+
+Instead of requiring them to have an account or go through complicated channels, they can simply visit your Security Portal and submit a report in a few clicks.
+
+### Internal Team
+
+You can also use it internally to give your team a quick, always-available way to report threats without logging into the full ChainPatrol dashboard. Benefits include no login required, faster submission for quick reports, mobile-friendly interface, and a bookmarkable URL you can share with non-technical team members.
+
+## Where Can You Find It?
+
+Your Security Portal lives at a unique URL based on your organization's slug.
+
+**Example:** If your organization is `acme`, your Security Portal would be at `chainpatrol.io/acme`
+
+To locate your portal URL:
+
+1. Go to **Settings → Security Portal** in your dashboard
+2. Look for the "Security Portal URL" card
+3. Click the link to copy your unique URL and share it with your community
+
+Add your Security Portal URL to your website footer, documentation, and community resources so users know where to report threats.
+
+## Where Can You Configure It?
+
+You configure the Security Portal in **Settings → Security Portal** within your organization's dashboard.
+
+### Visibility
+
+Controls who can access the portal:
+
+- **Disabled** - The portal isn't accessible to anyone. Portal returns 404 error and no one can submit reports via portal.
+- **Private** - Only members of your organization can see it. Requires ChainPatrol login and is good for internal testing.
+- **Public** - Anyone with the link can access it. No authentication required for maximum community engagement.
+
+### Public Reports
+
+A toggle that determines whether non-authenticated users can view the reports submitted to your organization.
+
+When enabled, people visiting your Security Portal can see what's been reported, what action has been taken, and it demonstrates active threat monitoring while building community trust.
+
+What's displayed includes report title and description, assets reported (URLs, accounts, etc.), status (pending, in progress, closed), date submitted, and action taken. Internal comments, reviewer identities, and sensitive investigation details are NOT displayed.
+
+<Warning>
+Consider your transparency goals and privacy requirements before enabling public reports.
+</Warning>
+
+### Public Metrics
+
+A toggle that displays high-level threat statistics on your Security Portal.
+
+Metrics displayed include threats blocked, takedowns filed, takedowns completed, reports received, threats by asset type, and recent activity trends. This demonstrates that your organization takes security seriously without exposing sensitive details.
+
+## Why Does It Exist?
+
+The Security Portal serves two primary purposes:
+
+### Community-Powered Protection
+
+When users encounter a phishing site or a fake profile impersonating you, they often want to report it but don't know how. Common barriers include no clear reporting channel, complicated submission process, requiring account creation, and being unclear if reports are acted upon.
+
+The Security Portal gives them a simple, trusted place to submit that information directly to ChainPatrol with easy submission (no account required), a clear process, a trusted branded channel, and visible impact showing reports lead to action.
+
+### Transparency & Trust
+
+By enabling public reports and metrics, you can demonstrate active security monitoring to stakeholders, regulators, and your user base. Board members see active threat monitoring, investors understand security investment, partners verify protection measures, and auditors review security processes. This builds trust and demonstrates that your organization takes security seriously.
+
+## Where Do Community Reports Go?
+
+When someone submits a report through your Security Portal, it flows into your organization's **Reports** page in the ChainPatrol dashboard, just like any other report.
+
+The report processing flow works as follows:
+
+1. User submits report via Security Portal
+2. Report appears in your organization's Reports page
+3. ChainPatrol's team evaluates the evidence and runs security checks
+4. Determines whether reported assets should be blocked, allowed, or escalated
+5. If "Obligatory Organization Admin Approval" is enabled, your team confirms the action
+6. Asset status is updated and distributed to blocklist
+
+From there, the report goes through the same review process as any other submission.
+
+## Key Takeaways
+
+- Community reporting acts as an early warning system: Users often encounter threats before your internal team, so a public security portal captures intelligence from the front lines
+- No-account submission lowers barriers: Requiring registration dramatically reduces report volume, so public portals accept submissions without login to maximize threat discovery
+- Transparency builds trust with your community: Publishing metrics and showing how you respond to reports demonstrates active protection and encourages continued reporting
+- Portal reports flow through the same rigorous review: Public submissions get the same expert analysis as internal detections, ensuring quality while maintaining speed

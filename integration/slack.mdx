@@ -1,0 +1,198 @@
+---
+icon: slack
+title: Slack Bot
+sidebarTitle: Slack
+description: A Slack bot that can be used to submit scam reports to ChainPatrol
+---
+
+If you have a **Slack workspace**, you can use the ChainPatrol Slack Bot to let your workspace members submit scam reports to **ChainPatrol**. The bot will generate new reports that get sent to your admin dashboard for review.
+
+## Setup
+
+### Bot Installation
+
+<Steps>
+  <Step title="Go to the Admin Dashboard">
+    Start by opening your dashboard on the [ChainPatrol app](https://app.chainpatrol.io/).
+
+    <Frame>![Step 1 - Dashboard](/images/dashboard-navbar.png)</Frame>
+
+  </Step>
+  <Step title="Go to Organization Settings">
+    In the navbar, select **Settings** to go to your **Organization Settings** page.
+
+    <Frame>![Step 2 - Organization Settings](/images/organization-settings.png)</Frame>
+
+  </Step>
+  <Step title="Go to Integrations Tab">
+    Once you are in the organization settings, navigate to the **Integrations** tab. This section contains options for the Slack bot as well as other integrations.
+
+    <Frame>![Step 3 - Integrations Tab](/images/settings-integrations.png)</Frame>
+
+  </Step>
+  <Step title="Complete Slack OAuth">
+
+    In the Integrations tab, you will find an option to **Add to Slack**. Click this button, then you will be redirected to the Slack authorization page. Click **Allow**.
+
+    <Frame>![Step 4 - Add Bot](/images/slack-integration-authorization.png)</Frame>
+    <Tip>
+    Remember to select the correct workspace at the top right of the authorization page.
+    </Tip>
+
+  </Step>
+  
+</Steps>
+
+<Warning>
+  **Important**: Please avoid using organization-level installs for the
+  ChainPatrol Slack Bot. Organization-level and enterprise installs can cause
+  issues with the bot's functionality and may not properly integrate with your
+  ChainPatrol dashboard. Always use workspace-level installations to ensure
+  proper operation.
+</Warning>
+
+## Confirmation and Finalization
+
+The ChainPatrol Slack Bot should appear in your listed apps along with other allowed workspace apps.
+
+<Frame>![Slack Apps](/images/slack-apps.png)</Frame>
+
+### Adding ChainPatrol Bot To Your Reporting Channel
+
+<Warning>
+  Remember to add the slack bot to the reporting channel! By default, the
+  ChainPatrol bot does not automatically read and join existing channels for
+  privacy.
+</Warning>
+
+<CardGroup cols={3}>
+  <Card title="Channel You Want To Take Report From" icon="square-1">
+    <Frame>![Kebab Menu](/images/slack-channel-details.png)</Frame>
+  </Card>
+  <Card title="Integrations" icon="square-2">
+    <Frame>![Report Modal](/images/slack-add-bot.png)</Frame>
+  </Card>
+  <Card title="Add ChainPatrol" icon="square-3">
+    <Frame>![Report Modal](/images/slack-select-bot.png)</Frame>
+  </Card>
+</CardGroup>
+
+### Link Organization
+
+<Warning>
+  This step needs to be done with help from ChainPatrol staff in order for the
+  Slack Bot to work properly.
+</Warning>
+
+**Please send ChainPatrol staff your workspace's Slack Team ID so that we can finish the automated pipeline.**
+
+- Follow [Slack's documentation](https://slack.com/intl/en-gb/help/articles/221769328-Locate-your-Slack-URL-or-ID#free,-pro-and-business+-subscriptions-2) to locate your Team ID.
+
+<Tip>
+  Slack refers to the Team ID as "workspace or org ID".
+
+`https://app.slack.com/client/TXXXXXXX/CXXXXXXX`
+
+In the above URL, the Team ID is the slug that begins with `T`.
+
+</Tip>
+
+## Usage
+
+Once the bot is added to your workspace and you have **sent ChainPatrol your Team ID**, you can use the following actions:
+
+### Slash Commands
+
+- `/chainpatrol <url>` - Submit a scam report for the given URL
+
+### Shortcut Actions
+
+For a given message, click on the kebab menu and then select the `Create Report` option.
+
+<CardGroup cols={2}>
+  <Card title="Kebab Menu" icon="square-1">
+    <Frame>![Kebab Menu](/images/slack-kebab.png)</Frame>
+  </Card>
+  <Card title="Report Modal" icon="square-2">
+    <Frame>![Report Modal](/images/report-modal.png)</Frame>
+  </Card>
+</CardGroup>
+
+## Threats Feed Configuration
+
+In addition to submitting reports, the ChainPatrol Slack Bot can also send automated notifications about threats and reports to your Slack channels. This creates a real-time threats feed that keeps your team informed about security activity.
+
+<Frame>![Blocklist Update Example](/images/blocklist-update.png)</Frame>
+
+### Setting Up Notification Settings
+
+<Steps>
+  <Step title="Create and Configure Notification Channel">
+    Create a dedicated channel in your Slack workspace for receiving ChainPatrol threat notifications. This channel will serve as your organization's security feed for real-time threat intelligence.
+
+    <Frame>![Add Bot to Channel](/images/add-to-channel.png)</Frame>
+
+    <Warning>
+      **Important**: You must add the ChainPatrol bot to this channel for notifications to work properly. The bot cannot automatically join channels for privacy and security reasons.
+    </Warning>
+
+  </Step>
+  <Step title="Provide Channel Information to ChainPatrol">
+    Contact ChainPatrol staff with your notification channel's Channel ID to complete the integration setup. The Channel ID is a unique identifier that begins with "C" and can be found in your channel's details.
+
+    <Tip>
+      To find your Channel ID, right-click on the channel name and select "View channel details" or check the URL when viewing the channel in your browser.
+    </Tip>
+
+  </Step>
+  <Step title="Access Integration Settings">
+    Navigate to your ChainPatrol dashboard and go to **Settings** > **Integrations** to configure your notification preferences.
+  </Step>
+  <Step title="Configure Notification Preferences">
+    Within the Integrations tab, locate the **Notification Settings** section to customize which types of security alerts your team receives.
+
+    <Frame>![Notification Settings](/images/notification-settings.png)</Frame>
+
+  </Step>
+  <Step title="Select Notification Types">
+    Choose which notifications you want to receive for your organization's reports and monitored assets. Each option serves different security monitoring needs as detailed below.
+  </Step>
+</Steps>
+
+### Notification Options
+
+<CardGroup cols={1}>
+  <Card title="New Reports for Blocked Assets" icon="shield-exclamation">
+    Receive notifications when new reports are created for assets that are
+    already on your blocklist. This helps you track ongoing threats and see when
+    community members are encountering known malicious content.
+  </Card>
+  <Card title="New Reports for Allowed Assets" icon="shield-check">
+    Receive notifications when new reports are created for assets that are
+    currently on your allowlist. This can help identify potential false
+    positives or assets that may need review if they're receiving multiple
+    reports.
+  </Card>
+  <Card title="Assets Added to Blocklist" icon="shield-slash">
+    Receive notifications when assets are confirmed as threats and added to the
+    blocklist. **This is the most critical notification type** - when you see
+    this alert, it means ChainPatrol's systems have confirmed a threat and are
+    actively working to process it for takedown and blocklist distribution.
+  </Card>
+</CardGroup>
+
+<Tip>
+  **Recommended Configuration**: We recommend enabling all three notification
+  types for comprehensive threat monitoring. However, if you want to focus on
+  the most critical alerts, option 3 (Assets Added to Blocklist) provides
+  notifications specifically for confirmed threats rather than just reports.
+</Tip>
+
+<Warning>
+  Notification settings only take effect if you have Discord or Slack reporting
+  feeds enabled through the bot integration.
+</Warning>
+
+## Privacy
+
+The bot does not collect any personal information. It only collects the URL and the Slack ID of the user that submitted the report (in case a moderator needs more information about why the URL is a scam). The bot does not store any sensitive information about the workspace it is added to.

@@ -1,0 +1,91 @@
+---
+title: "Takedowns"
+description: "Understanding how ChainPatrol removes malicious content from the internet"
+---
+
+## Overview
+
+A **takedown** is a formal request asking an online platform to remove harmful, fraudulent, or unauthorized content.
+
+<Info>
+This request is sent to the organization responsible for hosting or displaying that content, such as a hosting provider, domain registrar, social media platform, app store, or TLD registry.
+</Info>
+
+## Why Takedowns Matter
+
+Takedowns are an essential tool for protecting brands and users online. They help remove content that:
+
+- Impersonates legitimate organizations
+- Misleads or scams users
+- Abuses a brand's trademarks
+- Spreads harmful information
+- Distributes fraudulent or malicious applications
+- Hosts phishing pages or fake login portals
+
+## Where Takedowns Are Sent
+
+Because digital threats appear across many parts of the internet, takedowns may be sent to a wide range of platforms:
+
+### Websites
+
+**Hosting Providers** - Organizations that host website content (AWS, Cloudflare, Vercel, shared hosting companies, VPS and dedicated server providers).
+
+**Domain Registrars** - Companies that register and manage domain names (GoDaddy, Namecheap, Google Domains, country-specific registrars, reseller networks).
+
+**TLD Registries** - Organizations managing top-level domains (.com, .xyz, etc.) like Verisign (.com, .net), Public Interest Registry (.org), and country-code registries. Response time varies widely.
+
+### Social Media
+
+Twitter/X, Facebook, Instagram, YouTube, Telegram, Discord, Reddit, TikTok, and more. What gets removed includes impersonation accounts, scam posts and messages, fake support channels, and fraudulent giveaways.
+
+### App Stores
+
+Google Play, Apple App Store, Chrome Web Store, Firefox Add-ons, Microsoft Store. What gets removed includes fake wallet applications, malicious browser extensions, impersonation apps, and fraudulent utilities.
+
+### Decentralized Platforms
+
+IPFS (InterPlanetary File System) - Harmful content can be stored in a distributed way across IPFS nodes. Takedown targets include IPFS gateway operators, pinning services, and node operators hosting malicious content. Gateway blocking is the most effective approach since the decentralized nature makes complete removal difficult.
+
+## The Purpose of Takedowns
+
+Regardless of the platform, the purpose of a takedown is the same: **to remove dangerous or unauthorized content quickly, securely, and effectively.**
+
+### Takedowns vs. Blocklisting
+
+**Takedowns** provide complete removal from the internet. Content is permanently removed, attackers lose their infrastructure, future victims are prevented from accessing, and enforcement action is demonstrated. However, takedowns take time (hours to days), some providers don't respond, attackers can quickly create new sites, and there are jurisdiction and legal challenges. Best for long-term threat elimination, persistent campaigns, and high-profile impersonation.
+
+**Blocklisting** provides immediate protection at point of access. Protection is instant (15-30 minutes), works regardless of hosting provider, protects users even if content stays online, and offers universal coverage across platforms. However, content remains online, requires integration with security tools, and may not prevent all access methods. Best for immediate threat mitigation, rapid response scenarios, and protecting users before takedown completes.
+
+<Check>
+**ChainPatrol's approach:** "Blocklist-first, takedown-second" provides immediate protection while working toward permanent removal.
+</Check>
+
+## Takedown Lifecycle
+
+1. **TODO** - Takedown has been created and is waiting to be processed
+2. **IN PROGRESS** - ChainPatrol is actively working on the takedown: submitting to appropriate provider, monitoring the request, following up as needed
+3. **COMPLETED** - The provider removed the harmful content
+
+### Alternative Outcomes
+
+- **CANCELED** - Takedown stopped (e.g., content invalid or unnecessary)
+- **PENDING RETRACTION** - Identified as false positive, marked for retraction
+- **RETRACTION SENT** - Formal retraction request submitted to provider
+- **RETRACTED** - Provider confirmed retraction, takedown reversed
+
+## What Makes Takedowns Effective
+
+**Legal Documentation** - Effective takedowns require Power of Attorney (POA) authorizing action, trademark registration documents, clear evidence of abuse or impersonation, and authorized representative details. ChainPatrol handles all legal documentation and submission on your behalf.
+
+**Provider Relationships** - We maintain relationships with providers across the ecosystem with known abuse contact information, established reporting procedures, track record of successful takedowns, and understanding of each provider's requirements.
+
+**Persistent Follow-Up** - We don't just submit and forget. We perform regular status checks, follow-up communications, escalation when needed, and alternative approaches if initial request fails.
+
+**Evidence Collection** - Each takedown includes screenshots of malicious content, technical metadata (hosting, DNS, etc.), timeline of activity, and user reports and impact evidence.
+
+## Key Takeaways
+
+- Takedowns provide permanent removal while blocklists provide immediate protection: Use both together to protect users instantly via blocklists while working toward complete threat elimination through takedowns
+- Automatic retraction prevents wrongful removals: When false positives are identified, retraction requests go to providers quickly to halt or reverse takedowns before legitimate content is removed
+- Provider-specific formatting increases success rates: Different platforms have different submission requirements, and using the correct format for each provider improves response times and removal rates
+- Lifecycle tracking enables data-driven decisions: Complete visibility from TODO to COMPLETED helps identify which providers respond fastest and which threats are hardest to remove

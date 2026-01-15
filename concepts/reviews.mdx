@@ -1,0 +1,161 @@
+---
+title: "Reviews"
+description: "How ChainPatrol evaluates and makes decisions on reported threats"
+---
+
+## Overview
+
+A **review** is a decision made on a **proposal** to either block or allow a reported asset. When someone reports a potentially malicious website, social media account, or other digital asset, ChainPatrol creates a proposal that requires review before taking action.
+
+<Info>
+Think of a review as the approval or rejection of a recommendation to block a threat.
+</Info>
+
+### Components of a Review
+
+Each review consists of:
+
+- **Decision** - Approve, reject, skip, or escalate
+- **Label** - Type of threat (e.g., phishing, brand impersonation)
+- **Comment** - Optional reasoning explanation
+- **Reviewer** - Who made the decision
+- **Timestamp** - When the review was made
+
+## Who Can Review?
+
+### ChainPatrol Staff
+
+Our security analysts who review reports for all customers. They can review all reports, create, read, and delete reviews, apply expert threat analysis, and handle complex cases.
+
+### Trusted Reporters
+
+Verified security researchers and partners who have demonstrated expertise in threat identification. They can submit high-confidence reports, receive auto-approval for trusted submissions, create and read reviews, and fast-track threat blocking.
+
+### Customer Administrators
+
+Admins and owners of customer organizations who can review reports for their own brand. They can review reports for their organization, approve or reject proposals, have final say on blocklist decisions, and override escalations.
+
+### Automated System
+
+Our automation system that can auto-approve certain high-confidence threats. It provides instant review of clear threats, threat score calculation, pattern recognition, and 24/7 operation.
+
+## Review Actions
+
+There are four types of review decisions:
+
+### Approve
+
+Confirms that the reported asset is malicious and should be blocked. The asset is added to ChainPatrol's blocklist, distributed to integrated platforms, takedown process is initiated (if enabled), and the organization is notified. Use when there's clear evidence of malicious activity, high confidence in threat assessment, and asset matches known attack patterns.
+
+### Reject
+
+Indicates the reported asset is legitimate and should not be blocked. Common reasons include the asset is actually official (false positive), the threat has already been removed, insufficient evidence of malicious activity, or misidentification. The proposal is closed and the asset remains unblocked.
+
+### Skip
+
+Reviewer cannot make a definitive decision yet. This keeps the proposal in a pending state for another reviewer to examine. Common reasons include insufficient evidence to confirm or deny the threat, need for additional context or investigation, waiting for asset to load or become accessible, or requires more specialized expertise.
+
+### Escalate
+
+Passes the review decision to another party for final judgment.
+
+**Escalate to Customer** - Requests the brand owner to review and decide. Used when staff reviewers are uncertain, asset type requires customer approval, or content is ambiguous. The customer team receives notifications (Slack/Discord) and the proposal stays pending until customer decides.
+
+**Escalate to Team** - Passes to senior ChainPatrol analysts. Used when customer administrators are uncertain, complex cases require expert review, or there are multiple conflicting signals. Routes to senior security analysts for in-depth analysis and final decision.
+
+## Automated Review
+
+The ChainPatrol automation system automatically reviews proposals under specific conditions:
+
+### Auto-Approval Criteria
+
+A proposal is automatically approved when:
+
+1. **Trusted Reporter Submissions** - Reports from trusted reporters are auto-approved if they don't trigger legitimacy warnings
+2. **High Threat Score** - Reports with sufficiently high threat scores are auto-approved if no legitimacy checks indicate the asset is legitimate, the organization doesn't require customer approval, and there's no active dispute on the report
+
+### Auto-Skip Criteria
+
+A proposal is automatically skipped (sent for manual review) when:
+
+- High-confidence rules indicate the asset appears legitimate
+- The threat score is below the auto-approval threshold
+- Organization settings require manual approval from their team
+- Someone has disputed the report
+- Too many auto-approvals in a short time period
+
+### Threat Scoring
+
+The automation system calculates a threat score by analyzing multiple factors.
+
+**Brand Impersonation** signals include visual similarity to known brands, logo matching, name and text similarity, domain typosquatting, and profile impersonation (score range 0.0 - 1.0+).
+
+**General Phishing** indicators include credential harvesting forms, suspicious URL patterns, malicious links, social engineering tactics, and wallet connection scams (score range 0.0 - 1.0+).
+
+**Score Calculation** - The system combines scores from different detection categories. Multiple detections across categories increase confidence while preventing artificial score inflation.
+
+## Evidence Reviewed
+
+When making a review decision, reviewers examine multiple types of evidence:
+
+**Detection Rules** - ChainPatrol runs automated detection rules that check for brand impersonation (logos, names, visual similarity), phishing indicators (credential forms, suspicious URLs), legitimacy signals (official certificates, verified accounts, trusted hosting), and blockchain threats (fake wallet connections, transaction scams).
+
+**Asset Scans** - Screenshots and HTML snapshots showing visual appearance of the website or profile, page content and text, forms and input fields, external links and resources, and network requests and behavior.
+
+**Report Context** - Information from the person who submitted the report including description of the threat, reporter's identity and trust level, attachments and supporting evidence, report source (form, API, integration), and timeline of discovery.
+
+**Historical Data** - Past activity related to the asset including previous reports of the same or similar assets, takedown history, related threats from the same infrastructure, and pattern analysis across campaigns.
+
+## How to Revert a Review
+
+Reviewers can revert their review decisions within **5 minutes** of submission. This safety window allows you to undo a mistaken approval or rejection.
+
+1. Navigate to the report page containing your review
+2. Look for the "Need to revert the change?" section
+3. Click the revert button while the timer is still active
+4. The review will be deleted and the proposal will return to pending status
+
+<Note>
+**Superusers** can revert reviews at any time, but standard reviewers are limited to the 5-minute window.
+</Note>
+
+## When Reviews Are Escalated
+
+Reviews can be escalated in two directions:
+
+**Staff reviewers** can escalate to customer when uncertain, escalate to team when complex, or make a direct decision when clear.
+
+**Customer admins** can escalate to team when uncertain or make a direct decision when clear.
+
+### Resolving Escalations
+
+**Customer Escalations** - The proposal stays pending until customer admin reviews it. Customer approval or rejection finalizes the decision. Notifications are sent via Slack/Discord, and superusers can override if needed.
+
+**Team Escalations** - Routes to senior ChainPatrol analysts. In-depth investigation is performed. Expert decision is made and customer is notified of outcome.
+
+## Why Human Review vs. Automation?
+
+ChainPatrol uses a **hybrid approach** combining automation with human expertise:
+
+**When Automation Works Best** - Clear-cut phishing with high threat scores and strong evidence, reports from trusted sources (verified security researchers), repeat patterns similar to previously confirmed threats, and high confidence where multiple detection rules agree.
+
+**When Human Review is Required** - Asset shows signs of being official (legitimacy signals), unclear or conflicting evidence (low confidence), unusual patterns that don't fit standard rules (edge cases), organizations that require manual approval (customer preference), and when someone claims the report is incorrect (disputes).
+
+This approach ensures we block real threats quickly while maintaining accuracy and giving brands control over their security decisions.
+
+## Review Permissions
+
+| Role | Create Reviews | Read Reviews | Delete Reviews | Special Abilities |
+|------|----------------|--------------|----------------|-------------------|
+| **Staff (Non-Customer)** | ✅ | ✅ | ✅ | Review all reports |
+| **Trusted Reporters** | ✅ | ✅ | ❌ | Auto-approval eligible |
+| **Customer Admins** | ✅ | ✅ | ❌ | Review own org only |
+| **Superusers** | ✅ | ✅ | ✅ | Override escalations, bypass time limits |
+| **Reporters/Standard Users** | ❌ | ✅ | ❌ | View only |
+
+## Key Takeaways
+
+- Four decision types prevent deadlock: Unlike binary approve/reject systems, Skip and Escalate ensure unclear threats get proper attention without forcing premature decisions
+- Trusted reporters enable fast response: Pre-verified security researchers can submit high-confidence reports that bypass standard review, accelerating protection for known threats
+- Five-minute revert window catches mistakes: This safety buffer lets reviewers undo accidental decisions before changes propagate, balancing speed with accuracy
+- Escalation paths preserve expertise: Customer escalations leverage brand context for ambiguous cases, while team escalations route complex threats to senior analysts
