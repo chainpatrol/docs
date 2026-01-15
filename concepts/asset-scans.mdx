@@ -3,7 +3,7 @@ title: "Asset Scans"
 description: "Understanding how ChainPatrol evaluates assets at specific points in time"
 ---
 
-## Definition
+## Overview
 
 <Info>
 An **asset scan** is a single security check ChainPatrol performs on an asset (like a URL, social profile, app listing, crypto address, or email) at a specific moment in time.
@@ -127,25 +127,11 @@ A social profile claiming to be one of your employees is discovered. The profile
 - **Not a Case** - A scan can be clean or suspicious. A threat or incident record is created only when risk crosses thresholds or a human escalates it.
 - **Not a Configuration** - Scans use your rules, thresholds, and service settings, but they are not where you configure behavior—they are the evidence those settings produce.
 
----
-
 ## Key Takeaways
 
 - **Point-in-Time Snapshot** - Each scan captures asset state at a specific moment
-- **Building Blocks** - Scans are fundamental to threat understanding
 - **Rich Context** - Enrichments provide comprehensive asset intelligence
-- **Risk Labels** - Human-readable categorization of threats
-- **Timeline History** - Multiple scans show asset evolution over time
-- **Evidence Base** - Provides proof for reviews and takedowns
-- **Relationship Mapping** - Links between assets reveal campaigns
-- **Automated & Systematic** - Consistent, repeatable security checks
-
----
-
-<Card
-  title="View Asset Scan History"
-  icon="magnifying-glass-chart"
-  href="https://app.chainpatrol.io"
->
-  Access your dashboard to review asset scans and their results
-</Card>
+- **Labels + Scores** - Findings summarize what the scan detected and how risky it appears
+- **Timeline History** - Multiple scans show how an asset evolves over time
+- **Evidence Base** - Scan data supports reviews, decisions, and takedown requests
+- **Relationship Mapping** - Links and redirects can reveal broader campaigns

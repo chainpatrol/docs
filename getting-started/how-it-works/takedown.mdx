@@ -3,6 +3,10 @@ title: "Takedown"
 description: "How ChainPatrol removes malicious content through coordinated takedown requests"
 ---
 
+## Overview
+
+A takedown is the process of requesting that a platform, host, or provider remove harmful content. This page explains how takedowns move through their lifecycle in ChainPatrol, how they’re submitted and monitored, and how retractions work when an asset is identified as legitimate.
+
 ## Takedown Lifecycle
 
 Every takedown follows a clear lifecycle inside ChainPatrol:
@@ -76,9 +80,7 @@ After submission, ChainPatrol continuously monitors the takedown to track its pr
 - **Provider Responses** - Reviewing and interpreting responses from the provider
 - **Escalation** - Automatically retrying or escalating when needed
 
-<Tip>
-The takedown remains active until a final outcome is reached. Continuous monitoring ensures takedowns are not prematurely closed.
-</Tip>
+The takedown remains active until a final outcome is reached. Continuous monitoring helps ensure takedowns are not prematurely closed.
 
 ### Final Outcome
 
@@ -166,12 +168,10 @@ No provider guarantees removal in all cases, but ChainPatrol works to maximize s
 **What documentation do I need to provide?**
 Most takedowns require legal documents such as Letter of Authorization, Power of Attorney, Trademark registration, and Business registration documents. Requirements vary by provider and will be communicated during onboarding.
 
----
+## Key Takeaways
 
-<Card
-  title="View Your Takedowns"
-  icon="list-check"
-  href="https://app.chainpatrol.io"
->
-  Access your takedown dashboard to monitor all active and completed takedown requests
-</Card>
+- Takedowns move through clear states (TODO → IN PROGRESS → COMPLETED) with alternative outcomes
+- A takedown is created automatically for blocked assets when the Takedowns service is enabled
+- ChainPatrol assigns the correct provider and submits provider-specific requests with evidence
+- Monitoring and follow-up continue until a final outcome is reached
+- Retractions help stop or reverse takedowns for false positives or legitimate content

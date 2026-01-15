@@ -3,9 +3,9 @@ title: "Detections"
 description: "How ChainPatrol automatically identifies potential security threats"
 ---
 
-A **detection** is a potential security threat that has been automatically identified by ChainPatrol's monitoring system. When a detection source discovers suspicious content that may be impersonating your brand or attempting to defraud users, it creates a detection record for your security team to review.
+## Overview
 
-## What is a Detection?
+A **detection** is a potential security threat that has been automatically identified by ChainPatrol's monitoring system. When a detection source discovers suspicious content that may be impersonating your brand or attempting to defraud users, it creates a detection record for your security team to review.
 
 Detections represent automated findings from ChainPatrol's continuous monitoring across the internet.
 
@@ -89,25 +89,11 @@ The system automatically handles duplicate detections to prevent alert fatigue:
 
 **Different Assets, Same Campaign** - Related assets in the same attack campaign are linked via group IDs but maintained as separate detections. This allows you to report each asset individually, track takedown progress per asset, and understand campaign scope.
 
----
-
 ## Key Takeaways
 
 - **Automated Discovery** - Detections are automatically identified by monitoring sources
-- **Comprehensive Analysis** - Multiple data types analyzed for each detection
-- **Confidence Scoring** - 0-1 score indicates likelihood of being malicious
-- **Rule-Based Evaluation** - Dozens of rules evaluate threat indicators
+- **Analysis + Rules Engine** - Scans and rules evaluate threat indicators and evidence
+- **Confidence Scoring** - A 0-1 score indicates likelihood of being malicious
 - **Group Tracking** - Related threats linked via group IDs
 - **Smart Deduplication** - Prevents alert fatigue while maintaining visibility
 - **Auto-Reporting** - High-confidence threats can be automatically reported
-- **Lifecycle Tracking** - Full visibility from discovery to resolution
-
----
-
-<Card
-  title="View Your Detections"
-  icon="radar"
-  href="https://app.chainpatrol.io"
->
-  Access your dashboard to review and manage detections
-</Card>
