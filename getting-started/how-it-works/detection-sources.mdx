@@ -1,0 +1,165 @@
+---
+title: "Detection Sources"
+description: "Automated monitoring systems that continuously scan the internet for threats to your brand"
+---
+
+## Overview
+
+Detection sources are automated monitoring systems that continuously scan the internet for potential threats to your brand. Each source monitors a specific platform or data stream, searching for suspicious assets that may be impersonating your organization or attempting to defraud your users.
+
+## How Detection Sources Work
+
+Detection sources operate on automated schedules, running searches across various platforms using your organization's **included terms** (brand names, products, keywords you want to monitor) and **excluded terms** (legitimate domains you want to filter out). When a source finds a potential threat, it automatically submits the asset for analysis through ChainPatrol's threat detection pipeline.
+
+### The Detection Flow
+
+1. **Scheduled Execution** - Each detection source runs on a predefined schedule (e.g., every 15 minutes, hourly, daily)
+2. **Platform Scanning** - The source searches its platform (ex. Twitter, Google Ads, Reddit) using your organization's keywords and monitoring rules
+3. **Asset Discovery** - Matching results are collected as potential threats
+4. **Automatic Processing** - Discovered assets are automatically submitted to the threat detection system
+5. **Enrichment & Analysis** - Assets are scanned, enriched with additional data, and evaluated by the rules engine
+6. **Threat Scoring** - A threat score is calculated based on multiple detection rules
+7. **Action Taken** - If the score exceeds your organization's detection thresholds, the threat can be automatically reported or flagged for review
+
+## Available Detection Sources
+
+<Info>
+ChainPatrol supports **28 different detection sources** across multiple categories
+</Info>
+
+### Search Engines
+
+Monitor search results for phishing sites and scam pages:
+
+- **Google Search** - Scans Google search results
+- **Bing Search** - Monitors Bing search results
+- **Yahoo Search** - Tracks Yahoo search results
+- **DuckDuckGo Search** - Monitors DuckDuckGo search results
+- **Google Ads Search** - Monitors Google Ads for malicious content
+
+### Social Media
+
+Track social media for impersonation accounts and fraudulent posts:
+
+**Twitter/X Monitoring:**
+- Twitter Post Search - Searches Twitter posts for threats
+- Twitter User Search - Monitors Twitter user profiles
+- Twitter Profile Monitoring - Tracks replies on posts from specific Twitter profiles
+
+**Reddit Monitoring:**
+- Reddit Subreddit Search - Searches for Reddit communities by name
+
+**YouTube Monitoring:**
+- YouTube Search - Searches YouTube videos and channels
+
+**Medium Monitoring:**
+- Medium Tag RSS - Monitors Medium articles by tags
+
+**Telegram Monitoring:**
+- Telegram Channels Search - Searches for Telegram channels
+- Telegram User Search - Searches for Telegram user accounts
+
+**TikTok Monitoring:**
+- TikTok Video Search - Searches TikTok videos
+- TikTok User Search - Searches TikTok user profiles
+
+### App Stores
+
+Monitor mobile app stores and browser extension marketplaces:
+
+- **Google Play** - Monitors Google Play Store apps
+- **Apple App Store** - Tracks iOS App Store applications
+- **Mozilla Add-ons** - Monitors Firefox browser extensions
+
+### Web3 & Blockchain
+
+Specialized sources for cryptocurrency and blockchain threats:
+
+- **DexScreener Search** - Monitors DeFi protocols and tokens for impersonation
+
+### Specialized Sources
+
+Additional monitoring capabilities for comprehensive protection:
+
+- **URLScan** - Leverages URLScan.io's database to find threats
+- **DNS Twist** - Detects typosquatting domains using homoglyph analysis
+- **Certstream** - Monitors certificate transparency logs for newly issued TLS/SSL certificates
+- **Guestbook** - Monitors community guestbook submissions
+- **Blocked IP Scan** - Scans for assets hosted on known malicious IPs
+- **Asset Check** - Re-checks existing assets for status changes
+- **External** - Handles external threat submissions via API
+
+## Source Configuration
+
+Each detection source can be customized with:
+
+- **Status Options** - Enable or disable sources
+- **Scope Settings** - Organization or global level
+- **Schedule Configuration** - Custom timing and frequency
+
+### Status Options
+
+- **Enabled** - Source runs automatically on schedule
+- **Disabled** - Source does not run
+
+### Scope Settings
+
+Detection sources can operate at two levels:
+
+**Organization Level** - Uses your specific keywords and monitoring settings
+
+**Global Level** - Runs system-wide monitoring for all organizations
+
+### Schedule Configuration
+
+Sources run on automated schedules that vary by:
+
+- **Organization Priority** - Higher priority organizations get more frequent scans
+- **Source Type** - Different sources have different default intervals based on their data freshness and rate limits
+
+<Tip>
+**Custom Schedules:** You can override default schedules with custom cron expressions for fine-tuned control over when each source runs.
+</Tip>
+
+## Best Practices
+
+### Setting Up Detection Sources
+
+1. **Start with core sources** - Enable search engines and social media sources first
+2. **Configure included terms** - Add all your brand names, product names, and common misspellings
+3. **Set excluded terms** - Add your legitimate domains to reduce false positives
+4. **Adjust thresholds** - Set appropriate auto-reporting thresholds based on your risk tolerance
+5. **Monitor results** - Review initial detections to fine-tune your configuration
+
+### Optimizing Detection Coverage
+
+- **Use Multiple Sources** - Different sources catch different types of threats
+- **Monitor App Stores** - Essential if you have mobile applications
+- **Add Official Assets** - Add official Twitter assets to monitor replies
+- **Regular Reviews** - Periodically review and adjust your configuration
+
+### Managing False Positives
+
+- **Refine Excluded Terms** - Add legitimate mentions to your excluded terms list to filter out false positives
+- **Adjust Similarity Thresholds** - Fine-tune keyword similarity thresholds for token monitoring
+- **Use Evaluate Status** - Manually review results before enabling automatic actions
+- **Review Rules Dashboard** - Identify rules that generate false positives and adjust accordingly
+
+## Performance Considerations
+
+### Rate Limits
+
+Each detection source respects platform-specific rate limits. The system automatically handles rate limiting by adjusting request timing, batching operations where possible, and logging when limits are reached. Rate limiting ensures compliance with platform APIs while maintaining consistent monitoring coverage.
+
+### Resource Usage
+
+Detection sources are optimized for efficiency. Results are processed in batches to avoid overwhelming the system, duplicate assets are automatically filtered out, sources run in parallel when possible, and failed detections are logged but don't block other sources.
+
+Our infrastructure is designed to handle high-volume monitoring without impacting detection speed or accuracy.
+
+## Key Takeaways
+
+- Start broad, then refine: Enable core sources first (search engines and social media), then expand to specialized sources based on where your threats appear
+- Quality over quantity: Well-configured included and excluded terms on fewer sources beats poorly configured monitoring across all platforms
+- Different sources catch different threats: A domain might not show in Google Search but appear in Certstream, so layer your coverage for comprehensive protection
+- Auto-reporting works best after calibration: Review initial detections manually to fine-tune your thresholds before enabling automatic blocking

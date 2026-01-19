@@ -1,0 +1,410 @@
+---
+title: "Onboarding Requirements"
+description: "Information ChainPatrol needs to protect your organization from threats"
+---
+
+This guide explains the information ChainPatrol needs during onboarding and how to keep your organization's data up to date for effective threat protection.
+
+## Overview
+
+ChainPatrol protects your organization by monitoring for threats impersonating your brands, assets, and employees. To do this effectively, we need accurate and comprehensive information about:
+
+<CardGroup cols={3}>
+  <Card title="Assets" icon="link">
+    All digital properties you own or manage
+  </Card>
+  
+  <Card title="Brand Identity" icon="palette">
+    Logos, trademarks, and brand terms
+  </Card>
+  
+  <Card title="Legal Authorization" icon="scale-balanced">
+    Documents that allow us to take action on your behalf
+  </Card>
+</CardGroup>
+
+<Info>
+Keeping this information current ensures we can quickly identify and respond to threats while avoiding false positives.
+</Info>
+
+## What Information We Collect
+
+### Assets
+
+We need to know about all digital properties associated with your organization:
+
+<Tabs>
+  <Tab title="Domains" icon="globe">
+    - Websites and web applications
+    - Subdomains and development environments
+    - Landing pages and marketing sites
+    - Documentation and support portals
+  </Tab>
+  
+  <Tab title="Social Media" icon="share-nodes">
+    - Twitter/X handles
+    - Discord servers
+    - Telegram channels and groups
+    - LinkedIn company pages
+    - YouTube channels
+    - Other platform accounts
+  </Tab>
+  
+  <Tab title="Email & Communication" icon="envelope">
+    - Official company email addresses
+    - Employee email addresses
+    - Support and contact emails
+    - Newsletter addresses
+  </Tab>
+  
+  <Tab title="Blockchain" icon="link">
+    - Wallet addresses
+    - Smart contracts
+    - ENS names
+    - On-chain identities
+    - Token contracts
+  </Tab>
+  
+  <Tab title="Applications" icon="mobile">
+    - iOS applications
+    - Android applications
+    - Chrome extensions
+    - Firefox add-ons
+    - Safari extensions
+  </Tab>
+  
+  <Tab title="Other Properties" icon="folder">
+    - GitHub repositories
+    - Documentation sites
+    - Community forums
+    - Developer portals
+    - API endpoints
+  </Tab>
+</Tabs>
+
+<Warning>
+**Important:** When something is added to your organization, we **automatically allowlist it** so it doesn't get accidentally blocked or taken down by our systems.
+</Warning>
+
+### Brand Images and Visual Identity
+
+We collect visual assets to help identify brand impersonation attempts:
+
+<AccordionGroup>
+  <Accordion title="Logos" icon="image">
+    - Primary logo (all formats)
+    - Secondary logo variations
+    - Wordmarks and text-only versions
+    - Monochrome versions
+    - Icon-only versions
+  </Accordion>
+  
+  <Accordion title="Brand Colors" icon="palette">
+    - Primary color palette
+    - Secondary colors
+    - Hex codes and RGB values
+    - Color usage guidelines
+  </Accordion>
+  
+  <Accordion title="Design Assets" icon="paintbrush">
+    - Icons and symbols
+    - Patterns and textures
+    - Typography and fonts
+    - Other brand elements
+  </Accordion>
+</AccordionGroup>
+
+### Brand Terms and Trademarks
+
+We monitor for unauthorized use of your:
+
+<CardGroup cols={2}>
+  <Card title="Registered Trademarks" icon="trademark">
+    All marks registered with trademark offices
+  </Card>
+  
+  <Card title="Product Names" icon="box">
+    Official names of your products and services
+  </Card>
+  
+  <Card title="Taglines & Slogans" icon="quote-left">
+    Marketing phrases associated with your brand
+  </Card>
+  
+  <Card title="Common Misspellings" icon="spell-check">
+    Variations that scammers might use
+  </Card>
+</CardGroup>
+
+### Legal Documents
+
+Before we can perform takedowns on your behalf, we need:
+
+<Steps>
+  <Step title="Power of Attorney (POA)">
+    Authorizes ChainPatrol to perform takedowns in a narrow, specific capacity
+  </Step>
+  
+  <Step title="Letter of Authorization (LOA)">
+    Required specifically for Twitter/X takedowns
+  </Step>
+  
+  <Step title="Supporting Documentation">
+    Trademark certificates and business registration documents
+  </Step>
+</Steps>
+
+<Warning>
+These documents are **required before we can enable takedown services** for your organization.
+</Warning>
+
+## Managing Your Organization's Assets
+
+### Organization Assets Settings Page
+
+You can add, remove, or modify assets directly from your organization's settings:
+
+<Steps>
+  <Step title="Navigate to Settings">
+    Go to **Settings** > **Organization Assets**
+  </Step>
+  
+  <Step title="Add Assets">
+    Click **Add Asset** to include new properties
+  </Step>
+  
+  <Step title="Remove Assets">
+    Select assets and click **Remove** to delete outdated entries
+  </Step>
+  
+  <Step title="Search and Filter">
+    Use the search and filter tools to find specific assets
+  </Step>
+  
+  <Step title="Organize">
+    Group assets to help organize by priority or type
+  </Step>
+</Steps>
+
+### API Management
+
+For organizations with many assets or frequent updates, you can manage assets programmatically using our API:
+
+<CardGroup cols={3}>
+  <Card title="API Documentation" icon="book" href="/external-api/overview">
+    Complete endpoint documentation
+  </Card>
+  
+  <Card title="Generate API Keys" icon="key">
+    Create keys in Settings > API Keys
+  </Card>
+  
+  <Card title="Batch Operations" icon="layer-group">
+    Add or remove multiple assets in a single request
+  </Card>
+</CardGroup>
+
+<Tip>
+See our [API Integration Guide](/integration/guide) for detailed instructions on programmatic asset management.
+</Tip>
+
+## The Onboarding Process
+
+### Customer Information Sheet (CIS)
+
+During onboarding, you'll receive a **Customer Information Sheet** to fill out. This comprehensive form captures all the information listed above.
+
+<Warning>
+**Best Practice:** Don't fill out the CIS alone. Share it with teams across your organization.
+</Warning>
+
+#### Teams to Involve
+
+<AccordionGroup>
+  <Accordion title="Marketing" icon="bullhorn">
+    - Brand campaigns and initiatives
+    - Social media accounts
+    - Creative assets and materials
+    - Marketing domains and landing pages
+  </Accordion>
+  
+  <Accordion title="Engineering" icon="code">
+    - Infrastructure domains
+    - GitHub repositories
+    - Developer tools and APIs
+    - Staging and testing environments
+  </Accordion>
+  
+  <Accordion title="Product" icon="box">
+    - Product names and features
+    - Beta programs
+    - Feature launches
+    - Product documentation
+  </Accordion>
+  
+  <Accordion title="Legal" icon="scale-balanced">
+    - Trademark registrations
+    - Official documentation
+    - Power of Attorney
+    - Business registration
+  </Accordion>
+  
+  <Accordion title="Community" icon="users">
+    - Discord servers
+    - Telegram groups
+    - Community forums
+    - Ambassador programs
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+Sometimes teams "squat" domains or social media handles for future use that leadership may not know about. A comprehensive internal review prevents these assets from being misidentified as threats.
+</Note>
+
+### Ongoing Allowlist Updates
+
+We don't just collect information once. ChainPatrol conducts **frequent allowlist gathering throughout the year** to:
+
+<CardGroup cols={2}>
+  <Card title="Capture Growth" icon="arrow-up">
+    New assets as your organization grows
+  </Card>
+  
+  <Card title="Remove Deprecated" icon="trash">
+    Outdated or retired properties
+  </Card>
+  
+  <Card title="Update Materials" icon="arrows-rotate">
+    Brand materials after refreshes
+  </Card>
+  
+  <Card title="Add Team Members" icon="user-plus">
+    New employees and team members
+  </Card>
+</CardGroup>
+
+<Info>
+You'll be notified when it's time for an allowlist review, typically quarterly or after major organizational changes.
+</Info>
+
+## Document Security and Privacy
+
+Your legal documents and sensitive information are handled with strict security measures:
+
+<CardGroup cols={2}>
+  <Card title="Private Cloud Storage" icon="cloud-lock">
+    All documents stored in encrypted, access-controlled cloud storage
+  </Card>
+  
+  <Card title="Limited Access" icon="user-lock">
+    Only authorized takedown staff and support can retrieve documents
+  </Card>
+  
+  <Card title="Audit Trails" icon="list-check">
+    All document access is logged and monitored
+  </Card>
+  
+  <Card title="Compliance" icon="shield-check">
+    Following industry-standard security practices
+  </Card>
+</CardGroup>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What happens when someone leaves your company?" icon="user-minus">
+    You should remove their email address and any personal accounts from your organization's asset list. This can be done through the Settings page or API.
+    
+    <Tip>
+    We recommend integrating asset management with your employee offboarding process.
+    </Tip>
+  </Accordion>
+  
+  <Accordion title="What happens when you rebrand?" icon="paintbrush">
+    Contact us immediately when planning a rebrand. We'll work with you to:
+    
+    1. Add new brand assets to your allowlist
+    2. Update visual identity materials
+    3. Keep old brand assets protected during the transition period
+    4. Eventually remove outdated assets after the transition is complete
+    
+    <Info>
+    Rebrand transitions typically require 30-90 days where both old and new assets are protected.
+    </Info>
+  </Accordion>
+  
+  <Accordion title="What happens when you get acquired or acquire a new brand?" icon="building">
+    **For acquisitions you make:**
+    - Add the acquired brand as a sub-brand in your organization
+    - Include all their assets in your allowlist
+    - Keep existing POA/LOA documents for the acquired entity
+    
+    **For being acquired:**
+    - Work with your new parent company to transfer ChainPatrol services
+    - Legal documents may need to be updated to reflect the new ownership structure
+    - Contact [support@chainpatrol.io](mailto:support@chainpatrol.io) to coordinate the transition
+  </Accordion>
+  
+  <Accordion title="What happens if one of your assets gets compromised?" icon="triangle-exclamation">
+    If an asset you own is compromised (hacked, stolen credentials, etc.):
+    
+    <Steps>
+      <Step title="Immediately Notify ChainPatrol">
+        Email [support@chainpatrol.io](mailto:support@chainpatrol.io) or use your dedicated Slack channel
+      </Step>
+      
+      <Step title="Remove from Allowlist">
+        Remove the compromised asset so we can take action against it
+      </Step>
+      
+      <Step title="Report the Compromise">
+        Report through our platform so we can track and monitor the threat
+      </Step>
+      
+      <Step title="Re-add After Recovery">
+        Re-add the asset once you've regained control and secured it
+      </Step>
+    </Steps>
+    
+    <Check>
+    We can respond quickly to compromised assets once notified, often taking them down within hours.
+    </Check>
+  </Accordion>
+  
+  <Accordion title="Can I manage multiple brands or subsidiaries?" icon="sitemap">
+    Yes! Organizations can have multiple brands, each with their own:
+    
+    - Asset lists
+    - Brand identity materials
+    - Protected terms
+    
+    This is common for holding companies, investment firms, or organizations with multiple product lines.
+  </Accordion>
+  
+  <Accordion title="How often should I review my asset list?" icon="calendar-check">
+    We recommend reviewing your assets:
+    
+    - **Quarterly**: Regular check-ins to catch gradual changes
+    - **After launches**: New products, campaigns, or initiatives
+    - **After reorganizations**: Mergers, acquisitions, or restructuring
+    - **When prompted**: We'll notify you when it's time for a scheduled review
+  </Accordion>
+  
+  <Accordion title="If I'm unsure whether something should be included?" icon="circle-question">
+    **When in doubt, include it.** It's better to have too many assets in your allowlist than to miss something.
+    
+    <Tip>
+    Our team can help you refine your list during onboarding and ongoing reviews.
+    </Tip>
+  </Accordion>
+</AccordionGroup>
+
+---
+
+<Card
+  title="Ready to Get Started?"
+  icon="rocket"
+  href="https://cal.com/chainpatrol"
+>
+  Schedule an onboarding call to begin protecting your organization
+</Card>

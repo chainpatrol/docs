@@ -1,0 +1,121 @@
+---
+title: "Reports"
+description: "How suspicious or safe activity gets submitted to ChainPatrol for review"
+---
+
+## Overview
+
+A **Report** is how suspicious or safe activity gets submitted to ChainPatrol for review. Each report bundles together one or more assets, like websites, social profiles, or crypto addresses, along with the evidence needed to evaluate them.
+
+<Info>
+When you create a report, you're proposing that specific assets should either be **blocked** (because they're malicious) or **allowed** (because they're safe).
+</Info>
+
+### What a Report Contains
+
+- **Assets** - One or more URLs, profiles, or addresses
+- **Context** - Title and description explaining the threat
+- **Evidence** - Screenshots and supporting materials
+
+## When Reports Get Created
+
+Reports flow into ChainPatrol from multiple sources:
+
+### Manual Submission
+
+Your team or ChainPatrol staff can create reports directly in the dashboard whenever they spot something suspicious. Organization members, ChainPatrol staff, and security team members can create reports for discovered threats, community-reported issues, and proactive monitoring.
+
+### Public Portal
+
+When your organization has a public Security Portal enabled, anyone can submit a report through the public submission form. Reports are automatically flagged as customer reports with no login required. This enables community-powered detection, early threat discovery, and user engagement.
+
+### API Integration
+
+Through the API, integrations or partners can submit threats programmatically for automated monitoring tools, partner integrations, custom workflows, and bulk submissions. See our [API documentation](/external-api/report-create) for integration details.
+
+### Automated Detection
+
+ChainPatrol's systems continuously scan the web, social platforms, and other sources for threats through continuous monitoring, automatic report creation, pre-analyzed evidence, and instant submission. We monitor 50+ platforms 24/7 with real-time detection.
+
+## How Reports Get Reviewed
+
+Every report that comes into your organization is reviewed by ChainPatrol's team.
+
+1. **Evidence Review** - Reviewers examine the evidence, screenshots, and context provided
+2. **Security Checks** - Run automated security scans and analysis on the reported assets
+3. **Decision** - Decide whether each asset should be Blocked (confirmed malicious), Allowed (confirmed legitimate), Watchlisted (monitored for changes), or Escalated (requires additional investigation)
+4. **Action** - Apply the decision and update asset status
+
+### Automatic Review
+
+In some cases, the review happens automatically:
+
+**High Confidence Detection** - When our systems have extremely high confidence that an asset is malicious (known wallet drainer script detected, exact copy of known phishing site, matches multiple high-confidence rules), it's approved immediately without manual validation.
+
+**Trusted Reporter** - When the report comes from someone we've marked as a trusted reporter (verified security researchers, trusted partner organizations, ChainPatrol staff), it's fast-tracked for approval.
+
+### Organization Admin Approval
+
+<Warning>
+If you've enabled **Obligatory Organization Admin Approval** for certain types of assets, there's an extra step.
+</Warning>
+
+Even after ChainPatrol's team approves a report, the changes won't be applied to your blocklist until someone from your organization with admin permissions confirms them:
+
+1. ChainPatrol reviews and approves the report
+2. Report waits for organization admin confirmation
+3. Your admin reviews and approves or rejects
+4. Asset status is updated based on final decision
+
+## Report Status
+
+Reports move through three stages as they're processed:
+
+- **TODO** - The report is waiting in the queue for review
+- **IN_PROGRESS** - ChainPatrol staff or automated systems are actively reviewing it
+- **CLOSED** - The review is complete and decisions have been made on all assets
+
+## Finding Your Reports
+
+The **Reports page** in your dashboard shows all the reports for your organization, whether they're pending review, currently being worked on, or already closed.
+
+You can filter and search by creator, date, asset, and status to track the status of something you reported or follow up on threats flagged by your community.
+
+## How to Submit a Report
+
+Creating a report in ChainPatrol is straightforward:
+
+1. **Click Create Report** - Start by clicking **Create Report** from the dashboard
+
+2. **Add Assets** - Paste in the assets you want to report, one per line: URLs (e.g., `https://fake-metamask.com`), social media profiles (e.g., `@fake_support`), blockchain addresses (e.g., `0x123...`), or any other asset type ChainPatrol monitors. The system automatically figures out what kind of asset each one is.
+
+3. **Add Context** - Provide a title summarizing what you're reporting and a description explaining why these assets are suspicious, how you found them, and any relevant details.
+
+4. **Upload Evidence** - Upload screenshots of malicious content, user reports or messages, social media posts, or any supporting documentation. Visual evidence helps reviewers quickly understand what's going on and speeds up the review process.
+
+5. **Submit** - Hit Submit and your report goes into the review queue
+
+### What Happens Next
+
+**Immediately** - Report enters TODO status, you receive confirmation, report appears in your dashboard, and ChainPatrol team is notified.
+
+**During Review** - Status changes to IN_PROGRESS, assets are scanned and analyzed, evidence is evaluated, and decisions are made.
+
+**After Review** - Status changes to CLOSED, asset statuses are updated, you're notified of the outcome, and actions are taken (blocking, allowing, etc.).
+
+## Report Best Practices
+
+**Provide Clear Context** - Include how you discovered the threat, why you believe it's malicious, any user reports or complaints, and timeline of when it appeared.
+
+**Include Visual Evidence** - Capture the full page or profile, specific malicious elements, user-facing content, and screenshots before it gets taken down.
+
+**Report Promptly** - The sooner you report a threat, the sooner it can be blocked, providing faster protection for users and less time for scammers to operate.
+
+**Group Related Assets** - If multiple assets are part of the same campaign, report them together so reviewers see the full picture for more efficient review and coordinated response.
+
+## Key Takeaways
+
+- Multi-asset reports capture campaign scope: Grouping related threats in one report helps reviewers understand attack patterns and makes blocking entire campaigns more efficient
+- Context accelerates review decisions: Reports with screenshots, explanations, and evidence of harm move through review faster than bare URLs with no context
+- Three submission methods serve different needs: Manual reports for ad-hoc discoveries, API reports for automated detection systems, and portal reports for community submissions
+- Report status tracks progress without micromanagement: TODO, IN_PROGRESS, and CLOSED states provide visibility while letting the security team work without constant updates

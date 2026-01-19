@@ -1,0 +1,104 @@
+---
+title: "Review"
+description: "How ChainPatrol evaluates and approves threat status changes through automated and human review"
+---
+
+## Overview
+
+In order to block malicious threats or allow official assets, we use the Review process. To change an Asset's status (from `UNKNOWN` to `BLOCKED`/`ALLOWED`, or in special cases between `BLOCKED` and `ALLOWED`), we create a **Proposal**.
+
+<Info>
+Each Proposal is evaluated by either human reviewers or our automation, who can make one of four decisions: **Approve**, **Reject**, **Skip**, or **Escalate**.
+</Info>
+
+### Proposal Decisions
+
+- **Approve** - Accepts the Asset's status change and closes the Proposal
+- **Reject** - Denies the status change and closes the Proposal
+- **Skip** - Keeps Proposal pending when there's insufficient evidence
+- **Escalate** - Sends to senior team members or customer for additional review
+
+Only **Approve** and **Reject** decisions close out the Proposal. **Skip** and **Escalate** keep the Proposal in `PENDING` status for further evaluation.
+
+## Automation
+
+Our automated review system handles high-confidence threat detections, allowing human analysts to focus on edge cases and complex decisions.
+
+### When Do We Perform Automated Review?
+
+Automated review is enabled when specific conditions are met:
+
+**Organization Requirements** - Reviewing automation only activates for organizations with an active subscription status (Active, Trial, or Prospect).
+
+**Asset Information Requirements** - Automation requires sufficient data about the Asset. Some platforms currently lack adequate information gathering capabilities. Platforms requiring human review include Facebook, Instagram, and TikTok due to limited automated data collection.
+
+**Proposal Type Restrictions** - Automated review only handles Proposals to set an Asset to `BLOCKED` status. Proposals to set Assets to `ALLOWED` or `UNKNOWN` status are not automated.
+
+### How Does Automated Review Make a Decision?
+
+Our automated review system calculates a **risk score** to determine whether an asset should be approved as malicious.
+
+1. **Rule Execution** - During an Asset Scan, multiple detection rules are executed against the asset
+2. **Score Calculation** - The risk score is a weighted sum of all individual scores from each successful rule execution
+3. **Threshold Evaluation** - The final risk score is compared against our approval threshold
+4. **Decision** - Assets meeting the threshold are automatically approved; others are escalated for human review
+
+### Legitimacy Rules
+
+<Warning>
+**Special Case:** Legitimacy Rules can override automatic approval, even with high risk scores.
+</Warning>
+
+Legitimacy Rules are special detection rules that identify when an asset is **not malicious**. If a Legitimacy Rule with "Very High" confidence passes, automation will **not** automatically approve the Proposal, regardless of the Risk Score.
+
+**Example:** An asset might have a high risk score, but if it matches a Very High confidence Legitimacy Rule (e.g., verified official domain), the Proposal will be escalated for human review instead of being auto-blocked.
+
+### Automatically Approving the Proposal
+
+For a Proposal to be automatically approved, **all** of the following must be true:
+
+**Required Conditions:**
+- Asset must not already be `ALLOWED`
+- Organization must have Reviewing enabled and not be inactive
+- Proposal must be for blocking the Asset (not for allowing)
+- No Legitimacy Rules of "Very High" confidence have passed
+
+**Approval Triggers (at least one must be true):**
+- High Risk Score - the overall Risk Score of the Asset meets our confidence threshold
+- Trusted Reporter - the Asset was part of a Report created by a Trusted Reporter
+
+## Human Review
+
+Humans are essential for making decisions about Proposals that fall outside automated approval criteria.
+
+Since automation only handles Proposals to block Assets with high confidence scores, human analysts evaluate all other cases.
+
+### When Humans Are Involved
+
+- **Lower Confidence Blocks** - Proposals to Block an Asset that doesn't meet the automated threshold
+- **Allow Proposals** - All Proposals to Allow an Asset
+- **Unknown Status** - Proposals to set an Asset to Unknown
+
+### Human Review Process
+
+1. **Proposal Assignment** - Proposals are routed to appropriate analysts based on expertise and workload
+2. **Evidence Review** - Analysts examine scan results, screenshots, metadata, and context
+3. **Decision Making** - Using established criteria and guidelines, analysts make Approve/Reject/Skip/Escalate decisions
+4. **Quality Assurance** - Decisions feed back into our AI models to improve future automation accuracy
+
+### What Analysts Use to Make Decisions
+
+**Asset Scan Results** - Screenshots and visual evidence, page content and metadata, network and infrastructure data, historical scan timeline.
+
+**Detection Rules** - Which rules triggered and their confidence levels, rule weights and scoring breakdown, legitimacy rule results.
+
+**Context & Intelligence** - Related assets and infrastructure, reporter information and history, brand-specific guidelines, recent threat patterns.
+
+**Organization Settings** - Custom detection thresholds, allowlist and blocklist entries, brand protection priorities.
+
+## Key Takeaways
+
+- Legitimacy rules protect you from overblocking: If a Very High confidence legitimacy rule passes, the proposal goes to human review regardless of risk score
+- Escalate unclear cases strategically: Use "Skip" when you need more information, "Escalate to Team" for expertise, and "Escalate to Customer" when brand context matters
+- Automation learns from humans: Every manual review decision feeds back into the system, improving future automatic detection accuracy
+- The four-decision model prevents deadlock: Unlike binary approve/reject systems, Skip and Escalate ensure unclear threats get proper attention without forcing premature decisions

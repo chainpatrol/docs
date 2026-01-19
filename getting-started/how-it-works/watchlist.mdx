@@ -1,0 +1,140 @@
+---
+title: "Watchlist"
+description: "How ChainPatrol monitors assets to detect when they become malicious or go offline"
+---
+
+## Overview
+
+The watchlist is a set of assets that are not blocked or allowed, but are **actively monitored**. We watchlist assets for two main reasons:
+
+- **Review Process** - Monitoring assets to determine if they become malicious
+- **Takedown Process** - Monitoring assets to determine if they go offline
+
+### When Assets Leave the Watchlist
+
+We remove assets from the watchlist for three reasons:
+
+- **Asset Allowed** - Asset status changed to ALLOWED
+- **Comes Back Online** - Previously dead asset becomes accessible again
+- **Offline Too Long** - Asset has been offline for more than 30 days
+
+<Info>
+For more details about the watchlist concept, see our [Concepts documentation](/concepts/watchlist).
+</Info>
+
+## Placing Assets onto the Watchlist
+
+### Review Process
+
+During the review flow, an analyst can choose to put an asset onto the watchlist. This is typically done for two scenarios:
+
+**Parking Page** - The domain is reserved but has no active content. The URL indicates potential brand impersonation, but there's not enough evidence yet to perform a takedown. We monitor to see if malicious content appears. Example: `metamask-airdrop.com` shows a domain parking page, but the name suggests future malicious use.
+
+**Dead Asset** - The asset is currently offline or inaccessible. The URL structure suggests brand impersonation, but we can't analyze content that doesn't exist yet. We monitor to detect when it comes online. Example: `uniswap-claim.xyz` returns a 404 error, but the domain name is suspicious.
+
+### Takedown Process
+
+When we file a takedown, we automatically place the asset being taken down onto the watchlist.
+
+1. **Takedown Filed** - Takedown request submitted to the appropriate provider
+2. **Asset Watchlisted** - Asset automatically added to watchlist for monitoring
+3. **Automated Monitoring** - Regular scans check if the asset goes offline
+4. **Automatic Completion** - If asset goes offline, takedown is marked as complete automatically
+
+This automation allows us to confirm successful takedowns without manual verification, speeding up the entire process.
+
+### Watchlist Eligibility
+
+Only specific asset types can be placed on the watchlist due to our ability to monitor them consistently in an automated fashion:
+
+- **URL** - Web addresses and domains
+- **Page** - Specific web pages
+- **Email** - Email addresses
+- **Twitter** - Twitter/X accounts
+- **Telegram** - Telegram channels and users
+
+Asset types not on this list are monitored by our human staff for takedown confirmation instead of automated watchlist monitoring.
+
+## What Happens When Assets Are on the Watchlist
+
+When an asset is on the watchlist, we monitor it by running asset scans periodically to determine if there is any change in behavior:
+
+- **Status Changes** - Monitoring HTTP status codes and accessibility
+- **Content Changes** - Detecting modifications to page content
+- **Infrastructure Changes** - Tracking DNS record and hosting changes
+
+We also run checks to determine if we should keep the asset on the watchlist or remove it because it's unlikely to become malicious.
+
+<Tip>
+**Adaptive Frequency:** Assets recently added to the watchlist are scanned more frequently. As time passes without changes, scan frequency decreases to optimize resources.
+</Tip>
+
+## Scan Frequency
+
+We cycle through the watchlist each minute, checking about **150 assets at a time**. Scan frequency depends on how long the asset has been on the watchlist and its current status.
+
+### UNKNOWN / ALLOWED Assets
+
+Assets that are not yet blocked are scanned more frequently:
+
+| Time on Watchlist | Scan Frequency |
+|-------------------|----------------|
+| < 6 hours | Hourly |
+| < 24 hours | Every 2 hours |
+| < 2 days | Every 4 hours |
+| < 7 days | Every 6 hours |
+| < 2 weeks | Every 12 hours |
+| < 1 month | Daily |
+| < 2 months | Every 2 days |
+| > 2 months | Every 4 days |
+
+### BLOCKED Assets
+
+Blocked assets are scanned less frequently since they're already protected:
+
+| Time on Watchlist | Scan Frequency |
+|-------------------|----------------|
+| < 6 hours | Every 3 hours |
+| < 24 hours | Every 6 hours |
+| < 2 days | Every 12 hours |
+| < 7 days | Every 18 hours |
+| < 2 weeks | Every 36 hours |
+| < 1 month | Every 3 days |
+| < 2 months | Every 6 days |
+| > 2 months | Every 12 days |
+
+**Why the difference?** UNKNOWN and ALLOWED assets need closer monitoring to catch when they become malicious. BLOCKED assets are already protected, so we primarily monitor to confirm takedown success.
+
+## Removing Assets from the Watchlist
+
+Assets are automatically removed from the watchlist under specific conditions:
+
+### Asset Becomes ALLOWED
+
+If an asset's status changes from `BLOCKED` or `UNKNOWN` to `ALLOWED`, we immediately remove it from the watchlist. Allowed assets are verified as legitimate and don't require monitoring.
+
+### Asset Comes Online
+
+If an asset's liveness status changes from `DEAD` to `ALIVE` or `UNKNOWN`, we remove it from the watchlist. The asset is pushed back into the review queue where a human analyst will evaluate whether it's malicious.
+
+### Decay Factor
+
+**UNKNOWN Assets - 30 Day Limit** - If an asset is in `UNKNOWN` status, we remove it from the watchlist after 30 days. If an asset hasn't become malicious after a month, it's unlikely to pose a threat.
+
+**Takedown Success** - If the asset was watchlisted during the takedown process and the takedown is in `IN_PROGRESS` state, when the asset goes offline or the takedown provider suspends the asset, it's removed from the watchlist since the takedown was successful.
+
+**Manual Removal** - An analyst can manually remove an asset from the watchlist if they determine it's no longer necessary to monitor.
+
+## Best Practices
+
+- **Use for Suspicious Domains** - Watchlist domains with suspicious names but no active content yet
+- **Monitor Takedowns** - Let the watchlist automatically confirm takedown success
+- **Review Regularly** - Periodically review long-term watchlist items to ensure they're still relevant
+- **Trust the Automation** - The adaptive scan frequency optimizes monitoring without manual intervention
+
+## Key Takeaways
+
+- Watchlist is for the gray area: Use it when you suspect an asset might be malicious but don't have enough evidence to block yet
+- Automatic takedown monitoring saves time: Every takedown automatically watchlists the asset to detect when it goes offline, eliminating manual checking
+- Adaptive frequency optimizes resources: Recent additions scan hourly while stable assets scan less often, so you catch changes quickly without wasting scans
+- 30-day decay prevents watchlist bloat: UNKNOWN assets that haven't become malicious after a month are automatically removed, keeping your monitoring focused
