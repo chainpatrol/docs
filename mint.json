@@ -117,7 +117,6 @@
       "group": "Assets",
       "pages": [
         "external-api/asset-check",
-        "external-api/asset-details",
         "external-api/asset-search",
         "external-api/asset-submit",
         "external-api/asset-list",
@@ -277,6 +276,10 @@
     {
       "source": "/bots/telegram",
       "destination": "/bots/telegram-bot"
+    },
+    {
+      "source": "/external-api/asset-details",
+      "destination": "/external-api/asset-search"
     }
   ],
   "backgroundImage": "/background.png",
