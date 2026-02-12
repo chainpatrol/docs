@@ -74,3 +74,10 @@ Takedowns can have two main states:
 - **Completed**: Successfully removed malicious content based on our takedown requests
 
 The takedown process helps ensure that confirmed malicious content is removed from platforms, reducing the potential impact on users.
+
+
+### Takedown Tasks
+
+Each Takedown is broken down into one or more **Takedown Tasks**, which represent individual takedown actions at different provider levels. The task types depend on the asset: for URLs/pages, tasks are created for the **hosting provider**, **domain registrar**, and/or **TLD registrar** (whichever are detected); for platform-specific assets like Twitter, Telegram, or Medium, platform-specific task types are created instead.
+
+Each task progresses through its own lifecycle with statuses: todo → submitted → approved (or rejected / stale / cancelled). Tasks also carry a `retractionStatus` for cases where a takedown needs to be reversed. Tasks can be completed manually by staff or auto-completed when automated liveness checks detect the asset is down at a specific provider level.
