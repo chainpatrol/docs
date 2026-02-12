@@ -5,13 +5,11 @@ openapi: "POST /asset/search"
 
 ## Overview
 
-### Takedown Tasks
+The Asset Search endpoint returns a single result with three main parts:
 
-When an asset is blocked, ChainPatrol automatically creates a **Takedown** - a top-level entity that tracks the effort to remove the malicious content. Each Takedown is broken down into one or more **Takedown Tasks**, which represent individual takedown actions at different provider levels. The task types depend on the asset: for URLs/pages, tasks are created for the **hosting provider**, **domain registrar**, and/or **TLD registrar** (whichever are detected); for platform-specific assets like Twitter, Telegram, or Medium, platform-specific task types are created instead.
-
-Each task progresses through its own lifecycle with statuses: todo → submitted → approved (or rejected / stale / cancelled). Tasks also carry a `retractionStatus` for cases where a takedown needs to be reversed. Tasks can be completed manually by staff or auto-completed when automated liveness checks detect the asset is down at a specific provider level.
-
-**From the API perspective**, the Asset Search endpoint returns a takedown object nested in the response, which includes a tasks array. Each task exposes its `type`, `status`, `retractionStatus`, the associated `takedownProvider` name, submission/retraction timestamps, and an optional `externalId` referencing the provider's own tracking ID. This allows API consumers to clearly see **what is being taken down**, **at which infrastructure level** the takedown is happening, and **what the current status** of each individual effort is.
+- **asset** - The matched asset: its `id`, `content`, `type`, `status`, `watchStatus`, and timestamps (`createdAt`, `updatedAt`).
+- **reports** - List of reports linked to the asset, each with `id`, `title`, `status`, and `createdAt`.
+- **takedown** - Takedown metadata (`id`, `status`, timestamps) plus a **tasks** array. Each task has `type`, `status`, `retractionStatus`, the associated `takedownProvider` name, submission/retraction timestamps, and an optional `externalId` for the provider’s tracking ID. [Learn more about takedown tasks](../general/concepts#takedown-tasks).
 
 ## Quick Start
 
