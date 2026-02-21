@@ -111,16 +111,18 @@ When an asset is removed from the blocklist, the update is distributed to all in
 
 ## Blocklist Distribution
 
-When an asset is blocklisted, it's automatically distributed to multiple platforms:
+When an asset is blocklisted, it's automatically distributed to multiple platforms. Today, our distribution network is primarily focused on **domains and URLs** — these are the asset types that flow through to browsers, wallets, DNS providers, and threat intelligence partners.
 
-- **Google Safe Browsing** - All asset types eligible for browser protection
+- **Google Safe Browsing** - Domains and URLs for browser protection
 - **SEAL-ISAC** - URLs hosted on 50+ hosting providers (Vercel, Cloudflare, AWS, etc.)
-- **Crypto-ISAC** - All URL and domain assets
+- **Crypto-ISAC** - URL and domain assets
 - **Eth-Phishing-Detect** - Ethereum-related phishing sites
 - **Polkadot Phishing** - Cross-network phishing domains
 - **Direct Partners** - Real-time API updates to wallet providers
 
-Distribution happens automatically through our integration workflows. There's no manual step required.
+Social media accounts, blockchain addresses, and other asset types are tracked and blocklisted in our database, and available via our API. Automated distribution for these asset types to external platforms is being expanded over time.
+
+Distribution for domains and URLs happens automatically through our integration workflows. There's no manual step required.
 
 <Tip>
 In the case of a false positive, we will submit retraction requests for ChainPatrol's submissions to these partners.
