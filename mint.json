@@ -143,20 +143,6 @@
       ]
     },
     {
-      "group": "Guides",
-      "pages": [
-        "guides/api-keys",
-        "guides/enabling-disabling-services",
-        "guides/gathering-allowlist",
-        "guides/setting-up-brands",
-        "guides/false-positives",
-        "guides/public-reports",
-        "guides/sso",
-        "guides/unflagging-your-assets",
-        "guides/communicating-with-chainpatrol"
-      ]
-    },
-    {
       "group": "External API",
       "pages": ["external-api/overview", "external-api/authentication"]
     },
