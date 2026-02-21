@@ -155,6 +155,18 @@ Security teams protect employees and users, brand protection teams monitor and b
 
 A public API provides freely accessible blocklist data for developers and security researchers, an SDK offers developer tools for easy integration, and a web dashboard provides a search and lookup interface for manual checks. Anyone can access our blocklist data to build security tools, perform research, or check suspicious assets.
 
+## Blocklist Propagation Speed
+
+Once an asset is confirmed and added to our blocklist, protection propagates across the ecosystem at different speeds depending on the integration:
+
+| Integration | Propagation Time |
+|---|---|
+| **Wallets** (MetaMask, Phantom, etc.) | Within minutes |
+| **Quad9 DNS & other integrations** | Within minutes |
+| **Google Safe Browsing** (Chrome, Safari, Edge, Firefox) | 1–2 hours |
+
+Wallets and direct API integrations receive updates almost immediately because they query our blocklist in real-time. Google Safe Browsing takes longer because it batches updates across its global infrastructure, but still provides broad browser-level protection within a couple of hours.
+
 ## Key Takeaways
 
 - Immediate protection beats slow removal: Blocklisting provides user protection within minutes, while traditional takedowns can take hours or days (if they succeed at all)
