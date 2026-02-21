@@ -35,7 +35,7 @@
     "thumbsRating": true,
     "suggestEdit": true
   },
-  "openapi": "https://app.chainpatrol.io/api/v2/openapi.json",
+  "openapi": "https://app.chainpatrol.io/api/v2/openapi.json?v=2",
   "api": {
     "baseUrl": "https://app.chainpatrol.io/api/v2",
     "auth": {
@@ -164,7 +164,7 @@
       "group": "Assets",
       "pages": [
         "external-api/asset-check",
-        "external-api/asset-details",
+        "external-api/asset-search",
         "external-api/asset-submit",
         "external-api/asset-list",
         "external-api/asset-changelog",

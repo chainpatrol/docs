@@ -1,0 +1,22 @@
+---
+title: Asset Search
+openapi: "POST /asset/search"
+---
+
+## Overview
+
+The Asset Search endpoint returns a single result with three main parts:
+
+- **asset** - The matched asset: its `id`, `content`, `type`, `status`, `watchStatus`, and timestamps (`createdAt`, `updatedAt`).
+- **reports** - List of reports linked to the asset, each with `id`, `title`, `status`, and `createdAt`.
+- **takedown** - Takedown metadata (`id`, `status`, timestamps) plus a **tasks** array. Each task has `type`, `status`, `retractionStatus`, the associated `takedownProvider` name, submission/retraction timestamps, and an optional `externalId` for the provider’s tracking ID. [Learn more about takedown tasks](../general/concepts#takedown-tasks).
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: <api-key>
+```

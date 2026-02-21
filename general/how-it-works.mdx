@@ -52,14 +52,22 @@ Fast path to protection: suspicious content is detected, analyzed, reviewed, and
 
 ## 6) Protection distribution
 
-- **Public blocklist**
-  - We maintain a public list of blocked threats that any service can use
-- **Direct integration with major platforms**
-  - MetaMask wallet protection
-  - Google Safe Browsing
-  - Community security lists
-  - DNS resolvers like Quad9
-- All updates are safe and tested before going live
+Within minutes of detecting a malicious domain, ChainPatrol data is sent across integrations to send warnings to end users
+
+- **Blocklist Integrations**
+  - Once a domain is identified as malicious, it goes on the ChainPatrol block list. 
+  - These domains are blocked across 20+ crypto wallets in minutes, including Metamask and Phantom.
+  -  We also blocklist domains across Google Safe Browsing, reaching Chrome and other browsers. 
+  - DNS providers like Quad9 and others increase the reach of our network
+  - Any user visiting the malicious link is shown a warning.
+
+- **Blocklist Speed**
+  - Wallets and many other integration partners blocklist domains within minutes
+  - Google Safe Browsing takes a 1-2 hours to show warnings from initial flagging
+
+
+- **Public Blocklist API**
+  - We maintain a public list of blocked threats that any service can use, our goal is to work with security partners to protect every user
 
 ## 7) Protection verification
 
@@ -71,10 +79,10 @@ Fast path to protection: suspicious content is detected, analyzed, reviewed, and
 
 - We automatically request takedowns from hosting providers, domain registrars, and social platforms
 - We work with major providers including Cloudflare, Vercel, GoDaddy, Squarespace, Firebase, and many others
-- For social platforms like Telegram and Twitter, we use automated reporting systems
+- For social platforms like Telegram and Twitter, we combine human analysts and automated reporting systems
 - We track takedown progress and avoid duplicate requests
 
-## 9) Executive reporting
+## 9) Metrics and Executive reporting
 
 - We generate clear, executive-ready reports showing threats detected and actions taken
 - Reports use plain language suitable for sharing with stakeholders and management
