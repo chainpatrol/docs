@@ -1,0 +1,112 @@
+---
+title: "Asset Scans"
+description: "How ChainPatrol automatically evaluates and monitors potential threats across the web"
+---
+
+## Overview
+
+An **asset scan** is an automated security check ChainPatrol runs on an online surface that could be used in a scam, like a website, a social profile, an app-store listing, or a crypto address. Each scan records what we observed at a specific moment in time and evaluates risk using a mix of detection rules and AI signals.
+
+<Info>
+Asset scans solve a simple problem: the internet changes constantly, attackers iterate fast, and manual review doesn't scale. Scans let us monitor large volumes of assets, catch newly emerging threats, and track whether risky content is still live.
+</Info>
+
+## What We Scan
+
+ChainPatrol supports many asset types across the digital landscape:
+
+- **Web Properties** - URLs and hosted pages (including redirect chains and landing pages)
+- **Social & Content Profiles** - Twitter/X, Telegram, YouTube, Reddit, Medium, Farcaster, and more
+- **App Listings & Extensions** - Google Play, Apple App Store, Mozilla Add-ons, and other marketplaces
+- **Crypto Addresses** - Normalized contract/address identifiers (e.g., CAIP-2 style) with chain context
+
+## Asset vs. Asset Scan
+
+Understanding the difference is key to how our monitoring works:
+
+**Asset** - An asset is the thing itself: a URL, handle, listing, or address. Example: `https://fake-metamask.com`
+
+**Asset Scan** - An asset scan is a time-stamped snapshot of that asset. The same asset may be scanned many times, and scans form a timeline of changes. Example: Scan #1 (Jan 1), Scan #2 (Jan 3), Scan #3 (Jan 5)
+
+Multiple scans of the same asset create a historical timeline, allowing us to track changes, detect when threats go live or are taken down, and monitor asset behavior over time.
+
+## When Scans Run
+
+Scans are triggered in three main ways:
+
+**Automatically** - Scans run when ChainPatrol detection sources surface something relevant, when an asset is added (e.g., via report, onboarding, or API ingestion), and during watchlist monitoring where assets are rescanned on a schedule that adapts over time (more frequent early on, less frequent as an asset stays stable, blocked assets scanned less often to reduce noise).
+
+**On Demand** - Manual or API-triggered scans occur when a team member triggers a rescan from the UI or when your systems submit assets via API.
+
+**Ongoing Liveness Checks** - For certain platform-hosted assets (e.g., specific site builders or marketplaces), ChainPatrol periodically re-checks whether a previously-blocked asset is still reachable.
+
+## How Scans Work
+
+Our scanning process follows a systematic approach to evaluate threats efficiently and accurately:
+
+1. **Normalize and Prepare** - We normalize the input (e.g., resolve canonical URLs or identifiers), create a scan record, and run a first pass of checks that don't require external enrichment.
+
+2. **Enrich with Context** - Depending on asset type, we collect relevant data:
+
+   **Web URL / Page Enrichments:**
+   - HTTP fetch results (status, redirects, extracted links, basic metadata like title and description)
+   - Optional browser capture (screenshot and DOM signals when available)
+   - Network and registration context (DNS, TLS, WHOIS/RDAP when enabled)
+
+   **Platform/API Enrichments:**
+   - Profile and listing details (descriptions, author and publisher fields, follower and engagement signals)
+
+   <Tip>
+   Some enrichments run only when earlier signals suggest elevated risk to keep scans efficient.
+   </Tip>
+
+3. **Security Analysis** - We evaluate the asset using rules and AI/ML signals for patterns like phishing, impersonation, and scam mechanics. This includes both content-based and visual/behavioral indicators when available.
+
+4. **Labels, Scores, and Liveness** - Each scan is tagged with labels and produces scores for prioritization:
+
+   **Common Labels:**
+   - Captcha detected
+   - Parked domain
+   - Provider suspended
+   - Brand impersonation
+   - Wallet drainer detected
+
+   **Liveness Status:**
+   - **ALIVE** - Asset is active and accessible
+   - **DEAD** - Asset is no longer reachable
+   - **UNKNOWN** - Inconclusive (not "safe")
+
+5. **Relationship Discovery** - For supported web and social surfaces, scans can extract outbound links and redirects to help you trace related infrastructure and uncover threat networks.
+
+## How Scan Results Are Used
+
+- **Triage and Review** - Scans provide evidence (metadata, redirects, links, screenshots) so reviewers can decide to block, allow, investigate further, or initiate takedowns
+- **Detections & Automation** - High-risk scans feed detection workflows and monitoring pipelines; actions vary by configuration and policy
+- **Monitoring Hygiene** - Watchlist and liveness workflows keep your monitoring set current and highlight meaningful changes over time
+
+## What You See in the Product
+
+Our platform provides comprehensive visibility into scan results and asset history:
+
+**Per-Asset Timeline** - A complete history of scans for each asset, including liveness status changes, notable changes in content or behavior, risk score evolution, and label additions/removals.
+
+**Scan Detail Views** - Deep dive into individual scans with evidence artifacts (screenshots, metadata), applied labels and their sources, scoring signals and rule matches, and enrichment data (redirects, links, network info).
+
+**Org/Brand Dashboards** - High-level overview showing recent activity and new threats, top-risk assets requiring attention, monitoring coverage across platforms, and trend analysis over time.
+
+**Reporting & Metrics** - Actionable insights including scan volume and frequency, detection speed metrics, number of risky assets still live, and takedown success rates.
+## Scan Efficiency & Scale
+
+- **Smart Scheduling** - Adaptive scan frequency based on asset risk and stability
+- **Selective Enrichment** - Deep analysis triggered only when risk signals warrant it
+- **Parallel Processing** - Multiple assets scanned simultaneously for faster coverage
+- **Historical Context** - Timeline-based analysis to detect behavioral changes
+
+Our scanning infrastructure processes thousands of assets daily, providing real-time threat intelligence while maintaining accuracy and minimizing false positives.
+
+## Key Takeaways
+
+- One asset, many scans: The same URL can be scanned multiple times to create a timeline showing how threats evolve or when they're taken down
+- Selective enrichment saves resources: Deep analysis only triggers when initial signals suggest elevated risk, keeping scans fast for low-risk assets
+- Liveness tracking enables automation: Knowing when an asset goes from ALIVE to DEAD lets us automatically confirm successful takedowns
+- Relationship discovery reveals campaigns: Extracting links and redirects from scans helps you trace entire threat networks instead of blocking sites one at a time

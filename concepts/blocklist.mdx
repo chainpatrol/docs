@@ -1,0 +1,163 @@
+---
+title: "Blocklist"
+description: "Understanding ChainPatrol's threat intelligence database"
+---
+
+## Overview
+
+A blocklist (also known as a denylist) is a database of confirmed malicious entities that should be blocked or flagged to protect users. In the context of web3 security, a blocklist contains verified phishing websites, scam social media accounts, fraudulent crypto addresses, and other malicious assets that pose a threat to users.
+
+<Info>
+ChainPatrol's blocklist functions as a **threat intelligence database** that's continuously updated and distributed in real-time.
+</Info>
+
+Unlike traditional security databases that may update daily or weekly, our blocklist provides immediate updates as threats are confirmed, ensuring protection is deployed within minutes rather than hours or days.
+
+The blocklist serves as the foundation of proactive security. Instead of waiting for users to encounter threats, we identify, verify, and distribute threat intelligence to prevent exposure before it happens.
+
+## Why Do We Use a Blocklist and Why Is It Effective?
+
+### The Problem with Traditional Takedowns
+
+Traditional cybersecurity approaches rely heavily on **takedowns**, requesting hosting providers or domain registrars to remove malicious content. However, this approach has critical limitations:
+
+- **Slow Response Times** - Hours to days for hosting providers and domain takedowns
+- **Incomplete Coverage** - Some providers never respond or operate in non-cooperative jurisdictions
+- **Attack Window** - Scammers can steal funds within minutes of launching a phishing site
+- **Whack-a-Mole** - Attackers quickly spin up new domains or move to different providers
+
+### The Blocklist Advantage
+
+ChainPatrol's blocklist provides **immediate protection** through a "blocklist-first, takedown-second" approach:
+
+1. **Speed** - Assets are blocklisted and distributed within minutes after confirmation
+2. **Universal Coverage** - Protection works regardless of hosting provider, jurisdiction, or whether the malicious content remains online
+3. **Point-of-Access Protection** - Blocks are enforced at the browser, wallet, and network level where users actually interact with threats
+4. **Persistent Protection** - Even if a scammer sets up 100 copycat sites, each one gets blocklisted as soon as it's detected
+
+<Warning>
+In web3, where transactions are irreversible and scams can drain wallets in seconds, **prevention at the point of interaction is critical**.
+</Warning>
+
+### Network Effects
+
+The effectiveness of our blocklist increases exponentially with distribution. One confirmation protects millions of users across browsers, wallets, enterprise networks, and partner organizations.
+
+## Who Contributes to the Blocklist?
+
+ChainPatrol's blocklist is powered by a diverse network of contributors:
+
+### Community Reports
+
+Anyone can report suspicious assets through our public reporting interface. Web3 communities including Discord moderators, Twitter users, and Reddit communities actively report scams targeting their communities. Users who've encountered or fallen victim to scams help us identify active threats.
+
+### Partner Organizations
+
+Organizations using ChainPatrol for brand protection contribute threat intelligence. Wallet providers like MetaMask, Phantom, and Coinbase Wallet share detected threats. Security alliances including SEAL-ISAC, Crypto-ISAC, and other information sharing networks contribute, as do blockchain projects and DAOs monitoring for impersonation attacks.
+
+### Automated Detection
+
+Our AI-powered scanning detection engine continuously monitors using detection rules. We perform real-time monitoring of newly registered domains through Certificate Transparency, automated detection of impersonation accounts and scam posts through social media monitoring, and use honeypots (intentional traps that identify and track attacker infrastructure).
+
+### Expert Review Team
+
+While many sources contribute detections, all blocklist entries are verified by ChainPatrol's security team before being added. This ensures accuracy, minimizes false positives, maintains blocklist quality, and provides human judgment for edge cases. This human-in-the-loop review process is critical for maintaining trust in the blocklist.
+
+## What Is In Scope for Being Added to the Blocklist?
+
+Assets are added to the blocklist when they meet two criteria: **intent** and **confirmation**.
+
+### Intent: Malicious Purpose
+
+Assets must demonstrate clear malicious intent:
+
+- **Phishing** - Sites designed to steal credentials, seed phrases, or private keys
+- **Scams** - Fraudulent schemes (fake airdrops, rug pulls, Ponzi schemes)
+- **Impersonation** - Content falsely claiming to represent legitimate brands
+- **Malware Distribution** - Sites or links that distribute malicious software
+- **Social Engineering** - Content designed to manipulate users into compromising security
+
+### Confirmation: Evidence-Based Verification
+
+Assets must be confirmed as malicious through:
+
+1. Multiple credible reports from independent sources
+2. Evidence of attacks or proof of successful attacks and victim reports
+3. Technical analysis showing malicious code or behavior detected
+4. Pattern matching with clear alignment with known attack techniques
+5. Brand owner confirmation verifying unauthorized use (when applicable)
+
+### Out of Scope
+
+The following are **not** added to the blocklist:
+
+- **Legitimate Criticism** - Negative reviews, critical commentary, or parody (protected speech)
+- **Competitor Content** - Content from legitimate competitors, even if unfavorable
+- **Alleged Scams** - Projects accused of being scams without concrete evidence of malicious activity
+- **Civil Disputes** - Trademark disputes, contract disagreements, or business conflicts (handle through legal channels)
+- **Low-Confidence Detections** - Suspicious but unconfirmed assets (may be monitored, but not blocklisted)
+
+This scope ensures our blocklist maintains high accuracy and focuses on clear, immediate threats to user security.
+
+## What Type of Data Is In Our Blocklist?
+
+ChainPatrol's blocklist includes multiple asset types, each with specific attributes:
+
+### URLs and Domains
+
+Full URLs (specific phishing pages), domains (root domains and subdomains), status (current blocklist status and distribution state), first seen date, blocklist date, and associated data including screenshots, detection rules triggered, and related assets.
+
+### Social Media Accounts
+
+Twitter/X accounts, Telegram groups and channels, Discord servers, YouTube channels, and Facebook pages and groups. Each includes platform-specific identifiers like account handles, user IDs, and channel links.
+
+### Blockchain Addresses
+
+Ethereum addresses (scam contracts, phishing wallets, rug pull contracts), multi-chain support across multiple blockchain networks, contract metadata including code analysis and transaction patterns, and labels indicating scam type (fake airdrop, phishing, Ponzi scheme).
+
+### Email Addresses
+
+Phishing emails used in campaigns, fake customer support email addresses, and associated domains linked to scam operations.
+
+### Other Digital Assets
+
+Mobile apps (fake wallet apps, scam applications), browser extensions (malicious extensions that steal credentials), IPFS hashes (decentralized content hosting phishing pages), and NFT collections (scam NFT projects and counterfeit collections).
+
+### Metadata for All Assets
+
+Every blocklisted asset includes comprehensive metadata: asset type, status (BLOCKED, ALLOWED, PENDING), severity, related assets, detection methods, distribution status, and update history.
+
+## Who Uses Our Blocklist?
+
+ChainPatrol's blocklist protects users across the web3 ecosystem through multiple integration types:
+
+### Browser Security
+
+Google Safe Browsing powers protection in Chrome, Safari, Edge, Firefox, and other browsers. Cloudflare Gateway provides network-level protection for enterprises. Direct integrations support web3-focused browsers. Blocklisted URLs are prevented from loading or show warning pages, protecting users regardless of which website they're visiting.
+
+### Wallet Providers
+
+MetaMask (direct integration via Eth-Phishing-Detect), Phantom (real-time API integration), Coinbase Wallet, Trust Wallet, Rainbow, Ledger, WalletConnect, and additional wallets across the ecosystem. Wallets warn users before connecting to malicious sites or interacting with scam contracts, preventing fund loss at the point of transaction.
+
+### Web3 Applications
+
+Polymarket (content moderation and user protection), Snapshot (governance platform security), NFT marketplaces (filtering scam collections and malicious listings), and DeFi protocols (protecting users from fake interfaces and phishing sites). Applications can automatically filter malicious content and warn users about threats specific to their platform.
+
+### Threat Intelligence
+
+SEAL-ISAC, Crypto-ISAC, Eth-Phishing-Detect (ChainPatrol is a core contributor), and Polkadot Phishing List for cross-chain threat sharing. Our blocklist feeds into the broader security ecosystem, creating a network effect where threats are shared across organizations and platforms.
+
+### Enterprise Security
+
+Security teams protect employees and users, brand protection teams monitor and block impersonation attempts, and custom integrations provide API access for internal security tools and workflows. Organizations can integrate ChainPatrol's threat intelligence into their existing security infrastructure for comprehensive protection.
+
+### Public Access
+
+A public API provides freely accessible blocklist data for developers and security researchers, an SDK offers developer tools for easy integration, and a web dashboard provides a search and lookup interface for manual checks. Anyone can access our blocklist data to build security tools, perform research, or check suspicious assets.
+
+## Key Takeaways
+
+- Immediate protection beats slow removal: Blocklisting provides user protection within minutes, while traditional takedowns can take hours or days (if they succeed at all)
+- Network effects multiply protection value: Each confirmed threat automatically protects users across browsers, wallets, and partner platforms without requiring separate submissions
+- Evidence-based verification prevents false positives: Requiring both malicious intent and confirmation ensures blocklist accuracy while human review catches edge cases
+- Public accessibility enables ecosystem security: Open API access lets any wallet, browser, or security tool integrate blocklist protection without licensing barriers

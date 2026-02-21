@@ -1,0 +1,134 @@
+---
+title: "Organizations"
+description: "Understanding your workspace in ChainPatrol"
+---
+
+## Overview
+
+Everything you see and do in ChainPatrol happens inside an **Organization**. Think of it as your team's dedicated workspace where you manage your brands, track your assets, and measure how ChainPatrol is protecting you from threats.
+
+<Info>
+An organization is the top-level container for all your security operations, team members, and protected assets in ChainPatrol.
+</Info>
+
+## How ChainPatrol Manages Security for You
+
+ChainPatrol is a **fully managed security product**. This means our team handles the heavy lifting:
+
+- **Day-to-Day Threat Hunting** - Continuous scanning across platforms
+- **Suspicious Activity Review** - Expert analysis of potential threats
+- **Attack Analysis** - Detailed evaluation of threat patterns
+- **Takedown Filing** - Professional requests to providers and platforms
+
+You don't need to become a security expert or dedicate staff to monitor threats around the clock. We do that work for you.
+
+### Your Level of Involvement
+
+That said, you're not locked out of the process. If you want your team to be more hands-on, you can:
+
+- **Invite Members** - Invite team members into your organization's dashboard with customized permissions and roles
+- **Report Threats** - Your team can report threats they discover through the dashboard or integrations
+- **Approve or Decline** - Review and approve specific takedowns or blocklist decisions before they take effect
+- **Connect Tools** - Integrate Slack, Telegram, SSO, and other tools to fit ChainPatrol into your existing workflows
+
+You decide how involved you want to be, from fully hands-off to deeply integrated with your team's operations.
+
+## Brands and Assets
+
+Every organization has one or more **brands** that ChainPatrol protects.
+
+### What is a Brand?
+
+A brand could be your company name, a product line, your executives or key personnel, or a key identity that attackers might try to impersonate.
+
+We use brands to detect **brand impersonation** attacks including lookalike domains, fake social profiles, scam campaigns borrowing your brand's name, and imagery or messaging designed to trick people.
+
+### What are Assets?
+
+In addition to brands, your organization also has **assets**, the digital properties that actually belong to you:
+
+- **Websites** - Domains and web applications
+- **Social Accounts** - Twitter, Discord, Telegram, etc.
+- **App Listings** - App store and extension marketplace listings
+- **Wallet Addresses** - Blockchain addresses and contracts
+- **Email Addresses** - Official company and team emails
+- **Other Properties** - GitHub repos, forums, documentation sites
+
+We track your official assets so we can spot copycats and general phishing pages that mimic your legitimate sites or channels. When we find something suspiciously similar to your assets but not actually yours, it gets flagged for review.
+
+## Services You Can Enable
+
+Each organization can turn individual services on or off depending on what you need. These services control which ChainPatrol features are active for your organization:
+
+### Detection
+
+Enables ChainPatrol's automated scanning across the web, social platforms, app stores, and other sources. When this is turned on, we continuously look for new threats targeting your brands. This is the foundation service (required for all other services).
+
+### Monitoring & Reporting
+
+Activates the systems that collect and organize reports and detections into a single view. This powers your dashboards and ensures you have up-to-date visibility into what's happening. Recommended for all organizations.
+
+### Reviewing
+
+Turns on ChainPatrol's review workflows, where our team validates suspicious assets and decides whether they should be blocked, allowed, watchlisted, or escalated. Recommended for accuracy and quality control.
+
+### Obligatory Organization Admin Approval
+
+Adds a final approval step for specific types of assets. When enabled, you choose which asset categories (like domains, social media, or messaging platforms) require explicit confirmation from an admin in your organization before ChainPatrol's blocklist decisions take effect. If you don't select any specific types, all asset types will require approval. This is optional, for organizations requiring internal oversight.
+
+### Wallet Blocking
+
+Allows approved crypto-related threats to be added to ChainPatrol's global blocklist, which is consumed by partner wallets like Coinbase Wallet and MetaMask to protect their users from known malicious addresses. Essential for Web3 organizations.
+
+### Takedowns
+
+Enables ChainPatrol to file takedown requests with hosting providers, registrars, and platforms on your behalf. When this service is on, we don't just block threats but work to get them removed from the internet entirely. Requires legal documentation (trademark proof, authorized representative details). Recommended for comprehensive protection.
+
+### Automated Takedowns
+
+Speeds up the takedown process for clear-cut cases. Once you've provided the required legal documents (like a Power of Attorney) and your main website URL, ChainPatrol can automatically submit takedown requests for approved threats without waiting for manual back-and-forth on every case. Requires Power of Attorney document, main website URL, and all other services enabled. This is an advanced feature for high-volume threat environments.
+
+Learn more about configuring these services in our [Services Setup guide](/protect-your-brand/services-setup).
+
+## Members, Roles, and Permissions
+
+You control who can access your organization and what they're allowed to do.
+
+### How It Works
+
+1. Invite team members into your organization's dashboard
+2. Assign them roles that determine their access level
+3. Configure specific permissions for what they can do
+4. Retain ultimate control over approvals and sensitive actions
+
+### What Permissions Control
+
+- **Threat Reporting** - Ability to report and submit threats
+- **Blocklist Approvals** - Approve or reject blocklist changes
+- **Settings Management** - Modify organization settings and configuration
+- **Sensitive Information** - View confidential data and reports
+- **Service Control** - Enable or disable organization services
+- **Member Management** - Invite, remove, or modify team members
+
+<Warning>
+This permission system ensures that potentially destructive actions (like turning on Wallet Blocking or Automated Takedowns) only happen with your organization's explicit permission.
+</Warning>
+
+ChainPatrol's staff handle the day-to-day security operations, but you retain ultimate control over approvals, visibility, and how the platform integrates with your team.
+
+## Organization Structure
+
+### Typical Organization Hierarchy
+
+**Single Brand** - Most organizations have a single brand with one company identity, all assets under one brand, and straightforward management. Example: A startup protecting their main product.
+
+**Multiple Brands** - Some organizations manage multiple brands including parent company + subsidiaries, multiple product lines, acquired companies, and regional brands. Example: A holding company protecting multiple portfolio companies.
+
+**Enterprise** - Large enterprises may have multiple brands, hundreds or thousands of assets, complex approval workflows, and multiple teams with different permissions. Example: A Fortune 500 company with global operations.
+
+## Key Takeaways
+
+- Organizations provide centralized visibility across brands: One dashboard shows threat activity for all your brands, products, and executives instead of fragmented monitoring
+- Service toggles let you start simple and expand: Begin with monitoring and manual blocking, then enable automated detection, takedowns, and API access as needs grow
+- Role-based permissions balance access and security: Admins can configure settings and approve blocks, while reporters can submit threats without changing system configuration
+- Managed service means no infrastructure to maintain: ChainPatrol handles detection sources, review workflows, and provider relationships so you focus on decisions, not operations

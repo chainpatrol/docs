@@ -1,0 +1,99 @@
+---
+title: "General Phishing"
+description: "Understanding phishing attacks and common attack vectors in Web3"
+---
+
+## Overview
+
+Phishing is a malicious attack that involves someone pretending to be a legitimate actor. Phishing comes in many forms, but the ultimate goal is to gain the trust of the end user and steal their information.
+
+This includes passwords, credit card numbers, or even a user's two factor authentication codes. In the context of Web3, common attack vectors aim to steal a user's seed phrase for their wallet, or simply all of the contents of their wallets.
+
+## Types of Phishing Attack Vectors
+
+### Wallet Drainers
+
+Wallet drainers are a tool that scammers use to quickly steal all of the funds from a user's wallet without them knowing.
+
+**How it works:**
+
+1. A scammer sets up a fake site that looks very similar to a legitimate one, like the homepage of a wallet, or a fake airdrop that looks like it's advertising a legitimate token
+2. The user is prompted to connect their wallet to the website
+3. Once connected, the user is prompted to sign a transaction that is described in vague terms or lies about its intentions
+4. By agreeing, the user signs a broad smart contract that gives the scammer permission for unlimited token withdrawal on the victim's wallet
+5. The scammer scans the user's wallet to find any tokens, NFTs, or other valuable assets, and transfers them to their wallet
+6. The stolen assets are disseminated to multiple wallets to make tracking more difficult
+
+### Seed Recovery Phrase Theft
+
+Seed recovery phrase theft is when a scammer tries to get the seed recovery phrase of a user by pretending to need it for a legitimate purpose.
+
+**Important:** Users should never share their seed recovery phrase with anyone, as it will grant complete access to their wallet and all of their tokens to any actor who has it.
+
+**Common tactics:**
+
+- Fake airdrops that promise large rewards
+- "Doubling" scams that claim to multiply the amount of a specific token
+- Requests to type in the full seed recovery phrase to claim rewards
+
+Once the user types in their seed recovery phrase, the attacker will use it to lock the victim out of their assets, and disseminate them to multiple other wallets to make tracking the stolen assets more difficult.
+
+### Social Engineering
+
+Social engineering involves gaining a user's trust so that they voluntarily provide confidential details to an attacker.
+
+**In the context of Web3:**
+
+Social engineering may involve fake tech support for a wallet responding to requests about being unable to access funds. Attackers gain trust by seeming legitimate through conversations over email or phone. Once sufficient trust is built, they will ask for seed phrases or request the user to connect their wallet to a wallet drainer.
+
+**Warning signs:**
+
+- Unsolicited contact from "support" representatives
+- Requests for sensitive information like seed phrases
+- Pressure to act quickly or urgently
+- Communication through unofficial channels
+
+### Malware Distribution
+
+Malware distribution involves a user downloading or otherwise obtaining a malicious program on their system.
+
+**Common disguises:**
+
+These programs often masquerade as legitimate software. For example:
+- A browser extension that looks like an official wallet extension
+- Fake wallet applications
+- Compromised software updates
+
+Once installed, the malware will use one of the aforementioned techniques to steal a user's information, including seed phrases, private keys, or direct wallet access.
+
+### Developer Key Compromise
+
+Developer key compromise occurs when a developer's private keys for accessing sensitive information are obtained by attackers.
+
+**The danger:**
+
+This allows the attacker to:
+- Impersonate the developer
+- Access systems the developer works on
+- Inject malicious code into legitimate programs
+
+This is particularly dangerous because it allows attackers to infiltrate legitimate services and have a widespread impact across an entire user base. Users trust the legitimate application, making them more vulnerable to attacks that originate from compromised developer accounts.
+
+## Protecting Yourself from Phishing
+
+<Tip>
+**Key principle:** Legitimate projects will never ask for your seed phrase, private keys, or request you to sign suspicious transactions.
+</Tip>
+
+Always verify:
+- Website URLs carefully before connecting your wallet
+- The authenticity of support representatives
+- Browser extensions and applications before installation
+- Transaction details before signing anything
+
+## Key Takeaways
+
+- Wallet drainers exploit transaction approval flows: Unlike traditional phishing that steals passwords, wallet drainers trick users into signing legitimate-looking transactions that grant unlimited withdrawal permissions
+- Seed phrases are the master key: A compromised seed phrase gives attackers complete and permanent control, which is why legitimate projects never ask for them under any circumstances
+- Social engineering bypasses technical protections: Even with security tools in place, attackers who build trust through fake support interactions can convince users to voluntarily disable protections
+- Developer key compromise has cascading impact: When attacker gains access to a developer's keys, they can inject malicious code into trusted applications that affect thousands of users simultaneously

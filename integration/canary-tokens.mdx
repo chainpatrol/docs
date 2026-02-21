@@ -1,0 +1,88 @@
+---
+icon: dove
+title: Canary Tokens
+description: Use Canary Tokens to notify ChainPatrol when your website is cloned and have them blocked immediately
+---
+
+## What is a Canary Token?
+
+Canary Tokens are a free, open-source tool that helps you discover when bad actors access your data. They can be used to detect unauthorized access to your website, documents, or other sensitive information.
+
+You can read more on the [Canary Tokens website](https://docs.canarytokens.org/guide/).
+
+## Cloned Website Tokens
+
+Cloned Website Tokens are a type of Canary Token that can be used to detect when your website is cloned. They work by embedding a unique token into your website that is invisible to your users. When a bad actor clones your website, they will also clone the token. When the token is accessed, you will be notified and ChainPatrol will proceed to block and takedown the malicious cloned site.
+
+You can read more about Cloned Website Tokens on the [Canary Tokens website](https://docs.canarytokens.org/guide/cloned-web-token.html).
+
+## Setup Instructions
+
+<Steps>
+  <Step title="Create a new Canary Token">
+    Go to the [Canary Tokens Nest](https://canarytokens.org/nest/) and select the `JS cloned website` from the list.
+
+    Fill the fields with the information below:
+
+    | Field | Value |
+    | :---- |:----- |
+    | Domain of protected website | `<YOUR DOMAIN>` |
+    | Mail me here when the alert fires | `<YOUR EMAIL>` |
+    | Remind me of this when the alert fires | Any note you'd like (ex. `Token for <YOUR DOMAIN>`) |
+
+    Next, click **Add Webhook Notification**, and fill in the following information:
+
+    | Field | Value |
+    | :---- |:----- |
+    | Notify me here when the alert fires | `https://app.chainpatrol.io/api/v2/canary/webhook` |
+
+    It should look something like this when you are done:
+
+    ![Canary Generation](/images/canary.png)
+
+    Click **Create Canarytoken**.
+
+  </Step>
+  <Step title="Navigate to Manage Token">
+    After the token is created, you will see the modal with the token information.
+
+    ![Canary Success](/images/canary-success.png)
+
+    Click **Manage Canarytoken** to navigate to the token's page.
+
+    > **Note:** You should save this current page's URL for future reference.
+  </Step>
+  <Step title="Add the token to ChainPatrol">    
+
+    After clicking the button, you will be redirected to the token's page. This is a uniquely generated URL containing the token that you can come back to see the history of the your Canary Token.
+
+    Example: `https://canarytokens.org/nest/manage/<NEST_ID>/<TOKEN_ID>`
+
+    Next, go to your ChainPatrol dashboard and go to **Settings** > **Canary Tokens**.
+    
+    ![Canary Token ID](/images/organization-canary-tokens.png)
+
+    In order for ChainPatrol to automatically detect cloned websites, **create new token, and paste the token ID from your token's page**.
+
+    After creating the token, you will see the token in the list. You can delete or edit the token at any time.
+
+    At this point, our webhook will start receiving alerts when the token is accessed.
+
+    ![Added Canary Token](/images/organization-added-canary-token.png)
+  </Step>
+  <Step title="Add the generated JavaScript snippet to your website">
+    Finally, to complete the setup of the Canary Token, you need to add the generated JavaScript snippet to the domain that you indicated earlier.
+    
+    1. Toggle ON the **"Obfuscate this script"** option and copy the generated code.
+    2. Paste the code into your website's HTML code, preferably in the `<head>` tag on the homepage.
+    
+    > **Note:** We recommend turning OFF **Email Alerts**, since they may include localhost URLs and other false positives. We will handle the alerts via webhook.
+  </Step>
+</Steps>
+
+## What happens when a cloned website is detected?
+
+When your website is cloned, we will create a new report in your ChainPatrol dashboard.
+ChainPatrol will proceed to block and takedown the malicious cloned site.
+
+![Canary Report](/images/canary-report.png)

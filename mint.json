@@ -59,6 +59,10 @@
   ],
   "tabs": [
     {
+      "name": "Integrations",
+      "url": "integration"
+    },
+    {
       "name": "API Reference",
       "url": "external-api"
     },
@@ -74,40 +78,69 @@
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": ["introduction"]
-    },
-
-    {
-      "group": "General",
       "pages": [
-        "general/how-it-works",
-        "general/api-key",
-        "general/concepts",
-        "general/false-positives"
+        {
+          "group": "What do we do?",
+          "pages": [
+            "getting-started/what-we-do/introduction",
+            "getting-started/what-we-do/brand-impersonation",
+            "getting-started/what-we-do/general-phishing"
+          ]
+        },
+        {
+          "group": "How it works",
+          "pages": [
+            "getting-started/how-it-works/how-we-use-ai",
+            "getting-started/how-it-works/detection-sources",
+            "getting-started/how-it-works/asset-scans",
+            "getting-started/how-it-works/review",
+            "getting-started/how-it-works/blocklist",
+            "getting-started/how-it-works/takedown",
+            "getting-started/how-it-works/watchlist"
+          ]
+        },
+        {
+          "group": "How do I get started?",
+          "pages": [
+            "protect-your-brand/onboarding-requirements",
+            "protect-your-brand/who-should-be-involved",
+            "protect-your-brand/services-setup",
+            "protect-your-brand/ongoing-communication"
+          ]
+        }
       ]
     },
     {
-      "group": "Integration",
+      "group": "Concepts",
       "pages": [
-        "integration/guide",
-        "integration/check-vs-list",
-        "integration/proxy",
-        "integration/webhooks",
-        "integration/zapier",
+        "concepts/organizations",
+        "concepts/brands",
+        "concepts/reports",
+        "concepts/reviews",
+        "concepts/detections",
+        "concepts/asset-scans",
+        "concepts/blocklist",
+        "concepts/allowlist",
+        "concepts/watchlist",
+        "concepts/takedowns",
+        "concepts/legal-docs",
+        "concepts/metrics",
+        "concepts/security-portal"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "integration/discord",
+        "integration/telegram",
+        "integration/slack",
         "integration/vercel",
         "integration/intercom",
         "integration/github",
-        "security-integration/canary-tokens",
-        "security-integration/submit-assets-for-scanning"
+        "integration/canary-tokens",
+        "integration/webhooks",
+        "integration/zapier"
       ]
-    },
-    {
-      "group": "Bots",
-      "pages": ["bots/discord-bot", "bots/slack-bot", "bots/telegram-bot"]
-    },
-    {
-      "group": "Extensions",
-      "pages": ["extensions/chrome-extension"]
     },
     {
       "group": "External API",
@@ -255,7 +288,23 @@
     },
     {
       "source": "/general/discord-bot",
-      "destination": "/bots/discord-bot"
+      "destination": "/integration/discord"
+    },
+    {
+      "source": "/bots/discord-bot",
+      "destination": "/integration/discord"
+    },
+    {
+      "source": "/bots/telegram-bot",
+      "destination": "/integration/telegram"
+    },
+    {
+      "source": "/bots/slack-bot",
+      "destination": "/integration/slack"
+    },
+    {
+      "source": "/security-integration/canary-tokens",
+      "destination": "/integration/canary-tokens"
     },
     {
       "source": "/api",
@@ -267,19 +316,15 @@
     },
     {
       "source": "/bots/slack",
-      "destination": "/bots/slack-bot"
+      "destination": "/integration/slack"
     },
     {
       "source": "/bots/discord",
-      "destination": "/bots/discord-bot"
+      "destination": "/integration/discord"
     },
     {
       "source": "/bots/telegram",
-      "destination": "/bots/telegram-bot"
-    },
-    {
-      "source": "/external-api/asset-details",
-      "destination": "/external-api/asset-search"
+      "destination": "/integration/telegram"
     }
   ],
   "backgroundImage": "/background.png",

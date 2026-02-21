@@ -1,0 +1,97 @@
+---
+title: "Detections"
+description: "How ChainPatrol automatically identifies potential security threats"
+---
+
+## Overview
+
+A **detection** is a potential security threat that has been automatically identified by ChainPatrol's monitoring system. When a detection source discovers suspicious content that may be impersonating your brand or attempting to defraud users, it creates a detection record for your security team to review.
+
+Detections represent automated findings from ChainPatrol's continuous monitoring across the internet.
+
+### Components of a Detection
+
+Each detection contains:
+
+- **Asset** - The specific URL, social account, or content identified
+- **Source** - Which detection source discovered it
+- **Score** - Confidence level (0-1) indicating likelihood of being malicious
+- **Reason** - Why it was flagged and which rules triggered
+- **Organization** - Your organization being targeted
+- **Timestamp** - When the threat was first detected
+- **Status** - Current state (reported, under review, awaiting action)
+
+## Detection Lifecycle
+
+1. **Discovery** - A detection source finds content matching your monitoring keywords or patterns. For example, Google Search detects a website containing your brand name plus terms like "airdrop" or "claim tokens".
+
+2. **Asset Processing** - The discovered asset is automatically submitted to ChainPatrol's analysis pipeline, where it creates or retrieves the asset record, validates the asset hasn't already been marked as legitimate (allowed), and checks for duplicate detections.
+
+3. **Scanning & Enrichment** - The asset undergoes comprehensive scanning to gather intelligence including content analysis (webpage screenshots, HTML content, metadata extraction, text and image analysis), network data (DNS records, IP addresses, hosting information, CDN and infrastructure), domain registration (WHOIS data, registration date, registrar information, historical records), platform data (social media profiles, app store information, platform metadata, account details), visual analysis (logo detection, similarity matching, brand element identification, visual fingerprinting), and blockchain data (smart contract analysis, token information, transaction patterns, wallet connections).
+
+4. **Rule Evaluation** - The system executes dozens of detection rules against the enriched asset data. Each rule evaluates specific threat indicators like domain age (newly registered domains < 30 days old), visual similarity (logo or design mimicking your brand), text similarity (URLs or names that closely match yours), threat intelligence (known malicious infrastructure or patterns), and behavioral indicators (wallet drainer code, phishing forms).
+
+5. **Scoring** - Based on rule results, the system calculates a threat score (0-1) representing confidence that the asset is malicious. Rules are grouped by category (Visual Similarity, Threat Intelligence, Domain Age, Text Matching, Behavioral Analysis), each rule has a confidence level (Very Low to Very High), and weighted scores are combined across all triggered rules with organization-specific adjustments applied.
+
+6. **Detection Creation** - A detection record is created in the database with all gathered intelligence.
+
+7. **Auto-Reporting (Optional)** - If your organization has auto-reporting enabled and the detection score exceeds your medium threshold, the system can automatically create a report with the detected asset, mark the asset as blocked, submit takedown requests (if configured), and send notifications to your team.
+
+<Warning>
+**Auto-Reporting Requirements:** Score must meet or exceed your medium threshold, detection source must be enabled, asset must not already be blocked, and asset must not have been previously rejected multiple times.
+</Warning>
+
+## Confidence Levels
+
+Detections are categorized into confidence levels based on your organization's thresholds:
+
+### None (Score 0 to Low Threshold)
+
+Low confidence detections. May be false positives or tangentially related to your brand. Useful for monitoring trends but rarely require action. Examples include generic mention of your brand in unrelated context, weak keyword matches, and minimal similarity indicators.
+
+### Low (Low Threshold to Medium Threshold)
+
+Some indicators suggest a potential threat, but evidence is limited. Requires manual review to confirm. Common scenarios include domain contains your brand name but has legitimate business purpose, social media mentions your brand in neutral context, and weak visual or textual similarity.
+
+### Medium (Medium Threshold to High Threshold)
+
+Strong indicators of malicious intent. Multiple detection rules triggered with reasonable confidence. Common scenarios include new domain with brand name and suspicious keywords, social media account impersonating your brand with stolen logo, and token contract with similar name on blockchain. This is the typical threshold for automatic reporting and blocking.
+
+### High (High Threshold and above)
+
+Very strong evidence of malicious activity. Multiple high-confidence rules triggered. Common scenarios include perfect visual replica of your website, domain nearly identical to yours (typosquatting), known phishing infrastructure, and contains wallet drainer code. High confidence detections require immediate attention and rapid response.
+
+## Understanding Detection Groups
+
+Detections can be grouped together using a **Group ID** to represent related threats discovered from a single source.
+
+### Relationship Extraction
+
+When analyzing an asset, the system may discover additional related threats:
+
+- **Linked URLs** - A phishing page that links to multiple other scam domains
+- **Redirects** - A URL that redirects through several malicious domains
+- **Related Accounts** - Social media posts that mention multiple scam websites
+
+All related detections share the same group ID, making it easy to identify and report entire phishing campaigns at once.
+
+### Campaign Tracking
+
+Group IDs help you identify campaigns (recognize coordinated phishing campaigns), track infrastructure (map relationships between threats), report networks (report entire attack networks simultaneously), and understand tactics (analyze attacker tactics and patterns).
+
+## Deduplication
+
+The system automatically handles duplicate detections to prevent alert fatigue:
+
+**Same Asset, Same Organization** - If the same asset is detected multiple times by the same source for your organization, only one detection record is kept to prevent alert fatigue from repeated discoveries.
+
+**Same Asset, Different Sources** - If multiple detection sources independently find the same threat, separate detection records are created. This helps validate threat confidence (multiple sources agree), understand which sources are most effective, and track how threats spread across platforms.
+
+**Different Assets, Same Campaign** - Related assets in the same attack campaign are linked via group IDs but maintained as separate detections. This allows you to report each asset individually, track takedown progress per asset, and understand campaign scope.
+
+## Key Takeaways
+
+- Detection is the entry point, not the decision: A detection indicates potential threat, but review and approval are required before blocking to prevent false positives
+- Group IDs reveal campaign scope: When one detection links to multiple related assets, you can identify and report entire phishing campaigns instead of blocking sites one at a time
+- Threshold configuration balances coverage and noise: Lower thresholds catch more threats but require more review, while higher thresholds miss edge cases but reduce workload
+- Deduplication across sources increases confidence: When multiple independent detection sources flag the same asset, it provides stronger evidence of malicious intent
