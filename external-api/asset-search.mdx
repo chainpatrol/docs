@@ -5,11 +5,12 @@ openapi: "POST /asset/search"
 
 ## Overview
 
-The Asset Search endpoint returns a single result with three main parts:
+The Asset Search endpoint returns a single result with four main parts:
 
 - **asset** - The matched asset: its `id`, `content`, `type`, `status`, `watchStatus`, and timestamps (`createdAt`, `updatedAt`).
 - **reports** - List of reports linked to the asset, each with `id`, `title`, `status`, and `createdAt`.
-- **takedown** - Takedown metadata (`id`, `status`, timestamps) plus a **tasks** array. Each task has `type`, `status`, `retractionStatus`, the associated `takedownProvider` name, submission/retraction timestamps, and an optional `externalId` for the provider’s tracking ID. [Learn more about takedown tasks](../general/concepts#takedown-tasks).
+- **takedown** - Takedown metadata (`id`, `status`, timestamps) plus a **tasks** array. Each task has `type`, `status`, `retractionStatus`, the associated `takedownProvider` name, submission/retraction timestamps, and an optional `externalId` for the provider's tracking ID. [Learn more about takedown tasks](../general/concepts#takedown-tasks).
+- **blockedBy** - List of platforms currently consuming (blocking) the asset. Each entry has a `consumer` slug (e.g. `metamask`, `google-safe-browsing`, `quad9`), the platform's display `name`, and a `consumedAt` timestamp indicating when the platform started blocking the asset.
 
 ## Quick Start
 
