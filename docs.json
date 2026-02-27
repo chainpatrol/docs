@@ -1,0 +1,366 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "palm",
+  "name": "ChainPatrol",
+  "colors": {
+    "primary": "#6622DC",
+    "light": "#985EFD",
+    "dark": "#2A186B"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              {
+                "group": "What do we do?",
+                "pages": [
+                  "getting-started/what-we-do/introduction",
+                  "getting-started/what-we-do/brand-impersonation",
+                  "getting-started/what-we-do/general-phishing"
+                ]
+              },
+              {
+                "group": "How it works",
+                "pages": [
+                  "getting-started/how-it-works/how-we-use-ai",
+                  "getting-started/how-it-works/detection-sources",
+                  "getting-started/how-it-works/asset-scans",
+                  "getting-started/how-it-works/review",
+                  "getting-started/how-it-works/blocklist",
+                  "getting-started/how-it-works/takedown",
+                  "getting-started/how-it-works/watchlist"
+                ]
+              },
+              {
+                "group": "How do I get started?",
+                "pages": [
+                  "protect-your-brand/onboarding-requirements",
+                  "protect-your-brand/who-should-be-involved",
+                  "protect-your-brand/services-setup",
+                  "protect-your-brand/ongoing-communication"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Concepts",
+            "pages": [
+              "concepts/organizations",
+              "concepts/brands",
+              "concepts/reports",
+              "concepts/reviews",
+              "concepts/detections",
+              "concepts/asset-scans",
+              "concepts/blocklist",
+              "concepts/allowlist",
+              "concepts/watchlist",
+              "concepts/takedowns",
+              "concepts/legal-docs",
+              "concepts/metrics",
+              "concepts/security-portal"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Integrations",
+        "groups": [
+          {
+            "group": "Integrations",
+            "pages": [
+              "integration/discord",
+              "integration/telegram",
+              "integration/slack",
+              "integration/vercel",
+              "integration/intercom",
+              "integration/github",
+              "integration/canary-tokens",
+              "integration/webhooks",
+              "integration/zapier"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "External API",
+            "pages": [
+              "external-api/overview",
+              "external-api/authentication"
+            ]
+          },
+          {
+            "group": "Assets",
+            "pages": [
+              "external-api/asset-check",
+              "external-api/asset-search",
+              "external-api/asset-submit",
+              "external-api/asset-list",
+              "external-api/asset-changelog",
+              "external-api/asset-parse"
+            ]
+          },
+          {
+            "group": "Organization Assets",
+            "pages": [
+              "external-api/organization-assets-list",
+              "external-api/organization-assets-add",
+              "external-api/organization-assets-update",
+              "external-api/organization-assets-remove"
+            ]
+          },
+          {
+            "group": "Organization Asset Groups",
+            "pages": [
+              "external-api/organization-asset-groups-list",
+              "external-api/organization-asset-groups-create",
+              "external-api/organization-asset-groups-update",
+              "external-api/organization-asset-groups-delete"
+            ]
+          },
+          {
+            "group": "Reports",
+            "pages": [
+              "external-api/report-create"
+            ]
+          },
+          {
+            "group": "Organization Reports",
+            "pages": [
+              "external-api/organization-reports",
+              "external-api/organization-reports-list"
+            ]
+          },
+          {
+            "group": "Threats",
+            "pages": [
+              "external-api/threats-list",
+              "external-api/detection-list"
+            ]
+          },
+          {
+            "group": "Disputes",
+            "pages": [
+              "external-api/dispute-create"
+            ]
+          },
+          {
+            "group": "Takedowns",
+            "pages": [
+              "external-api/takedowns-list"
+            ]
+          },
+          {
+            "group": "Organization Metrics",
+            "pages": [
+              "external-api/organization-metrics",
+              "external-api/organization-metrics-list"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "JavaScript SDK",
+        "groups": [
+          {
+            "group": "@chainpatrol/sdk",
+            "pages": [
+              "sdk/overview",
+              "sdk/quickstart"
+            ]
+          },
+          {
+            "group": "API Reference",
+            "pages": [
+              {
+                "group": "ThreatDetector",
+                "pages": [
+                  "sdk/threat-detector/overview",
+                  "sdk/threat-detector/constructor",
+                  {
+                    "group": "Instance methods",
+                    "pages": [
+                      "sdk/threat-detector/instance-methods/url",
+                      "sdk/threat-detector/instance-methods/allow",
+                      "sdk/threat-detector/instance-methods/block",
+                      "sdk/threat-detector/instance-methods/ignore"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Storage",
+                "pages": [
+                  "sdk/storage/overview",
+                  "sdk/storage/browser",
+                  "sdk/storage/extension",
+                  "sdk/storage/memory"
+                ]
+              },
+              {
+                "group": "Relay",
+                "pages": [
+                  "sdk/relay/overview",
+                  {
+                    "group": "Static methods",
+                    "pages": [
+                      "sdk/relay/static-methods/send",
+                      "sdk/relay/static-methods/run",
+                      "sdk/relay/static-methods/on"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "ChainPatrolClient",
+                "pages": [
+                  "sdk/chainpatrol-client/overview",
+                  "sdk/chainpatrol-client/constructor",
+                  {
+                    "group": "Instance methods",
+                    "pages": [
+                      "sdk/chainpatrol-client/instance-methods/asset-check",
+                      "sdk/chainpatrol-client/instance-methods/asset-list",
+                      "sdk/chainpatrol-client/instance-methods/asset-submit"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Glossary",
+        "groups": [
+          {
+            "group": "Asset Types",
+            "pages": [
+              "glossary/asset-types/url",
+              "glossary/asset-types/page",
+              "glossary/asset-types/address"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://chainpatrol.com"
+  },
+  "api": {
+    "openapi": "https://app.chainpatrol.io/api/v2/openapi.json?v=2",
+    "mdx": {
+      "server": "https://app.chainpatrol.io/api/v2",
+      "auth": {
+        "method": "key",
+        "name": "X-API-KEY"
+      }
+    }
+  },
+  "appearance": {
+    "default": "dark"
+  },
+  "background": {
+    "image": "/background.png",
+    "color": {
+      "dark": "#060114"
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Blog",
+        "href": "https://chainpatrol.com/blog"
+      },
+      {
+        "label": "Changelog",
+        "href": "https://chainpatrol.com/changelog"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://app.chainpatrol.io/"
+    }
+  },
+  "footer": {
+    "socials": {
+      "twitter": "https://twitter.com/ChainPatrol",
+      "linkedin": "https://www.linkedin.com/company/89545915",
+      "github": "https://github.com/chainpatrol"
+    }
+  },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-QEBBHCD92K"
+    }
+  },
+  "fonts": {
+    "heading": {
+      "family": "IBM Plex Sans"
+    },
+    "body": {
+      "family": "Inter"
+    }
+  },
+  "redirects": [
+    {
+      "source": "/wallet-integration/false-positives",
+      "destination": "/general/false-positives"
+    },
+    {
+      "source": "/wallet-integration/check-vs-list",
+      "destination": "/integration/check-vs-list"
+    },
+    {
+      "source": "/general/discord-bot",
+      "destination": "/integration/discord"
+    },
+    {
+      "source": "/bots/discord-bot",
+      "destination": "/integration/discord"
+    },
+    {
+      "source": "/bots/telegram-bot",
+      "destination": "/integration/telegram"
+    },
+    {
+      "source": "/bots/slack-bot",
+      "destination": "/integration/slack"
+    },
+    {
+      "source": "/security-integration/canary-tokens",
+      "destination": "/integration/canary-tokens"
+    },
+    {
+      "source": "/api",
+      "destination": "/external-api"
+    },
+    {
+      "source": "/api/:slug*",
+      "destination": "/external-api/:slug*"
+    },
+    {
+      "source": "/bots/slack",
+      "destination": "/integration/slack"
+    },
+    {
+      "source": "/bots/discord",
+      "destination": "/integration/discord"
+    },
+    {
+      "source": "/bots/telegram",
+      "destination": "/integration/telegram"
+    }
+  ]
+}
