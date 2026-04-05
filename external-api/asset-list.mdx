@@ -13,6 +13,24 @@ Include your API key in the `X-API-KEY` header:
 X-API-KEY: <api-key>
 ```
 
+## Sync Strategy and Removals
+
+<Warning>
+When using time-based filtering (e.g., fetching only the last 5 minutes of blocklist data), you may miss asset removals from the blocklist. To ensure complete data consistency, use one of these approaches:
+</Warning>
+
+### Recommended Approaches
+
+1. **Monitor allowlist and unknown list for removals**: Check both the allowlist and unknown list endpoints periodically to detect assets that have been removed from the blocklist.
+
+2. **Periodic full sync**: Perform a complete sync of the full blocklist at regular intervals (e.g., hourly or daily) to catch any missed changes.
+
+3. **Hybrid approach**: Use time-based filtering for frequent updates combined with periodic full syncs for comprehensive coverage.
+
+### Why This Matters
+
+Asset status changes can move assets between different lists (blocklist, allowlist, unknown). Time-based queries on a single endpoint may not capture these transitions, potentially leaving your local cache with outdated information about blocked assets that should no longer be blocked.
+
 ## Pagination
 
 To use pagination, include the `per_page` and `next_page` parameters in your request:
