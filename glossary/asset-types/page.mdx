@@ -5,7 +5,11 @@ description: Represents a page link to be reported
 
 The `PAGE` asset type is used to report webpages on a domain. Unlike `URL` asset type, the `PAGE` asset type will NOT normalize the URL string before submitting to **Chainpatrol**.
 
-This allows you to report webpages on sites where the scam or malicious content is hosted on a subpath of the domain.
+This allows you to report webpages on sites where the scam or malicious content is hosted on a subpath of the domain, rather than the entire domain being malicious.
+
+<Info>
+Use the `PAGE` asset type for hosting platforms like *.wordpress.com, where individual pages may be malicious but blocking the entire domain would affect legitimate content. For these platforms, report the specific page URL rather than the domain.
+</Info>
 
 When you submit a report, if you submit a URL that matches one of the domains below, a `PAGE` asset will be created instead of a `URL` asset.
 
@@ -24,6 +28,7 @@ telegram.me
 tinyurl.com
 twitter.com
 beacons.ai
+wordpress.com
 ```
 
 <Note>
