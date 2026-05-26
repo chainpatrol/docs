@@ -30,3 +30,12 @@ as a free service to wallets, security apps, and marketplaces.&#x20;
 <Card title="Asset List" icon="list-check" href="/external-api/asset-list">
   Fetch our entire allowlist/blocklist for use in your own application.
 </Card>
+
+## Custom Reporting Flows
+
+If you want to build your own reporting flow for a platform we don't support yet (chat apps, internal systems, etc.) or can't use our Discord/Telegram/Slack bots, you can use ChainPatrol's public APIs to replicate the functionality:
+
+- **Asset Check API** (`/external-api/asset-check`) to check the status of domains/URLs/addresses against ChainPatrol's blocklist (e.g., to warn users about malicious links in their chat or platform)
+- **Report Create API** (`/external-api/report-create`) to submit reports into ChainPatrol from your own system, so reports still land in the ChainPatrol review queue and benefit from the full detection/review/takedown pipeline
+
+This is the recommended approach for any "we want bot-like reporting but on a platform/system you don't support" use case.
