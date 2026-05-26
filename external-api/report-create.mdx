@@ -7,6 +7,8 @@ openapi: "POST /report/create"
 
 The Report Create endpoint allows you to submit assets (URLs, domains, blockchain addresses, etc.) for review by the ChainPatrol team. This endpoint handles bulk submissions and provides detailed error reporting for validation failures.
 
+<Note>This API is commonly used to build custom reporting flows for platforms we don't support yet. Submit reports from your own chat app, internal system, or custom platform directly into ChainPatrol's review queue, where they benefit from the full detection/review/takedown pipeline.</Note>
+
 ## Error Responses
 
 ### 422 Unprocessable Content
