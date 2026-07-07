@@ -1,6 +1,6 @@
 ---
 title: "Security Portal"
-description: "Understanding your organization's public-facing threat reporting page"
+description: "Configure your organization's public Security Portal at chainpatrol.io/<slug> — visibility, public reports, metrics, brand metadata, and customization."
 ---
 
 ## Overview
@@ -110,6 +110,18 @@ The report processing flow works as follows:
 6. Asset status is updated and distributed to blocklist
 
 From there, the report goes through the same review process as any other submission.
+
+## Reading Portal Configuration via the API
+
+Each org's portal configuration is exposed on the [`POST /user/orgs`](/external-api/user-orgs-list) and [`GET /user/orgs/{slug}`](/external-api/user-orgs-get) endpoints (and on `UserOrg` in the JavaScript SDK). The response includes:
+
+- `portalVisibility` — `PUBLIC`, `PRIVATE`, or `DISABLED`, mirroring the three states above.
+- `reportVisibility` — `PUBLIC` or `PRIVATE`, matching the **Public Reports** toggle.
+- `metricsVisibility` — `PUBLIC`, `PRIVATE`, or `DISABLED`, matching the **Public Metrics** toggle.
+- `brandMetadata` — the public brand-facing fields shown on the portal (`websiteUrl`, `twitterHandle`, `securityContactEmail`, `industry`).
+- `portalCustomization` — the customer-configurable presentation (`useCustomDetails`, custom `name` / `slug` / `avatarUrl`, and `bannerEnabled` / `bannerContent`).
+
+Use these fields to audit portal setup across every org you administer without opening the dashboard.
 
 ## Key Takeaways
 
