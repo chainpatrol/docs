@@ -163,6 +163,13 @@
               "external-api/organization-metrics",
               "external-api/organization-metrics-list"
             ]
+          },
+          {
+            "group": "User",
+            "pages": [
+              "external-api/user-orgs-list",
+              "external-api/user-orgs-get"
+            ]
           }
         ]
       },

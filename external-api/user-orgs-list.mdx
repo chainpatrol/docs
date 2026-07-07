@@ -1,0 +1,189 @@
+---
+title: List User Organizations
+openapi: "POST /user/orgs"
+---
+
+## Overview
+
+List every organization the authenticated caller belongs to, along with each organization's subscription status, enabled services, integration connection status, legal documents, trademark registrations, and — most relevant to this page — the configuration for the org's public [Security Portal](/concepts/security-portal).
+
+Use this endpoint to:
+
+- Discover which organizations an API key or user session can act on.
+- Audit portal visibility, brand-facing metadata, and portal customization across every org you administer.
+- Filter the list server-side by subscription status, active services, or the "Obligatory Organization Admin Approval" setting.
+
+The organization identity is inferred from your API key or user session. User API keys and user sessions return every org the user is a member of; org-scoped API keys return the single matching org. Soft-deleted and `INACTIVE` organizations are always excluded.
+
+## Portal, brand, and customization fields
+
+Each entry in the response describes how the org's public Security Portal at `chainpatrol.io/<slug>` is configured. See the [Security Portal concept](/concepts/security-portal) for the visibility model and where these values are edited in the dashboard.
+
+### `portalVisibility`
+
+Top-level visibility of the portal.
+
+| Value      | Behavior                                                                                        |
+| ---------- | ----------------------------------------------------------------------------------------------- |
+| `PUBLIC`   | Portal is fully discoverable — metrics, listings, and the report form all render.               |
+| `PRIVATE`  | Only the report form renders. Metrics and asset listings are hidden even to authenticated users. |
+| `DISABLED` | `chainpatrol.io/<slug>` returns a 404. No portal is served.                                     |
+
+### `reportVisibility`
+
+Whether the reports list on the portal is visible to visitors. `PUBLIC` shows the org's reports; `PRIVATE` hides the report list even when the portal itself is discoverable.
+
+### `metricsVisibility`
+
+Whether the metrics and threats-blocked stats render on the portal. `PUBLIC` shows the metrics tab; `PRIVATE` hides it from anonymous visitors; `DISABLED` means metrics are not computed for this org at all.
+
+### `brandMetadata`
+
+Public brand-facing metadata that renders on the portal header and is used by ChainPatrol staff and takedown providers for outbound contact. Every field is nullable — expect gaps for orgs still in onboarding.
+
+| Field                  | Type             | Description                                                                                                     |
+| ---------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------- |
+| `websiteUrl`           | `string \| null` | Public website URL of the brand.                                                                                |
+| `twitterHandle`        | `string \| null` | Public Twitter / X handle, stored with the leading `@` (for example `@acme`).                                   |
+| `securityContactEmail` | `string \| null` | Email address for security correspondence, distinct from the internal customer POC email.                       |
+| `industry`             | `string \| null` | Free-form industry label (for example `"DeFi"`, `"CEX"`, `"NFT"`, `"Wallet"`).                                  |
+
+### `portalCustomization`
+
+Customer-configurable presentation of the portal. When `useCustomDetails` is `false` the portal uses the org's own name, slug, and avatar; when `true` the fields below override them.
+
+| Field              | Type              | Description                                                                                                                             |
+| ------------------ | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `useCustomDetails` | `boolean`         | When `true`, the portal uses `name`, `slug`, and `avatarUrl` from this object instead of the org's own values.                          |
+| `name`             | `string \| null`  | Custom display name (used only when `useCustomDetails=true`).                                                                           |
+| `slug`             | `string \| null`  | Custom URL slug (`chainpatrol.io/<slug>`). Takes precedence over the org's own slug when set, regardless of `useCustomDetails`.         |
+| `avatarUrl`        | `string \| null`  | Custom avatar URL (used only when `useCustomDetails=true`).                                                                             |
+| `bannerEnabled`    | `boolean`         | When `true`, the portal renders `bannerContent` as a highlighted banner at the top of the page.                                         |
+| `bannerContent`    | `string \| null`  | Markdown body of the portal banner. Null or empty with `bannerEnabled=true` means the toggle is on but no content has been written yet. |
+
+<Info>
+  A `bannerEnabled=true` with a null or empty `bannerContent` is a common audit finding — the banner is toggled on but never populated.
+</Info>
+
+## Example request
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/user/orgs' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -H 'Content-Type: application/json' \
+  -d '{}'
+```
+
+## Example response
+
+```json
+{
+  "organizations": [
+    {
+      "id": 42,
+      "name": "Acme Protocol",
+      "slug": "acme",
+      "avatarUrl": "https://…/acme.png",
+      "subscriptionStatus": "ACTIVE",
+      "portalVisibility": "PUBLIC",
+      "reportVisibility": "PUBLIC",
+      "metricsVisibility": "PUBLIC",
+      "brandMetadata": {
+        "websiteUrl": "https://acme.example",
+        "twitterHandle": "@acme",
+        "securityContactEmail": "security@acme.example",
+        "industry": "DeFi"
+      },
+      "portalCustomization": {
+        "useCustomDetails": false,
+        "name": null,
+        "slug": null,
+        "avatarUrl": null,
+        "bannerEnabled": true,
+        "bannerContent": "Report suspicious Acme domains here — we act within 24h."
+      },
+      "services": {
+        "reporting": { "active": true },
+        "reviewing": { "active": true },
+        "protection": { "active": true },
+        "takedowns": { "active": true, "automated": false },
+        "detection": { "active": true },
+        "darkWebMonitoring": { "active": false }
+      },
+      "obligatoryAdminApproval": false,
+      "integrations": {
+        "slack": true,
+        "discord": false,
+        "telegram": { "connected": true, "groupCount": 2 },
+        "vercel": false,
+        "intercom": false,
+        "moderation": true
+      },
+      "legalDocuments": {
+        "letterOfAuthorization": { "present": true, "fileName": "loa.pdf", "fileUrl": "https://…" },
+        "powerOfAttorney": { "present": false, "fileName": null, "fileUrl": null }
+      },
+      "trademarkRegistrations": []
+    }
+  ]
+}
+```
+
+## Use cases
+
+### Audit portal visibility across your orgs
+
+Fetch every org you have access to and group them by portal visibility to answer "which customers have a public portal?" and "which portals are turned off?".
+
+```typescript
+const res = await fetch("https://app.chainpatrol.io/api/v2/user/orgs", {
+  method: "POST",
+  headers: {
+    "X-API-KEY": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({}),
+});
+
+const { organizations } = await res.json();
+
+const byVisibility = organizations.reduce((acc, org) => {
+  (acc[org.portalVisibility] ??= []).push(org.slug);
+  return acc;
+}, {} as Record<string, string[]>);
+
+console.log(byVisibility);
+// { PUBLIC: ["acme", "beta"], PRIVATE: ["gamma"], DISABLED: ["delta"] }
+```
+
+### Find orgs missing a security contact
+
+`brandMetadata.securityContactEmail` is used by takedown providers and researchers, so surfacing empty values is a common quality check.
+
+```typescript
+const missing = organizations.filter(
+  (org) => !org.brandMetadata.securityContactEmail,
+);
+
+console.log(
+  "Orgs without a security contact:",
+  missing.map((o) => o.slug),
+);
+```
+
+### Detect orgs with a banner toggled on but empty content
+
+```typescript
+const emptyBanner = organizations.filter(
+  (org) =>
+    org.portalCustomization.bannerEnabled &&
+    !org.portalCustomization.bannerContent?.trim(),
+);
+```
+
+## Notes
+
+- The response is additive — existing integrations that don't reference the new fields continue to work unchanged.
+- `portalVisibility`, `reportVisibility`, and `metricsVisibility` are independent switches. A portal can be `PUBLIC` overall while individually hiding reports or metrics.
+- `portalCustomization.slug` takes precedence over the org's own slug whenever it is set — even if `useCustomDetails` is `false`.
+- Use [`GET /user/orgs/{slug}`](/external-api/user-orgs-get) to fetch a single org's record by slug when you already know which one you need.

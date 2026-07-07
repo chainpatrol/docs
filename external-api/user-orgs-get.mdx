@@ -1,0 +1,106 @@
+---
+title: Get User Organization
+openapi: "GET /user/orgs/{slug}"
+---
+
+## Overview
+
+Fetch a single organization by slug. Returns the same per-organization shape as [`POST /user/orgs`](/external-api/user-orgs-list), including subscription status, enabled services, integrations, legal documents, trademark registrations, and the org's public [Security Portal](/concepts/security-portal) configuration.
+
+Use this endpoint when you already know the target slug and want a single record instead of paging the full list.
+
+Access requires the caller to have permission for the org:
+
+- **Org-scoped API keys** must match the requested slug exactly.
+- **User sessions and user-scoped API keys** need an active membership on the target org (unless the caller is staff).
+
+Soft-deleted organizations are excluded.
+
+## Portal, brand, and customization fields
+
+The response includes the same portal-related fields as the list endpoint. See [`POST /user/orgs`](/external-api/user-orgs-list#portal-brand-and-customization-fields) for the full field reference and the [Security Portal concept](/concepts/security-portal) for what the visibility values mean end-to-end.
+
+At a glance:
+
+- `portalVisibility` (`PUBLIC` / `PRIVATE` / `DISABLED`) — whether the portal at `chainpatrol.io/<slug>` is discoverable, report-form-only, or 404s.
+- `reportVisibility` (`PUBLIC` / `PRIVATE`) — whether the report list is shown on the portal.
+- `metricsVisibility` (`PUBLIC` / `PRIVATE` / `DISABLED`) — whether the metrics tab is shown (and whether metrics are computed at all).
+- `brandMetadata` — nullable `websiteUrl`, `twitterHandle`, `securityContactEmail`, `industry`.
+- `portalCustomization` — `useCustomDetails`, custom `name` / `slug` / `avatarUrl`, and `bannerEnabled` / `bannerContent`.
+
+## Example request
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/user/orgs/acme' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+```typescript TypeScript
+const res = await fetch(
+  "https://app.chainpatrol.io/api/v2/user/orgs/acme",
+  {
+    method: "GET",
+    headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+  },
+);
+
+const org = await res.json();
+console.log(org.portalVisibility, org.brandMetadata.securityContactEmail);
+```
+
+## Example response
+
+```json
+{
+  "id": 42,
+  "name": "Acme Protocol",
+  "slug": "acme",
+  "avatarUrl": "https://…/acme.png",
+  "subscriptionStatus": "ACTIVE",
+  "portalVisibility": "PRIVATE",
+  "reportVisibility": "PRIVATE",
+  "metricsVisibility": "PUBLIC",
+  "brandMetadata": {
+    "websiteUrl": "https://acme.example",
+    "twitterHandle": "@acme",
+    "securityContactEmail": "security@acme.example",
+    "industry": "DeFi"
+  },
+  "portalCustomization": {
+    "useCustomDetails": true,
+    "name": "Acme Security",
+    "slug": "acme-security",
+    "avatarUrl": "https://…/acme-security.png",
+    "bannerEnabled": false,
+    "bannerContent": null
+  },
+  "services": {
+    "reporting": { "active": true },
+    "reviewing": { "active": true },
+    "protection": { "active": true },
+    "takedowns": { "active": true, "automated": true },
+    "detection": { "active": true },
+    "darkWebMonitoring": { "active": false }
+  },
+  "obligatoryAdminApproval": true,
+  "integrations": {
+    "slack": true,
+    "discord": true,
+    "telegram": { "connected": false, "groupCount": 0 },
+    "vercel": false,
+    "intercom": false,
+    "moderation": false
+  },
+  "legalDocuments": {
+    "letterOfAuthorization": { "present": true, "fileName": "loa.pdf", "fileUrl": "https://…" },
+    "powerOfAttorney": { "present": true, "fileName": "poa.pdf", "fileUrl": "https://…" }
+  },
+  "trademarkRegistrations": []
+}
+```
+
+## Notes
+
+- The `slug` in the URL path must be the org's own slug. Custom portal slugs from `portalCustomization.slug` do not resolve here.
+- The response is additive — clients that only read the pre-existing fields are unaffected by the portal, brand-metadata, and customization additions.
+- To iterate every org the caller can access, use [`POST /user/orgs`](/external-api/user-orgs-list) instead.
