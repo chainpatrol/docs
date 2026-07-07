@@ -1,6 +1,6 @@
 ---
 title: "Takedown"
-description: "How ChainPatrol removes malicious content through coordinated takedown requests"
+description: "How ChainPatrol submits, monitors, and retracts takedown requests across hosting providers, registrars, social media platforms, and app stores."
 ---
 
 ## Overview
@@ -47,6 +47,7 @@ Every takedown follows a clear lifecycle inside ChainPatrol:
 ### Alternative Outcomes
 
 - **CANCELED** - The takedown was stopped (e.g., content turned out to be invalid or unnecessary)
+- **PENDING EVIDENCE** - The takedown is paused while ChainPatrol waits on externally-supplied evidence required to proceed. Only email and phone-number takedowns can enter this state. While a takedown sits in **PENDING EVIDENCE**, no retractions, provider takedown emails, or background automations act on it — staff can move it in or out of this state from any other status. A daily job automatically cancels takedowns that stay in **PENDING EVIDENCE** for more than 21 days with an insufficient-evidence note
 - **PENDING RETRACTION** - Identified as false positive, marked for retraction but not yet sent to provider
 - **RETRACTION SENT** - Formal retraction request submitted to provider to halt or reverse the takedown
 - **RETRACTED** - Provider confirmed retraction, takedown fully stopped or reversed
