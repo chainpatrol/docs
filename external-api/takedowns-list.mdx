@@ -14,6 +14,18 @@ openapi: "POST /takedowns/list"
   pagination feature as described below.
 </Info>
 
+## Response fields
+
+Each entry in the `takedowns` array includes:
+
+- **`externalId`** (nullable) — the vendor's own reference for the takedown (for example, a CleanDNS report ID or a registrar ticket number). Use this to reconcile takedowns with your own systems and with reports pulled from the takedown provider directly.
+- **`hasFilingDelay`** / **`hasLivenessCheckDelay`** — boolean flags set by ChainPatrol staff that mark takedowns held up in filing or liveness verification. Use them to explain slow takedowns without needing internal context.
+- **`domainRegistrar`**, **`hostingProvider`**, **`tldRegistrar`** — `{ id, name }` objects (nullable) describing the entities responsible for the asset being taken down. These are exposed at the takedown level and are distinct from the per-task `takedownProvider` on `tasks[]`.
+- **`asset.livenessStatus`** — whether the asset is currently reachable (`ALIVE`), gone (`DEAD`), or hasn't been checked (`UNKNOWN`). `null` when liveness has never been evaluated.
+- **`asset.blockedAt`** — timestamp when the asset transitioned to `BLOCKED`. `null` for non-blocked assets or blocks that predate the field.
+
+All fields are additive — existing integrations continue to work unchanged.
+
 ## Pagination
 
 To use pagination, include the `per_page` and `next_page` parameters in your request:

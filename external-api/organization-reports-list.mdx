@@ -111,7 +111,13 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
           "reason": "phishing",
           "createdAt": "2024-01-15T10:30:00.000Z"
         }
-      ]
+      ],
+      "slaDueAt": "2024-01-16T10:30:00.000Z",
+      "externalSubmissionLink": "https://discord.com/channels/123/456/789",
+      "duplicateOfId": null,
+      "imageDisplay": "PREVIEW",
+      "favoritedAt": null,
+      "attachments": []
     }
   ],
   "cursor": "next_page_cursor_string"
@@ -120,15 +126,23 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
 
 ### Response Fields
 
-| Field                      | Type   | Description                                                              |
-| -------------------------- | ------ | ------------------------------------------------------------------------ |
-| reports                    | array  | Array of report objects for your organization                            |
-| reports[].id               | string | Unique identifier for the report                                         |
-| reports[].createdAt        | string | ISO 8601 timestamp when the report was created                           |
-| reports[].status           | string | Overall status of the report (PENDING, APPROVED, REJECTED)               |
-| reports[].assets           | array  | Array of assets included in the report                                   |
-| reports[].proposals        | array  | Array of proposals associated with the report                            |
-| cursor                     | string | Cursor for the next page of results (undefined if no more results)       |
+| Field                              | Type             | Description                                                                                                                                                       |
+| ---------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| reports                            | array            | Array of report objects for your organization                                                                                                                     |
+| reports[].id                       | string           | Unique identifier for the report                                                                                                                                  |
+| reports[].createdAt                | string           | ISO 8601 timestamp when the report was created                                                                                                                    |
+| reports[].status                   | string           | Overall status of the report (PENDING, APPROVED, REJECTED)                                                                                                        |
+| reports[].assets                   | array            | Array of assets included in the report                                                                                                                            |
+| reports[].proposals                | array            | Array of proposals associated with the report. Each proposal exposes its nested `asset.scans[]` metadata for callers that need scan history alongside the proposal. |
+| reports[].slaDueAt                 | string \| null   | ISO 8601 SLA deadline for the report. Use this to identify reports that are late without making a second healthcheck call.                                        |
+| reports[].externalSubmissionLink   | string \| null   | Original external source URL (for example, a Discord message, X/Twitter post, or forwarded webform) when the report was submitted from a third-party surface.    |
+| reports[].duplicateOfId            | string \| null   | ID of the canonical report when this report is a duplicate. Group reports by this field to dedupe counts.                                                        |
+| reports[].imageDisplay             | string           | How the report's images should be displayed in downstream UIs.                                                                                                    |
+| reports[].favoritedAt              | string \| null   | ISO 8601 timestamp when the report was favorited by a reviewer. `null` when it isn't favorited.                                                                   |
+| reports[].attachments              | array            | Attachments uploaded with the report (screenshots, evidence files, etc.).                                                                                         |
+| cursor                             | string           | Cursor for the next page of results (undefined if no more results)                                                                                                |
+
+All new fields are additive — existing integrations continue to work unchanged.
 
 ## Pagination
 

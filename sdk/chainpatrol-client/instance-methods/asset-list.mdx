@@ -1,6 +1,6 @@
 ---
 title: "asset.list"
-description: "Retrieve lists of assets with filtering options"
+description: "Retrieve paginated lists of ChainPatrol assets filtered by type, status, and date range, including watch status, liveness, and blocked-at timestamps."
 ---
 
 The `asset.list` method allows you to retrieve bulk lists of assets that ChainPatrol has reviewed, with powerful filtering options by type, status, and date range. This method is ideal for bulk analysis and reporting.
@@ -54,6 +54,10 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
   Array of asset objects matching the filter criteria.
 
   <Expandable title="Asset Object Properties">
+    <ResponseField name="id" type="number" required>
+      Unique numeric identifier for the asset. Use it to reference the asset in follow-up calls such as `asset.search`.
+    </ResponseField>
+
     <ResponseField name="type" type="enum<string>" required>
       The type of the asset: `URL`, `PAGE`, or `ADDRESS`.
     </ResponseField>
@@ -66,6 +70,18 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
 
     <ResponseField name="status" type="enum<string>" required>
       The threat status: `UNKNOWN`, `ALLOWED`, or `BLOCKED`.
+    </ResponseField>
+
+    <ResponseField name="watchStatus" type="enum<string>" required>
+      Whether ChainPatrol is actively monitoring the asset: `ENABLED` or `DISABLED`.
+    </ResponseField>
+
+    <ResponseField name="livenessStatus" type="enum<string> | null" required>
+      Whether the asset is currently reachable (`ALIVE`), gone (`DEAD`), or has never been checked (`UNKNOWN`). `null` when liveness has never been evaluated. Use this to filter out dead assets without an extra request.
+    </ResponseField>
+
+    <ResponseField name="blockedAt" type="string | null" required>
+      ISO 8601 timestamp of when the asset transitioned to `BLOCKED`. `null` for non-blocked assets or for blocks that predate this field. Distinct from `updatedAt`, which changes on any mutation.
     </ResponseField>
 
     <ResponseField name="updatedAt" type="string" required>
@@ -145,15 +161,23 @@ result.assets.forEach(asset => {
 {
   "assets": [
     {
+      "id": 90123,
       "type": "URL",
       "content": "phishing-site.com",
       "status": "BLOCKED",
+      "watchStatus": "ENABLED",
+      "livenessStatus": "ALIVE",
+      "blockedAt": "2023-06-15T10:30:00.000Z",
       "updatedAt": "2023-06-15T10:30:00.000Z"
     },
     {
+      "id": 90124,
       "type": "URL",
       "content": "scam-airdrop.net",
       "status": "BLOCKED",
+      "watchStatus": "ENABLED",
+      "livenessStatus": "DEAD",
+      "blockedAt": "2023-06-14T15:45:00.000Z",
       "updatedAt": "2023-06-14T15:45:00.000Z"
     }
   ]
