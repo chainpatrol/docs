@@ -13,6 +13,16 @@ Include your API key in the `X-API-KEY` header:
 X-API-KEY: <api-key>
 ```
 
+## Response fields
+
+Each entry in the `assets` array includes:
+
+- **`id`** — the asset's unique numeric identifier. Use this to reference the asset in follow-up calls to endpoints like `POST /asset/search`.
+- **`livenessStatus`** — whether the asset is currently reachable (`ALIVE`), gone (`DEAD`), or has never been checked (`UNKNOWN`). `null` when liveness has never been evaluated. Use this to skip dead assets without an extra call.
+- **`blockedAt`** — ISO 8601 timestamp of when the asset transitioned to `BLOCKED`. `null` for non-blocked assets or for blocks that predate this field. Distinct from `updatedAt`, which changes on any mutation.
+
+Existing fields (`content`, `type`, `status`, `watchStatus`, `updatedAt`) are unchanged.
+
 ## Sync Strategy and Removals
 
 <Warning>

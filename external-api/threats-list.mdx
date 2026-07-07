@@ -129,12 +129,13 @@ The `assetType` parameter accepts an array of asset types to filter by:
 
 Each item in the `threats` array has the following structure:
 
-| Field       | Type     | Description                                   |
-| ----------- | -------- | --------------------------------------------- |
-| `id`        | `number` | Unique threat identifier                      |
-| `content`   | `string` | Threat content (URL, address, username, etc.) |
-| `type`      | `string` | Asset type (AssetType enum value)             |
-| `blockedAt` | `string` | ISO 8601 timestamp of when asset was blocked  |
+| Field            | Type             | Description                                                                                                                                              |
+| ---------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`             | `number`         | Unique threat identifier                                                                                                                                 |
+| `content`        | `string`         | Threat content (URL, address, username, etc.)                                                                                                            |
+| `type`           | `string`         | Asset type (AssetType enum value)                                                                                                                        |
+| `livenessStatus` | `string \| null` | Whether the threat is currently reachable (`ALIVE`), gone (`DEAD`), or has never been checked (`UNKNOWN`). `null` when liveness has never been evaluated. Use this to filter out dead threats without a follow-up call. |
+| `blockedAt`      | `string`         | ISO 8601 timestamp of when asset was blocked                                                                                                             |
 
 ### Complete Response Example
 
@@ -145,18 +146,21 @@ Each item in the `threats` array has the following structure:
       "id": 12345,
       "content": "https://fake-site.com",
       "type": "URL",
+      "livenessStatus": "ALIVE",
       "blockedAt": "2024-01-15T10:30:00.000Z"
     },
     {
       "id": 12346,
       "content": "eip155:1:0x1234567890123456789012345678901234567890",
       "type": "ADDRESS",
+      "livenessStatus": null,
       "blockedAt": "2024-01-15T09:15:00.000Z"
     },
     {
       "id": 12347,
       "content": "twitter.com/fake_account",
       "type": "TWITTER",
+      "livenessStatus": "DEAD",
       "blockedAt": "2024-01-15T08:45:00.000Z"
     }
   ],
@@ -255,6 +259,7 @@ interface ThreatResult {
   id: number;
   content: string;
   type: string;
+  livenessStatus: "UNKNOWN" | "ALIVE" | "DEAD" | null;
   blockedAt: string;
 }
 

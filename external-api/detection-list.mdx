@@ -205,15 +205,20 @@ Each filter object must have the following structure:
 
 Each item in the `detections` array has the following structure:
 
-| Field           | Type          | Description                                               |
-| --------------- | ------------- | --------------------------------------------------------- |
-| `id`            | `number`      | Unique threat detection result identifier                 |
-| `threatContent` | `string`      | Content that was detected as threatening                  |
-| `source`        | `string`      | Source of the threat detection (ThreatDetectionSourceKey) |
-| `createdAt`     | `string`      | ISO 8601 timestamp of when threat was detected            |
-| `confidence`    | `string`      | Confidence level: "none", "low", "medium", or "high"      |
-| `reportStatus`  | `string`      | Report status: "REPORTED" or "NOT_REPORTED"               |
-| `asset`         | `AssetObject` | Associated asset information                              |
+| Field           | Type              | Description                                                                                                                                                                             |
+| --------------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`            | `number`          | Unique threat detection result identifier                                                                                                                                               |
+| `threatContent` | `string`          | Content that was detected as threatening                                                                                                                                                |
+| `source`        | `string`          | Source of the threat detection (ThreatDetectionSourceKey)                                                                                                                               |
+| `createdAt`     | `string`          | ISO 8601 timestamp of when threat was detected                                                                                                                                          |
+| `confidence`    | `string`          | Confidence level: `"none"`, `"low"`, `"medium"`, or `"high"`. Bucketed from `score` using your organization's thresholds.                                                                |
+| `score`         | `number`          | Raw model score in the range `0`–`1`. Use this when you need a finer-grained signal than the bucketed `confidence`.                                                                     |
+| `reason`        | `string \| null`  | Free-text explanation of why the detection fired (for example, `"matches brand-name typo squat"` or `"TLS cert issued by known lookalike CA"`). Read this before deciding how to act on a hit. |
+| `configId`      | `number \| null`  | ID of the `ThreatDetectionConfig` that produced the hit. Pair with `GET /detection-configs/list` to look up the originating config.                                                     |
+| `reportStatus`  | `string`          | Report status: `"REPORTED"` or `"NOT_REPORTED"`                                                                                                                                         |
+| `reportedAt`    | `string \| null`  | ISO 8601 timestamp of the transition to `REPORTED`. `null` when the detection has not been reported.                                                                                    |
+| `brands`        | `Brand[]`         | Brand associations for the detection (each entry has at least `id`, `name`, and `slug`). Empty array when no brand match is available.                                                  |
+| `asset`         | `AssetObject`     | Associated asset information                                                                                                                                                            |
 
 ### Asset Object
 
@@ -235,7 +240,12 @@ Each item in the `detections` array has the following structure:
       "source": "GOOGLE_SEARCH",
       "createdAt": "2024-01-15T10:30:00Z",
       "confidence": "high",
+      "score": 0.94,
+      "reason": "Matches brand-name typo squat",
+      "configId": 42,
       "reportStatus": "REPORTED",
+      "reportedAt": "2024-01-15T10:32:00Z",
+      "brands": [{ "id": 7, "name": "Acme", "slug": "acme" }],
       "asset": {
         "id": 67890,
         "content": "https://fake-site.com",
@@ -249,7 +259,12 @@ Each item in the `detections` array has the following structure:
       "source": "EXTERNAL",
       "createdAt": "2024-01-15T09:15:00Z",
       "confidence": "medium",
+      "score": 0.62,
+      "reason": null,
+      "configId": null,
       "reportStatus": "NOT_REPORTED",
+      "reportedAt": null,
+      "brands": [],
       "asset": {
         "id": 67891,
         "content": "0x1234567890123456789012345678901234567890",
