@@ -84,6 +84,12 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
 | startDate    | string  | No       | Filter reports created after this date (ISO 8601 format)                                              |
 | endDate      | string  | No       | Filter reports created before this date (ISO 8601 format)                                             |
 | onlyRejected | boolean | No       | If true, only return reports with rejected proposals (default: false)                                 |
+| reporterKind | string  | No       | Filter by the reporter (submitter). One of `human` or `automation`.                                   |
+| reviewerKind | string  | No       | Filter by the reviewer that approved the report. One of `human` or `automation`.                      |
+
+<Note>
+  The legacy `excludeAutomation` boolean is deprecated and kept as a backward-compatible alias for `reporterKind=human`. Prefer `reporterKind` in new integrations.
+</Note>
 
 ## Response
 
@@ -236,6 +242,24 @@ Get rejected reports from a specific date range:
 
 ```bash
 curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?startDate=2024-01-01T00:00:00Z&endDate=2024-03-31T23:59:59Z&onlyRejected=true&limit=100' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+### Filter by Reporter or Reviewer
+
+Use `reporterKind` and `reviewerKind` to separate reports submitted or approved by human users from those handled by ChainPatrol Automation. This is useful for measuring automation performance or exporting only human-driven activity.
+
+Get only reports submitted by human reporters:
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?reporterKind=human' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+Get reports that were approved by ChainPatrol Automation:
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?reviewerKind=automation' \
   -H 'X-API-KEY: YOUR_API_KEY_HERE'
 ```
 
