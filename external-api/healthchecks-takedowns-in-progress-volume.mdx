@@ -1,0 +1,12 @@
+---
+title: IN_PROGRESS Takedown Volume
+openapi: "POST /healthchecks/takedowns/in-progress-volume"
+---
+
+## Overview
+
+Counts takedowns currently `IN_PROGRESS` for the organization, regardless of age. This
+complements the
+[staleness check](/external-api/healthchecks-takedowns-stale-in-progress), which only
+flags items past a staleness threshold — a high overall pile-up signals
+submission-format or vendor-side issues even when individual items are not yet stale.

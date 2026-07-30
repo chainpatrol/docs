@@ -1,0 +1,22 @@
+---
+title: Get Blocklist Version
+openapi: "GET /asset/blocklist/version"
+---
+
+## Overview
+
+Returns metadata for the current blocklist snapshot and the recent-additions feed —
+tokens, counts, and absolute CDN URLs — along with the canonicalization algorithm
+version. The browser extension uses this endpoint to discover and cache blocklist
+artifacts.
+
+## How blocklist sync works
+
+The blocklist is distributed as hashed expression prefixes so clients never have to
+download the full list of blocked content:
+
+1. Call this endpoint to get the current `algoVersion` and the snapshot / recent feed URLs.
+2. Download the artifacts from the returned CDN URLs and store the prefixes locally.
+3. When a local prefix matches, call
+   [Confirm Blocklist Prefix Matches](/external-api/asset-blocklist-confirm) to resolve
+   the true positives.
