@@ -1,0 +1,10 @@
+---
+title: Automated Takedowns Disabled
+openapi: "POST /healthchecks/takedowns/automation-off"
+---
+
+## Overview
+
+Flags organizations where the takedown service is enabled but automated takedowns have
+been off for longer than the configured age threshold (warn at 30 days, fail at 60 days
+by default). Organizations without the takedown service enabled at all are excluded.

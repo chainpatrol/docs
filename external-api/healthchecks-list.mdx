@@ -1,0 +1,15 @@
+---
+title: List Healthchecks
+openapi: "POST /healthchecks/list"
+---
+
+## Overview
+
+Return the registry of healthchecks ChainPatrol exposes today, including planned checks
+that are not yet implemented on the backend. Iterate this list and only call endpoints
+where `implemented` is true.
+
+<Info>
+  Every healthcheck returns the same uniform result shape, so you can call them in a loop
+  and grade the responses with shared code.
+</Info>

@@ -1,0 +1,17 @@
+---
+title: Confirm Blocklist Prefix Matches
+openapi: "POST /asset/blocklist/confirm"
+---
+
+## Overview
+
+Given a list of 4-byte (8-hex-character) hash prefixes and the algorithm version,
+returns the full SHA-256 hashes of blocked expressions whose prefixes match, grouped by
+prefix. The browser extension uses this endpoint to resolve true positives after a local
+prefix hit.
+
+<Info>
+  Get the current `algoVersion` and the prefix artifacts from
+  [Get Blocklist Version](/external-api/asset-blocklist-version) before calling this
+  endpoint.
+</Info>
