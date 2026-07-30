@@ -1,0 +1,8 @@
+---
+title: Dead Asset Spike
+openapi: "POST /healthchecks/assets/dead-asset-spike"
+---
+
+## Overview
+
+Compares recently detected dead assets against the baseline rate from the prior period. Severity only fires once the current count clears `minSpikeCount`, so organizations with near-zero baseline activity don't produce noise.

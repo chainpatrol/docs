@@ -7,12 +7,13 @@ We work with leading wallets and security to block scam links, contract addresse
 wallet addresses before a user interacts with the scam. ChainPatrol's APIs are offered
 as a free service to wallets, security apps, and marketplaces.&#x20;
 
-Every endpoint below is available at `https://app.chainpatrol.io/api/v2` and needs an
-API key — see [Authentication](/external-api/authentication).
+Every endpoint below lives under `https://app.chainpatrol.io/api/v2` and needs an API
+key — see [Authentication](/external-api/authentication). This page indexes the whole
+API; the sidebar has the same endpoints grouped the same way.
 
 ## Start here
 
-The endpoints most integrations begin with. Everything else is grouped below.
+The endpoints most integrations begin with.
 
 <CardGroup cols={2}>
   <Card title="Report Create" icon="flag" href="/external-api/report-create">
@@ -58,6 +59,37 @@ The endpoints most integrations begin with. Everything else is grouped below.
   <Card title="Asset Parse" icon="scissors" href="/external-api/asset-parse">
     Parse raw content into normalized assets and their types.
   </Card>
+
+  <Card title="Asset Details" icon="circle-info" href="/external-api/asset-details">
+    Fetch the full record we hold for one asset.
+  </Card>
+
+  <Card title="Asset Unblock" icon="lock-open" href="/external-api/asset-unblock">
+    Unblock your own asset, or raise a dispute for someone else's.
+  </Card>
+
+  <Card title="Asset Scan" icon="magnifying-glass-chart" href="/external-api/asset-scan">
+    Start a scan, optionally with a webhook callback.
+  </Card>
+
+  <Card title="Get Scan Results" icon="file-magnifying-glass" href="/external-api/scan-result">
+    Fetch a completed scan by scan ID.
+  </Card>
+</CardGroup>
+
+## Blocklist sync
+
+For clients that keep a local copy of the blocklist, such as browser extensions, and
+resolve hits without sending us the URL a user visited.
+
+<CardGroup cols={2}>
+  <Card title="Blocklist Version" icon="code-branch" href="/external-api/blocklist-version">
+    Discover the current blocklist snapshot, feed metadata, and CDN URLs.
+  </Card>
+
+  <Card title="Blocklist Confirm" icon="fingerprint" href="/external-api/blocklist-confirm">
+    Resolve 4-byte hash prefixes to full hashes after a local prefix hit.
+  </Card>
 </CardGroup>
 
 ## Reports
@@ -67,12 +99,20 @@ The endpoints most integrations begin with. Everything else is grouped below.
     File a report against a scam.
   </Card>
 
+  <Card title="Search Reports" icon="magnifying-glass" href="/external-api/reports-search">
+    Check whether a report already exists for an asset.
+  </Card>
+
   <Card
     title="List Organization Reports"
     icon="rectangle-list"
     href="/external-api/organization-reports-list"
   >
     List the reports submitted for your organization, with filtering and pagination.
+  </Card>
+
+  <Card title="Dispute Create" icon="comment-dots" href="/external-api/dispute-create">
+    Create a dispute for an asset that has been incorrectly flagged.
   </Card>
 </CardGroup>
 
@@ -112,7 +152,7 @@ The endpoints most integrations begin with. Everything else is grouped below.
   </Card>
 </CardGroup>
 
-## Organization asset groups
+## Organization asset groups and brands
 
 <CardGroup cols={2}>
   <Card
@@ -146,9 +186,17 @@ The endpoints most integrations begin with. Everything else is grouped below.
   >
     Delete an asset group.
   </Card>
+
+  <Card
+    title="List Organization Brands"
+    icon="copyright"
+    href="/external-api/organization-brands-list"
+  >
+    List your parent, product, and individual brands with their configuration.
+  </Card>
 </CardGroup>
 
-## Threats and takedowns
+## Threats and detection
 
 <CardGroup cols={2}>
   <Card title="List Threats" icon="triangle-exclamation" href="/external-api/threats-list">
@@ -159,12 +207,44 @@ The endpoints most integrations begin with. Everything else is grouped below.
     List raw threat detection results, before review.
   </Card>
 
-  <Card title="Takedowns List" icon="gavel" href="/external-api/takedowns-list">
-    List individual takedown records and their status.
+  <Card
+    title="List Detection Configs"
+    icon="sliders"
+    href="/external-api/detection-configs-list"
+  >
+    List detection sources and their per-source configuration.
   </Card>
 
-  <Card title="Dispute Create" icon="comment-dots" href="/external-api/dispute-create">
-    Create a dispute for an asset that has been incorrectly flagged.
+  <Card
+    title="Update Detection Config"
+    icon="pen"
+    href="/external-api/detection-configs-update"
+  >
+    Change a config's status, schedule, or source-specific fields.
+  </Card>
+
+  <Card title="Run Detection Configs" icon="play" href="/external-api/detection-configs-run">
+    Run configs on demand instead of waiting for the schedule.
+  </Card>
+
+  <Card
+    title="Validate Detection Configs"
+    icon="circle-check"
+    href="/external-api/detection-configs-validate"
+  >
+    Catch configs that have gone silent.
+  </Card>
+
+  <Card title="Detection Drift" icon="chart-mixed" href="/external-api/detection-drift">
+    Surface zero-result, noisy-source, and stale-query drift signals.
+  </Card>
+</CardGroup>
+
+## Takedowns
+
+<CardGroup cols={2}>
+  <Card title="Takedowns List" icon="gavel" href="/external-api/takedowns-list">
+    List individual takedown records and their status.
   </Card>
 </CardGroup>
 
@@ -176,12 +256,85 @@ The endpoints most integrations begin with. Everything else is grouped below.
     icon="chart-line"
     href="/external-api/organization-metrics-list"
   >
-    Fetch reporting, review, blocklist, and takedown metrics for your organization.
+    Reporting, review, blocklist, and takedown metrics for your organization.
+  </Card>
+
+  <Card title="Metrics Summary" icon="chart-simple" href="/external-api/metrics-summary">
+    Customer-facing metrics and blocked-threat breakdowns for a date range.
+  </Card>
+
+  <Card title="Found Threats Count" icon="hashtag" href="/external-api/metrics-found">
+    The default `found` metric: customer-facing new threats.
+  </Card>
+
+  <Card title="Metrics Breakdown" icon="chart-column" href="/external-api/metrics-breakdown">
+    Blocked threat counts grouped by day, asset type, or brand.
+  </Card>
+</CardGroup>
+
+## Operations and healthchecks
+
+<CardGroup cols={2}>
+  <Card
+    title="Queues Snapshot"
+    icon="layer-group"
+    href="/external-api/operations-queues-snapshot"
+  >
+    Pending review and takedown queue state with SLA and age buckets.
+  </Card>
+
+  <Card title="List Healthchecks" icon="stethoscope" href="/external-api/healthchecks-list">
+    The registry of healthchecks, including which are implemented.
+  </Card>
+</CardGroup>
+
+Each healthcheck grades one signal as ok / warn / fail against configurable thresholds:
+
+- [Reviewing Backlog](/external-api/healthchecks-reviewing-backlog) — proposals piling up in review
+- [Old Proposals In Review](/external-api/healthchecks-reviewing-old-proposals) — proposals waiting too long
+- [Takedowns TODO Volume](/external-api/healthchecks-takedowns-todo-volume) — takedowns not yet filed
+- [Takedowns In-Progress Volume](/external-api/healthchecks-takedowns-in-progress-volume) — filed takedowns piling up
+- [Stale In-Progress Takedowns](/external-api/healthchecks-takedowns-stale-in-progress) — takedowns stuck past the staleness threshold
+- [Cancelled Takedowns Count](/external-api/healthchecks-takedowns-cancelled-count) — excess cancellations over a rolling window
+- [Takedown Automation Off](/external-api/healthchecks-takedowns-automation-off) — automation disabled for too long
+- [Silent Detection Configs](/external-api/healthchecks-detections-silent-configs) — enabled configs producing no results
+- [Dead Asset Spike](/external-api/healthchecks-assets-dead-asset-spike) — spike in recently dead assets
+- [Missing Contact URL](/external-api/healthchecks-organization-missing-contact-url) — no main communication channel configured
+
+## Account and access
+
+<CardGroup cols={2}>
+  <Card title="Validate API Key" icon="key" href="/external-api/validate">
+    Check whether an API key is valid.
+  </Card>
+
+  <Card title="Get Current User" icon="user" href="/external-api/user-me">
+    Details of the user your credentials belong to.
+  </Card>
+
+  <Card title="Update Current User" icon="user-pen" href="/external-api/user-me-update">
+    Update the authenticated user's profile and settings.
+  </Card>
+
+  <Card title="List Organizations" icon="building" href="/external-api/user-orgs">
+    Organizations you can access, with services, integrations, and settings.
+  </Card>
+
+  <Card title="Get Organization" icon="building-shield" href="/external-api/user-org-get">
+    Fetch a single organization by slug.
+  </Card>
+</CardGroup>
+
+## Webhooks
+
+<CardGroup cols={2}>
+  <Card title="Configure Webhook" icon="webhook" href="/external-api/webhook-config">
+    Receive real-time asset status updates and threat detections.
   </Card>
 </CardGroup>
 
 <Note>
-  Two endpoints are kept for backwards compatibility and should not be used in new
+  Two endpoints remain for backwards compatibility and should not be used in new
   integrations: [Get Organization Reports
   (Deprecated)](/external-api/organization-reports) and [Get Organization Metrics
   (Deprecated)](/external-api/organization-metrics). Use the `GET` equivalents linked

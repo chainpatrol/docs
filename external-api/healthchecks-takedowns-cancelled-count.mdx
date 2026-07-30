@@ -1,0 +1,8 @@
+---
+title: Cancelled Takedowns Count
+openapi: "POST /healthchecks/takedowns/cancelled-count"
+---
+
+## Overview
+
+Counts transitions into `CANCELLED` within a rolling window. Cancellations should be rare, so a high count usually means a quality problem in the proposal funnel or misuse of the status.

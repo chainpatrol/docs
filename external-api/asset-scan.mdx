@@ -1,0 +1,8 @@
+---
+title: Asset Scan
+openapi: "POST /asset/scan"
+---
+
+## Overview
+
+Start a scan for an asset. Pass an organization slug to include brand impersonation detection, and a callback URL to receive the results by webhook when the scan finishes. Use [Get Scan Results](/external-api/scan-result) to fetch results by scan ID instead of waiting on a callback.

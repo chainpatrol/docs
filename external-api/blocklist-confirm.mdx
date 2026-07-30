@@ -1,0 +1,8 @@
+---
+title: Blocklist Confirm
+openapi: "POST /asset/blocklist/confirm"
+---
+
+## Overview
+
+Given a list of 4-byte (8-hex-character) hash prefixes and the algorithm version, return the full SHA-256 hashes of blocked expressions whose prefixes match, grouped by prefix. This resolves true positives after a local prefix hit, so a client never has to send the URL a user visited.

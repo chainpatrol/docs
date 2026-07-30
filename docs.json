@@ -104,7 +104,18 @@
               "external-api/asset-submit",
               "external-api/asset-list",
               "external-api/asset-changelog",
-              "external-api/asset-parse"
+              "external-api/asset-parse",
+              "external-api/asset-details",
+              "external-api/asset-scan",
+              "external-api/scan-result",
+              "external-api/asset-unblock"
+            ]
+          },
+          {
+            "group": "Blocklist Sync",
+            "pages": [
+              "external-api/blocklist-version",
+              "external-api/blocklist-confirm"
             ]
           },
           {
@@ -126,9 +137,16 @@
             ]
           },
           {
+            "group": "Organization Brands",
+            "pages": [
+              "external-api/organization-brands-list"
+            ]
+          },
+          {
             "group": "Reports",
             "pages": [
-              "external-api/report-create"
+              "external-api/report-create",
+              "external-api/reports-search"
             ]
           },
           {
@@ -142,7 +160,12 @@
             "group": "Threats",
             "pages": [
               "external-api/threats-list",
-              "external-api/detection-list"
+              "external-api/detection-list",
+              "external-api/detection-configs-list",
+              "external-api/detection-configs-update",
+              "external-api/detection-configs-run",
+              "external-api/detection-configs-validate",
+              "external-api/detection-drift"
             ]
           },
           {
@@ -161,7 +184,48 @@
             "group": "Organization Metrics",
             "pages": [
               "external-api/organization-metrics",
-              "external-api/organization-metrics-list"
+              "external-api/organization-metrics-list",
+              "external-api/metrics-summary",
+              "external-api/metrics-found",
+              "external-api/metrics-breakdown"
+            ]
+          },
+          {
+            "group": "Operations",
+            "pages": [
+              "external-api/operations-queues-snapshot"
+            ]
+          },
+          {
+            "group": "Healthchecks",
+            "pages": [
+              "external-api/healthchecks-list",
+              "external-api/healthchecks-reviewing-backlog",
+              "external-api/healthchecks-reviewing-old-proposals",
+              "external-api/healthchecks-takedowns-todo-volume",
+              "external-api/healthchecks-takedowns-in-progress-volume",
+              "external-api/healthchecks-takedowns-stale-in-progress",
+              "external-api/healthchecks-takedowns-cancelled-count",
+              "external-api/healthchecks-takedowns-automation-off",
+              "external-api/healthchecks-detections-silent-configs",
+              "external-api/healthchecks-assets-dead-asset-spike",
+              "external-api/healthchecks-organization-missing-contact-url"
+            ]
+          },
+          {
+            "group": "Account & Access",
+            "pages": [
+              "external-api/validate",
+              "external-api/user-me",
+              "external-api/user-me-update",
+              "external-api/user-orgs",
+              "external-api/user-org-get"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "external-api/webhook-config"
             ]
           }
         ]
