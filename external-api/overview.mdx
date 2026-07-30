@@ -7,26 +7,183 @@ We work with leading wallets and security to block scam links, contract addresse
 wallet addresses before a user interacts with the scam. ChainPatrol's APIs are offered
 as a free service to wallets, security apps, and marketplaces.&#x20;
 
-<Card title="Report create" icon="flag" href="/external-api/report-create">
-  File a report against a scam.
-</Card>
+Every endpoint below is available at `https://app.chainpatrol.io/api/v2` and needs an
+API key — see [Authentication](/external-api/authentication).
 
-<Card
-  title="Dispute Create"
-  icon="comment-dots"
-  href="/external-api/dispute-create"
->
-  Create a dispute for an asset that has been incorrectly flagged.
-</Card>
+## Start here
 
-<Card title="Asset Changelog" icon="book" href="/external-api/asset-changelog">
-  Fetch the latest changes to our allowlist/blocklist.
-</Card>
+The endpoints most integrations begin with. Everything else is grouped below.
 
-<Card title="Asset Check" icon="shield-check" href="/external-api/asset-check">
-  Check if an asset is allowed or blocked.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Report Create" icon="flag" href="/external-api/report-create">
+    File a report against a scam.
+  </Card>
 
-<Card title="Asset List" icon="list-check" href="/external-api/asset-list">
-  Fetch our entire allowlist/blocklist for use in your own application.
-</Card>
+  <Card title="Asset Check" icon="shield-check" href="/external-api/asset-check">
+    Check if an asset is allowed or blocked.
+  </Card>
+
+  <Card title="Asset List" icon="list-check" href="/external-api/asset-list">
+    Fetch our entire allowlist/blocklist for use in your own application.
+  </Card>
+
+  <Card title="Asset Changelog" icon="book" href="/external-api/asset-changelog">
+    Fetch the latest changes to our allowlist/blocklist.
+  </Card>
+</CardGroup>
+
+## Assets
+
+<CardGroup cols={2}>
+  <Card title="Asset Check" icon="shield-check" href="/external-api/asset-check">
+    Check whether a single asset is allowed or blocked.
+  </Card>
+
+  <Card title="Asset Search" icon="magnifying-glass" href="/external-api/asset-search">
+    Search our allowlist/blocklist for assets matching a query.
+  </Card>
+
+  <Card title="Asset Submit" icon="paper-plane" href="/external-api/asset-submit">
+    Submit assets for scanning and review.
+  </Card>
+
+  <Card title="Asset List" icon="list-check" href="/external-api/asset-list">
+    Fetch our entire allowlist/blocklist.
+  </Card>
+
+  <Card title="Asset Changelog" icon="book" href="/external-api/asset-changelog">
+    Fetch the latest changes to our allowlist/blocklist.
+  </Card>
+
+  <Card title="Asset Parse" icon="scissors" href="/external-api/asset-parse">
+    Parse raw content into normalized assets and their types.
+  </Card>
+</CardGroup>
+
+## Reports
+
+<CardGroup cols={2}>
+  <Card title="Report Create" icon="flag" href="/external-api/report-create">
+    File a report against a scam.
+  </Card>
+
+  <Card
+    title="List Organization Reports"
+    icon="rectangle-list"
+    href="/external-api/organization-reports-list"
+  >
+    List the reports submitted for your organization, with filtering and pagination.
+  </Card>
+</CardGroup>
+
+## Organization assets
+
+<CardGroup cols={2}>
+  <Card
+    title="List Organization Assets"
+    icon="rectangle-list"
+    href="/external-api/organization-assets-list"
+  >
+    List the official assets registered to your organization.
+  </Card>
+
+  <Card
+    title="Add Organization Assets"
+    icon="plus"
+    href="/external-api/organization-assets-add"
+  >
+    Register official assets for your organization.
+  </Card>
+
+  <Card
+    title="Update Organization Asset"
+    icon="pen"
+    href="/external-api/organization-assets-update"
+  >
+    Update an official asset on your organization.
+  </Card>
+
+  <Card
+    title="Remove Organization Asset"
+    icon="trash"
+    href="/external-api/organization-assets-remove"
+  >
+    Remove an official asset from your organization.
+  </Card>
+</CardGroup>
+
+## Organization asset groups
+
+<CardGroup cols={2}>
+  <Card
+    title="List Asset Groups"
+    icon="rectangle-list"
+    href="/external-api/organization-asset-groups-list"
+  >
+    List your organization's asset groups.
+  </Card>
+
+  <Card
+    title="Create Asset Group"
+    icon="plus"
+    href="/external-api/organization-asset-groups-create"
+  >
+    Create a new asset group.
+  </Card>
+
+  <Card
+    title="Update Asset Group"
+    icon="pen"
+    href="/external-api/organization-asset-groups-update"
+  >
+    Rename or re-scope an existing asset group.
+  </Card>
+
+  <Card
+    title="Delete Asset Group"
+    icon="trash"
+    href="/external-api/organization-asset-groups-delete"
+  >
+    Delete an asset group.
+  </Card>
+</CardGroup>
+
+## Threats and takedowns
+
+<CardGroup cols={2}>
+  <Card title="List Threats" icon="triangle-exclamation" href="/external-api/threats-list">
+    List the confirmed threats ChainPatrol has blocked for your organization.
+  </Card>
+
+  <Card title="List Detection Results" icon="binoculars" href="/external-api/detection-list">
+    List raw threat detection results, before review.
+  </Card>
+
+  <Card title="Takedowns List" icon="gavel" href="/external-api/takedowns-list">
+    List individual takedown records and their status.
+  </Card>
+
+  <Card title="Dispute Create" icon="comment-dots" href="/external-api/dispute-create">
+    Create a dispute for an asset that has been incorrectly flagged.
+  </Card>
+</CardGroup>
+
+## Metrics
+
+<CardGroup cols={2}>
+  <Card
+    title="Get Organization Metrics"
+    icon="chart-line"
+    href="/external-api/organization-metrics-list"
+  >
+    Fetch reporting, review, blocklist, and takedown metrics for your organization.
+  </Card>
+</CardGroup>
+
+<Note>
+  Two endpoints are kept for backwards compatibility and should not be used in new
+  integrations: [Get Organization Reports
+  (Deprecated)](/external-api/organization-reports) and [Get Organization Metrics
+  (Deprecated)](/external-api/organization-metrics). Use the `GET` equivalents linked
+  above instead.
+</Note>
