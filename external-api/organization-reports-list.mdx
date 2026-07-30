@@ -86,6 +86,8 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
 | onlyRejected | boolean | No       | If true, only return reports with rejected proposals (default: false)                                 |
 | reporterKind | string  | No       | Filter by the reporter (submitter). One of `human` or `automation`.                                   |
 | reviewerKind | string  | No       | Filter by the reviewer that approved the report. One of `human` or `automation`.                      |
+| needsCustomerReview | boolean | No | If true, only return reports the organization's own admins still have to approve. If false, exclude them. |
+| slug         | string  | No       | Organization slug. Optional for organization-scoped API keys, which resolve the organization from the key. Required when your credentials can access more than one organization. |
 
 <Note>
   The legacy `excludeAutomation` boolean is deprecated and kept as a backward-compatible alias for `reporterKind=human`. Prefer `reporterKind` in new integrations.
@@ -260,6 +262,22 @@ Get reports that were approved by ChainPatrol Automation:
 
 ```bash
 curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?reviewerKind=automation' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+### Filter to Reports Waiting on Customer Approval
+
+Use `needsCustomerReview=true` to return only reports the organization's own admins still have to approve — useful for building a "reports needing your review" dashboard or exporting the current approval backlog. Pass `false` to return only reports that are not waiting on the customer.
+
+What counts as "waiting on the customer" depends on the organization's settings:
+
+- **Obligatory Organization Admin Approval on** — every report with a pending proposal whose asset type is in the approval scope (all asset types when the scope has not been narrowed), plus anything ChainPatrol staff escalated to the organization.
+- **Obligatory Organization Admin Approval off** — only reports staff escalated to the organization that the customer has not answered yet.
+
+Reports the organization submitted itself are never included.
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?needsCustomerReview=true' \
   -H 'X-API-KEY: YOUR_API_KEY_HERE'
 ```
 
