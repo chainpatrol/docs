@@ -5,7 +5,11 @@ openapi: "GET /organization/reports"
 
 ## Overview
 
-Retrieve security reports for your organization. This endpoint returns all reports submitted for your organization, including details about reported assets, proposals, and their current status. The organization is automatically inferred from your API key.
+Retrieve security reports for your organization. This endpoint returns full report records — proposals, assets, scans, reporter, and SLA metadata — with filtering and pagination, newest first. The organization is automatically inferred from your API key; if your credentials can reach more than one organization, pass an organization `slug` in the query to disambiguate.
+
+<Tip>
+  Use this endpoint to browse or filter existing reports. To check whether a report already exists for a specific set of assets before filing a new one, use `POST /reports/search`, which looks reports up by asset content in a single batched call and returns a `totalCount` alongside the (capped) results.
+</Tip>
 
 ## Quick Start
 
