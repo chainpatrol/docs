@@ -32,3 +32,44 @@ When filtering by dates you need to provide both the `startDate` and `endDate` p
 You can filter for only reports with a rejected proposals by setting the `onlyRejected` parameter to `true`.
 
 The reports returned will have proposals inside, however not all proposals will be rejected, as a report can have multiple proposals inside, and some may be rejected while others are approved. So you need to look through the data if you want only rejected proposals.
+
+## Filter by reporter or reviewer
+
+Use `reporterKind` and `reviewerKind` to filter reports by whether the submitter (reporter) or the reviewer that approved the report was a human user or ChainPatrol Automation. Each parameter accepts one of:
+
+- `"human"` — only reports submitted or approved by a human user.
+- `"automation"` — only reports submitted or approved by ChainPatrol Automation.
+
+`reviewerKind` matches the reviewer on the approving decision, so it only affects reports that have an approved proposal.
+
+Use these filters when you want to measure or export automation performance separately from human-submitted or human-approved reports.
+
+```json
+{
+  "slug": "your-org-slug",
+  "reporterKind": "human",
+  "reviewerKind": "automation"
+}
+```
+
+<Note>
+  The older `excludeAutomation` boolean is now deprecated. It is preserved as a backward-compatible alias for `reporterKind: "human"` — setting `excludeAutomation: true` filters to human reporters when `reporterKind` is not set. Prefer `reporterKind` in new integrations.
+</Note>
+
+## Filter to reports waiting on customer approval
+
+Set `needsCustomerReview` to `true` to return only reports the organization still has to action, or `false` to return only reports that are not waiting on them. This is the same queue the organization's Review page shows, so use it to power a "reports needing your review" dashboard or export.
+
+A report counts when it has at least one pending proposal that is the organization's to action:
+
+- A proposal that ChainPatrol staff escalated to the organization and the organization has not answered yet, or
+- Any pending proposal on a report the organization submitted itself.
+
+Obligatory Organization Admin Approval does not widen this filter. That setting says an asset type will eventually need admin sign-off, not that every pending proposal is waiting on the admin right now — an untriaged proposal is still ChainPatrol's to review, and only reaches the organization once staff escalate it.
+
+```json
+{
+  "slug": "your-org-slug",
+  "needsCustomerReview": true
+}
+```
