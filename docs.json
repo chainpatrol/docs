@@ -153,7 +153,8 @@
             "group": "Organization Reports",
             "pages": [
               "external-api/organization-reports",
-              "external-api/organization-reports-list"
+              "external-api/organization-reports-list",
+              "external-api/organization-proposals-review"
             ]
           },
           {
