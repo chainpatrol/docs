@@ -84,6 +84,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
 | startDate    | string  | No       | Filter reports created after this date (ISO 8601 format)                                              |
 | endDate      | string  | No       | Filter reports created before this date (ISO 8601 format)                                             |
 | onlyRejected | boolean | No       | If true, only return reports with rejected proposals (default: false)                                 |
+| needsCustomerReview | boolean | No | If true, only return reports with at least one proposal waiting on **your** review — the same queue your Review page shows. Use it to answer "what is waiting on me?", then act on the proposals with [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review). |
 
 ## Response
 
@@ -106,10 +107,14 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
       ],
       "proposals": [
         {
-          "id": "prop_abc123",
-          "status": "APPROVED",
-          "reason": "phishing",
-          "createdAt": "2024-01-15T10:30:00.000Z"
+          "id": 4321,
+          "reviewStatus": "PENDING",
+          "asset": {
+            "id": 12345,
+            "type": "URL",
+            "content": "https://scam-site.com",
+            "status": "UNKNOWN"
+          }
         }
       ]
     }
@@ -128,6 +133,9 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
 | reports[].status           | string | Overall status of the report (PENDING, APPROVED, REJECTED)               |
 | reports[].assets           | array  | Array of assets included in the report                                   |
 | reports[].proposals        | array  | Array of proposals associated with the report                            |
+| reports[].proposals[].id   | number | Unique identifier for the proposal. Pass it to [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review) to approve, reject, or watchlist the proposal. |
+| reports[].proposals[].reviewStatus | string | Review state of the proposal (PENDING, APPROVED, REJECTED)        |
+| reports[].proposals[].asset | object | The asset the proposal targets. Its `id` is the `assetId` the review endpoint requires. |
 | cursor                     | string | Cursor for the next page of results (undefined if no more results)       |
 
 ## Pagination
@@ -229,6 +237,17 @@ Get reports that have rejected proposals:
 curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?onlyRejected=true' \
   -H 'X-API-KEY: YOUR_API_KEY_HERE'
 ```
+
+### Filter Reports Awaiting Your Review
+
+Get the reports with at least one proposal waiting on your organization — the same queue your Review page shows:
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?needsCustomerReview=true&limit=20' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+Each returned report carries the proposals to act on in `proposals[]`. Take `proposals[].id` and `proposals[].asset.id` from there and pass both to [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review).
 
 ### Combine Filters
 
