@@ -1,0 +1,11 @@
+---
+title: Cancelled Takedown Count
+openapi: "POST /healthchecks/takedowns/cancelled-count"
+---
+
+## Overview
+
+Counts transitions into the `CANCELLED` status from the takedown event log within the
+configured lookback window. Cancellations should be rare — typically zero to two per
+week — so a higher count usually signals a quality problem in the proposal funnel or a
+misuse of the `CANCELLED` status.

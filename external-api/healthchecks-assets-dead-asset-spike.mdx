@@ -1,0 +1,17 @@
+---
+title: Dead Asset Spike
+openapi: "POST /healthchecks/assets/dead-asset-spike"
+---
+
+## Overview
+
+Compares the count of assets detected as dead in the current window against the baseline
+rate from the prior `baselineDays`. Severity fires only when the current count clears
+`minSpikeCount` and exceeds the configured multiplier, which suppresses noise for
+organizations with near-zero baseline activity.
+
+## When this fires
+
+A spike is useful for catching liveness-checker regressions after platform changes —
+captcha rollouts or anti-bot updates, for example — which can falsely mark live assets as
+dead.

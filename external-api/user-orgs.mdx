@@ -1,0 +1,28 @@
+---
+title: List User Organizations
+openapi: "POST /user/orgs"
+---
+
+## Overview
+
+List the organizations accessible to the current user, along with each one's
+subscription status, which services are enabled (reporting, reviewing, protection,
+takedowns, detection, and dark web monitoring), integration connection status, whether
+obligatory organization admin approval is enabled, the org-level Letter of Authorization
+and Power of Attorney attachments, and every org-level trademark registration on file.
+
+## Notes
+
+- Every service exposes an `active` flag; only `takedowns` additionally exposes
+  `automated`.
+- The `integrations` object reports which third-party integrations are connected. `slack`,
+  `discord`, `vercel`, `intercom`, and `moderation` are booleans; `telegram` reports both a
+  connected flag and a group count, since an organization can have multiple Telegram
+  groups.
+- `legalDocuments` has `letterOfAuthorization` and `powerOfAttorney` entries, each
+  reporting whether the document is present along with its file name and URL.
+- `trademarkRegistrations` is the full list of org-level trademarks with their issuing
+  office, registration number, and a certificate PDF link when one has been uploaded — use
+  it to identify which customers have or have not added trademarks.
+- The optional `subscriptionStatus`, `services`, and `obligatoryAdminApproval` filters
+  narrow the result server-side. `INACTIVE` organizations are always excluded.

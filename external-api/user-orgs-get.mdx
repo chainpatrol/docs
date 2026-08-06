@@ -1,0 +1,21 @@
+---
+title: Get User Organization
+openapi: "GET /user/orgs/{slug}"
+---
+
+## Overview
+
+Fetch a single organization by slug. The response uses the same per-organization shape
+as [List User Organizations](/external-api/user-orgs) — id, name, slug, avatar URL,
+subscription status, services flags, integration connection status, obligatory admin
+approval, legal documents, and trademark registrations.
+
+## Access
+
+The caller must have permission for the organization:
+
+- Org-scoped API keys must match the requested slug.
+- User sessions and user-scoped API keys need an active organization membership, unless
+  the caller is ChainPatrol staff.
+
+Soft-deleted organizations are excluded.
