@@ -58,14 +58,14 @@ Use these filters when you want to measure or export automation performance sepa
 
 ## Filter to reports waiting on customer approval
 
-Set `needsCustomerReview` to `true` to return only reports the organization's own admins still have to approve, or `false` to return only reports that are not waiting on them. Use this when you want to surface the customer approval backlog — for example, to power a "reports needing your review" dashboard or export.
+Set `needsCustomerReview` to `true` to return only reports the organization still has to action, or `false` to return only reports that are not waiting on them. This is the same queue the organization's Review page shows, so use it to power a "reports needing your review" dashboard or export.
 
-What counts as "waiting on the customer" depends on the organization's settings:
+A report counts when it has at least one pending proposal that is the organization's to action:
 
-- **Obligatory Organization Admin Approval on** — every report with a pending proposal whose asset type is in the approval scope (all asset types when the scope has not been narrowed), plus anything ChainPatrol staff escalated to the organization.
-- **Obligatory Organization Admin Approval off** — only reports staff escalated to the organization that the customer has not answered yet.
+- A proposal that ChainPatrol staff escalated to the organization and the organization has not answered yet, or
+- Any pending proposal on a report the organization submitted itself.
 
-Reports the organization submitted itself are never included, because staff can action those without customer sign-off.
+Obligatory Organization Admin Approval does not widen this filter. That setting says an asset type will eventually need admin sign-off, not that every pending proposal is waiting on the admin right now — an untriaged proposal is still ChainPatrol's to review, and only reaches the organization once staff escalate it.
 
 ```json
 {
