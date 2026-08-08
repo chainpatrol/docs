@@ -8,7 +8,7 @@ description: "How suspicious or safe assets get submitted to ChainPatrol with sc
 A **Report** is how suspicious or safe activity gets submitted to ChainPatrol for review. Each report bundles together one or more assets, like websites, social profiles, or crypto addresses, along with the evidence needed to evaluate them.
 
 <Info>
-When you create a report, you're proposing that specific assets should either be **blocked** (because they're malicious) or **allowed** (because they're safe).
+When you create a report, it starts in **NEEDS_REVIEW** status (waiting in the review queue), then moves to **IN_PROGRESS** (actively being reviewed), and finally **CLOSED** (review complete).
 </Info>
 
 ### What a Report Contains
@@ -71,7 +71,7 @@ Even after ChainPatrol's team approves a report, the changes won't be applied to
 
 Reports move through three stages as they're processed:
 
-- **TODO** - The report is waiting in the queue for review
+- **NEEDS_REVIEW** - The report is waiting in the queue for review
 - **IN_PROGRESS** - ChainPatrol staff or automated systems are actively reviewing it
 - **CLOSED** - The review is complete and decisions have been made on all assets
 
@@ -97,7 +97,7 @@ Creating a report in ChainPatrol is straightforward:
 
 ### What Happens Next
 
-**Immediately** - Report enters TODO status, you receive confirmation, report appears in your dashboard, and ChainPatrol team is notified.
+**Immediately** - Report enters NEEDS_REVIEW status, you receive confirmation, report appears in your dashboard, and ChainPatrol team is notified.
 
 **During Review** - Status changes to IN_PROGRESS, assets are scanned and analyzed, evidence is evaluated, and decisions are made.
 
@@ -118,4 +118,4 @@ Creating a report in ChainPatrol is straightforward:
 - Multi-asset reports capture campaign scope: Grouping related threats in one report helps reviewers understand attack patterns and makes blocking entire campaigns more efficient
 - Context accelerates review decisions: Reports with screenshots, explanations, and evidence of harm move through review faster than bare URLs with no context
 - Three submission methods serve different needs: Manual reports for ad-hoc discoveries, API reports for automated detection systems, and portal reports for community submissions
-- Report status tracks progress without micromanagement: TODO, IN_PROGRESS, and CLOSED states provide visibility while letting the security team work without constant updates
+- Report status tracks progress without micromanagement: NEEDS_REVIEW, IN_PROGRESS, and CLOSED states provide visibility while letting the security team work without constant updates

@@ -8,7 +8,7 @@ description: "How ChainPatrol combines automated risk scoring and human analyst 
 In order to block malicious threats or allow official assets, we use the Review process. To change an Asset's status (from `UNKNOWN` to `BLOCKED`/`ALLOWED`, or in special cases between `BLOCKED` and `ALLOWED`), we create a **Proposal**.
 
 <Info>
-Each Proposal is evaluated by either human reviewers or our automation, who can make one of four decisions: **Approve**, **Reject**, **Skip**, or **Escalate**.
+Each Proposal is evaluated through our review process, which moves reports from **NEEDS_REVIEW** (waiting in queue) → **IN_PROGRESS** (actively being reviewed) → **CLOSED** (review complete). Proposals are evaluated by either human reviewers or our automation, who can make one of four decisions: **Approve**, **Reject**, **Skip**, or **Escalate**.
 </Info>
 
 ### Proposal Decisions
