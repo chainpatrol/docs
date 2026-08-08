@@ -5,7 +5,11 @@ openapi: "POST /organization/proposals/{proposalId}/review"
 
 ## Overview
 
-Record your organization's decision on a proposal that is waiting on you — one ChainPatrol escalated to you, or one on a report you submitted yourself. These are exactly the proposals your Review page shows and the ones [`GET /organization/reports?needsCustomerReview=true`](/external-api/organization-reports-list) counts, so this endpoint lets you clear that queue without opening the web app.
+Record your organization's decision on a proposal ChainPatrol escalated to you and you have not answered yet. These are exactly the proposals your Review page shows and the ones [`GET /organization/reports?needsCustomerReview=true`](/external-api/organization-reports-list) counts, so this endpoint lets you clear that queue without opening the web app.
+
+<Note>
+  Proposals on reports **your organization submitted itself** are not reviewable here and return `403`. ChainPatrol triages those, and staff approval blocks the asset on its own — submitting the report is already your organization's intent, so there is no second decision for you to record. You still see those reports in `GET /organization/reports`; they simply never enter your review queue.
+</Note>
 
 There is one endpoint for all three outcomes, discriminated by `decision`:
 
@@ -265,11 +269,20 @@ A conditional requirement was not met, or the asset type cannot be watchlisted:
 
 ### 403 Forbidden
 
-The credential is not a customer member of the organization, or a safety check refused the write:
+The credential is not a customer member of the organization, a safety check refused the write, or the proposal is not one that is waiting on you:
 
 ```json
 {
   "message": "This asset cannot be approved over the API because an enabled legitimacy rule marks it as legitimate. Review it on the Review page.",
+  "code": "FORBIDDEN"
+}
+```
+
+A proposal that is not in your review queue — because nobody escalated it to you, because you already answered, or because your organization submitted the report itself — returns:
+
+```json
+{
+  "message": "Proposal 4321 is not waiting on your organization. Only proposals ChainPatrol escalated to you and you have not answered can be reviewed here.",
   "code": "FORBIDDEN"
 }
 ```
@@ -439,3 +452,5 @@ A `409` means either the asset does not match or the proposal is already resolve
 - Asset status is global: assets are unique on type and content, so approving blocks the asset everywhere rather than only for your organization.
 - Not every asset type can be watchlisted. Types the watchlist cannot re-check are refused with `400` instead of silently skipping the park.
 - `GET /organization/reports` returns `proposals[].id` specifically so proposals can be addressed here.
+- Answering an escalation takes the proposal out of your queue. Approving, rejecting, and escalating it back to ChainPatrol all count as answers; if ChainPatrol escalates it to you again afterwards, it returns to the queue.
+- Obligatory Organization Admin Approval does not change which proposals appear here. It means an asset type will eventually need admin sign-off, not that an untriaged proposal is already waiting on you.
