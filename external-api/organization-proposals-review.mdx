@@ -1,0 +1,441 @@
+---
+title: Review Organization Proposal
+openapi: "POST /organization/proposals/{proposalId}/review"
+---
+
+## Overview
+
+Record your organization's decision on a proposal that is waiting on you — one ChainPatrol escalated to you, or one on a report you submitted yourself. These are exactly the proposals your Review page shows and the ones [`GET /organization/reports?needsCustomerReview=true`](/external-api/organization-reports-list) counts, so this endpoint lets you clear that queue without opening the web app.
+
+There is one endpoint for all three outcomes, discriminated by `decision`:
+
+| Decision | What it does | Also required |
+| --- | --- | --- |
+| `APPROVE` | Blocks the asset | `label` (plus `brandId` for labels that name a specific target) |
+| `REJECT` | Declines the proposal | `rejectReason` |
+| `WATCHLIST` | Declines the proposal **and** parks the asset so it is re-evaluated if it comes back alive | `watchlistReason` (plus `note` when the reason is `OTHER`) |
+
+`WATCHLIST` is a flavor of rejection rather than a separate outcome: it is stored as a `REJECT` review with the asset watchlisted, which is the same write the Review page performs. That is why a successful watchlist response comes back with `review.decision: "REJECT"` and `watchlisted: true`.
+
+<Warning>
+  A review cannot be undone through the API. `APPROVE` blocks the asset, and because assets are unique on type and content, that status is global rather than scoped to your organization. Read the proposal before you act on it, and use the [rate limit](#rate-limit) as a backstop rather than a target.
+</Warning>
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Finding a proposal to review
+
+Both IDs this endpoint needs come from the reports listing. Ask for the proposals that are waiting on you, then read `proposals[].id` and `proposals[].asset.id`:
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?needsCustomerReview=true&limit=10' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/proposals/4321/review",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 987,
+      decision: "APPROVE",
+      label: "General Phishing",
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data.proposal.asset.status); // "BLOCKED"
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/proposals/4321/review",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetId: 987,
+      decision: "APPROVE",
+      label: "General Phishing",
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data.proposal.asset.status); // "BLOCKED"
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/organization/proposals/4321/review",
+    headers={
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    json={
+        "assetId": 987,
+        "decision": "APPROVE",
+        "label": "General Phishing",
+    },
+)
+
+data = response.json()
+print(data["proposal"]["asset"]["status"])  # "BLOCKED"
+```
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/organization/proposals/4321/review' \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -d '{
+    "assetId": 987,
+    "decision": "APPROVE",
+    "label": "General Phishing"
+  }'
+```
+
+</CodeGroup>
+
+## Request Body
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| assetId | number | Yes | The asset this proposal targets, from `proposals[].asset.id`. Must match the proposal's current asset or the request returns `409`. |
+| decision | string | Yes | `APPROVE`, `REJECT`, or `WATCHLIST`. |
+| slug | string | No | Organization slug. Optional for organization-scoped API keys; required when your credentials can reach more than one organization. |
+| label | string | On approve | Why the asset is being blocked. See [Block labels](#block-labels). |
+| brandId | number | Conditional | Brand the asset impersonates. Required for `Brand Impersonation` and `Employee Impersonation`. List yours with [`GET /organization/brands`](/external-api/organization-brands). |
+| rejectReason | string | On reject | `irrelevant`, `no_malicious_activity`, `insufficient_evidence`, `not_targeting_org`, or `decayed`. |
+| watchlistReason | string | On watchlist | `DEAD`, `PARKING`, `NOT_ENOUGH_EVIDENCE`, or `OTHER`. |
+| note | string | Conditional | Free-text detail. Required when `watchlistReason` is `OTHER`, since the note then carries the reason. |
+
+`proposalId` is a path parameter, so it is not repeated in the body.
+
+### Why assetId is required
+
+`assetId` is an echo-back, not a lookup. The server compares it against the proposal's current asset and returns `409` on a mismatch, which means a stale or mistyped `proposalId` fails loudly instead of reviewing a different asset than the one you read. Take both values from the same listing response and pass them together.
+
+### Block labels
+
+`label` is required when approving and ignored otherwise. `Brand Impersonation` and `Employee Impersonation` also require `brandId`.
+
+| Label | Use it when |
+| --- | --- |
+| `Brand Impersonation` | The asset is directly using the brand's name, logo, or other trademarks |
+| `Employee Impersonation` | The asset is impersonating a specific employee of the organization |
+| `Fake Employee` | The asset claims to work at the company without impersonating a specific person |
+| `Targeting Org Users` | A scam you want taken down that falls outside direct impersonation |
+| `General Phishing` | The asset is trying to steal user funds |
+| `C2 Server` | Command-and-control server providing backend infrastructure for phishing |
+| `False Positive` | The asset was incorrectly flagged and should be allowed |
+
+### Reject reasons
+
+Reject reasons feed ChainPatrol's detection-tuning breakdown, so pick the closest one rather than putting the real reason in `note`:
+
+| Reason | Meaning |
+| --- | --- |
+| `irrelevant` | Not related to your organization |
+| `no_malicious_activity` | Real asset, nothing malicious about it |
+| `insufficient_evidence` | Not enough signal to act on |
+| `not_targeting_org` | Malicious, but not aimed at your organization |
+| `decayed` | No longer live or relevant |
+
+## Response
+
+### Success Response
+
+```json
+{
+  "proposal": {
+    "id": 4321,
+    "reviewStatus": "APPROVED",
+    "asset": {
+      "id": 987,
+      "type": "URL",
+      "content": "https://scam-site.com",
+      "status": "BLOCKED"
+    }
+  },
+  "review": {
+    "id": 55123,
+    "decision": "APPROVE",
+    "label": "General Phishing",
+    "brandId": null,
+    "comment": "General Phishing",
+    "createdAt": "2026-08-06T10:30:00.000Z"
+  },
+  "watchlisted": false
+}
+```
+
+### Watchlist Response
+
+A watchlist request is recorded as a rejection with the asset parked:
+
+```json
+{
+  "proposal": {
+    "id": 4321,
+    "reviewStatus": "REJECTED",
+    "asset": {
+      "id": 987,
+      "type": "URL",
+      "content": "https://parked-domain.com",
+      "status": "UNKNOWN"
+    }
+  },
+  "review": {
+    "id": 55124,
+    "decision": "REJECT",
+    "label": "",
+    "brandId": null,
+    "comment": "Add to watchlist: Parking page",
+    "createdAt": "2026-08-06T10:32:00.000Z"
+  },
+  "watchlisted": true
+}
+```
+
+### Response Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| proposal.id | number | The reviewed proposal |
+| proposal.reviewStatus | string | `APPROVED` or `REJECTED` after your decision |
+| proposal.asset | object | The asset, with its `status` after your decision |
+| review.id | number | The review that was created |
+| review.decision | string | As recorded in ChainPatrol. A `WATCHLIST` request is stored as `REJECT`. |
+| review.label | string | Block label recorded on the review, empty when none |
+| review.brandId | number \| null | Brand recorded on the review |
+| review.comment | string | The composed comment, built from your reason and note |
+| review.createdAt | string | ISO 8601 timestamp of the review |
+| watchlisted | boolean | Whether the asset was parked on the watchlist |
+
+## Safety checks
+
+Approving over the API is held to the same checks as the Review page, and unlike the UI **they cannot be overridden**:
+
+- **Legitimacy rules.** If any enabled legitimacy rule concluded the asset looks legitimate — a Tranco-listed domain, a regex match on a domain you own — approval returns `403`. A person has to make that call on the Review page.
+- **Allowlisted assets.** An asset that is currently `ALLOWED` cannot be blocked here, also `403`.
+
+Both are deliberate dead ends rather than warnings. When you hit one, review the proposal in the app.
+
+### Rate limit
+
+Reviews are limited to **10 per organization per rolling 24 hours**. The budget is shared across every API credential your organization has, and reviews made from the Review page do not count against it. Exceeding it returns `429`.
+
+The limit exists because a review is not undoable and looping over a queue is easy to do by accident. Treat it as a backstop: if you are hitting it regularly, the queue is better cleared in the app.
+
+## Error Responses
+
+### 400 Bad Request
+
+A conditional requirement was not met, or the asset type cannot be watchlisted:
+
+```json
+{
+  "message": "`label` is required when approving a proposal",
+  "code": "BAD_REQUEST"
+}
+```
+
+### 403 Forbidden
+
+The credential is not a customer member of the organization, or a safety check refused the write:
+
+```json
+{
+  "message": "This asset cannot be approved over the API because an enabled legitimacy rule marks it as legitimate. Review it on the Review page.",
+  "code": "FORBIDDEN"
+}
+```
+
+### 404 Not Found
+
+The proposal does not exist, or is not one of yours:
+
+```json
+{
+  "message": "Proposal not found",
+  "code": "NOT_FOUND"
+}
+```
+
+### 409 Conflict
+
+`assetId` does not match the proposal's current asset, or the proposal has already been resolved:
+
+```json
+{
+  "message": "assetId does not match the proposal's asset",
+  "code": "CONFLICT"
+}
+```
+
+### 429 Too Many Requests
+
+The organization's daily review budget is spent:
+
+```json
+{
+  "message": "Review limit of 10 per day reached for this organization.",
+  "code": "TOO_MANY_REQUESTS"
+}
+```
+
+## Use Cases
+
+### Clear the queue that is waiting on you
+
+Read the proposals waiting on your organization, then act on each one:
+
+<CodeGroup>
+
+```typescript TypeScript
+const listed = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/reports?needsCustomerReview=true&limit=20",
+  { headers: { "X-API-KEY": process.env.CHAINPATROL_API_KEY! } }
+).then((res) => res.json());
+
+for (const report of listed.reports) {
+  for (const proposal of report.proposals) {
+    // Decide from the asset and its scan data before writing anything.
+    const decision = shouldBlock(proposal.asset)
+      ? { decision: "APPROVE", label: "General Phishing" }
+      : { decision: "REJECT", rejectReason: "no_malicious_activity" };
+
+    const res = await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/proposals/${proposal.id}/review`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": process.env.CHAINPATROL_API_KEY!,
+        },
+        body: JSON.stringify({ assetId: proposal.asset.id, ...decision }),
+      }
+    );
+
+    if (res.status === 429) {
+      console.log("Daily review budget spent — finish the rest in the app.");
+      return;
+    }
+    if (res.status === 403) {
+      console.log(`Proposal ${proposal.id} needs a person on the Review page.`);
+      continue;
+    }
+  }
+}
+```
+
+```python Python
+import os
+import requests
+
+headers = {
+    "Content-Type": "application/json",
+    "X-API-KEY": os.environ["CHAINPATROL_API_KEY"],
+}
+
+listed = requests.get(
+    "https://app.chainpatrol.io/api/v2/organization/reports",
+    headers=headers,
+    params={"needsCustomerReview": "true", "limit": 20},
+).json()
+
+for report in listed["reports"]:
+    for proposal in report["proposals"]:
+        # Decide from the asset and its scan data before writing anything.
+        decision = (
+            {"decision": "APPROVE", "label": "General Phishing"}
+            if should_block(proposal["asset"])
+            else {"decision": "REJECT", "rejectReason": "no_malicious_activity"}
+        )
+
+        res = requests.post(
+            f"https://app.chainpatrol.io/api/v2/organization/proposals/{proposal['id']}/review",
+            headers=headers,
+            json={"assetId": proposal["asset"]["id"], **decision},
+        )
+
+        if res.status_code == 429:
+            print("Daily review budget spent — finish the rest in the app.")
+            break
+        if res.status_code == 403:
+            print(f"Proposal {proposal['id']} needs a person on the Review page.")
+            continue
+```
+
+</CodeGroup>
+
+### Park an asset that went quiet
+
+An asset that is dead or parked is not a false positive — watchlist it so ChainPatrol re-evaluates it if it comes back:
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/organization/proposals/4321/review' \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -d '{
+    "assetId": 987,
+    "decision": "WATCHLIST",
+    "watchlistReason": "OTHER",
+    "note": "Registrar suspended the domain; watch in case it is restored"
+  }'
+```
+
+## From the CLI
+
+The [ChainPatrol CLI](https://chainpatrol.com/docs/cli) wraps this endpoint, and confirms before it writes:
+
+```bash
+chainpatrol reports list --org acme --needs-customer-review --json
+chainpatrol proposals review 4321 --asset-id 987 --decision approve --label "General Phishing"
+```
+
+Pass `--yes` to skip the confirmation in a script, or `--dry-run` to print the payload without submitting it.
+
+## Best Practices
+
+### Read before you write
+
+Every request needs `assetId` from a listing you just read, which is deliberate. Fetch the proposal, decide from its asset and scan data, then review it — do not synthesize IDs or replay an old listing.
+
+### Treat 403 as routing, not failure
+
+A `403` from a safety check means the decision needs a person, not that your integration is broken. Log the proposal ID and move on; do not retry.
+
+### Do not retry a 409
+
+A `409` means either the asset does not match or the proposal is already resolved. Re-read the proposal instead of retrying with the same body.
+
+## Notes
+
+- Reviews must be attributed to a customer-role member of the organization. Staff credentials are refused with `403`.
+- Asset status is global: assets are unique on type and content, so approving blocks the asset everywhere rather than only for your organization.
+- Not every asset type can be watchlisted. Types the watchlist cannot re-check are refused with `400` instead of silently skipping the park.
+- `GET /organization/reports` returns `proposals[].id` specifically so proposals can be addressed here.
