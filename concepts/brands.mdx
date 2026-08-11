@@ -1,6 +1,6 @@
 ---
 title: "Brands"
-description: "How brands in ChainPatrol define the company or executive identities protected from impersonation using brand terms, images, and known legitimate assets"
+description: "How ChainPatrol brands represent company, individual, and product identities protected from impersonation using brand terms, images, and legitimate assets"
 ---
 
 ## Overview
@@ -13,21 +13,27 @@ Brands belong to an **organization**, and a single organization can have **multi
 
 ## Types of Brands
 
-ChainPatrol supports two types of brands:
+ChainPatrol supports three types of brands, exposed on the API as `type: ORGANIZATION`, `type: INDIVIDUAL`, and `type: PRODUCT`.
 
-### Company Brands
+### Company Brands (`ORGANIZATION`)
 
-These represent the organization itself or its products. Examples include your primary brand (e.g., "ChainPatrol"), product lines or services, sub-brands created for specific business units, and regional or market-specific brands.
+These represent the organization itself. Examples include your primary brand (e.g., "ChainPatrol"), sub-brands created for specific business units, and regional or market-specific brands.
 
-**Use Case:** A company protecting their main brand name, their product lines, and their marketplace brand.
+**Use Case:** A company protecting their main brand name and their marketplace brand.
 
-### Individual Brands
+### Individual Brands (`INDIVIDUAL`)
 
 These represent key people associated with the organization. Examples include CEO, executives, public-facing employees, founders, and brand ambassadors.
 
 **Use Case:** Protecting a CEO who is frequently impersonated on Twitter/X and Telegram by scammers offering fake investment opportunities.
 
-Both company and individual brands can be targeted by impersonation, scams, or fraud, and ChainPatrol protects both.
+### Product Brands (`PRODUCT`)
+
+These represent a specific product or service the organization offers, tracked separately from the parent organization brand. Examples include a wallet, a swap product, a mobile app, or a specific service line.
+
+**Use Case:** A protocol protecting its swap product ("Acme Swap") and its wallet ("Acme Wallet") as distinct brands so detection rules and metrics stay separated from the parent "Acme Protocol" brand.
+
+Company, individual, and product brands can all be targeted by impersonation, scams, or fraud, and ChainPatrol protects all three.
 
 ## What Information Is Stored in a Brand?
 
@@ -89,7 +95,7 @@ A single organization may be responsible for managing and protecting multiple br
 
 ### Common Multi-Brand Scenarios
 
-**Corporate + Product Brands** - A company safeguarding both its corporate identity and several product lines. Example: Main brand "Acme Protocol" plus product brands "Acme Swap", "Acme Wallet", and "Acme DAO".
+**Corporate + Product Brands** - A company safeguarding both its corporate identity (`type: ORGANIZATION`) and several product lines (`type: PRODUCT`). Example: Main brand "Acme Protocol" plus product brands "Acme Swap", "Acme Wallet", and "Acme DAO".
 
 **Executive Protection** - Protecting individual executives or other public-facing staff members. Example: Main brand "Acme Protocol" plus individual brands "Jane Smith (CEO)", "John Doe (CTO)", and "Sarah Johnson (CMO)".
 

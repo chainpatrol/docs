@@ -5,11 +5,20 @@ openapi: "GET /organization/brands"
 
 ## Overview
 
-List every brand belonging to the organization associated with your API key. Parent and
-product brands (`type: ORGANIZATION`) and individual or employee brands
-(`type: INDIVIDUAL`) are returned in a single call, including configuration fields such
-as `brandColors`, `includedTerms`, `excludedTerms`, `tickers`, `avatarUrl`,
-`websiteUrl`, and `twitterHandle`.
+List every brand belonging to the organization associated with your API key. Parent
+brands (`type: ORGANIZATION`), individual or employee brands (`type: INDIVIDUAL`), and
+product or service brands (`type: PRODUCT`) are returned in a single call, including
+configuration fields such as `brandColors`, `includedTerms`, `excludedTerms`, `tickers`,
+`avatarUrl`, `websiteUrl`, and `twitterHandle`.
+
+## Brand types
+
+- `ORGANIZATION` — parent or sub-brand representing the organization itself.
+- `INDIVIDUAL` — an employee or public-facing person, such as a CEO or founder.
+- `PRODUCT` — a specific product or service offering.
+
+`INDIVIDUAL` and `PRODUCT` brands can be assigned to a brand group via `brandGroupId`.
+`ORGANIZATION` brands cannot belong to a brand group.
 
 ## Notes
 
