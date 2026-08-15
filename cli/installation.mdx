@@ -1,0 +1,155 @@
+---
+title: Installation
+icon: download
+description: "Install the ChainPatrol CLI from npm, point it at an API environment, set a default organization, and enable zsh or bash shell completions."
+---
+
+## Requirements
+
+- Node.js 20 or newer
+- An npm-compatible package manager
+
+## Install
+
+<CodeGroup>
+
+```bash npm
+npm install -g @chainpatrol/cli
+```
+
+```bash pnpm
+pnpm add -g @chainpatrol/cli
+```
+
+```bash yarn
+yarn global add @chainpatrol/cli
+```
+
+</CodeGroup>
+
+The package installs a single `chainpatrol` binary. Verify it:
+
+```bash
+chainpatrol --version
+chainpatrol --help
+```
+
+<Note>
+  The npm package is `@chainpatrol/cli`. The unscoped `chainpatrol` package on npm is a
+  placeholder for the [JavaScript SDK](/sdk/overview) and does not contain the CLI.
+</Note>
+
+To run it once without installing globally:
+
+```bash
+npx @chainpatrol/cli asset check https://phish.example
+```
+
+## Upgrading
+
+```bash
+npm install -g @chainpatrol/cli@latest
+```
+
+The CLI checks npm for a newer version in the background while your command runs and
+prints a one-line notice when one exists. The check is skipped in `--json` and `--quiet`
+mode so it can never corrupt machine-readable output, and it never delays your command by
+more than half a second.
+
+## Configuration
+
+Configuration lives in `config.json` inside the CLI's config directory:
+
+- `$XDG_CONFIG_HOME/chainpatrol/` (defaults to `~/.config/chainpatrol/`)
+- `~/.chainpatrol/` is still used if it already exists and the XDG directory does not
+- `$CHAINPATROL_CONFIG_DIR` overrides both
+
+```json ~/.config/chainpatrol/config.json
+{
+  "apiUrl": "https://app.chainpatrol.io",
+  "defaultOrg": "acme"
+}
+```
+
+| Key | Description |
+| --- | --- |
+| `apiUrl` | API base URL. Defaults to `https://app.chainpatrol.io`. |
+| `defaultOrg` | Organization slug used when a command needs one and `--org` is omitted. |
+
+### Setting a default organization
+
+Most organization-scoped commands take `--org <slug>`. Passing it saves the slug as your
+default, so later commands can omit it:
+
+```bash
+chainpatrol configs list --org acme   # saves "acme" as the default
+chainpatrol configs list              # reuses it
+```
+
+The organization is resolved in this order:
+
+<Steps>
+  <Step title="--org flag">
+    An explicit `--org <slug>` always wins, and is written back to `config.json`.
+  </Step>
+
+  <Step title="Saved default">
+    `defaultOrg` from `config.json`.
+  </Step>
+
+  <Step title="Environment variable">
+    `CHAINPATROL_ORG`, useful in CI where you do not want to write a config file.
+  </Step>
+</Steps>
+
+If none of them resolve, the command fails with
+`Organization required. Use --org <slug> to specify one.` and [exit code
+`3`](/cli/output#exit-codes).
+
+<Tip>
+  Commands authenticated with an organization-scoped API key resolve the organization
+  server-side from the key, so `--org` is optional for those.
+</Tip>
+
+### Environment variables
+
+| Variable | Purpose |
+| --- | --- |
+| `CHAINPATROL_API_KEY` | API key to authenticate with instead of a stored login session. See [Authentication](/cli/authentication#api-key-authentication). |
+| `CHAINPATROL_API_URL` | Overrides the default API base URL. |
+| `CHAINPATROL_CONFIG_DIR` | Overrides the config directory. |
+| `CHAINPATROL_ORG` | Fallback organization slug. |
+| `NO_COLOR` | Disables colored output, same as `--no-color`. |
+
+## Shell completions
+
+`chainpatrol setup` installs completions for you. To write the script yourself:
+
+<CodeGroup>
+
+```bash zsh
+chainpatrol completions zsh > "${fpath[1]}/_chainpatrol"
+```
+
+```bash bash
+chainpatrol completions bash > ~/.chainpatrol-completions.bash
+echo 'source ~/.chainpatrol-completions.bash' >> ~/.bashrc
+```
+
+</CodeGroup>
+
+Restart your shell to pick them up.
+
+## Uninstall
+
+```bash
+chainpatrol uninstall        # remove the Claude Code skill and completions
+npm uninstall -g @chainpatrol/cli
+```
+
+To also remove stored credentials and configuration, delete the config directory:
+
+```bash
+chainpatrol logout
+rm -rf ~/.config/chainpatrol
+```

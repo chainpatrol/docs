@@ -1,0 +1,178 @@
+---
+title: detections
+icon: radar
+description: "Run ChainPatrol detection configs on demand, validate that they still return results, catch query drift, list detection results, and update a config."
+---
+
+```bash
+chainpatrol detections <healthcheck|validate|drift|run|list|configs>
+```
+
+Every subcommand is organization-scoped. Pass `--org <slug>` once and it is
+[saved as your default](/cli/installation#setting-a-default-organization).
+
+## detections healthcheck
+
+Run a health check across all of an organization's detection configs.
+
+```bash
+chainpatrol detections healthcheck --org <slug> [options]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--source <key>` | Filter by detection source key. |
+| `--min-results <n>` | Minimum recent results a config must have produced. |
+| `--lookback-hours <n>` | Lookback window, in hours. |
+| `--run` | Run the detections before validating them. |
+| `--include-disabled` | Include disabled configs. |
+
+```bash
+chainpatrol detections healthcheck --org acme --run
+chainpatrol detections healthcheck --org acme --run --min-results 1 --lookback-hours 168
+chainpatrol --json detections healthcheck --org acme --run
+```
+
+An unhealthy result exits with [code `6`](/cli/output#exit-codes) — the check ran fine,
+something is wrong. That makes it usable directly as a CI gate.
+
+## detections validate
+
+Validate that detection configs still produce the results you expect, without the
+surrounding health report. Takes the same options as `healthcheck`.
+
+```bash
+chainpatrol detections validate --org acme --source urlscan
+chainpatrol detections validate --org acme --min-results 5
+```
+
+## detections drift
+
+Surface drift signals — configs returning zero results, configs that have turned noisy,
+and stale queries.
+
+```bash
+chainpatrol detections drift --org <slug> [options]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--source <key>` | Filter by detection source key. |
+| `--config-id <n>` | Filter by config ID. |
+| `--lookback-hours <n>` | Lookback window, in hours. |
+| `--include-disabled` | Include disabled configs. |
+
+```bash
+chainpatrol detections drift --org acme --lookback-hours 168
+chainpatrol detections drift --org acme --explain --output markdown
+```
+
+Add `--explain` to get the recommendation behind each signal rather than the counts alone.
+
+## detections run
+
+Run one or more detection configs on demand.
+
+```bash
+chainpatrol detections run --org <slug> [options]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--config-id <n>` | Run a specific config. |
+| `--source <key>` | Filter by detection source key. |
+| `--include-disabled` | Include disabled configs. |
+| `--dry-run` | Preview without executing. |
+
+```bash
+chainpatrol detections run --org acme --source google_search
+chainpatrol detections run --org acme --config-id 42
+```
+
+## detections list
+
+List recent detection results, with the same filters as the app's Detections view.
+Confidence comes back as a human-readable level rather than a raw score.
+
+```bash
+chainpatrol detections list --org <slug> [filters]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--limit <n>` | Page size, 1–100. Defaults to 50. |
+| `--cursor <n>` | Pagination cursor. |
+| `--search <q>` | Search by threat content. |
+| `--source <list>` | Comma list of detection source keys. |
+| `--confidence <list>` | Comma list: `none`, `low`, `medium`, `high`. |
+| `--asset-status <list>` | Comma list: `BLOCKED`, `ALLOWED`, `UNKNOWN`. |
+| `--asset-type <list>` | Comma list of asset types. |
+| `--brand <ids>` | Comma list of brand IDs. |
+| `--liveness <list>` | Comma list: `ALIVE`, `DEAD`, `UNKNOWN`. |
+| `--watchlist <list>` | Comma list: `ENABLED`, `DISABLED`. |
+| `--reported <list>` | Comma list: `reported`, `not_reported`. |
+| `--country-code <list>` | Comma list of 2-letter ISO country codes. |
+| `--only-deleted` | Return only soft-deleted detections. Without it, both deleted and non-deleted are returned. |
+| `--from <iso>` / `--to <iso>` | Date range (ISO 8601). |
+
+```bash
+chainpatrol detections list --org acme --confidence medium,high
+chainpatrol detections list --org acme --source twitter --liveness ALIVE
+chainpatrol detections list --org acme --reported not_reported --watchlist ENABLED
+chainpatrol detections list --org acme --brand 12,34 --country-code US,GB
+```
+
+## configs list
+
+List the detection configs available to your organization. `chainpatrol configs list` is a
+top-level shorthand for `chainpatrol detections configs list`.
+
+```bash
+chainpatrol configs list --org acme
+chainpatrol detections configs list --org acme
+chainpatrol --json configs list --org acme
+```
+
+## detections configs update
+
+Update an existing config's status, title, cron schedule, or query.
+
+```bash
+chainpatrol detections configs update --org <slug> --config-id <n> [options]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--config-id <n>` | Config ID. Required. |
+| `--enable` / `--disable` | Enable or disable the config. |
+| `--title <text>` | New title. |
+| `--description <text>` | New description. |
+| `--cron <expr>` | New CRON expression. |
+| `--set key=value` | Patch a value inside the config. Repeatable. |
+| `--merge-config` | Merge `--set` keys into the existing config. Defaults to true. |
+| `--dry-run` | Preview without applying. |
+
+`--set` values are parsed: `true`, `false`, `null`, and numbers become their JSON types,
+`{...}` and `[...]` are parsed as JSON, and everything else stays a string.
+
+```bash
+chainpatrol detections configs update --org acme --config-id 42 --disable
+chainpatrol detections configs update --org acme --config-id 42 \
+  --set query=brand-phishing --set maxResults=100
+chainpatrol detections configs update --org acme --config-id 42 \
+  --set query="phishing site" --dry-run --output json
+```
+
+`detections configs run` is also accepted, and behaves the same as `detections run`.
+
+## Related
+
+- [`GET /organization/detections`](/external-api/detection-list)
+- [`GET /organization/detection-configs`](/external-api/detection-configs-list)
+- [`POST /organization/detection-configs/{id}`](/external-api/detection-configs-update)
+- [Detections concept](/concepts/detections)

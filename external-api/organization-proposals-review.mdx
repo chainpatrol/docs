@@ -410,14 +410,14 @@ curl -X POST 'https://app.chainpatrol.io/api/v2/organization/proposals/4321/revi
 
 ## From the CLI
 
-The [ChainPatrol CLI](https://chainpatrol.com/docs/cli) wraps this endpoint, and confirms before it writes:
+The [ChainPatrol CLI](/cli/overview) wraps this endpoint, and confirms before it writes:
 
 ```bash
 chainpatrol reports list --org acme --needs-customer-review --json
 chainpatrol proposals review 4321 --asset-id 987 --decision approve --label "General Phishing"
 ```
 
-Pass `--yes` to skip the confirmation in a script, or `--dry-run` to print the payload without submitting it.
+Pass `--yes` to skip the confirmation in a script, or `--dry-run` to print the payload without submitting it. See [`proposals review`](/cli/commands/proposals) for the full option set.
 
 ## Best Practices
 

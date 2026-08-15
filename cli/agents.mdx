@@ -1,0 +1,115 @@
+---
+title: Using the CLI with agents
+sidebarTitle: AI agents
+icon: robot
+description: "Install the ChainPatrol Claude Code skill and use --json, --dry-run, --explain, and --no-input to drive the CLI safely from scripts and AI agents."
+---
+
+The CLI is designed to be driven by something other than a human: stable JSON on stdout,
+[specific exit codes](/cli/output#exit-codes), a preview mode for every write, and no
+prompts unless a terminal is attached.
+
+## Install the Claude Code skill
+
+```bash
+chainpatrol setup
+```
+
+This writes a `/chainpatrol` skill to `~/.claude/skills/chainpatrol/SKILL.md` and installs
+shell completions. Claude Code then knows the command surface — how to log in, list
+detection configs, find reports awaiting review, and run an organization healthcheck —
+without you spelling it out each time.
+
+In a cloud or headless Claude Code environment, add `--cloud`:
+
+```bash
+chainpatrol setup --cloud
+```
+
+That also installs a `SessionStart` hook that surfaces the device-code login URL when the
+session is not yet authenticated, so the agent can hand you a link instead of stalling on
+a login it cannot complete.
+
+Re-running `setup` after a CLI upgrade refreshes the skill to match. To remove both:
+
+```bash
+chainpatrol uninstall
+```
+
+## Flags that matter for automation
+
+### `--json`
+
+Ask for JSON in every automated call. Success and failure are both JSON, so one parser
+handles the whole stream.
+
+```bash
+chainpatrol --json detections healthcheck --org acme --run --min-results 1
+chainpatrol --json metrics found --org acme --this-week
+chainpatrol --json reports list --org acme --needs-customer-review
+```
+
+### `--dry-run`
+
+Prints the exact payload a mutation would send, without sending it. Supported on the
+commands that write:
+
+- [`reports create`](/cli/commands/reports#reports-create)
+- [`proposals review`](/cli/commands/proposals)
+- [`detections run`](/cli/commands/detections#detections-run) and `detections configs run`
+- [`detections configs update`](/cli/commands/detections#detections-configs-update)
+
+```bash
+chainpatrol proposals review 4321 --asset-id 987 --decision reject \
+  --reject-reason decayed --dry-run --output json
+```
+
+Passing `--dry-run` to a read-only command is an error rather than a no-op, so a mistaken
+"safe" preview never turns into a silent live read of the wrong thing.
+
+### `--explain`
+
+Adds the recommendation context behind a result — why a config was flagged as drifting,
+what the suggested action is — instead of just the numbers.
+
+```bash
+chainpatrol detections drift --org acme --explain --output markdown
+```
+
+### `--no-input`
+
+Disables every interactive prompt. Combine it with `--yes` on commands that confirm before
+writing:
+
+```bash
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision approve --label "General Phishing" --yes --no-input
+```
+
+## Authentication for unattended runs
+
+Set `CHAINPATROL_API_KEY` rather than relying on a stored login. See
+[Authentication](/cli/authentication#api-key-authentication).
+
+```bash
+export CHAINPATROL_API_KEY="your_api_key_here"
+chainpatrol whoami --json
+```
+
+## Guardrails to respect
+
+<Warning>
+  Writes are real and some of them are irreversible. [Proposal
+  reviews](/cli/commands/proposals) cannot be undone through the API, an `APPROVE` blocks
+  the asset globally, and each organization is capped at 10 reviews per day across all of
+  its API credentials. Read the proposal, then act on it — do not synthesize IDs or replay
+  an old listing.
+</Warning>
+
+Two habits keep an agent honest:
+
+1. **Read before you write.** Every review needs an `assetId` from a listing you just
+   fetched. That is deliberate.
+2. **Do not retry a `403` or a `409`.** A `403` from a safety check means the decision
+   needs a person; a `409` means the asset does not match or the proposal is already
+   resolved. Re-read instead of retrying the same body.

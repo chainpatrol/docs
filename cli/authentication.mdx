@@ -1,0 +1,113 @@
+---
+title: Authentication
+icon: key
+description: "Authenticate the ChainPatrol CLI with the device-code login flow, or with a CHAINPATROL_API_KEY for CI, headless shells, and AI agents."
+---
+
+The CLI supports two credentials. Interactive users log in once with a browser; scripts,
+CI jobs, and agents set an API key in the environment.
+
+## Interactive login
+
+```bash
+chainpatrol login
+```
+
+This starts a device-code flow. The CLI prints a verification URL and a short user code,
+opens your browser when it can, and waits for you to approve the request:
+
+```
+Open this URL on any device to approve in one step:
+  https://app.chainpatrol.io/device?user_code=ABCD-EFGH
+Or visit https://app.chainpatrol.io/device and enter the code: ABCD-EFGH
+Waiting for approval...
+Logged in successfully as you@acme.com
+```
+
+Approving writes a session token to `credentials.json` in the [config
+directory](/cli/installation#configuration) with `0600` permissions. Check it at any time:
+
+```bash
+chainpatrol whoami
+```
+
+To sign out and delete the stored token:
+
+```bash
+chainpatrol logout
+```
+
+<Note>
+  Session tokens expire. When one does, the CLI clears it and asks you to run `chainpatrol
+  login` again, exiting with [code `2`](/cli/output#exit-codes).
+</Note>
+
+### Logging in without a browser
+
+In a remote shell, a container, or a CI runner, the CLI detects that it is not attached to
+a terminal and falls back to plain text — the verification URL is printed on stdout
+immediately instead of being hidden behind an interactive UI. Open it on any device.
+
+For a caller that parses output, `--json` emits one JSON object per milestone:
+
+```bash
+chainpatrol login --json
+```
+
+```json
+{"action":"open_url","user_code":"ABCD-EFGH","verification_uri":"https://app.chainpatrol.io/device","verification_uri_complete":"https://app.chainpatrol.io/device?user_code=ABCD-EFGH","expires_in":900,"headless":true}
+{"status":"success","email":"you@acme.com"}
+```
+
+<Warning>
+  `chainpatrol login --no-input` is rejected unless you also pass `--json`. Without one of
+  them there is no way to surface the device code, so the command would appear to hang.
+</Warning>
+
+## API key authentication
+
+Set `CHAINPATROL_API_KEY` and the CLI uses it instead of a stored session — no login step,
+nothing written to disk. This is the right choice for CI, cron jobs, and service accounts.
+
+```bash
+export CHAINPATROL_API_KEY="your_api_key_here"
+chainpatrol whoami
+chainpatrol threats list --json
+```
+
+The key is sent as the `X-API-KEY` header, the same one the [External
+API](/external-api/authentication) uses, so an existing API key works with the CLI as-is.
+
+An organization-scoped key carries its organization with it. Commands that would otherwise
+need `--org` — `threats list`, `takedowns list`, `orgs assets list`, `reports search`,
+`proposals review` — resolve it from the key.
+
+<Tip>
+  `CHAINPATROL_API_KEY` takes precedence over any stored session, so you can point a single
+  shell at a service account for one command:
+
+  ```bash
+  CHAINPATROL_API_KEY=... chainpatrol metrics organization --json --include reports
+  ```
+</Tip>
+
+## Which identity am I using?
+
+```bash
+chainpatrol whoami
+chainpatrol whoami --json
+```
+
+With an API key, `whoami` validates the key and reports the organization it is bound to.
+With a session token, it returns the logged-in user. Either way it is the fastest check
+before a command that writes.
+
+## Permissions
+
+The CLI has exactly the permissions of the credential behind it — it does not widen them.
+Two consequences worth knowing:
+
+- Staff-only surfaces (for example `queues snapshot --all`) fail with [exit code
+  `5`](/cli/output#exit-codes) for customer credentials.
+- [Proposal reviews](/cli/commands/proposals) must be attributed to a customer-role member
+  of the organization, so staff credentials are refused there.

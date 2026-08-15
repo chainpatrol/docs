@@ -1,0 +1,135 @@
+---
+title: reports
+icon: flag
+description: "Create ChainPatrol reports from the terminal, browse an organization's report queue with full filtering, and search by asset content to avoid duplicates."
+---
+
+```bash
+chainpatrol reports <create|list|search>
+```
+
+## reports create
+
+Create a report with one or more assets.
+
+```bash
+chainpatrol reports create [--org <slug>] [options]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. Defaults to the saved or environment org. |
+| `--title <text>` | Report title. |
+| `--description <text>` | Report description. |
+| `--contact-info <text>` | Reporter contact info. |
+| `--asset <c[:status]>` | Asset to include. Repeatable. `status` is `BLOCKED`, `ALLOWED`, or `UNKNOWN`. |
+| `--attachment-url <u>` | Attachment URL. Repeatable. |
+| `--external-submission-link <u>` | External submission link. |
+| `--payload-file <path>` | JSON file containing the full report payload. |
+| `--dry-run` | Print the payload without submitting it. |
+
+```bash
+# a single asset
+chainpatrol reports create --org acme \
+  --title "New phishing campaign" \
+  --description "Detected from CLI" \
+  --asset "https://phish.example:BLOCKED"
+
+# several assets and an attachment
+chainpatrol reports create --org acme --title "Batch report" \
+  --asset "https://a.example:BLOCKED" \
+  --asset "https://b.example:ALLOWED" \
+  --attachment-url "https://cdn.example/screenshot1.png"
+
+# preview first, then submit
+chainpatrol reports create --org acme --title "Batch report" \
+  --asset "https://a.example:BLOCKED" --dry-run --output markdown
+```
+
+For fields the flags do not cover — `externalReporter`, enrichments, `rawAssetsInput` —
+pass a payload file:
+
+```bash
+chainpatrol reports create --payload-file ./report-payload.json --json
+```
+
+## reports list
+
+List recent reports for an organization, with the same filtering as the app's Reports
+view.
+
+```bash
+chainpatrol reports list --org <slug> [filters]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--limit <n>` | Page size, 1–20. |
+| `--cursor <id>` | Pagination cursor. |
+| `--status <s>` | Report status: `TODO`, `IN_PROGRESS`, or `CLOSED`. |
+| `--search <q>` | Search by title or description. |
+| `--reporter-query <q>` | Search by reporter name (legacy). |
+| `--reported-by-customer` | Only customer-submitted reports. |
+| `--no-reported-by-customer` | Only non-customer reports. |
+| `--needs-customer-review` | Only reports awaiting your organization's own approval. |
+| `--no-needs-customer-review` | Only reports not awaiting your approval. |
+| `--reporter-kind <kind>` | Filter by reporter: `human` or `automation`. |
+| `--reviewer-kind <kind>` | Filter by approver: `human` or `automation`. |
+| `--exclude-automation` | Deprecated — prefer `--reporter-kind human`. |
+| `--only-rejected` | Only reports whose latest review decision was `REJECT`. |
+| `--review-status <list>` | Comma list: `APPROVE`, `REJECT`, `SKIP`, `ESCALATE`. |
+| `--asset-type <list>` | Comma list of asset types (`URL`, `TWITTER`, …). |
+| `--brand <ids>` | Comma list of brand IDs. |
+| `--country-code <list>` | Comma list of 2-letter ISO country codes. |
+| `--reviewed-by-user-id <n>` | Only reports reviewed by a specific user ID. |
+| `--from <iso>` / `--to <iso>` | Filter on `createdAt`. |
+| `--updated-from <iso>` / `--updated-to <iso>` | Filter on `updatedAt`. |
+
+```bash
+chainpatrol reports list --org acme --limit 10
+chainpatrol reports list --org acme --status TODO --review-status REJECT
+chainpatrol reports list --org acme --reporter-kind human --reviewer-kind automation
+chainpatrol reports list --org acme --brand 12,34 --country-code US,GB
+chainpatrol reports list --org acme --needs-customer-review
+```
+
+<Tip>
+  Responses include `totalCount` — the number of reports matching your filters,
+  independent of `--limit` and `--cursor`. Use it as a denominator when sampling ("sampled
+  200 of ~4,235") or to decide whether to paginate or narrow the filters first.
+</Tip>
+
+`--needs-customer-review` is the queue [`proposals review`](/cli/commands/proposals) acts
+on. The proposal and asset IDs that command needs come from `proposals[].id` and
+`proposals[].asset.id` in this listing.
+
+## reports search
+
+Answer "does a report already exist for these assets?" in one call. This is the fast way
+to avoid filing a duplicate; to browse or filter an organization's reports, use `reports
+list` instead.
+
+```bash
+chainpatrol reports search <content> [<content> ...]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. Defaults to the saved or environment org. |
+| `--asset <content>` | Asset content. Repeatable, and an alternative to positional arguments. |
+| `--reported-by-customer` | Match only customer-submitted reports. |
+| `--no-reported-by-customer` | Match only non-customer reports. |
+| `--limit <n>` | Max reports to return, newest first. 1–100, defaults to 50. |
+
+```bash
+chainpatrol reports search https://bad.site
+chainpatrol reports search https://a.site https://b.site --reported-by-customer
+chainpatrol reports search https://bad.site --limit 100
+```
+
+## Related
+
+- [`POST /report/create`](/external-api/report-create)
+- [`GET /organization/reports`](/external-api/organization-reports-list)
+- [Reports concept](/concepts/reports)

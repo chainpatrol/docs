@@ -1,0 +1,123 @@
+---
+title: metrics
+icon: chart-line
+description: "Query ChainPatrol organization metrics from the CLI: summary counts, newly found threats, breakdowns by day, type, or brand, and multi-organization rollups."
+---
+
+```bash
+chainpatrol metrics <summary|found|breakdown|organization>
+```
+
+All four subcommands default to the trailing 3 months when you give no date range. Pass
+`--from` and `--to` for an explicit window, or `--this-week` for the current ISO week.
+
+## metrics summary
+
+Summary metrics for an organization over a date range.
+
+```bash
+chainpatrol metrics summary --org <slug> [--from ISO --to ISO|--this-week]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--from <iso>` / `--to <iso>` | Date range (ISO 8601). |
+| `--this-week` | Use the current ISO week. |
+| `--brand <ids>` | Comma-separated brand IDs. |
+
+```bash
+chainpatrol metrics summary --org acme --this-week
+chainpatrol metrics summary --org acme --from 2026-01-01 --to 2026-01-08
+```
+
+## metrics found
+
+Count of newly found threats — the customer-facing "new threats" number. Same options as
+`metrics summary`.
+
+```bash
+chainpatrol metrics found --org acme --this-week
+chainpatrol --json metrics found --org acme --from 2026-01-01 --to 2026-02-01
+```
+
+## metrics breakdown
+
+Threat counts grouped by an axis.
+
+```bash
+chainpatrol metrics breakdown --org <slug> --by <day|type|brand> [--from ISO --to ISO|--this-week]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--by <axis>` | `day`, `type`, or `brand`. Required. |
+| `--from <iso>` / `--to <iso>` | Date range. |
+| `--this-week` | Use the current ISO week. |
+| `--brand <ids>` | Comma-separated brand IDs. |
+
+```bash
+chainpatrol metrics breakdown --org acme --by day --this-week
+chainpatrol metrics breakdown --org acme --by type --from 2026-01-01 --to 2026-01-08
+chainpatrol metrics breakdown --org acme --by brand --output csv
+```
+
+## metrics organization
+
+The documented `GET /organization/metrics` endpoint, including its multi-organization
+rollup. Works with organization-scoped API keys (single org only), user API keys (multi-org
+allowed, inheriting the user's permissions), and session auth.
+
+```bash
+chainpatrol metrics organization [--org <slug>|--slugs <list>|--all-my-orgs] [--from ISO --to ISO|--this-week] [--include <list>]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | A single organization. Mutually exclusive with `--slugs` and `--all-my-orgs`. |
+| `--slugs <list>` | Comma list of organization slugs, capped at 500. The response is the rollup across them. |
+| `--all-my-orgs` | Every organization you can see. Organization-scoped API keys are rejected. Capped at 500. |
+| `--subscription-status <list>` | With `--all-my-orgs`: only `ACTIVE`, `POC`, `PROSPECT`, or `INTEGRATION`. |
+| `--service-active <list>` | With `--all-my-orgs`: only organizations with the listed services active — `reporting`, `reviewing`, `protection`, `takedowns`, `detection`, `darkWebMonitoring`. |
+| `--brand-slug <slug>` | Filter by brand slug. Single organization only. |
+| `--from <iso>` / `--to <iso>` | Date range. |
+| `--this-week` | Use the current ISO week. |
+| `--include <list>` | Fields to compute. Omit for all. |
+
+`--include` accepts `reports`, `newThreats`, `threatsWatchlisted`, `takedownsFiled`,
+`takedownsCompleted`, `domainThreats`, `twitterThreats`, `telegramThreats`, `otherThreats`,
+`blockedByType`, `blockedByDay`. Fields you leave out come back as `null`, so narrowing
+`--include` is the cheapest way to speed up a wide query.
+
+A multi-organization response carries totals, per-day and per-organization-per-day
+averages, and a per-organization breakdown.
+
+```bash
+# defaults to the last 3 months
+chainpatrol metrics organization --org acme
+
+# just the takedown numbers
+chainpatrol metrics organization --org acme --include takedownsFiled,takedownsCompleted
+
+# a rollup across three named orgs
+chainpatrol metrics organization --slugs acme,beta,gamma \
+  --include takedownsCompleted --from 2026-05-12 --to 2026-05-19
+
+# a cross-customer total in one call
+chainpatrol metrics organization --all-my-orgs \
+  --service-active takedowns --subscription-status ACTIVE \
+  --include takedownsCompleted --from 2026-05-12 --to 2026-05-19
+
+# with an API key
+CHAINPATROL_API_KEY=... chainpatrol metrics organization --json --include reports
+```
+
+<Note>
+  `metrics org` is accepted as an alias for `metrics organization`.
+</Note>
+
+## Related
+
+- [`GET /organization/metrics`](/external-api/organization-metrics)
+- [Metrics concept](/concepts/metrics)

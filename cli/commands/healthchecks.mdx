@@ -1,0 +1,87 @@
+---
+title: healthchecks
+icon: heart-pulse
+description: "List and run ChainPatrol organization healthchecks from the CLI across detections, reviewing, takedowns, and asset liveness, with CI-friendly exit codes."
+---
+
+```bash
+chainpatrol healthchecks <list|run <id>|run --all>
+```
+
+Healthchecks are the platform's own view of whether an organization's pipeline is working:
+are detections still returning results, is the review queue piling up, are takedowns
+stuck. Each one returns a uniform shape — `id`, `severity`, `observed`, `threshold`,
+`findings`, `suggestedAction` — so a script can treat them all the same way.
+
+## healthchecks list
+
+List every healthcheck the platform exposes, including ones that are defined but not yet
+implemented on the backend. Not-yet-implemented entries carry a `notImplementedReason` you
+can surface to users.
+
+```bash
+chainpatrol healthchecks list
+chainpatrol --json healthchecks list | jq '.checks[] | select(.implemented) | .id'
+```
+
+Implemented checks at the time of writing:
+
+| ID | What it catches |
+| --- | --- |
+| `detections.silent-configs` | Detection configs that have stopped producing results |
+| `reviewing.backlog` | A pile-up of proposals needing review |
+| `reviewing.old-proposals` | Proposals that have waited too long |
+| `takedowns.todo-volume` | A pile-up of `TODO` takedowns |
+| `takedowns.in-progress-volume` | A pile-up of `IN_PROGRESS` takedowns |
+| `takedowns.stale-in-progress` | Takedowns stuck in `IN_PROGRESS` |
+| `takedowns.cancelled-count` | Excess `CANCELLED` takedowns over a rolling window |
+| `takedowns.automation-off` | Takedown automation disabled for too long |
+| `assets.dead-asset-spike` | A spike in recently dead assets |
+| `organization.missing-contact-url` | No main contact URL or communication channel |
+
+Run `healthchecks list` for the live set rather than trusting this table — it is the
+authority, and it grows.
+
+## healthchecks run
+
+Run a single check by ID, or `--all` to run every implemented check in parallel and
+aggregate the results.
+
+```bash
+chainpatrol healthchecks run <id|--all> --org <slug>
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. Required. |
+| `--all` | Run every implemented healthcheck in parallel. |
+| `--min-results <n>` | Passed through to `detections.silent-configs`. |
+| `--lookback-hours <n>` | Passed through to `detections.silent-configs`. |
+
+```bash
+chainpatrol healthchecks run --all --org acme
+chainpatrol healthchecks run reviewing.backlog --org acme
+chainpatrol healthchecks run takedowns.stale-in-progress --org acme
+chainpatrol --json healthchecks run --all --org acme --output json
+```
+
+A breached threshold exits with [code `6`](/cli/output#exit-codes) — the check ran, and
+something is unhealthy. That is a failing gate rather than an error to retry:
+
+```bash
+chainpatrol --json healthchecks run --all --org acme > health.json || {
+  [ $? -eq 6 ] && jq '.checks[] | select(.severity != "ok")' health.json
+}
+```
+
+## healthchecks vs. detections healthcheck
+
+[`detections healthcheck`](/cli/commands/detections#detections-healthcheck) is
+detection-specific and can run the configs before validating them. `healthchecks run`
+covers the whole pipeline — reviewing, takedowns, and assets as well — through the public
+healthchecks API.
+
+## Related
+
+- [Healthcheck endpoints](/external-api/healthchecks-list)
+- [`queues snapshot`](/cli/commands/queues) for the raw queue counts behind several checks
