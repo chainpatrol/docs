@@ -1,0 +1,109 @@
+---
+title: ChainPatrol CLI
+sidebarTitle: Overview
+icon: terminal
+description: "Install and use the ChainPatrol CLI to check assets, file reports, review proposals, and query detection and takedown data from your terminal or a script."
+---
+
+The ChainPatrol CLI is a terminal interface to the same platform the dashboard and the
+[External API](/external-api/overview) expose. It is built for two audiences at once:
+an operator who wants a fast answer without opening the app, and a script or AI agent
+that needs machine-readable output and predictable exit codes.
+
+```bash
+npm install -g @chainpatrol/cli
+chainpatrol login
+chainpatrol asset check https://phish.example
+```
+
+## What you can do with it
+
+<CardGroup cols={2}>
+  <Card title="Check and search assets" icon="shield-check" href="/cli/commands/asset">
+    Look up URLs and addresses against the blocklist, in bulk if you need to.
+  </Card>
+
+  <Card title="File and find reports" icon="flag" href="/cli/commands/reports">
+    Create reports, browse an organization's queue, and check for duplicates.
+  </Card>
+
+  <Card title="Clear your review queue" icon="gavel" href="/cli/commands/proposals">
+    Approve, reject, or watchlist the proposals waiting on your organization.
+  </Card>
+
+  <Card title="Tune detections" icon="radar" href="/cli/commands/detections">
+    Run configs on demand, validate that they still return results, and catch drift.
+  </Card>
+
+  <Card title="Pull metrics" icon="chart-line" href="/cli/commands/metrics">
+    Summary counts, breakdowns by day/type/brand, and multi-organization rollups.
+  </Card>
+
+  <Card title="Track takedowns" icon="list-check" href="/cli/commands/takedowns">
+    List takedown records with the same filters as the app's Takedowns view.
+  </Card>
+</CardGroup>
+
+## Command index
+
+| Command | What it does |
+| --- | --- |
+| [`login`](/cli/authentication) | Authenticate with ChainPatrol via device-code flow |
+| [`logout`](/cli/authentication) | Clear stored credentials from this machine |
+| [`whoami`](/cli/authentication) | Show the current authenticated identity |
+| [`asset`](/cli/commands/asset) | Check, search, or list assets, or list supported asset types |
+| [`reports`](/cli/commands/reports) | Create, list, and search reports |
+| [`proposals`](/cli/commands/proposals) | Review proposals waiting on your organization |
+| [`detections`](/cli/commands/detections) | Validate, run, list, and update detection configs and results |
+| [`configs`](/cli/commands/detections#configs-list) | Shorthand for `detections configs list` |
+| [`metrics`](/cli/commands/metrics) | Query organization metrics and breakdowns |
+| [`threats`](/cli/commands/threats) | List confirmed threats blocked by ChainPatrol |
+| [`takedowns`](/cli/commands/takedowns) | List individual takedown records |
+| [`orgs`](/cli/commands/orgs) | List organizations, org assets, and asset groups |
+| [`brands`](/cli/commands/orgs#brands-list) | List brands |
+| [`healthchecks`](/cli/commands/healthchecks) | List and run organization healthchecks |
+| [`queues`](/cli/commands/queues) | Snapshot review and takedown queues |
+| [`presets`](/cli/commands/presets) | Run saved workflows for common jobs |
+| [`setup`](/cli/agents) | Install the Claude Code skill and shell completions |
+| [`uninstall`](/cli/agents) | Remove the Claude Code skill and shell completions |
+| [`completions`](/cli/installation#shell-completions) | Output a shell completion script |
+
+## Built-in help
+
+Every command documents itself. `chainpatrol --help` prints the command list, and
+`--help` on any command or subcommand prints its full option set:
+
+```bash
+chainpatrol --help
+chainpatrol reports list --help
+chainpatrol help proposals review
+```
+
+The help text ships with the binary, so it always matches the version you have installed.
+This documentation describes CLI `1.6.x`.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/cli/installation">
+    Install the CLI, point it at an environment, and enable shell completions.
+  </Card>
+
+  <Card title="Authentication" icon="key" href="/cli/authentication">
+    Log in interactively, or use an API key for CI and headless runs.
+  </Card>
+
+  <Card title="Output and exit codes" icon="code" href="/cli/output">
+    JSON, markdown, and CSV output, plus the exit codes scripts should branch on.
+  </Card>
+
+  <Card title="Using the CLI with agents" icon="robot" href="/cli/agents">
+    The Claude Code skill, `--dry-run`, `--explain`, and non-interactive mode.
+  </Card>
+</CardGroup>
+
+## Support
+
+Report bugs and request features at
+[github.com/chainpatrol/chainpatrol-cli/issues](https://github.com/chainpatrol/chainpatrol-cli/issues),
+or email [support@chainpatrol.io](mailto:support@chainpatrol.io).

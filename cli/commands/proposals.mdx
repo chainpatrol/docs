@@ -1,0 +1,111 @@
+---
+title: proposals
+icon: gavel
+description: "Approve, reject, or watchlist the ChainPatrol proposals waiting on your organization's review from the terminal, with confirmation and dry-run support."
+---
+
+```bash
+chainpatrol proposals review <proposalId> --asset-id <id> --decision <approve|reject|watchlist> [options]
+```
+
+## proposals review
+
+Record your organization's decision on a proposal that is waiting on you — the same queue
+the Review page shows and [`reports list
+--needs-customer-review`](/cli/commands/reports#reports-list) returns.
+
+<Warning>
+  A review cannot be undone through the API. `approve` blocks the asset, and because assets
+  are unique on type and content, that status is global rather than scoped to your
+  organization. The command asks for confirmation unless you pass `--yes`, and each
+  organization is capped at 10 reviews per day across all of its API credentials.
+</Warning>
+
+### Options
+
+| Option | Description |
+| --- | --- |
+| `--proposal-id <id>` | Proposal to review. An alternative to the positional argument. |
+| `--asset-id <id>` | Asset the proposal targets. Must match, or the API returns `409`. |
+| `--decision <d>` | `approve`, `reject`, or `watchlist`. |
+| `--label <text>` | Block label, required when approving. Quote it — see [labels](#block-labels). |
+| `--brand-id <id>` | Brand the asset impersonates. Required for Brand and Employee Impersonation. |
+| `--reject-reason <r>` | Required when rejecting: `irrelevant`, `no_malicious_activity`, `insufficient_evidence`, `not_targeting_org`, `decayed`. |
+| `--watchlist-reason <r>` | Required when watchlisting: `DEAD`, `PARKING`, `NOT_ENOUGH_EVIDENCE`, `OTHER`. |
+| `--note <text>` | Free-text detail. Required when `--watchlist-reason OTHER`. |
+| `--org <slug>` | Organization slug. Optional for organization-scoped API keys. |
+| `--yes` | Skip the confirmation prompt. Required when not attached to a terminal. |
+| `--dry-run` | Print the payload without submitting it. |
+
+### The three decisions
+
+| Decision | What it does | Also required |
+| --- | --- | --- |
+| `approve` | Blocks the asset | `--label`, plus `--brand-id` for labels that name a specific target |
+| `reject` | Declines the proposal | `--reject-reason` |
+| `watchlist` | Declines the proposal **and** parks the asset so it is re-evaluated if it comes back alive | `--watchlist-reason`, plus `--note` when the reason is `OTHER` |
+
+`watchlist` is a flavor of rejection rather than a separate outcome — it is stored as a
+`REJECT` review with the asset watchlisted, which is exactly what the Review page does.
+That is why a successful watchlist comes back with `review.decision: "REJECT"` and
+`watchlisted: true`.
+
+### Block labels
+
+`--label` is required when approving. Quote it, since every value contains a space:
+
+`"General Phishing"`, `"Brand Impersonation"`, `"Employee Impersonation"`,
+`"Fake Employee"`, `"Targeting Org Users"`, `"C2 Server"`, `"False Positive"`.
+
+Labels that name a specific target — Brand Impersonation and Employee Impersonation — also
+need `--brand-id`.
+
+## Finding a proposal to review
+
+Both IDs come from the reports listing. Ask for the proposals waiting on you, then read
+`proposals[].id` and `proposals[].asset.id`:
+
+```bash
+chainpatrol reports list --org acme --needs-customer-review --json
+```
+
+## Examples
+
+```bash
+# block a phishing site
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision approve --label "General Phishing" --yes
+
+# block an impersonation, naming the brand
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision approve --label "Brand Impersonation" --brand-id 12 --yes
+
+# decline it
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision reject --reject-reason no_malicious_activity --yes
+
+# park an asset that went quiet
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision watchlist --watchlist-reason OTHER \
+  --note "Registrar suspended it" --yes
+
+# see the payload without sending it
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision reject --reject-reason decayed --dry-run
+```
+
+## Notes
+
+- Reviews must be attributed to a customer-role member of the organization. Staff
+  credentials are refused with [exit code `5`](/cli/output#exit-codes).
+- A `403` from a safety check means the decision needs a person, not that your integration
+  is broken. Log the proposal ID and move on rather than retrying.
+- A `409` means either the asset does not match the proposal or the proposal is already
+  resolved. Re-read the proposal instead of retrying with the same body.
+- Not every asset type can be watchlisted. Types the watchlist cannot re-check are refused
+  rather than silently skipped.
+
+## Related
+
+- [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review)
+- [Reviews concept](/concepts/reviews)

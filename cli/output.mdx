@@ -1,0 +1,112 @@
+---
+title: Output and exit codes
+sidebarTitle: Output & exit codes
+icon: code
+description: "Global ChainPatrol CLI flags, JSON, markdown, and CSV output formats, and the deterministic exit codes scripts and CI jobs should branch on."
+---
+
+## Global flags
+
+These work on every command. Command-specific options are documented on each command's
+page and in `chainpatrol <command> --help`.
+
+| Flag | Description |
+| --- | --- |
+| `--json` | Machine-readable JSON. Equivalent to `--output json`. |
+| `--output <fmt>` | Output format: `human`, `json`, `markdown`, or `csv`. |
+| `--quiet`, `-q` | Suppress non-essential output. |
+| `--no-color` | Disable colored output. `NO_COLOR` in the environment does the same. |
+| `--no-input` | Disable interactive prompts. Use in scripts and CI. |
+| `--dry-run` | Preview a mutation without sending the write. Mutation commands only. |
+| `--explain` | Include the reasoning and recommendation context behind a result. |
+| `--help`, `-h` | Show help for the command. |
+| `--version`, `-V` | Print the CLI version. |
+
+<Note>
+  `--json` and `--output` cannot be combined unless they agree. `--json --output csv`
+  fails with `Use either --json or --output, not both.`
+</Note>
+
+## Output formats
+
+### human
+
+The default. Formatted for reading in a terminal, with color when the terminal supports it.
+
+```bash
+chainpatrol asset check https://phish.example
+```
+
+### json
+
+Every command supports `--json`, and JSON is the format to build on — it is the only one
+guaranteed to carry the full result rather than a summary of it.
+
+```bash
+chainpatrol --json asset check https://phish.example
+chainpatrol --json reports list --org acme --limit 5 | jq '.reports[].title'
+```
+
+Errors are JSON too, so a parser never has to deal with a mixed stream:
+
+```json
+{
+  "error": "Organization required. Use --org <slug> to specify one.",
+  "exitCode": 1
+}
+```
+
+### markdown
+
+A table you can paste into a ticket, a Slack message, or a doc.
+
+```bash
+chainpatrol detections drift --org acme --explain --output markdown
+```
+
+### csv
+
+For spreadsheets and further processing. Commands that have no meaningful tabular shape
+fall back to JSON.
+
+```bash
+chainpatrol queues snapshot --all --output csv > queues.csv
+chainpatrol asset list --asset-type ADDRESS --per-page 500 --output csv
+```
+
+## Exit codes
+
+Exit codes are stable and specific, so a script can tell "nothing to do" apart from
+"credentials expired" without parsing text.
+
+| Code | Meaning | Typical cause |
+| --- | --- | --- |
+| `0` | Success | — |
+| `1` | Unknown error | An unclassified failure |
+| `2` | Authentication error | No credentials, or an expired session — run `chainpatrol login` |
+| `3` | Usage error | Missing or invalid arguments, unknown command |
+| `4` | Not found | The organization, config, proposal, or asset does not exist |
+| `5` | Forbidden | The credential lacks permission for this resource |
+| `6` | Check failed | A healthcheck, drift, or queue threshold was breached |
+| `7` | Mutation partial failure | A write succeeded for some items and failed for others |
+| `8` | Network or API unavailable | Connection refused, timeout, upstream outage |
+
+<Tip>
+  Code `6` is a *result*, not a crash: `detections healthcheck` and `healthchecks run`
+  return it when the checks ran fine but something is unhealthy. Treat it as a failing CI
+  gate, not as an error to retry.
+</Tip>
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! chainpatrol --json detections healthcheck --org acme --run > health.json; then
+  case $? in
+    2) echo "Credentials expired"; exit 1 ;;
+    6) echo "Detections unhealthy"; jq '.failures' health.json; exit 1 ;;
+    8) echo "ChainPatrol unreachable, retrying later"; exit 0 ;;
+    *) echo "Unexpected failure"; exit 1 ;;
+  esac
+fi
+```

@@ -1,0 +1,55 @@
+---
+title: presets
+icon: play
+description: "Run saved ChainPatrol CLI workflows that bundle several calls into one command, such as the CS Weekly Health package for a customer check-in."
+---
+
+```bash
+chainpatrol presets <list|run <id>>
+```
+
+A preset bundles several CLI calls into one command, so a recurring job is a single
+invocation instead of a script you have to keep in sync.
+
+## presets list
+
+List the available presets with their IDs and descriptions.
+
+```bash
+chainpatrol presets list
+chainpatrol presets list --output json
+```
+
+| Preset | What it does |
+| --- | --- |
+| `cs-weekly-health` | Weekly customer health package: found threats, summary metrics, and detection validation. |
+
+## presets run
+
+Run a preset against an organization.
+
+```bash
+chainpatrol presets run <preset-id> --org <slug>
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. Required. |
+
+```bash
+chainpatrol presets run cs-weekly-health --org acme
+chainpatrol presets run cs-weekly-health --org acme --output json
+chainpatrol presets run cs-weekly-health --org acme --explain --output markdown
+```
+
+An unknown preset ID fails with [exit code `3`](/cli/output#exit-codes) — run `presets
+list` to see the valid ones.
+
+`--output markdown` is the useful one here: it gives you a report you can paste straight
+into a customer check-in.
+
+## Related
+
+- [`metrics`](/cli/commands/metrics) and
+  [`detections`](/cli/commands/detections) — the underlying commands a preset composes
+- [`healthchecks run --all`](/cli/commands/healthchecks) for a pipeline-wide check

@@ -235,6 +235,37 @@
         ]
       },
       {
+        "tab": "CLI",
+        "groups": [
+          {
+            "group": "ChainPatrol CLI",
+            "pages": [
+              "cli/overview",
+              "cli/installation",
+              "cli/authentication",
+              "cli/output",
+              "cli/agents"
+            ]
+          },
+          {
+            "group": "Command Reference",
+            "pages": [
+              "cli/commands/asset",
+              "cli/commands/reports",
+              "cli/commands/proposals",
+              "cli/commands/detections",
+              "cli/commands/metrics",
+              "cli/commands/threats",
+              "cli/commands/takedowns",
+              "cli/commands/orgs",
+              "cli/commands/healthchecks",
+              "cli/commands/queues",
+              "cli/commands/presets"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "JavaScript SDK",
         "groups": [
           {
@@ -382,6 +413,14 @@
     }
   },
   "redirects": [
+    {
+      "source": "/cli",
+      "destination": "/cli/overview"
+    },
+    {
+      "source": "/cli/commands",
+      "destination": "/cli/overview"
+    },
     {
       "source": "/wallet-integration/false-positives",
       "destination": "/general/false-positives"

@@ -1,0 +1,116 @@
+---
+title: orgs
+icon: building
+description: "List ChainPatrol organizations and filter them by subscription status, service toggles, and pending approvals; inspect a single org, its allowlist, and brands."
+---
+
+```bash
+chainpatrol orgs <list|get <slug>|assets list|asset-groups list>
+```
+
+`orgs list` and `orgs get` operate on the organizations your credential can see. The
+nested subcommands — `assets` and `asset-groups` — operate on the organization tied to
+your API key.
+
+## orgs list
+
+List organizations with their subscription status and per-service active flag. All filters
+compose with AND.
+
+| Option | Description |
+| --- | --- |
+| `--query <text>` | Partial name match (substring, case-insensitive). |
+| `--subscription-status <l>` | Comma list: `PROSPECT`, `POC`, `ACTIVE`, `INTEGRATION`. |
+| `--service-active <l>` | Comma list of services that must be active. |
+| `--service-inactive <l>` | Comma list of services that must be inactive. |
+| `--service-automated <l>` | Services whose automation must be **on**. Only `takedowns` is accepted. |
+| `--service-manual <l>` | Services whose automation must be **off**. Only `takedowns` is accepted. |
+| `--pending-approval-active` | Only organizations with an open service-enable approval awaiting sign-off. |
+| `--pending-approval-inactive` | Only organizations with no pending service-enable approvals. |
+| `--pending-approval-service <l>` | Only organizations with a pending approval for `protection` (Wallet Blocking) and/or `takedowns`. |
+
+Services are `reporting`, `reviewing`, `protection`, `takedowns`, `detection`, and
+`darkWebMonitoring`. `automated` is reported for takedowns only — that is the one service
+where manual-versus-automated changes real platform behavior.
+
+```bash
+chainpatrol orgs list --subscription-status ACTIVE
+chainpatrol orgs list --service-active takedowns --service-manual takedowns
+chainpatrol --json orgs list --subscription-status ACTIVE,POC --service-active detection
+chainpatrol --json orgs list --pending-approval-service protection,takedowns
+```
+
+## orgs get
+
+Get a single organization by slug. Returns the same shape as one row of `orgs list`.
+
+```bash
+chainpatrol orgs get <slug>
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Use the saved default organization instead of a positional argument. |
+
+The caller must have access: an organization-scoped API key must match the slug, and a user
+session or key needs an active membership unless the user is staff.
+
+```bash
+chainpatrol orgs get acme
+chainpatrol --json orgs get acme
+chainpatrol orgs get acme --output markdown
+```
+
+## orgs assets list
+
+List the assets in your organization's allowlist. The organization is derived from your API
+key.
+
+| Option | Description |
+| --- | --- |
+| `--asset-type <type>` | Filter by asset type (`URL`, `ADDRESS`, …). `--type` is an alias. |
+| `--group-id <n>` | Filter by group ID. Use `-1` for ungrouped assets only. |
+| `--query <text>` | Search asset content (substring). |
+| `--per-page <n>` | Page size, 1–1000. Defaults to 100. `--limit` is also accepted. |
+| `--next-page <cursor>` | Cursor returned by a previous response. |
+
+```bash
+chainpatrol orgs assets list --asset-type URL
+chainpatrol orgs assets list --group-id 12 --per-page 250 --output csv
+```
+
+## orgs asset-groups list
+
+List your organization's asset groups with per-group asset counts.
+
+```bash
+chainpatrol orgs asset-groups list
+chainpatrol orgs asset-groups list --output csv
+```
+
+## brands list
+
+`brands` is a separate top-level command that lists the brands available to you.
+
+```bash
+chainpatrol brands list [--type ORGANIZATION|INDIVIDUAL|PRODUCT]
+```
+
+The `--type` value is case-insensitive. Brand IDs from this listing are what `--brand` and
+`--brand-id` accept elsewhere — in [`reports list`](/cli/commands/reports#reports-list),
+[`detections list`](/cli/commands/detections#detections-list),
+[`takedowns list`](/cli/commands/takedowns), [`metrics`](/cli/commands/metrics), and
+[`proposals review`](/cli/commands/proposals).
+
+```bash
+chainpatrol brands list
+chainpatrol brands list --type ORGANIZATION
+chainpatrol --json brands list | jq '.brands[] | {id, name}'
+```
+
+## Related
+
+- [`GET /organization/assets`](/external-api/organization-assets-list)
+- [`GET /organization/asset-groups`](/external-api/organization-asset-groups-list)
+- [`GET /organization/brands`](/external-api/organization-brands)
+- [Organizations concept](/concepts/organizations) and [Brands concept](/concepts/brands)

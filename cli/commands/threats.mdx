@@ -1,0 +1,46 @@
+---
+title: threats
+icon: skull
+description: "List confirmed threats blocked by ChainPatrol from the CLI, filtered by content, date range, asset type, and sorted with cursor pagination."
+---
+
+```bash
+chainpatrol threats list [filters]
+```
+
+## threats list
+
+List the threats ChainPatrol has blocked. The organization is derived from your API key,
+so there is no `--org` flag. Defaults to the last day — widen it with `--from` and `--to`.
+
+| Option | Description |
+| --- | --- |
+| `--query <text>` | Search threat content (substring match). |
+| `--from <iso>` | Start date (`YYYY-MM-DD`). |
+| `--to <iso>` | End date (`YYYY-MM-DD`). |
+| `--asset-type <list>` | Comma list: `URL`, `TWITTER`, `TELEGRAM`, … |
+| `--sort-by <key>` | Sort key, for example `blockedAt`. |
+| `--sort-direction <dir>` | `asc` or `desc`. |
+| `--per-page <n>` | Page size, 1–100. Defaults to 10. |
+| `--next-page <cursor>` | Cursor returned by a previous response. |
+
+```bash
+chainpatrol threats list
+chainpatrol threats list --from 2026-05-01 --asset-type URL
+chainpatrol threats list --query "acme-" --sort-by blockedAt --sort-direction desc
+CHAINPATROL_API_KEY=... chainpatrol threats list --json
+```
+
+Paginate by feeding the cursor from one response into the next call:
+
+```bash
+cursor=$(chainpatrol --json threats list --per-page 100 | jq -r '.nextPage')
+chainpatrol --json threats list --per-page 100 --next-page "$cursor"
+```
+
+Run `chainpatrol asset types` to see every value `--asset-type` accepts.
+
+## Related
+
+- [`GET /organization/threats`](/external-api/threats-list)
+- [`takedowns list`](/cli/commands/takedowns) for the takedown record behind a threat

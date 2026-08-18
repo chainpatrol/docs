@@ -1,0 +1,125 @@
+---
+title: asset
+icon: shield-check
+description: "Check URLs and addresses against the ChainPatrol blocklist, search assets by content or ID, list blocked assets in bulk, and see every supported asset type."
+---
+
+```bash
+chainpatrol asset <check|list|search|types>
+```
+
+## asset check
+
+Look up one or more assets — a URL, domain, or crypto address — against the ChainPatrol
+blocklist and external feeds. Returns the aggregated status plus a per-source breakdown.
+
+```bash
+chainpatrol asset check <content> [<content> ...]
+```
+
+| Option | Description |
+| --- | --- |
+| `--asset <content>` | Asset content. Repeatable, and an alternative to positional arguments. |
+
+Multiple assets are checked in parallel with a concurrency of 10:
+
+```bash
+# one asset
+chainpatrol asset check https://phish.example
+
+# many at once
+chainpatrol asset check a.example b.example c.example
+
+# repeated --asset is equivalent
+chainpatrol asset check --asset a.example --asset b.example
+
+# a file of one domain per line, in a single CLI call
+xargs -a domains.txt chainpatrol --json asset check
+```
+
+A single-asset `--json` response is a flat object. A bulk response is
+`{ results: [...], summary: { checked, blocked, allowed, unknown, errored } }`, so a script
+can report totals without recounting:
+
+```bash
+chainpatrol --json asset check a.example b.example | jq '.summary'
+```
+
+Markdown and CSV summaries work too:
+
+```bash
+chainpatrol asset check phish.example --output markdown
+chainpatrol asset check a.example b.example --output csv
+```
+
+## asset search
+
+Search assets by content or by numeric ID. Where `asset check` queries the public
+blocklist aggregation, `asset search` queries the asset database directly and returns
+richer context: status, associated reports, takedown details, and which platforms have
+consumed the block.
+
+```bash
+chainpatrol asset search [<content> ...] [--id <id> ...]
+```
+
+| Option | Description |
+| --- | --- |
+| `--id <number>` | Asset ID. Repeatable for bulk lookup. |
+| `--asset <content>` | Asset content. Repeatable, and an alternative to positional arguments. |
+
+```bash
+chainpatrol asset search https://phish.example
+chainpatrol asset search --id 4175269
+chainpatrol --json asset search --id 4175269 --id 4144496 --id 4642520
+chainpatrol asset search --id 12345 --output markdown
+```
+
+## asset list
+
+List assets in the global ChainPatrol blocklist for a given asset type. Defaults to
+`BLOCKED` assets updated in the last day — widen the window with `--from` and `--to`.
+
+```bash
+chainpatrol asset list --asset-type <type> [--from ISO --to ISO] [filters]
+```
+
+| Option | Description |
+| --- | --- |
+| `--asset-type <type>` | Asset type: `URL`, `ADDRESS`, `TWITTER`, `TELEGRAM`, `DISCORD`, … |
+| `--type <type>` | Alias for `--asset-type`. |
+| `--asset-status <s>` | Status filter: `BLOCKED`, `ALLOWED`, or `UNKNOWN`. Defaults to `BLOCKED`. |
+| `--from <iso>` | Start date (`YYYY-MM-DD`). |
+| `--to <iso>` | End date (`YYYY-MM-DD`). |
+| `--per-page <n>` | Page size, 1–10000. Defaults to 100. `--limit` is also accepted. |
+| `--next-page <cursor>` | Cursor returned by a previous response. |
+
+```bash
+chainpatrol asset list --asset-type URL --from 2026-05-01 --to 2026-05-17
+chainpatrol asset list --asset-type ADDRESS --per-page 500 --output csv
+```
+
+## asset types
+
+List every asset type ChainPatrol supports and what each enum value means — for example
+`ARCHIVE_ORG` is an Archive.org Wayback snapshot and `PAGE` is a standalone web page.
+
+```bash
+chainpatrol asset types
+```
+
+This reads a static map bundled with the CLI, so it needs no network and no
+authentication. Use it to pick the right `--asset-type` value for `asset list`,
+[`threats list`](/cli/commands/threats), or [`takedowns list`](/cli/commands/takedowns).
+
+```bash
+chainpatrol asset types
+chainpatrol --json asset types
+chainpatrol asset types --output csv > asset-types.csv
+```
+
+## Related
+
+- [`POST /asset/check`](/external-api/asset-check) — the API behind `asset check`
+- [`POST /asset/list`](/external-api/asset-list) — the API behind `asset list`
+- [Asset type glossary](/glossary/asset-types/url)

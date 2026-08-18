@@ -1,0 +1,45 @@
+---
+title: queues
+icon: layer-group
+description: "Snapshot ChainPatrol's pending review proposals and open takedowns for one organization or across all of them, with configurable staleness windows."
+---
+
+```bash
+chainpatrol queues snapshot [--org <slug>|--all] [--window-hours <n>]
+```
+
+## queues snapshot
+
+Snapshot the operational queues — pending review proposals and open takedowns — so you can
+see what is waiting and how long it has been waiting.
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--all` | Every organization. Staff-only. |
+| `--window-hours <n>` | Hours used for the staleness windows. |
+
+```bash
+# one organization
+chainpatrol queues snapshot --org acme
+
+# everything, over the last week, as a table to paste into a doc
+chainpatrol queues snapshot --all --window-hours 168 --output markdown
+
+# for a spreadsheet
+chainpatrol queues snapshot --all --output csv > queues.csv
+
+# with the reasoning behind each flag
+chainpatrol queues snapshot --org acme --explain
+```
+
+<Note>
+  `--all` requires staff credentials. With a customer credential it fails with [exit code
+  `5`](/cli/output#exit-codes).
+</Note>
+
+## Related
+
+- [`GET /operations/queues/snapshot`](/external-api/operations-queues-snapshot)
+- [`healthchecks run`](/cli/commands/healthchecks) to turn these counts into pass/fail gates
+- [`takedowns list`](/cli/commands/takedowns) for the individual records behind the counts
