@@ -6,3 +6,9 @@ openapi: "POST /detection/configs/update"
 ## Overview
 
 Update an organization threat detection config's status, schedule, and config fields.
+
+To create a new config for a source that is disabled by default, use
+[Create Detection Config](/external-api/detection-configs-create) first. To
+durably disable a source that is enabled by default, set `status` to `DISABLED`
+here rather than calling [Delete Detection Config](/external-api/detection-configs-delete),
+since automation may re-create a default config for such sources.

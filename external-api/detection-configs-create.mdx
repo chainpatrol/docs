@@ -1,0 +1,38 @@
+---
+title: Create Detection Config
+openapi: "POST /detection/configs/create"
+---
+
+## Overview
+
+Create a new threat detection config so a source starts scanning for your
+organization. Sources that are disabled by default have no config row, so they
+cannot be enabled through [Update Detection Config](/external-api/detection-configs-update)
+until you create one here.
+
+A single source can have several configs, each with its own query, schedule, or
+brand. Use `title` and `description` to tell them apart.
+
+## When to use
+
+- Turn on a source that is disabled by default for your organization.
+- Add another config to a source you already run (for example, a second query
+  or a brand-scoped variant).
+- Provision a source-specific `config` payload programmatically.
+
+For an existing config, use [Update Detection Config](/external-api/detection-configs-update)
+instead.
+
+## How it works
+
+- `source` must be a key returned by [List Detection Sources](/external-api/detection-sources-list).
+  Global-only sources and sources with no implementation are rejected.
+- `cron` is only accepted for scheduled (pull-based) sources. Omit it to use
+  the source's default schedule.
+- `config` is validated against the source's `configSchema` from
+  [List Detection Sources](/external-api/detection-sources-list). An empty
+  object `{}` is allowed; schema defaults are applied at scan time.
+- `brandId`, when passed, must belong to your organization. Omit for an
+  organization-wide config.
+- The config and an initial history row are written in one transaction so
+  default-sync jobs don't disable it.

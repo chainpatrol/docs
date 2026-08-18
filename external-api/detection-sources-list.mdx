@@ -1,0 +1,17 @@
+---
+title: List Detection Sources
+openapi: "GET /detection/sources"
+---
+
+## Overview
+
+List the catalog of threat detection sources ChainPatrol can run for your
+organization. Each entry includes the scopes the source supports, whether it is
+pull-based or push-based, its brand scope, the asset types it monitors, and the
+JSON Schema its `config` object must satisfy.
+
+Sources that do not apply to your organization's industry are omitted.
+
+Use this endpoint to discover valid `source` keys and their config shapes before
+calling [Create Detection Config](/external-api/detection-configs-create) or
+[Update Detection Config](/external-api/detection-configs-update).

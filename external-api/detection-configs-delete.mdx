@@ -1,0 +1,30 @@
+---
+title: Delete Detection Config
+openapi: "POST /detection/configs/delete"
+---
+
+## Overview
+
+Soft-delete one org-scoped threat detection config by `configId` so it stops
+scanning. Other configs sharing the same source keep running.
+
+Only configs owned by your organization can be deleted through this endpoint;
+global configs stay staff-only.
+
+## When to use
+
+- Remove a config you no longer need.
+- Retire one variant of a multi-config source without touching the others.
+
+Deleting the *last* config for a source that is enabled by default for your
+organization is **not permanent**: automation re-creates a default config for
+that source on its next run. To stop such a source durably, call
+[Update Detection Config](/external-api/detection-configs-update) with
+`status` set to `DISABLED` instead — automation will not override that.
+
+## How it works
+
+- Look up the `configId` with [List Detection Configs](/external-api/detection-configs-list).
+- The config's `deletedAt` and `updatedAt` are set, and a history row is written
+  with unchanged status so default-sync jobs don't treat the deletion as a
+  status change.
