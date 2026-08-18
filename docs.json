@@ -162,8 +162,11 @@
             "pages": [
               "external-api/threats-list",
               "external-api/detection-list",
+              "external-api/detection-sources-list",
               "external-api/detection-configs-list",
+              "external-api/detection-configs-create",
               "external-api/detection-configs-update",
+              "external-api/detection-configs-delete",
               "external-api/detection-configs-run",
               "external-api/detection-configs-validate",
               "external-api/detection-drift"
