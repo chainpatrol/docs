@@ -14,7 +14,7 @@ with an API key — see [Authentication](/external-api/authentication) for how t
 ## Start here
 
 <CardGroup cols={2}>
-  <Card title="Report Create" icon="flag" href="/external-api/report-create">
+  <Card title="Create Report" icon="flag" href="/external-api/report-create">
     File a report against a scam.
   </Card>
 
@@ -30,7 +30,7 @@ with an API key — see [Authentication](/external-api/authentication) for how t
     Fetch the latest changes to our allowlist/blocklist.
   </Card>
 
-  <Card title="Dispute Create" icon="comment-dots" href="/external-api/dispute-create">
+  <Card title="Create Dispute" icon="comment-dots" href="/external-api/dispute-create">
     Create a dispute for an asset that has been incorrectly flagged.
   </Card>
 
@@ -48,6 +48,14 @@ Look up, submit, scan, and unblock individual assets.
     Check whether an asset is allowed or blocked.
   </Card>
 
+  <Card title="Asset List" icon="list-check" href="/external-api/asset-list">
+    Fetch the full allowlist/blocklist.
+  </Card>
+
+  <Card title="Asset Changelog" icon="book" href="/external-api/asset-changelog">
+    Fetch recent allowlist/blocklist changes.
+  </Card>
+
   <Card title="Asset Search" icon="magnifying-glass" href="/external-api/asset-search">
     Search across assets.
   </Card>
@@ -56,12 +64,8 @@ Look up, submit, scan, and unblock individual assets.
     Submit an asset for review.
   </Card>
 
-  <Card title="Asset List" icon="list-check" href="/external-api/asset-list">
-    Fetch the full allowlist/blocklist.
-  </Card>
-
-  <Card title="Asset Changelog" icon="book" href="/external-api/asset-changelog">
-    Fetch recent allowlist/blocklist changes.
+  <Card title="Unblock Asset" icon="unlock" href="/external-api/asset-unblock">
+    Unblock one of your assets, or open a dispute.
   </Card>
 
   <Card title="Asset Parse" icon="scissors" href="/external-api/asset-parse">
@@ -74,10 +78,6 @@ Look up, submit, scan, and unblock individual assets.
 
   <Card title="Get Scan Result" icon="file-magnifying-glass" href="/external-api/scan-result">
     Retrieve enrichments, checks, and labels for a scan.
-  </Card>
-
-  <Card title="Unblock Asset" icon="unlock" href="/external-api/asset-unblock">
-    Unblock one of your assets, or open a dispute.
   </Card>
 
   <Card title="Get Asset Details" icon="circle-info" href="/external-api/asset-details">
@@ -97,6 +97,43 @@ content. This is the mechanism the ChainPatrol browser extension uses.
 
   <Card title="Confirm Prefix Matches" icon="fingerprint" href="/external-api/asset-blocklist-confirm">
     Resolve full hashes for local prefix hits.
+  </Card>
+</CardGroup>
+
+## Reports
+
+<CardGroup cols={2}>
+  <Card title="Create Report" icon="flag" href="/external-api/report-create">
+    File a report against a scam.
+  </Card>
+
+  <Card title="Search Reports" icon="magnifying-glass" href="/external-api/reports-search">
+    Check for an existing report before creating a new one.
+  </Card>
+</CardGroup>
+
+## Disputes
+
+<CardGroup cols={2}>
+  <Card title="Create Dispute" icon="comment-dots" href="/external-api/dispute-create">
+    Dispute an asset that has been incorrectly flagged.
+  </Card>
+</CardGroup>
+
+## Webhooks
+
+<CardGroup cols={2}>
+  <Card title="Configure Webhook" icon="bell" href="/external-api/webhook-config">
+    Receive real-time notifications for asset status updates and threat detections.
+  </Card>
+</CardGroup>
+
+## Organization brands
+
+<CardGroup cols={2}>
+  <Card title="List Organization Brands" icon="tags" href="/external-api/organization-brands">
+    List every brand on your organization, with terms, tickers, legal documents, and
+    trademark registrations.
   </Card>
 </CardGroup>
 
@@ -138,26 +175,9 @@ Manage the assets and asset groups your organization owns.
   </Card>
 </CardGroup>
 
-## Organization brands
+## Organization reports
 
 <CardGroup cols={2}>
-  <Card title="List Organization Brands" icon="tags" href="/external-api/organization-brands">
-    List every brand on your organization, with terms, tickers, legal documents, and
-    trademark registrations.
-  </Card>
-</CardGroup>
-
-## Reports
-
-<CardGroup cols={2}>
-  <Card title="Report Create" icon="flag" href="/external-api/report-create">
-    File a report against a scam.
-  </Card>
-
-  <Card title="Search Reports" icon="magnifying-glass" href="/external-api/reports-search">
-    Check for an existing report before creating a new one.
-  </Card>
-
   <Card title="List Organization Reports" icon="list" href="/external-api/organization-reports-list">
     Retrieve your organization's reports (`GET /organization/reports`).
   </Card>
@@ -172,11 +192,7 @@ Manage the assets and asset groups your organization owns.
 List detections, inspect their sources, and manage the detection configs that produce them.
 
 <CardGroup cols={2}>
-  <Card title="Threats List" icon="triangle-exclamation" href="/external-api/threats-list">
-    List threats for your organization.
-  </Card>
-
-  <Card title="Detection List" icon="list" href="/external-api/detection-list">
+  <Card title="List Detections" icon="list" href="/external-api/detection-list">
     List detection results.
   </Card>
 
@@ -211,16 +227,16 @@ List detections, inspect their sources, and manage the detection configs that pr
   <Card title="Detection Drift" icon="chart-line-down" href="/external-api/detection-drift">
     Surface zero-result, noisy, and stale configs.
   </Card>
+
+  <Card title="List Threats" icon="triangle-exclamation" href="/external-api/threats-list">
+    List threats for your organization.
+  </Card>
 </CardGroup>
 
-## Disputes and takedowns
+## Takedowns
 
 <CardGroup cols={2}>
-  <Card title="Dispute Create" icon="comment-dots" href="/external-api/dispute-create">
-    Dispute an asset that has been incorrectly flagged.
-  </Card>
-
-  <Card title="Takedowns List" icon="gavel" href="/external-api/takedowns-list">
+  <Card title="List Takedowns" icon="gavel" href="/external-api/takedowns-list">
     List takedowns for your organization.
   </Card>
 </CardGroup>
@@ -246,6 +262,30 @@ List detections, inspect their sources, and manage the detection configs that pr
 
   <Card title="Get Organization Metrics" icon="clock-rotate-left" href="/external-api/organization-metrics">
     Deprecated — use List Organization Metrics.
+  </Card>
+</CardGroup>
+
+## Account and access
+
+<CardGroup cols={2}>
+  <Card title="Validate API Key" icon="key" href="/external-api/validate">
+    Check whether an API key is valid.
+  </Card>
+
+  <Card title="Get Current User" icon="user" href="/external-api/user-me">
+    Details of the authenticated user.
+  </Card>
+
+  <Card title="Update Current User" icon="user-pen" href="/external-api/user-me-update">
+    Update the authenticated user's profile and settings.
+  </Card>
+
+  <Card title="List User Organizations" icon="building" href="/external-api/user-orgs">
+    Organizations the caller can access, with services and integrations.
+  </Card>
+
+  <Card title="Get User Organization" icon="building-circle-check" href="/external-api/user-orgs-get">
+    Fetch a single organization by slug.
   </Card>
 </CardGroup>
 
@@ -292,38 +332,6 @@ The individual checks:
   detected as dead
 - [Missing Contact URL](/external-api/healthchecks-organization-missing-contact-url) — no
   main communication channel configured
-
-## Account and access
-
-<CardGroup cols={2}>
-  <Card title="Validate API Key" icon="key" href="/external-api/validate">
-    Check whether an API key is valid.
-  </Card>
-
-  <Card title="Get Current User" icon="user" href="/external-api/user-me">
-    Details of the authenticated user.
-  </Card>
-
-  <Card title="Update Current User" icon="user-pen" href="/external-api/user-me-update">
-    Update the authenticated user's profile and settings.
-  </Card>
-
-  <Card title="List User Organizations" icon="building" href="/external-api/user-orgs">
-    Organizations the caller can access, with services and integrations.
-  </Card>
-
-  <Card title="Get User Organization" icon="building-circle-check" href="/external-api/user-orgs-get">
-    Fetch a single organization by slug.
-  </Card>
-</CardGroup>
-
-## Webhooks
-
-<CardGroup cols={2}>
-  <Card title="Configure Webhook" icon="bell" href="/external-api/webhook-config">
-    Receive real-time notifications for asset status updates and threat detections.
-  </Card>
-</CardGroup>
 
 <Note>
   Two `POST` endpoints are deprecated and kept only for backwards compatibility:
