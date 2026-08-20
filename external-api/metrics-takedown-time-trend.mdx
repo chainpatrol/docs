@@ -1,0 +1,93 @@
+---
+title: Get Median Time to Takedown Trend
+openapi: "POST /metrics/takedown-time/trend"
+---
+
+## Overview
+
+Return the median time from takedown start to completion **bucketed by the month a
+takedown completed**, over a trailing window of whole months, plus a month-over-month
+change block. This is the trend data behind the org metrics chart, exposed for
+programmatic reporting.
+
+Same exclusion rules as `POST /metrics/takedown-time`: takedowns that took longer than 40
+days and takedowns with a negative recorded duration are dropped from the median.
+
+## When to use it
+
+- Chart takedown speed over time or drop it into a periodic report.
+- Track a single "how are we doing?" number month-over-month via the `change` block.
+- Split the trend into up to five separate series by passing `assetTypes` (for example
+  `["URL", "TWITTER"]`). Omit `assetTypes` for a single series pooled across every asset
+  type.
+- Narrow the trend to a block label, brand type, country, or subset of brands using the
+  same filters as `/metrics/takedown-time`.
+
+## Access
+
+This endpoint is gated per organization on the `median-time-to-takedown-trends-api`
+PostHog flag, separate from the flag on `/metrics/takedown-time`. An organization without
+the flag enabled receives `403 Forbidden`. An unknown `slug` returns `404 Not Found`.
+Contact ChainPatrol to have the flag enabled for your organization.
+
+## Reading the response
+
+- `periods` is every `yyyy-MM` key in the trailing window, oldest first.
+- Each series has one `points` entry per period, oldest first. A month with **no
+  completed takedowns** carries a `null` median with `count: 0`, not `0` — zero would
+  read as "instant takedowns".
+- `change` compares the two most recent months that actually had completed takedowns, so
+  a quiet month in between doesn't read as "no change".
+  - `direction` reads lower-is-better: `"improved"` means the median fell.
+  - `percentChange` and `direction` are `null` when there is no comparable earlier month
+    or when the baseline median is `0` (percentage change off zero is undefined). The
+    `latest` and `previous` points stay populated so a client can still render both
+    medians.
+- When `assetTypes` is passed, series come back in the order requested. A requested type
+  with no data at all still returns a series so a caller's columns stay stable.
+
+## Example response
+
+Two-series trend, trimmed to 3 months:
+
+```json
+{
+  "months": 3,
+  "periods": ["2026-06", "2026-07", "2026-08"],
+  "series": [
+    {
+      "assetType": "URL",
+      "points": [
+        { "period": "2026-06", "medianTakedownMinutes": 960, "medianTakedownHours": 16, "medianTakedownDays": 0.67, "count": 12 },
+        { "period": "2026-07", "medianTakedownMinutes": 720, "medianTakedownHours": 12, "medianTakedownDays": 0.5, "count": 18 },
+        { "period": "2026-08", "medianTakedownMinutes": 480, "medianTakedownHours": 8, "medianTakedownDays": 0.33, "count": 21 }
+      ],
+      "change": {
+        "latest":   { "period": "2026-08", "medianTakedownMinutes": 480, "medianTakedownHours": 8,  "medianTakedownDays": 0.33, "count": 21 },
+        "previous": { "period": "2026-07", "medianTakedownMinutes": 720, "medianTakedownHours": 12, "medianTakedownDays": 0.5,  "count": 18 },
+        "percentChange": -33.33,
+        "direction": "improved"
+      }
+    },
+    {
+      "assetType": "TWITTER",
+      "points": [
+        { "period": "2026-06", "medianTakedownMinutes": 2880, "medianTakedownHours": 48, "medianTakedownDays": 2, "count": 5 },
+        { "period": "2026-07", "medianTakedownMinutes": null, "medianTakedownHours": null, "medianTakedownDays": null, "count": 0 },
+        { "period": "2026-08", "medianTakedownMinutes": 4320, "medianTakedownHours": 72, "medianTakedownDays": 3, "count": 7 }
+      ],
+      "change": {
+        "latest":   { "period": "2026-08", "medianTakedownMinutes": 4320, "medianTakedownHours": 72, "medianTakedownDays": 3, "count": 7 },
+        "previous": { "period": "2026-06", "medianTakedownMinutes": 2880, "medianTakedownHours": 48, "medianTakedownDays": 2, "count": 5 },
+        "percentChange": 50,
+        "direction": "worsened"
+      }
+    }
+  ]
+}
+```
+
+The `TWITTER` series shows the empty-month behavior: July has no completed takedowns, so
+`change` skips it and compares 2026-06 → 2026-08 rather than reading the gap as
+"no change". That is why `previous.period` is included in the payload instead of being
+left implicit as "the month before `latest`".

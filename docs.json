@@ -196,6 +196,8 @@
               "external-api/metrics-summary",
               "external-api/metrics-breakdown",
               "external-api/metrics-found",
+              "external-api/metrics-takedown-time",
+              "external-api/metrics-takedown-time-trend",
               "external-api/organization-metrics-list",
               "external-api/organization-metrics"
             ]
@@ -327,7 +329,9 @@
                     "pages": [
                       "sdk/chainpatrol-client/instance-methods/asset-check",
                       "sdk/chainpatrol-client/instance-methods/asset-list",
-                      "sdk/chainpatrol-client/instance-methods/asset-submit"
+                      "sdk/chainpatrol-client/instance-methods/asset-submit",
+                      "sdk/chainpatrol-client/instance-methods/metrics-takedown-time",
+                      "sdk/chainpatrol-client/instance-methods/metrics-takedown-time-trend"
                     ]
                   }
                 ]
