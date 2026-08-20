@@ -90,7 +90,7 @@
         "tab": "API Reference",
         "groups": [
           {
-            "group": "External API",
+            "group": "Getting Started",
             "pages": [
               "external-api/overview",
               "external-api/authentication"
@@ -100,14 +100,14 @@
             "group": "Assets",
             "pages": [
               "external-api/asset-check",
-              "external-api/asset-search",
-              "external-api/asset-submit",
               "external-api/asset-list",
               "external-api/asset-changelog",
+              "external-api/asset-search",
+              "external-api/asset-submit",
+              "external-api/asset-unblock",
               "external-api/asset-parse",
               "external-api/asset-scan",
               "external-api/scan-result",
-              "external-api/asset-unblock",
               "external-api/asset-details"
             ]
           },
@@ -116,6 +116,31 @@
             "pages": [
               "external-api/asset-blocklist-version",
               "external-api/asset-blocklist-confirm"
+            ]
+          },
+          {
+            "group": "Reports",
+            "pages": [
+              "external-api/report-create",
+              "external-api/reports-search"
+            ]
+          },
+          {
+            "group": "Disputes",
+            "pages": [
+              "external-api/dispute-create"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "external-api/webhook-config"
+            ]
+          },
+          {
+            "group": "Organization Brands",
+            "pages": [
+              "external-api/organization-brands"
             ]
           },
           {
@@ -137,30 +162,8 @@
             ]
           },
           {
-            "group": "Organization Brands",
-            "pages": [
-              "external-api/organization-brands"
-            ]
-          },
-          {
-            "group": "Reports",
-            "pages": [
-              "external-api/report-create",
-              "external-api/reports-search"
-            ]
-          },
-          {
-            "group": "Organization Reports",
-            "pages": [
-              "external-api/organization-reports",
-              "external-api/organization-reports-list",
-              "external-api/organization-proposals-review"
-            ]
-          },
-          {
             "group": "Detections",
             "pages": [
-              "external-api/threats-list",
               "external-api/detection-list",
               "external-api/detection-sources-list",
               "external-api/detection-configs-list",
@@ -169,13 +172,16 @@
               "external-api/detection-configs-delete",
               "external-api/detection-configs-run",
               "external-api/detection-configs-validate",
-              "external-api/detection-drift"
+              "external-api/detection-drift",
+              "external-api/threats-list"
             ]
           },
           {
-            "group": "Disputes",
+            "group": "Organization Reports",
             "pages": [
-              "external-api/dispute-create"
+              "external-api/organization-reports-list",
+              "external-api/organization-proposals-review",
+              "external-api/organization-reports"
             ]
           },
           {
@@ -185,13 +191,23 @@
             ]
           },
           {
-            "group": "Organization Metrics",
+            "group": "Metrics",
             "pages": [
-              "external-api/organization-metrics",
-              "external-api/organization-metrics-list",
               "external-api/metrics-summary",
               "external-api/metrics-breakdown",
-              "external-api/metrics-found"
+              "external-api/metrics-found",
+              "external-api/organization-metrics-list",
+              "external-api/organization-metrics"
+            ]
+          },
+          {
+            "group": "Account & Access",
+            "pages": [
+              "external-api/validate",
+              "external-api/user-me",
+              "external-api/user-me-update",
+              "external-api/user-orgs",
+              "external-api/user-orgs-get"
             ]
           },
           {
@@ -214,22 +230,6 @@
               "external-api/healthchecks-takedowns-automation-off",
               "external-api/healthchecks-assets-dead-asset-spike",
               "external-api/healthchecks-organization-missing-contact-url"
-            ]
-          },
-          {
-            "group": "Account & Access",
-            "pages": [
-              "external-api/validate",
-              "external-api/user-me",
-              "external-api/user-me-update",
-              "external-api/user-orgs",
-              "external-api/user-orgs-get"
-            ]
-          },
-          {
-            "group": "Webhooks",
-            "pages": [
-              "external-api/webhook-config"
             ]
           }
         ]
