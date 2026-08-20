@@ -6,7 +6,7 @@ description: "Query ChainPatrol organization metrics from the CLI: summary count
 ---
 
 ```bash
-chainpatrol metrics <summary|found|breakdown|organization>
+chainpatrol metrics <summary|found|breakdown|takedown-time|takedown-time-trend|organization>
 ```
 
 All four subcommands default to the trailing 3 months when you give no date range. Pass
@@ -63,6 +63,64 @@ chainpatrol metrics breakdown --org acme --by day --this-week
 chainpatrol metrics breakdown --org acme --by type --from 2026-01-01 --to 2026-01-08
 chainpatrol metrics breakdown --org acme --by brand --output csv
 ```
+
+## metrics takedown-time
+
+Median time from takedown start to completion, one row per asset type, over a date range.
+Same exclusions as the chart on the org metrics page: takedowns that took longer than 40
+days, takedowns with a negative recorded duration, and staff-flagged filing/liveness
+delays are excluded.
+
+```bash
+chainpatrol metrics takedown-time --org <slug> [--from ISO --to ISO|--this-week]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--from <iso>` / `--to <iso>` | Date range (ISO 8601). A date-only `--to` covers the whole day in UTC. |
+| `--this-week` | Use the current ISO week. |
+| `--brand <ids>` | Comma-separated brand IDs. |
+
+```bash
+chainpatrol metrics takedown-time --org acme --from 2026-01-01 --to 2026-02-01
+chainpatrol metrics takedown-time --org acme --this-week --output markdown
+```
+
+<Note>
+  Gated per organization on the `median-time-to-takedown-api` feature flag. The command
+  returns an authorization error if the flag is not enabled for your org.
+</Note>
+
+## metrics takedown-time-trend
+
+Median time to takedown bucketed by the month a takedown completed, over a trailing
+window of whole months, with the month-over-month change.
+
+```bash
+chainpatrol metrics takedown-time-trend --org <slug> [--months 12] [--asset-type TWITTER,URL]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--months <n>` | Trailing window in whole months (2–36, default 12). |
+| `--asset-type <list>` | Comma list of asset types to break the trend down by (max 5). Omit for a single series pooled across every asset type. |
+| `--brand <ids>` | Comma-separated brand IDs. |
+
+Months with no completed takedowns come back with a `null` median rather than zero. The
+month-over-month change compares the two most recent months that actually had completed
+takedowns, so a quiet month in between doesn't read as "no change".
+
+```bash
+chainpatrol metrics takedown-time-trend --org acme --months 6
+chainpatrol metrics takedown-time-trend --org acme --asset-type URL,TWITTER --output csv
+```
+
+<Note>
+  Gated per organization on the `median-time-to-takedown-trends-api` feature flag,
+  separate from the flag on `metrics takedown-time`.
+</Note>
 
 ## metrics organization
 
@@ -121,4 +179,6 @@ CHAINPATROL_API_KEY=... chainpatrol metrics organization --json --include report
 ## Related
 
 - [`GET /organization/metrics`](/external-api/organization-metrics)
+- [`POST /metrics/takedown-time`](/external-api/metrics-takedown-time)
+- [`POST /metrics/takedown-time/trend`](/external-api/metrics-takedown-time-trend)
 - [Metrics concept](/concepts/metrics)

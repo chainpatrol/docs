@@ -1,0 +1,37 @@
+---
+title: Get Median Time to Takedown
+openapi: "POST /metrics/takedown-time"
+---
+
+## Overview
+
+Return the median time from takedown start to completion, one row per asset type, for a
+date range. This is the same number the org metrics page shows in its **Median time to
+takedown** chart, exposed for programmatic reporting.
+
+Same exclusion rules as the chart: takedowns that took longer than 40 days and takedowns
+with a negative recorded duration are dropped from the median. Staff-flagged filing and
+liveness-check delays are also excluded.
+
+## When to use it
+
+- Feed a customer-facing dashboard or executive report with the median response time your
+  organization is currently seeing per platform.
+- Compare a specific window (e.g. the last quarter) against another with the `startDate`
+  and `endDate` filters.
+- Narrow the median to a particular block label (`Brand Impersonation`, `Employee
+  Impersonation`, `Targeting Org Users`), brand type, country, or subset of brands.
+
+## Access
+
+This endpoint is gated per organization on the `median-time-to-takedown-api` PostHog flag.
+An organization without the flag enabled receives `403 Forbidden`. An unknown `slug`
+returns `404 Not Found`. Contact ChainPatrol to have the flag enabled for your
+organization.
+
+## Notes
+
+- Dates accept either a full ISO 8601 timestamp or a date-only `YYYY-MM-DD` value. A
+  date-only `endDate` covers the whole day in UTC (through 23:59:59.999Z), so
+  `endDate: "2026-05-31"` includes takedowns completed at any time on May 31.
+- Response rows are sorted ascending by median.

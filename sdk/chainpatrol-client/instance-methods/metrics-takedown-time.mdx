@@ -1,0 +1,122 @@
+---
+title: "getMetricsTakedownTime"
+description: Get the median time from takedown start to completion, one row per asset type, for a date range using the ChainPatrol JavaScript SDK.
+---
+
+The `getMetricsTakedownTime` method returns the median time from takedown start to
+completion for an organization, broken down by asset type. This is the same number the
+ChainPatrol dashboard's **Median time to takedown** chart shows, exposed for
+programmatic reporting.
+
+<Note>
+  This method lives on the `ChainPatrolApiClient` exported from `@chainpatrol/sdk/api`,
+  not on the base `ChainPatrolClient`. The API client covers the full public REST API
+  and is what the ChainPatrol CLI uses under the hood.
+</Note>
+
+## API Reference
+
+### Method Signature
+
+```typescript
+client.getMetricsTakedownTime(
+  input: MetricsTakedownTimeInput
+): Promise<MetricsTakedownTimeResult>
+```
+
+### Parameters
+
+<ParamField path="slug" type="string" required>
+  Organization slug.
+</ParamField>
+
+<ParamField path="startDate" type="string">
+  Only include takedowns completed on or after this date. Accepts an ISO 8601 timestamp
+  or a `YYYY-MM-DD` value (interpreted as midnight UTC).
+</ParamField>
+
+<ParamField path="endDate" type="string">
+  Only include takedowns completed on or before this date. A `YYYY-MM-DD` value covers
+  the whole day in UTC (through 23:59:59.999Z). Pass a full timestamp for a precise
+  cut-off.
+</ParamField>
+
+<ParamField path="blockLabel" type="string">
+  Only include assets blocked with this review label — for example `"Brand
+  Impersonation"`, `"Employee Impersonation"`, or `"Targeting Org Users"`.
+</ParamField>
+
+<ParamField path="brandType" type="string">
+  Only include assets belonging to brands of this type: `INDIVIDUAL`, `ORGANIZATION`, or
+  `PRODUCT`.
+</ParamField>
+
+<ParamField path="countryCodes" type="string[]">
+  Only include assets scanned from these ISO 3166-1 alpha-2 country codes (e.g. `["US",
+  "GB"]`).
+</ParamField>
+
+<ParamField path="brandIds" type="number[]">
+  Only include assets belonging to these brand IDs.
+</ParamField>
+
+### Returns
+
+<ResponseField name="byAssetType" type="array" required>
+  One entry per asset type with completed takedowns in the range, ascending by median.
+
+  <Expandable title="Entry">
+    <ResponseField name="assetType" type="string" required>
+      Asset type the median is computed over (e.g. `URL`, `TWITTER`, `TELEGRAM`).
+    </ResponseField>
+    <ResponseField name="medianTakedownMinutes" type="number" required />
+    <ResponseField name="medianTakedownHours" type="number" required />
+    <ResponseField name="medianTakedownDays" type="number" required />
+    <ResponseField name="count" type="number" required>
+      Number of completed takedowns behind the median.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Access
+
+Gated per organization on the `median-time-to-takedown-api` feature flag. Organizations
+without the flag enabled receive `403 Forbidden`. An unknown `slug` returns `404 Not
+Found`. Contact ChainPatrol to have the flag enabled.
+
+## Exclusions
+
+The median mirrors the chart in the dashboard:
+
+- Takedowns that took longer than 40 days are excluded as outliers.
+- Takedowns with a negative recorded duration are excluded.
+- Staff-flagged filing and liveness-check delays are excluded.
+
+## Example
+
+```typescript
+import { ChainPatrolApiClient, staticApiKey } from "@chainpatrol/sdk/api";
+
+const client = new ChainPatrolApiClient({
+  credential: staticApiKey(process.env.CHAINPATROL_API_KEY!),
+});
+
+const result = await client.getMetricsTakedownTime({
+  slug: "acme",
+  startDate: "2026-01-01",
+  endDate: "2026-03-31",
+});
+
+for (const row of result.byAssetType) {
+  console.log(
+    `${row.assetType}: ${row.medianTakedownDays.toFixed(1)} days (${row.count} takedowns)`,
+  );
+}
+```
+
+## Related
+
+- [`POST /metrics/takedown-time`](/external-api/metrics-takedown-time)
+- [`getMetricsTakedownTimeTrend`](./metrics-takedown-time-trend) — monthly trend and
+  month-over-month change.
+- [Metrics concept](/concepts/metrics)

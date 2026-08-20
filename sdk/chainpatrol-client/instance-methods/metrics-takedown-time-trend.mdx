@@ -1,0 +1,158 @@
+---
+title: "getMetricsTakedownTimeTrend"
+description: Get the median time to takedown bucketed by month over a trailing window, with month-over-month change, using the ChainPatrol JavaScript SDK.
+---
+
+The `getMetricsTakedownTimeTrend` method returns the median time from takedown start to
+completion bucketed by the month a takedown completed, over a trailing window of whole
+months, plus a month-over-month change block for each series.
+
+<Note>
+  This method lives on the `ChainPatrolApiClient` exported from `@chainpatrol/sdk/api`,
+  not on the base `ChainPatrolClient`.
+</Note>
+
+## API Reference
+
+### Method Signature
+
+```typescript
+client.getMetricsTakedownTimeTrend(
+  input: MetricsTakedownTimeTrendInput
+): Promise<MetricsTakedownTimeTrendResult>
+```
+
+### Parameters
+
+<ParamField path="slug" type="string" required>
+  Organization slug.
+</ParamField>
+
+<ParamField path="months" type="number" default="12">
+  Trailing window in whole months, including the current month. Between 2 and 36.
+</ParamField>
+
+<ParamField path="assetTypes" type="string[]">
+  Break the trend down by these asset types — one series each, up to 5. Omit for a
+  single series pooled across every asset type.
+</ParamField>
+
+<ParamField path="blockLabel" type="string">
+  Only include assets blocked with this review label.
+</ParamField>
+
+<ParamField path="brandType" type="string">
+  Only include assets belonging to brands of this type: `INDIVIDUAL`, `ORGANIZATION`, or
+  `PRODUCT`.
+</ParamField>
+
+<ParamField path="countryCodes" type="string[]">
+  Only include assets scanned from these ISO 3166-1 alpha-2 country codes.
+</ParamField>
+
+<ParamField path="brandIds" type="number[]">
+  Only include assets belonging to these brand IDs.
+</ParamField>
+
+### Returns
+
+<ResponseField name="months" type="number" required>
+  Size of the trailing window that was used.
+</ResponseField>
+
+<ResponseField name="periods" type="string[]" required>
+  Every `yyyy-MM` key in the window, oldest first.
+</ResponseField>
+
+<ResponseField name="series" type="array" required>
+  One series per requested asset type, in the order requested. A single pooled series is
+  returned when `assetTypes` is omitted.
+
+  <Expandable title="Series">
+    <ResponseField name="assetType" type="string | null" required>
+      Asset type the series is computed for. `null` for the pooled series.
+    </ResponseField>
+    <ResponseField name="points" type="array" required>
+      One point per month in the window, oldest first. A month with no completed
+      takedowns carries a `null` median with `count: 0`, not zero.
+      <Expandable title="Point">
+        <ResponseField name="period" type="string" required>
+          `yyyy-MM` key.
+        </ResponseField>
+        <ResponseField name="medianTakedownMinutes" type="number | null" required />
+        <ResponseField name="medianTakedownHours" type="number | null" required />
+        <ResponseField name="medianTakedownDays" type="number | null" required />
+        <ResponseField name="count" type="number" required />
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="change" type="object" required>
+      Month-over-month comparison for this series.
+      <Expandable title="Change">
+        <ResponseField name="latest" type="Point | null">
+          Most recent month in the window that had completed takedowns.
+        </ResponseField>
+        <ResponseField name="previous" type="Point | null">
+          Month with completed takedowns immediately before `latest`, skipping empty
+          months.
+        </ResponseField>
+        <ResponseField name="percentChange" type="number | null">
+          Percent change from `previous` to `latest`. Negative means takedowns got
+          faster. `null` when there is no comparable earlier month or when the baseline
+          median is `0` (percentage change off zero is undefined).
+        </ResponseField>
+        <ResponseField name="direction" type="'improved' | 'worsened' | 'unchanged' | null">
+          Sign of `percentChange`, read as lower-is-better. `null` when `percentChange`
+          is `null`.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Access
+
+Gated per organization on the `median-time-to-takedown-trends-api` feature flag,
+separate from the flag on `getMetricsTakedownTime`. Organizations without the flag
+enabled receive `403 Forbidden`. An unknown `slug` returns `404 Not Found`.
+
+## Reading the change block
+
+The comparison uses the two most recent months that actually had completed takedowns, so
+a quiet month in between doesn't read as "no change". Treat `percentChange: null` as
+"not computable — use `latest`/`previous`", not as an error. The three null cases are:
+no month with data, only one month with data, or a zero baseline.
+
+## Example
+
+```typescript
+import { ChainPatrolApiClient, staticApiKey } from "@chainpatrol/sdk/api";
+
+const client = new ChainPatrolApiClient({
+  credential: staticApiKey(process.env.CHAINPATROL_API_KEY!),
+});
+
+const trend = await client.getMetricsTakedownTimeTrend({
+  slug: "acme",
+  months: 6,
+  assetTypes: ["URL", "TWITTER"],
+});
+
+for (const series of trend.series) {
+  const label = series.assetType ?? "All asset types";
+  const { latest, previous, percentChange, direction } = series.change;
+  if (latest && previous && percentChange !== null) {
+    console.log(
+      `${label}: ${previous.period} → ${latest.period}: ${percentChange.toFixed(1)}% (${direction})`,
+    );
+  } else {
+    console.log(`${label}: not enough data to compute month-over-month change`);
+  }
+}
+```
+
+## Related
+
+- [`POST /metrics/takedown-time/trend`](/external-api/metrics-takedown-time-trend)
+- [`getMetricsTakedownTime`](./metrics-takedown-time) — point-in-time median for a date
+  range.
+- [Metrics concept](/concepts/metrics)

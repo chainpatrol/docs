@@ -28,3 +28,28 @@ Checks the status of an asset to see if it is malicious or not.
 ### [asset.list()](./instance-methods/asset-list)
 
 Lists all assets (and their statuses) that have been reviewed by ChainPatrol.
+
+---
+
+## Metrics via the API client
+
+For organization metrics — including the median time-to-takedown endpoints — use the
+`ChainPatrolApiClient` exported from `@chainpatrol/sdk/api`. It covers the full public
+REST API surface and is what the [ChainPatrol CLI](/cli/overview) uses under the hood.
+
+```js
+import { ChainPatrolApiClient, staticApiKey } from "@chainpatrol/sdk/api";
+
+const client = new ChainPatrolApiClient({
+  credential: staticApiKey(process.env.CHAINPATROL_API_KEY),
+});
+```
+
+### [getMetricsTakedownTime()](./instance-methods/metrics-takedown-time)
+
+Median time from takedown start to completion for a date range, one row per asset type.
+
+### [getMetricsTakedownTimeTrend()](./instance-methods/metrics-takedown-time-trend)
+
+Median time to takedown bucketed by month over a trailing window, with month-over-month
+change.
