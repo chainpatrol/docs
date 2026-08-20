@@ -158,7 +158,7 @@
             ]
           },
           {
-            "group": "Threats",
+            "group": "Detections",
             "pages": [
               "external-api/threats-list",
               "external-api/detection-list",
