@@ -1,0 +1,33 @@
+---
+title: Asset types
+sidebarTitle: Overview
+description: "Glossary of ChainPatrol asset type enums such as URL, PAGE, ADDRESS, and the social and app-store types listed by the API."
+---
+
+The **Glossary** is a reference for **asset types**: the enum values used when you report, check, list, or filter an asset.
+
+Product ideas such as organizations, detections, reports, and takedowns are in [Concepts](/concepts/organizations).
+
+`URL`, `PAGE`, and `ADDRESS` have dedicated pages because those pages already document normalization. Every other type is listed with the same labels used in [`POST /threats/list`](/external-api/threats-list), [`POST /detection/list`](/external-api/detection-list), and [`chainpatrol asset types`](/cli/commands/asset#asset-types).
+
+## Core types
+
+<CardGroup cols={3}>
+  <Card title="URL" href="/glossary/asset-types/url">
+    Website URLs. Blocking a domain also covers its subdomains.
+  </Card>
+  <Card title="PAGE" href="/glossary/asset-types/page">
+    Web pages, including paths on shared hosts in the PAGE domain list.
+  </Card>
+  <Card title="ADDRESS" href="/glossary/asset-types/address">
+    Blockchain addresses.
+  </Card>
+</CardGroup>
+
+## Other types
+
+| Group | Types |
+| --- | --- |
+| [Social and messaging](/glossary/asset-types/social) | Social and messaging enums from the API |
+| [Apps and extensions](/glossary/asset-types/apps) | App store and browser addon enums from the API |
+| [Other platforms](/glossary/asset-types/other) | Remaining enums from the API and CLI |

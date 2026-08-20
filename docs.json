@@ -342,9 +342,13 @@
           {
             "group": "Asset Types",
             "pages": [
+              "glossary/overview",
               "glossary/asset-types/url",
               "glossary/asset-types/page",
-              "glossary/asset-types/address"
+              "glossary/asset-types/address",
+              "glossary/asset-types/social",
+              "glossary/asset-types/apps",
+              "glossary/asset-types/other"
             ]
           }
         ]
