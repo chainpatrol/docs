@@ -162,6 +162,14 @@
             ]
           },
           {
+            "group": "Organization Reports",
+            "pages": [
+              "external-api/organization-reports-list",
+              "external-api/organization-proposals-review",
+              "external-api/organization-reports"
+            ]
+          },
+          {
             "group": "Detections",
             "pages": [
               "external-api/detection-list",
@@ -174,14 +182,6 @@
               "external-api/detection-configs-validate",
               "external-api/detection-drift",
               "external-api/threats-list"
-            ]
-          },
-          {
-            "group": "Organization Reports",
-            "pages": [
-              "external-api/organization-reports-list",
-              "external-api/organization-proposals-review",
-              "external-api/organization-reports"
             ]
           },
           {

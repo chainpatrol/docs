@@ -110,14 +110,6 @@ content. This is the mechanism the ChainPatrol browser extension uses.
   <Card title="Search Reports" icon="magnifying-glass" href="/external-api/reports-search">
     Check for an existing report before creating a new one.
   </Card>
-
-  <Card title="List Organization Reports" icon="list" href="/external-api/organization-reports-list">
-    Retrieve your organization's reports (`GET /organization/reports`).
-  </Card>
-
-  <Card title="Get Organization Reports" icon="clock-rotate-left" href="/external-api/organization-reports">
-    Deprecated — use List Organization Reports.
-  </Card>
 </CardGroup>
 
 ## Disputes
@@ -180,6 +172,18 @@ Manage the assets and asset groups your organization owns.
 
   <Card title="Delete Asset Group" icon="folder-minus" href="/external-api/organization-asset-groups-delete">
     Delete an asset group.
+  </Card>
+</CardGroup>
+
+## Organization reports
+
+<CardGroup cols={2}>
+  <Card title="List Organization Reports" icon="list" href="/external-api/organization-reports-list">
+    Retrieve your organization's reports (`GET /organization/reports`).
+  </Card>
+
+  <Card title="Get Organization Reports" icon="clock-rotate-left" href="/external-api/organization-reports">
+    Deprecated — use List Organization Reports.
   </Card>
 </CardGroup>
 
