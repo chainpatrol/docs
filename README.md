@@ -2,6 +2,8 @@
 
 This repo contains documentation setup for ChainPatrol, currently available at [chainpatrol.mintlify.app](https://chainpatrol.mintlify.app)
 
+Agents can load these docs from [llms.txt](https://chainpatrol.com/docs/llms.txt).
+
 ### 🚀 Setup
 
 Simply merge in this PR and your documentation will be connected!
