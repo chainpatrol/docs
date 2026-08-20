@@ -9,9 +9,11 @@ description: "List ChainPatrol organizations and filter them by subscription sta
 chainpatrol orgs <list|get <slug>|assets list|asset-groups list>
 ```
 
-`orgs list` and `orgs get` operate on the organizations your credential can see. The
-nested subcommands — `assets` and `asset-groups` — operate on the organization tied to
-your API key.
+`orgs list` and `orgs get` operate on the organizations your credential can see.
+`orgs assets list` accepts `--org <slug>` so staff and multi-org callers can target any
+organization they have access to; org-scoped API keys can omit the flag and use their own
+organization. `orgs asset-groups list` still operates on the organization tied to your API
+key.
 
 ## orgs list
 
@@ -64,19 +66,25 @@ chainpatrol orgs get acme --output markdown
 
 ## orgs assets list
 
-List the assets in your organization's allowlist. The organization is derived from your API
-key.
+List the assets in an organization's allowlist. Pass `--org <slug>` to choose one, or omit
+it to use the organization tied to your API key.
 
 | Option | Description |
 | --- | --- |
+| `--org <slug>` | Organization slug. Omit for organization-scoped API keys. Required for user-scoped keys and staff sessions. |
 | `--asset-type <type>` | Filter by asset type (`URL`, `ADDRESS`, …). `--type` is an alias. |
 | `--group-id <n>` | Filter by group ID. Use `-1` for ungrouped assets only. |
 | `--query <text>` | Search asset content (substring). |
 | `--per-page <n>` | Page size, 1–1000. Defaults to 100. `--limit` is also accepted. |
 | `--next-page <cursor>` | Cursor returned by a previous response. |
 
+An organization-scoped API key that passes `--org` for a different organization is rejected
+with a `403`, and an unknown slug returns a `404` — the same way `reports list --org`
+already behaves.
+
 ```bash
 chainpatrol orgs assets list --asset-type URL
+chainpatrol orgs assets list --org acme --per-page 1000
 chainpatrol orgs assets list --group-id 12 --per-page 250 --output csv
 ```
 
