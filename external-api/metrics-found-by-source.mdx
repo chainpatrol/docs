@@ -1,0 +1,90 @@
+---
+title: Get Blocked Threats by First-Report Source
+openapi: "POST /metrics/found-by-source"
+---
+
+## Overview
+
+Count the distinct currently blocked assets whose earliest report for your organization
+falls in a date range, split by who reported them first: your team (`customer`) or
+ChainPatrol (`chainpatrol`). Use this endpoint to see how many blocked threats were
+discovered proactively by ChainPatrol versus submitted by your own team and community.
+
+<Note>
+  This endpoint is gated behind the `threat-discovery-source-api` feature flag on a
+  per-organization basis. If the flag is not enabled for your organization, the API
+  returns a 403 Forbidden error. Contact ChainPatrol to enable access.
+</Note>
+
+## How assets are counted
+
+- **First-report cohort** — Each asset is attributed to the source of its earliest
+  non-deleted report for your organization. The date range filters on when that first
+  report was created, not on when the asset was blocked.
+- **Blocked only** — Only assets whose current status (or pending status) is `BLOCKED`
+  are counted. Assets that were reported in the range but never blocked, or later
+  unblocked, are excluded.
+- **Source buckets**:
+  - `customer` — assets first reported by your team, an external reporter, or a
+    customer-role user.
+  - `chainpatrol` — assets first reported by ChainPatrol staff or automation. Staff
+    and automation are collapsed into a single bucket.
+  - `totals` — `customer` + `chainpatrol`.
+
+<Warning>
+  `totals.blocked` does not match the counts from [`POST
+  /metrics/found`](/external-api/metrics-found). This endpoint windows on each asset's
+  first report date, while `/metrics/found` counts assets by when they were blocked.
+</Warning>
+
+## Date handling
+
+- `startDate` and `endDate` are required, and `startDate` must be on or before
+  `endDate`.
+- Date-only values (`YYYY-MM-DD`) are interpreted in UTC. `startDate` begins at
+  midnight UTC and `endDate` covers the whole day (through 23:59:59.999 UTC). Pass a
+  full ISO 8601 timestamp for a precise cut-off.
+- Impossible calendar dates (for example `2026-02-31`) are rejected with a 400 error
+  instead of being rolled forward to the next month.
+
+## Brand filtering
+
+Pass the optional `brandIds` array to restrict counts to assets belonging to specific
+brands. Every ID must belong to your organization. If any ID references a brand outside
+your organization (or a deleted brand), the API returns a 404 error instead of silently
+ignoring it.
+
+## Example request
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/found-by-source \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org-slug",
+    "startDate": "2026-07-01",
+    "endDate": "2026-07-31",
+    "brandIds": [123]
+  }'
+```
+
+## Example response
+
+```json
+{
+  "range": {
+    "startDate": "2026-07-01T00:00:00.000Z",
+    "endDate": "2026-07-31T23:59:59.999Z"
+  },
+  "customer": {
+    "blocked": 42
+  },
+  "chainpatrol": {
+    "blocked": 137
+  },
+  "totals": {
+    "blocked": 179
+  }
+}
+```
