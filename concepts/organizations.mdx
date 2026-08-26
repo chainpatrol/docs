@@ -1,6 +1,6 @@
 ---
 title: "Organizations"
-description: "How organizations in ChainPatrol group brands, assets, team members, and services like detection, reviewing, takedowns, and wallet blocking in one workspace"
+description: "How organizations in ChainPatrol group brands, assets, team members, and services like detection, reviewing, takedowns, and blocklisting in one workspace"
 ---
 
 ## Overview
@@ -51,7 +51,7 @@ In addition to brands, your organization also has **assets**, the digital proper
 - **Social Accounts** - Twitter, Discord, Telegram, etc.
 - **App Listings** - App store and extension marketplace listings
 - **Email Addresses** - Official company and team emails
-- **Wallet Addresses** - Blockchain addresses and contracts (crypto-specific)
+- **Wallet Addresses** - Blockchain addresses and contracts
 - **Other Properties** - GitHub repos, forums, documentation sites
 
 We track your official assets so we can spot copycats and general phishing pages that mimic your legitimate sites or channels. When we find something suspiciously similar to your assets but not actually yours, it gets flagged for review.
@@ -76,9 +76,9 @@ Turns on ChainPatrol's review workflows, where our team validates suspicious ass
 
 Adds a final approval step for specific types of assets. When enabled, you choose which asset categories (like domains, social media, or messaging platforms) require explicit confirmation from an admin in your organization before ChainPatrol's blocklist decisions take effect. If you don't select any specific types, all asset types will require approval. This is optional, for organizations requiring internal oversight.
 
-### Wallet Blocking
+### Blocklisting
 
-Allows approved crypto-related threats to be added to ChainPatrol's global blocklist, which is distributed to partner wallets like Coinbase Wallet and MetaMask, alongside browsers, DNS providers, and other partner platforms, to protect users from known malicious addresses. Most impactful for organizations with a wallet or crypto presence, though the underlying blocklist protects across wallets, browsers, and other platforms for every organization.
+Adds approved threats to ChainPatrol's global blocklist, which is distributed to browsers, DNS providers, antivirus tools, partner wallets like Coinbase Wallet and MetaMask, and other partner platforms to protect users from known malicious assets in real time.
 
 ### Takedowns
 
@@ -111,7 +111,7 @@ You control who can access your organization and what they're allowed to do.
 - **Member Management** - Invite, remove, or modify team members
 
 <Warning>
-This permission system ensures that potentially destructive actions (like turning on Wallet Blocking or Automated Takedowns) only happen with your organization's explicit permission.
+This permission system ensures that potentially destructive actions (like turning on Blocklisting or Automated Takedowns) only happen with your organization's explicit permission.
 </Warning>
 
 ChainPatrol's staff handle the day-to-day security operations, but you retain ultimate control over approvals, visibility, and how the platform integrates with your team.
