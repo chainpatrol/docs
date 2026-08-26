@@ -196,6 +196,7 @@
               "external-api/metrics-summary",
               "external-api/metrics-breakdown",
               "external-api/metrics-found",
+              "external-api/metrics-found-by-source",
               "external-api/organization-metrics-list",
               "external-api/organization-metrics"
             ]
