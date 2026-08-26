@@ -2,12 +2,12 @@
 icon: scale-balanced
 title: Asset Check vs. Asset List Endpoint
 sidebarTitle: Asset Check vs. List
-description: Compare ChainPatrol's Asset Check and Asset List API endpoints to choose the right approach for wallet URL lookups, blocklist syncing, and privacy.
+description: Compare ChainPatrol's Asset Check and Asset List API endpoints to choose the right approach for wallet and app URL lookups, blocklist syncing, and privacy.
 ---
 
 ## Option 1: Asset Check
 
-The [Asset Check](/external-api/asset-check) endpoint allows you to check if a URL is allowed or blocked by ChainPatrol. It's the simplest way to start using ChainPatrol in your wallet since it's a single HTTP request, which avoids the complexities of managing a list of URLs yourself.
+The [Asset Check](/external-api/asset-check) endpoint allows you to check if a URL is allowed or blocked by ChainPatrol. It's the simplest way to start using ChainPatrol in your wallet or app since it's a single HTTP request, which avoids the complexities of managing a list of URLs yourself.
 
 ### Advantages
 
@@ -21,7 +21,7 @@ The [Asset Check](/external-api/asset-check) endpoint allows you to check if a U
 
 ## Option 2: Asset List
 
-The [Asset List](/external-api/asset-list) endpoint allows you to fetch URLs on our allowlist/blocklist in bulk. This is useful if you want to check a large number of URLs at once, or if you want to keep a local copy of the URLs for privacy or auditing reasons. Using this endpoint requires you to manage your own list of URLs, which can be a bit more complicated. We recommend it only for wallets that have a large number of users and/or specific requirements about data storage and access.
+The [Asset List](/external-api/asset-list) endpoint allows you to fetch URLs on our allowlist/blocklist in bulk. This is useful if you want to check a large number of URLs at once, or if you want to keep a local copy of the URLs for privacy or auditing reasons. Using this endpoint requires you to manage your own list of URLs, which can be a bit more complicated. We recommend it only for wallets and apps that have a large number of users and/or specific requirements about data storage and access.
 
 ### Advantages
 
@@ -34,4 +34,4 @@ The [Asset List](/external-api/asset-list) endpoint allows you to fetch URLs on 
 - **Data staleness**: You have to fetch the list of URLs from our servers periodically to ensure that you have the most up-to-date list. If you don't, you may miss new URLs that are added to the list.
 - **No aggregation**: The asset list endpoint only returns URLs that have been reported to ChainPatrol directly and does not aggregate data from other sources. This means that you may miss URLs that are not reported to ChainPatrol directly, but are still blocked by ChainPatrol.
 
-Overall, we recommend using the Asset Check endpoint for most wallets. If you have a large number of users and/or specific requirements around data storage and access, reach out to us and we can help you decide which endpoint is best for you.
+Overall, we recommend using the Asset Check endpoint for most wallets and apps. If you have a large number of users and/or specific requirements around data storage and access, reach out to us and we can help you decide which endpoint is best for you.
