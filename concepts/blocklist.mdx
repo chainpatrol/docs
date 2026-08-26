@@ -1,20 +1,20 @@
 ---
 title: "Blocklist"
-description: "How ChainPatrol's blocklist confirms and distributes phishing sites, scam accounts, and malicious wallet addresses to browsers, wallets, and partners"
+description: "How ChainPatrol's blocklist confirms and distributes phishing sites, scam accounts, and malicious wallet addresses to browsers, DNS providers, wallets, and partners"
 ---
 
 ## Overview
 
-A blocklist (also known as a denylist) is a database of confirmed malicious entities that should be blocked or flagged to protect users. In the context of online security, a blocklist contains verified phishing websites, scam social media accounts, fraudulent crypto addresses, and other malicious digital assets.
+A blocklist (also known as a denylist) is a database of confirmed malicious entities that should be blocked or flagged to protect users. In the context of online security, a blocklist contains verified phishing websites, scam social media accounts, fraudulent wallet addresses, and other malicious digital assets, spanning brands across Fintech, Banking, Crypto, iGaming, VC, and more.
 
 ChainPatrol's blocklist is continuously updated through multiple sources:
 
 - **Community reports** from users and partner organizations
 - **Automated detection systems** that monitor the internet for new threats
-- **Threat intelligence partnerships** with organizations like Crypto-ISAC (Cryptocurrency Information Sharing and Analysis Center)
+- **Threat intelligence partnerships** with industry-specific organizations, including Crypto-ISAC (Cryptocurrency Information Sharing and Analysis Center)
 - **Manual verification** by security experts
 
-<Note>Through our partnership with Crypto-ISAC, ChainPatrol participates in bidirectional threat intelligence sharing, enabling faster detection and blocking of malicious domains across the cryptocurrency ecosystem.</Note>
+<Note>Crypto-ISAC is one of several threat-intel partnerships ChainPatrol maintains (crypto-specific). Through it, ChainPatrol participates in bidirectional threat intelligence sharing, enabling faster detection and blocking of malicious domains across the cryptocurrency ecosystem — complementing similar sharing relationships across the other industries ChainPatrol protects.</Note>
 
 <Info>
 ChainPatrol's blocklist functions as a **threat intelligence database** that's continuously updated and distributed in real-time.
@@ -45,7 +45,7 @@ ChainPatrol's blocklist provides **immediate protection** through a "blocklist-f
 4. **Persistent Protection** - Even if a scammer sets up 100 copycat sites, each one gets blocklisted as soon as it's detected
 
 <Warning>
-In web3, where transactions are irreversible and scams can drain wallets in seconds, **prevention at the point of interaction is critical**.
+In web3, where transactions are irreversible and scams can drain wallets in seconds, **prevention at the point of interaction is critical**. The same urgency applies across other industries ChainPatrol protects — a fintech or banking account takeover, or fraudulent iGaming account activity, can be just as damaging once it happens, which is why point-of-interaction prevention matters everywhere, not just in crypto.
 </Warning>
 
 ### Network Effects
@@ -62,7 +62,7 @@ Anyone can report suspicious assets through our public reporting interface. Comm
 
 ### Partner Organizations
 
-Organizations using ChainPatrol for brand protection contribute threat intelligence. Wallet providers like MetaMask, Phantom, and Coinbase Wallet share detected threats. Security alliances including SEAL-ISAC, Crypto-ISAC, and other information sharing networks contribute, as do blockchain projects and DAOs monitoring for impersonation attacks.
+Organizations using ChainPatrol for brand protection — across Fintech, Banking, Crypto, iGaming, VC, and more — contribute threat intelligence from their own detection systems. Wallet providers like MetaMask, Phantom, and Coinbase Wallet share detected threats. Security alliances including SEAL-ISAC, Crypto-ISAC, and other information sharing networks contribute, as do blockchain projects and DAOs monitoring for impersonation attacks.
 
 ### Automated Detection
 
@@ -120,9 +120,9 @@ Full URLs (specific phishing pages), domains (root domains and subdomains), stat
 
 Twitter/X accounts, Telegram groups and channels, Discord servers, YouTube channels, and Facebook pages and groups. Each includes platform-specific identifiers like account handles, user IDs, and channel links.
 
-### Blockchain Addresses
+### Blockchain Addresses (crypto-specific)
 
-Ethereum addresses (scam contracts, phishing wallets, rug pull contracts), multi-chain support across multiple blockchain networks, contract metadata including code analysis and transaction patterns, and labels indicating scam type (fake airdrop, phishing, Ponzi scheme).
+Ethereum addresses (scam contracts, phishing wallets, rug pull contracts), multi-chain support across multiple blockchain networks, contract metadata including code analysis and transaction patterns, and labels indicating scam type (fake airdrop, phishing, Ponzi scheme). This asset type is most relevant to organizations with a crypto or wallet presence; other asset types below cover the rest of ChainPatrol's customer base.
 
 ### Email Addresses
 
@@ -150,13 +150,13 @@ ChainPatrol's blocklist protects users across the ecosystem through multiple int
 
 Google Safe Browsing powers protection in Chrome, Safari, Edge, Firefox, and other browsers. Cloudflare Gateway provides network-level protection for enterprises. Blocklisted URLs are prevented from loading or show warning pages, protecting users regardless of which website they're visiting.
 
-### Wallet Providers
+### Wallet Providers (crypto-specific)
 
-MetaMask (direct integration via Eth-Phishing-Detect), Phantom (real-time API integration), Coinbase Wallet, Trust Wallet, Rainbow, Ledger, WalletConnect, and additional wallets across the ecosystem. Wallets warn users before connecting to malicious sites or interacting with scam contracts, preventing fund loss at the point of transaction.
+MetaMask (direct integration via Eth-Phishing-Detect), Phantom (real-time API integration), Coinbase Wallet, Trust Wallet, Rainbow, Ledger, WalletConnect, and additional wallets across the ecosystem. Wallets warn users before connecting to malicious sites or interacting with scam contracts, preventing fund loss at the point of transaction. This is one of several integration types alongside Browser Security, Applications, Threat Intelligence, and Enterprise Security below, which protect brands across Fintech, Banking, iGaming, VC, and more.
 
 ### Applications
 
-Polymarket (content moderation and user protection), Snapshot (governance platform security), NFT marketplaces (filtering scam collections and malicious listings), and DeFi protocols (protecting users from fake interfaces and phishing sites). Applications can automatically filter malicious content and warn users about threats specific to their platform.
+Polymarket (content moderation and user protection), Snapshot (governance platform security), NFT marketplaces (filtering scam collections and malicious listings), and DeFi protocols (protecting users from fake interfaces and phishing sites). Applications can automatically filter malicious content and warn users about threats specific to their platform. This same integration model applies to platforms outside of crypto — fintech, banking, and iGaming applications can integrate the blocklist the same way to filter malicious content and warn their users.
 
 ### Threat Intelligence
 
