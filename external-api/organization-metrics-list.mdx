@@ -83,6 +83,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/metrics?startDate=20
 | brandSlug | string | No       | Filter metrics by specific brand. Requires brands-metrics feature flag.                  |
 | startDate | string | No       | Start date for metrics (ISO 8601 format). Defaults to beginning of time if not provided. |
 | endDate   | string | No       | End date for metrics (ISO 8601 format). Defaults to current date if not provided.        |
+| include   | array  | No       | Subset of metrics to compute. Allowed values: `reports`, `newThreats`, `threatsWatchlisted`, `takedownsFiled`, `takedownsInProgress`, `takedownsCompleted`, `takedownsCancelled`, `domainThreats`, `twitterThreats`, `telegramThreats`, `otherThreats`, `blockedByType`, `blockedByDay`. Omit for all metrics. Fields not in `include` come back as `null`. |
 
 ## Response
 
@@ -95,7 +96,9 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/metrics?startDate=20
     "newThreats": 245,
     "threatsWatchlisted": 18,
     "takedownsFiled": 45,
+    "takedownsInProgress": 8,
     "takedownsCompleted": 32,
+    "takedownsCancelled": 5,
     "domainThreats": 120,
     "twitterThreats": 40,
     "telegramThreats": 25,
@@ -137,7 +140,9 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/metrics?startDate=20
 | metrics.newThreats             | number | Number of new threats blocked                              |
 | metrics.threatsWatchlisted     | number | Number of threats watchlisted (0 for brand-filtered queries) |
 | metrics.takedownsFiled         | number | Total number of takedown requests filed                    |
+| metrics.takedownsInProgress    | number | Number of takedowns currently in progress                  |
 | metrics.takedownsCompleted     | number | Total number of takedowns successfully completed           |
+| metrics.takedownsCancelled     | number | Number of takedowns currently cancelled                    |
 | metrics.domainThreats          | number | Number of URL/domain threats blocked                       |
 | metrics.twitterThreats         | number | Number of Twitter threats blocked                          |
 | metrics.telegramThreats        | number | Number of Telegram threats blocked                         |
@@ -462,6 +467,7 @@ Returned when brand slug is not found or doesn't belong to your organization:
 - All timestamps are in ISO 8601 format with UTC timezone
 - If no date range is provided, all-time metrics are returned
 - Metrics are calculated in real-time based on the specified date range
+- `takedownsInProgress` and `takedownsCancelled` count takedowns currently in that status whose `updatedAt` falls in the requested window (same windowing as `takedownsFiled`), so they reconcile with the Takedowns list filtered by status over the same date range
 - The `blockedByType` array includes all asset types that have blocked threats
 - The `blockedByDay` array provides time series data for visualization
 - Brand filtering requires the brands-metrics feature flag
