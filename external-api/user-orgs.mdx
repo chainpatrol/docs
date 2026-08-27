@@ -25,4 +25,8 @@ and Power of Attorney attachments, and every org-level trademark registration on
   office, registration number, and a certificate PDF link when one has been uploaded — use
   it to identify which customers have or have not added trademarks.
 - The optional `subscriptionStatus`, `services`, and `obligatoryAdminApproval` filters
-  narrow the result server-side. `INACTIVE` organizations are always excluded.
+  narrow the result server-side.
+- `subscriptionStatus` defaults to the live statuses (`PROSPECT`, `POC`, `ACTIVE`,
+  `INTEGRATION`). Pass `INACTIVE` explicitly to include churned organizations. The filter
+  does not widen access: customer callers remain scoped to their own memberships, so it
+  only decides which of the caller's already-visible organizations come back.
