@@ -1,6 +1,6 @@
 ---
 title: "Metrics"
-description: "How ChainPatrol reports threat volume, takedowns filed and completed, and median response time across brands, asset types, and custom time windows"
+description: "How ChainPatrol reports threat volume, takedown success rates, completed takedowns, and median response times across brands and time windows"
 ---
 
 ## Overview
@@ -39,7 +39,7 @@ Many metrics can be filtered by brand and broken down by:
 
 **Breakdowns** - Threats by asset type, threats per brand, detections by source, category distributions
 
-**Timelines and Speed** - Threats blocked per day, takedowns completed per day, median time to takedown, trend analysis
+**Timelines and Speed** - Threats blocked per day, takedowns completed per day, median time to takedown, takedown success rate, trend analysis
 
 ## What Lives Inside Metrics
 
@@ -72,6 +72,8 @@ Threats blocked per brand inside your organization, showing which brands are tar
 
 **Median Time to Takedown** - Calculated from when a takedown request is created to when it is first marked completed. Available as overall median, by asset type (domains, social media, etc.), and by threat category (brand vs. employee impersonation). Lower median times indicate faster threat removal and better provider relationships.
 
+**Takedown Success Rate** - The share of filed takedowns that ended in a removal, broken down by asset type. A takedown counts toward the period in which it was first submitted to a provider, and takedowns that were opened but never filed are excluded. Two rates are shown: the overall success rate, where still-open takedowns count against the result, and the resolved success rate, which only considers takedowns that reached an outcome. Available on the Metrics page and via the [takedown success rate API endpoint](/external-api/metrics-takedown-success-rate) when enabled for your organization.
+
 ## How Metrics Relate to Other Concepts
 
 **Assets and Asset Scans** - When asset scans and reviews lead to an asset being blocked, that asset contributes to metrics such as New Threats, Threats by asset type, and Threats blocked per day. Ongoing scans and liveness updates ensure that metrics reflect the current state of your threat surface.
@@ -80,7 +82,7 @@ Threats blocked per brand inside your organization, showing which brands are tar
 
 **Reports and Reviews** - Reports raised by your team or users drive the Reports metric. Review outcomes (e.g., approving a threat as real and blocking it) flow into threat and takedown metrics. Shows how well your review process is keeping up with incoming threats.
 
-**Takedowns** - Takedown records power Takedowns Filed, Takedowns Completed, and Median time to takedown per asset type and category. These metrics show how quickly threats are being removed once identified.
+**Takedowns** - Takedown records power Takedowns Filed, Takedowns Completed, Median time to takedown, and Takedown success rate per asset type and category. These metrics show how quickly and how reliably threats are being removed once identified.
 
 **Brands and Services** - Metrics can be filtered by brand to show which brands are most targeted. Enabling services like detection, reviewing, takedowns, and wallet blocking typically increases visibility in metrics (more threats found, blocked, and removed). Higher threat counts don't mean you're less secure; they mean you're detecting more threats that were always there.
 
