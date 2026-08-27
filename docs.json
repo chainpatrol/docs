@@ -93,7 +93,8 @@
             "group": "Getting Started",
             "pages": [
               "external-api/overview",
-              "external-api/authentication"
+              "external-api/authentication",
+              "external-api/api-usage"
             ]
           },
           {

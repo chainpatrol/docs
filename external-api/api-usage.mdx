@@ -1,0 +1,48 @@
+---
+title: "API Usage"
+description: "Monitor your organization's ChainPatrol API traffic from the dashboard, with request counts broken down by endpoint, status code, and API key."
+---
+
+The **API Usage** page in the ChainPatrol dashboard shows how your integration
+uses the External API. Open it from the **Developer** section of your
+organization's admin navigation, next to **API Keys**, at
+`https://app.chainpatrol.io/admin/<your-org-slug>/api-usage`.
+
+Use it to verify that a new integration is sending traffic, spot error spikes,
+and confirm which API keys are still in use before rotating or revoking them.
+
+## Who can see it
+
+Only organization **owners** and **admins** can view the API Usage page.
+Members of your organization with other roles cannot access it.
+
+## What it shows
+
+ChainPatrol records every request authenticated with one of your organization's
+API keys and rolls the data up hourly. The page summarizes that data for a time
+range you pick: last 90 days, 30 days, 7 days, 24 hours, or 3 hours. The
+selected range is stored in the page URL, so you can bookmark or share a
+specific view.
+
+### Totals
+
+Three counters show the total, successful, and errored request counts for the
+selected range. Requests with a `2xx` status code count as successful; all
+other status codes count as errors.
+
+### By endpoint
+
+A table lists each endpoint your integration called, with its HTTP method and
+total, successful, and errored request counts. Paths are templated, so requests
+to `/organization/asset-groups/123` appear as
+`/organization/asset-groups/{groupId}`.
+
+Click a row to expand it and see the exact response status codes behind the
+counts, for example how many calls returned `200` versus `429` or `500`.
+
+### By API key
+
+A second table breaks down the same traffic by API key, showing each key's
+name, prefix, environment (live or test), and request counts. Revoked keys are
+labelled **REVOKED** rather than hidden, so historical traffic from a key you
+have since revoked remains visible.
