@@ -1,6 +1,6 @@
 ---
 title: "Services Setup"
-description: "Configure ChainPatrol services like detection, monitoring, reviewing, wallet blocking, and automated takedowns for your organization's brand protection."
+description: "Configure ChainPatrol services like detection, monitoring, reviewing, blocklisting, and automated takedowns for your organization's brand protection."
 ---
 
 ChainPatrol offers multiple security services that can be configured based on your organization's needs. Each service can be enabled independently and requires specific permissions and approvals before activation.
@@ -28,8 +28,8 @@ ChainPatrol offers multiple security services that can be configured based on yo
     Internal approval workflow
   </Card>
   
-  <Card title="Wallet Blocking" icon="wallet" color="#ef4444">
-    Real-time wallet protection
+  <Card title="Blocklisting" icon="ban" color="#ef4444">
+    Real-time blocklist distribution to browsers, wallets, and partner platforms
   </Card>
   
   <Card title="Takedowns" icon="power-off" color="#ec4899">
@@ -156,7 +156,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
     **Prerequisites:**
     - Enable after Reviewing service
     - Have designated administrators available to review proposals regularly
-    - Enable before Wallet Blocking if you want approval control
+    - Enable before Blocklisting if you want approval control
   </Tab>
   
   <Tab title="Requirements" icon="list-check">
@@ -185,20 +185,18 @@ ChainPatrol offers multiple security services that can be configured based on yo
 
 ---
 
-## Wallet Blocking
+## Blocklisting
 
 <Tabs>
   <Tab title="What It Does" icon="info">
-    Approved threats are added to ChainPatrol's global blocklist, which is consumed by major cryptocurrency wallets and platforms, including Coinbase, MetaMask, and others. This prevents users from interacting with malicious addresses, domains, or contracts in real-time.
+    Approved threats are added to ChainPatrol's global blocklist, which is distributed in real time to partner browsers, DNS providers, and security platforms — including Google Safe Browsing, Quad9, and VirusTotal — as well as crypto wallets like Coinbase Wallet and MetaMask. This prevents users from interacting with malicious domains, addresses, or contracts before they get hurt.
   </Tab>
   
   <Tab title="Who Needs It" icon="users">
     **Ideal for:**
-    - Cryptocurrency projects and protocols
-    - DeFi platforms
-    - NFT projects
-    - Organizations with blockchain-related threats
-    - Any company whose users interact with blockchain wallets
+    - Any brand across Fintech, Banking, Crypto, iGaming, VC, and more that wants its confirmed threats blocked in browsers, DNS resolvers, and antivirus tools automatically
+    - Organizations whose users also interact with crypto wallets or blockchain-connected products
+    - Cryptocurrency projects, protocols, DeFi platforms, and NFT projects
   </Tab>
   
   <Tab title="When to Enable" icon="calendar">
@@ -231,7 +229,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
     - None
     
     <Warning>
-    **Important:** Enabling Wallet Blocking has immediate impact on end-users. Organizations must verify their asset configuration is accurate before enabling this service.
+    **Important:** Enabling Blocklisting has immediate impact on end-users. Organizations must verify their asset configuration is accurate before enabling this service.
     </Warning>
   </Tab>
 </Tabs>
@@ -286,7 +284,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
     - Organizations experiencing high volumes of threats requiring rapid response
     - Companies with mature threat detection processes
     - Teams that trust ChainPatrol's review process completely
-    - Brands in high-risk industries (cryptocurrency, finance, e-commerce)
+    - Brands in high-risk industries (Fintech, Banking, iGaming, Crypto, e-commerce)
   </Tab>
   
   <Tab title="When to Enable" icon="calendar">
@@ -353,7 +351,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
     **For certain services:**
     - Some services require ChainPatrol staff verification
     - Legal team reviews documentation for Takedowns and Automated Takedowns
-    - Security team validates configuration for Wallet Blocking
+    - Security team validates configuration for Blocklisting
   </Step>
 </Steps>
 
@@ -389,7 +387,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
 | Monitoring & Reporting | None | - |
 | Reviewing | None | - |
 | Obligatory Organization Admin Approval | None | - |
-| Wallet Blocking | None (but verification required) | - |
+| Blocklisting | None (but verification required) | - |
 | Takedowns | Trademark proof, Authorized representative details | Before enabling |
 | Automated Takedowns | Power of Attorney, Trademark registration, Main website URL | Before enabling |
 
@@ -454,7 +452,7 @@ flowchart TD
     Detection[Detection] --> Monitoring[Monitoring & Reporting]
     Monitoring --> Reviewing[Reviewing]
     Reviewing --> AdminApproval[Admin Approval<br/>Optional]
-    Reviewing --> WalletBlocking[Wallet Blocking]
+    Reviewing --> Blocklisting[Blocklisting]
     Reviewing --> Takedowns[Takedowns]
     Takedowns --> AutoTakedowns[Automated Takedowns]
     
@@ -462,7 +460,7 @@ flowchart TD
     style Monitoring fill:#8b5cf6
     style Reviewing fill:#10b981
     style AdminApproval fill:#f59e0b
-    style WalletBlocking fill:#ef4444
+    style Blocklisting fill:#ef4444
     style Takedowns fill:#ec4899
     style AutoTakedowns fill:#dc2626
 ```

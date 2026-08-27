@@ -1,20 +1,20 @@
 ---
 title: "Blocklist"
-description: "How ChainPatrol's blocklist confirms and distributes phishing sites, scam accounts, and malicious wallet addresses to browsers, wallets, and partners"
+description: "How ChainPatrol's blocklist confirms and distributes phishing sites, scam accounts, and malicious wallet addresses to browsers, DNS providers, wallets, and partners"
 ---
 
 ## Overview
 
-A blocklist (also known as a denylist) is a database of confirmed malicious entities that should be blocked or flagged to protect users. In the context of online security, a blocklist contains verified phishing websites, scam social media accounts, fraudulent crypto addresses, and other malicious digital assets.
+A blocklist (also known as a denylist) is a database of confirmed malicious entities that should be blocked or flagged to protect users. In the context of online security, a blocklist contains verified phishing websites, scam social media accounts, fraudulent wallet addresses, and other malicious digital assets, spanning brands across Fintech, Banking, Crypto, iGaming, VC, and more.
 
 ChainPatrol's blocklist is continuously updated through multiple sources:
 
 - **Community reports** from users and partner organizations
 - **Automated detection systems** that monitor the internet for new threats
-- **Threat intelligence partnerships** with organizations like Crypto-ISAC (Cryptocurrency Information Sharing and Analysis Center)
+- **Threat intelligence partnerships** with organizations like Google Safe Browsing, VirusTotal, Quad9, SEAL-ISAC, and Crypto-ISAC (Cryptocurrency Information Sharing and Analysis Center)
 - **Manual verification** by security experts
 
-<Note>Through our partnership with Crypto-ISAC, ChainPatrol participates in bidirectional threat intelligence sharing, enabling faster detection and blocking of malicious domains across the cryptocurrency ecosystem.</Note>
+<Note>ChainPatrol shares threat data bidirectionally with partners including Google Safe Browsing, VirusTotal, and Quad9, which query and contribute to our blocklist for browser- and DNS-level protection. Crypto-ISAC is a similar bidirectional partnership focused specifically on the cryptocurrency ecosystem, enabling faster detection and blocking of malicious domains for crypto brands.</Note>
 
 <Info>
 ChainPatrol's blocklist functions as a **threat intelligence database** that's continuously updated and distributed in real-time.
@@ -44,10 +44,6 @@ ChainPatrol's blocklist provides **immediate protection** through a "blocklist-f
 3. **Point-of-Access Protection** - Blocks are enforced at the browser, wallet, and network level where users actually interact with threats
 4. **Persistent Protection** - Even if a scammer sets up 100 copycat sites, each one gets blocklisted as soon as it's detected
 
-<Warning>
-In web3, where transactions are irreversible and scams can drain wallets in seconds, **prevention at the point of interaction is critical**.
-</Warning>
-
 ### Network Effects
 
 The effectiveness of our blocklist increases exponentially with distribution. One confirmation protects millions of users across browsers, wallets, enterprise networks, and partner organizations.
@@ -62,7 +58,7 @@ Anyone can report suspicious assets through our public reporting interface. Comm
 
 ### Partner Organizations
 
-Organizations using ChainPatrol for brand protection contribute threat intelligence. Wallet providers like MetaMask, Phantom, and Coinbase Wallet share detected threats. Security alliances including SEAL-ISAC, Crypto-ISAC, and other information sharing networks contribute, as do blockchain projects and DAOs monitoring for impersonation attacks.
+Organizations using ChainPatrol for brand protection — across Fintech, Banking, Crypto, iGaming, VC, and more — contribute threat intelligence from their own detection systems. Partners like Google Safe Browsing, VirusTotal, and Quad9 share detected threats through bidirectional integrations, as do security alliances including SEAL-ISAC and Crypto-ISAC. Wallet providers like MetaMask, Phantom, and Coinbase Wallet, and blockchain projects and DAOs monitoring for impersonation attacks, contribute as well.
 
 ### Automated Detection
 
@@ -148,7 +144,7 @@ ChainPatrol's blocklist protects users across the ecosystem through multiple int
 
 ### Browser Security
 
-Google Safe Browsing powers protection in Chrome, Safari, Edge, Firefox, and other browsers. Cloudflare Gateway provides network-level protection for enterprises. Blocklisted URLs are prevented from loading or show warning pages, protecting users regardless of which website they're visiting.
+Google Safe Browsing powers protection in Chrome, Safari, Edge, Firefox, and other browsers. Quad9 and Cloudflare Gateway provide DNS- and network-level protection for enterprises. Blocklisted URLs are prevented from loading or show warning pages, protecting users regardless of which website they're visiting.
 
 ### Wallet Providers
 
@@ -156,11 +152,11 @@ MetaMask (direct integration via Eth-Phishing-Detect), Phantom (real-time API in
 
 ### Applications
 
-Polymarket (content moderation and user protection), Snapshot (governance platform security), NFT marketplaces (filtering scam collections and malicious listings), and DeFi protocols (protecting users from fake interfaces and phishing sites). Applications can automatically filter malicious content and warn users about threats specific to their platform.
+Applications across every industry integrate our blocklist directly — browser blocklists, company firewalls, and antivirus tools filter malicious content automatically, while platform-specific integrations like Polymarket (content moderation and user protection), Snapshot (governance platform security), NFT marketplaces (filtering scam collections and malicious listings), and DeFi protocols (protecting users from fake interfaces and phishing sites) warn users about threats specific to their platform. Fintech, banking, and iGaming applications integrate the same way to filter malicious content and warn their users.
 
 ### Threat Intelligence
 
-SEAL-ISAC, Crypto-ISAC, Eth-Phishing-Detect (ChainPatrol is a core contributor), and Polkadot Phishing List for cross-chain threat sharing. Our blocklist feeds into the broader security ecosystem, creating a network effect where threats are shared across organizations and platforms.
+VirusTotal, SEAL-ISAC, Crypto-ISAC, Eth-Phishing-Detect (ChainPatrol is a core contributor), and Polkadot Phishing List for cross-chain threat sharing. Our blocklist feeds into the broader security ecosystem, creating a network effect where threats are shared across organizations and platforms.
 
 ### Enterprise Security
 
