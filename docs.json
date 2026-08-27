@@ -197,6 +197,7 @@
               "external-api/metrics-breakdown",
               "external-api/metrics-found",
               "external-api/metrics-found-by-source",
+              "external-api/metrics-takedown-success-rate",
               "external-api/organization-metrics-list",
               "external-api/organization-metrics"
             ]
