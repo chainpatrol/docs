@@ -1,0 +1,78 @@
+---
+title: "API Deprecation Policy"
+sidebarTitle: "Deprecation Policy"
+description: "How ChainPatrol versions its API, what counts as a breaking change, and the notice you'll get before anything changes underneath you."
+---
+
+ChainPatrol versions its API by URL, with the version encoded as a major-version
+segment in the path — the current version is `/api/v2`. This page explains how
+long a version stays supported, what triggers a notice, and how that notice
+reaches you.
+
+## Versioning
+
+Every endpoint is served under a versioned path, e.g.
+`https://app.chainpatrol.io/api/v2`. A new major version is introduced only
+when we need to make breaking changes; the previous major version keeps
+running, unchanged, for the length of its deprecation window.
+
+## Breaking vs. non-breaking changes
+
+<CardGroup cols={2}>
+  <Card title="Non-breaking" icon="circle-check">
+    New fields, new endpoints, and new optional parameters. These ship
+    without advance notice — existing integrations are unaffected.
+  </Card>
+
+  <Card title="Breaking" icon="triangle-exclamation">
+    Removing or renaming a field/endpoint, changing a field's type or
+    semantics, tightening validation, or making an optional parameter
+    required. These require a deprecation notice.
+  </Card>
+</CardGroup>
+
+## Deprecation window
+
+Breaking changes require a **minimum of 90 days' advance notice**. The
+deprecated version remains fully supported for the entire notice window —
+no functionality is removed or degraded before the window ends.
+
+<Note>
+  **Security exception:** security-critical fixes may need to ship faster
+  than the standard 90-day window. When that happens, we give as much
+  advance notice as we can responsibly provide given the severity of the
+  issue.
+</Note>
+
+## How you'll be notified
+
+We notify you through all of the following channels for every breaking
+change:
+
+<Steps>
+  <Step title="Email">
+    Sent to your organization's designated technical contact.
+  </Step>
+  <Step title="Public changelog">
+    Published to the [ChainPatrol changelog](https://chainpatrol.com/changelog).
+  </Step>
+  <Step title="HTTP response headers">
+    Affected endpoints return `Deprecation` and `Sunset` headers, per
+    [RFC 8594](https://www.rfc-editor.org/rfc/rfc8594), for the duration of
+    the deprecation window.
+  </Step>
+</Steps>
+
+Make sure your organization's technical contact is up to date so deprecation
+emails reach the right person — see
+[Update Current User](/external-api/user-me-update) or
+[List User Organizations](/external-api/user-orgs) to review your contact
+details.
+
+## Staying ahead of breaking changes
+
+- Check the [changelog](https://chainpatrol.com/changelog) periodically.
+- Watch for `Deprecation` and `Sunset` response headers on the endpoints you
+  call, and alert on their appearance.
+- Keep your organization's technical contact current so you don't miss the
+  email notice.
