@@ -1,0 +1,45 @@
+---
+title: Get Median Time to Takedown by Provider
+openapi: "POST /metrics/takedown-time/by-provider"
+---
+
+## Overview
+
+Return the median time from takedown start to completion, broken down by the **provider a
+takedown was filed against** (for example a specific hosting provider or domain
+registrar), for a date range. Use this to see which providers respond fastest to your
+organization's takedowns and which ones drag out response times.
+
+Each completed takedown is counted once per provider role it carries. A takedown filed
+against both a hosting provider and a domain registrar contributes to both provider
+entries.
+
+Same exclusion rules as the [point-in-time](/external-api/metrics-takedown-time) and
+[trend](/external-api/metrics-takedown-time-trend) endpoints: takedowns that took longer
+than 40 days and takedowns with a negative recorded duration are dropped from the median.
+Staff-flagged filing and liveness-check delays are also excluded.
+
+## When to use it
+
+- Rank your providers by how quickly they act on takedowns, and surface the slowest ones
+  in a report or dashboard.
+- Compare hosting providers against domain registrars against TLD registrars by passing a
+  subset of `roles`.
+- Narrow the median to a particular block label (`Brand Impersonation`, `Employee
+  Impersonation`, `Targeting Org Users`), brand type, country, or subset of brands.
+
+## Access
+
+This endpoint is gated per organization on the same `median-time-to-takedown-api` PostHog
+flag as [`POST /metrics/takedown-time`](/external-api/metrics-takedown-time). An
+organization without the flag enabled receives `403 Forbidden`. An unknown `slug` returns
+`404 Not Found`. Contact ChainPatrol to have the flag enabled for your organization.
+
+## Notes
+
+- Dates accept either a full ISO 8601 timestamp or a date-only `YYYY-MM-DD` value. A
+  date-only `endDate` covers the whole day in UTC (through 23:59:59.999Z), so
+  `endDate: "2026-05-31"` includes takedowns completed at any time on May 31.
+- `role` is one of `HOSTING_PROVIDER`, `DOMAIN_REGISTRAR`, or `TLD_REGISTRAR`. Omit
+  `roles` from the request to get every role.
+- Response rows are sorted ascending by median.

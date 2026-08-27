@@ -1,12 +1,16 @@
 ---
-title: "getMetricsTakedownTime"
-description: Get the median time from takedown start to completion, one row per asset type, for a date range using the ChainPatrol JavaScript SDK.
+title: "getMetricsTakedownTimeByProvider"
+description: Get the median time to takedown broken down by the provider a takedown was filed against, for a date range, using the ChainPatrol JavaScript SDK.
 ---
 
-The `getMetricsTakedownTime` method returns the median time from takedown start to
-completion for an organization, broken down by asset type. This is the same number the
-ChainPatrol dashboard's **Median time to takedown** chart shows, exposed for
-programmatic reporting.
+The `getMetricsTakedownTimeByProvider` method returns the median time from takedown start
+to completion for an organization, broken down by the provider a takedown was filed
+against and the role that provider filled (hosting provider, domain registrar, or TLD
+registrar). Use it to rank providers by how quickly they act on your takedowns.
+
+Each completed takedown is counted once per provider role it carries. A takedown filed
+against both a hosting provider and a domain registrar contributes to both provider
+entries.
 
 <Note>
   This method lives on the `ChainPatrolApiClient` exported from `@chainpatrol/sdk/api`,
@@ -19,9 +23,9 @@ programmatic reporting.
 ### Method Signature
 
 ```typescript
-client.getMetricsTakedownTime(
-  input: MetricsTakedownTimeInput
-): Promise<MetricsTakedownTimeResult>
+client.getMetricsTakedownTimeByProvider(
+  input: MetricsTakedownTimeByProviderInput
+): Promise<MetricsTakedownTimeByProviderResult>
 ```
 
 ### Parameters
@@ -39,6 +43,11 @@ client.getMetricsTakedownTime(
   Only include takedowns completed on or before this date. A `YYYY-MM-DD` value covers
   the whole day in UTC (through 23:59:59.999Z). Pass a full timestamp for a precise
   cut-off.
+</ParamField>
+
+<ParamField path="roles" type="string[]">
+  Only break down these provider roles: `HOSTING_PROVIDER`, `DOMAIN_REGISTRAR`,
+  `TLD_REGISTRAR`. Omit to include every role.
 </ParamField>
 
 <ParamField path="blockLabel" type="string">
@@ -62,12 +71,20 @@ client.getMetricsTakedownTime(
 
 ### Returns
 
-<ResponseField name="byAssetType" type="array" required>
-  One entry per asset type with completed takedowns in the range, ascending by median.
+<ResponseField name="byProvider" type="array" required>
+  One entry per provider and role with completed takedowns in the range, ascending by
+  median.
 
   <Expandable title="Entry">
-    <ResponseField name="assetType" type="string" required>
-      Asset type the median is computed over (e.g. `URL`, `TWITTER`, `TELEGRAM`).
+    <ResponseField name="providerId" type="number" required>
+      Takedown provider ID.
+    </ResponseField>
+    <ResponseField name="providerName" type="string" required>
+      Takedown provider name.
+    </ResponseField>
+    <ResponseField name="role" type="string" required>
+      Which provider slot of the takedown this median is computed over:
+      `HOSTING_PROVIDER`, `DOMAIN_REGISTRAR`, or `TLD_REGISTRAR`.
     </ResponseField>
     <ResponseField name="medianTakedownMinutes" type="number" required />
     <ResponseField name="medianTakedownHours" type="number" required />
@@ -80,9 +97,10 @@ client.getMetricsTakedownTime(
 
 ## Access
 
-Gated per organization on the `median-time-to-takedown-api` feature flag. Organizations
-without the flag enabled receive `403 Forbidden`. An unknown `slug` returns `404 Not
-Found`. Contact ChainPatrol to have the flag enabled.
+Gated per organization on the same `median-time-to-takedown-api` feature flag as
+[`getMetricsTakedownTime`](./metrics-takedown-time). Organizations without the flag
+enabled receive `403 Forbidden`. An unknown `slug` returns `404 Not Found`. Contact
+ChainPatrol to have the flag enabled.
 
 ## Exclusions
 
@@ -101,24 +119,25 @@ const client = new ChainPatrolApiClient({
   credential: staticApiKey(process.env.CHAINPATROL_API_KEY!),
 });
 
-const result = await client.getMetricsTakedownTime({
+const result = await client.getMetricsTakedownTimeByProvider({
   slug: "acme",
   startDate: "2026-01-01",
   endDate: "2026-03-31",
+  roles: ["HOSTING_PROVIDER", "DOMAIN_REGISTRAR"],
 });
 
-for (const row of result.byAssetType) {
+for (const row of result.byProvider) {
   console.log(
-    `${row.assetType}: ${row.medianTakedownDays.toFixed(1)} days (${row.count} takedowns)`,
+    `${row.providerName} (${row.role}): ${row.medianTakedownDays.toFixed(1)} days (${row.count} takedowns)`,
   );
 }
 ```
 
 ## Related
 
-- [`POST /metrics/takedown-time`](/external-api/metrics-takedown-time)
-- [`getMetricsTakedownTimeByProvider`](./metrics-takedown-time-by-provider) — same
-  medians grouped by the provider a takedown was filed against.
+- [`POST /metrics/takedown-time/by-provider`](/external-api/metrics-takedown-time-by-provider)
+- [`getMetricsTakedownTime`](./metrics-takedown-time) — same medians grouped by asset
+  type instead of provider.
 - [`getMetricsTakedownTimeTrend`](./metrics-takedown-time-trend) — monthly trend and
   month-over-month change.
 - [Metrics concept](/concepts/metrics)
