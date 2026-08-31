@@ -1,0 +1,163 @@
+---
+title: "Dark Web Monitoring"
+description: "How Dark Web Monitoring lets your team look up leaked credentials for your brands, review masked results, and get Slack alerts when leak volume increases"
+---
+
+## Overview
+
+**Dark Web Monitoring** is an on-demand investigation tool for credential leaks, plus a daily alert when leak volume for a monitored domain goes up.
+
+It sits in the admin app under **Employee Protection → Dark Web**, next to Employee Impersonations. Your team searches against your organization's tracked email assets, reviews masked hits in the session, and can acknowledge rows they have already looked at.
+
+<Info>
+Results are live lookups, not a stored detections pipeline. ChainPatrol does not keep a copy of leak contents. Re-run a search to see the same hits again.
+</Info>
+
+Dark Web Monitoring is **not** part of the threat-detection rules engine, not a takedown source, and not a public search API. The public API only exposes whether the service is on, the same way it does for other optional services.
+
+## What It Solves
+
+Customers, especially financial and fintech organizations, need to know when:
+
+1. **Employee or brand email credentials** appear in combo lists and breach dumps.
+2. **The brand is being discussed** on dark-web forums and chats in a fraud context (OTP bots, mule recruitment, support impersonation, and similar).
+
+ChainPatrol already tracks your brand assets (emails, websites, names). Dark Web Monitoring reuses those as the search scope, with masking so the UI does not dump full combo lists into the browser by default.
+
+## Who Can Use It
+
+| Audience | What they see |
+|---|---|
+| Organization **owners and admins** | Leaked credentials search |
+| Other org members | No search; an info alert that owners and admins have access |
+| Anyone, if the service is off | The page explains that Dark Web Monitoring is not enabled. Contact your account team. The nav item is hidden. |
+
+If the service is on but no brands are enabled for monitoring, the page says no brands are enabled.
+
+## Getting Started
+
+All of the following need to be in place before a search can run:
+
+1. **The service is on** for your organization. ChainPatrol staff manage this from **Settings → Services**. You can also read and update `services.darkWebMonitoring.active` on the public orgs API, same pattern as other optional services.
+2. **Brands are selected** for monitoring. Only allowlisted brands appear as search targets. Organization-type brands are listed first, then individual brands, alphabetically.
+3. Those brands have **EMAIL assets** to search against (domains and addresses you already track).
+
+<Tip>
+Ask your ChainPatrol account team to turn the service on and choose which brands should be searchable. You cannot search another organization's data; scope is always this brand's tracked email assets.
+</Tip>
+
+## Investigating Leaked Credentials
+
+This is the default tab on **Employee Protection → Dark Web**.
+
+<Steps>
+  <Step title="Pick a monitored brand">
+    Choose one of the brands enabled for Dark Web Monitoring.
+  </Step>
+  <Step title="Pick a target from that brand's email assets">
+    Targets come from `EMAIL` assets on the brand. You cannot type an arbitrary query.
+
+    - **Domain**: email domains on the brand. Generic mailbox providers such as `gmail.com` are omitted from domain search (too noisy). The domain that matches the brand website is selected by default when it is available.
+    - **Email**: full addresses, including consumer inboxes when you track a specific address. A single address is narrow enough to be useful.
+  </Step>
+  <Step title="Search">
+    ChainPatrol looks up matching credential leaks and returns a sanitized table in the session.
+  </Step>
+</Steps>
+
+Each brand can run up to **100 searches per calendar month**. Domain lookups return up to 1,000 records; email lookups are a single page with the same cap.
+
+### What each row shows
+
+- **Email**
+- **Masked password preview** (plaintext vs hash vs none). Full plaintext passwords are not included in the search response.
+- **Other exposed data** as short previews, not full values: phone, payment card, address, IP
+- **Source** (leak name or site)
+- **Detail snippet** on email searches, and only if the snippet contains the searched email
+- **Breach date**
+- **Acknowledged** or not
+
+### Filters, sorting, and export
+
+Filter by password category (plaintext / hash / none) and acknowledgement status. Columns are sortable. Page size is 10, 25, 50, or 100.
+
+If CSV export is enabled for your organization, you can download the current result set. The file includes Email, Password (only if you confirmed reveal), Other Exposed Data, Source, Breach Date, and Status. Email searches also include Detail. Filename shape: `dark-web-search-{target}-{timestamp}.csv`.
+
+## Reviewing a Hit
+
+Open a row to see a fuller excerpt and, when available, **leak context**: metadata about the named breach (description, dates, categories). Sample records from that breach are not shown.
+
+### Reveal a password
+
+Plaintext passwords stay hidden until you explicitly reveal them. Reveal is per click; bulk reveal is used only for CSV. Each reveal is audit-logged.
+
+<Warning>
+Reveal is short-lived. If you need the value again later, run the search again and reveal it then. Search results themselves are never stored.
+</Warning>
+
+### Acknowledge a row
+
+Toggle acknowledgement per row so your team can mark hits they have already reviewed. You can add an optional note. Unacknowledge if you need to put it back in the unreviewed set.
+
+Acknowledgements persist. The leak contents do not; only that this result ID was reviewed for this organization and brand.
+
+## Daily Leak-Count Alerts
+
+Once a day, ChainPatrol checks leak *volume* for each monitored brand's email domain (the brand website domain when that domain is also a tracked email asset, otherwise the first available domain; generic mailbox providers are skipped).
+
+- First observation stores a baseline. No alert.
+- Count unchanged or down updates the baseline. No alert.
+- Count **up** posts to your organization's configured Slack channel, with a link back to **Employee Protection → Dark Web**.
+
+The message reports that leak mentions for the brand (on that email domain) increased from X to Y.
+
+<Info>
+Alerts are Slack-only, using your existing Slack integration. They tell you that volume moved; your team still opens the page to investigate. Telegram leak alerts are not available.
+</Info>
+
+## Privacy and Scope
+
+Dark Web Monitoring is built so ChainPatrol is a scoped, masked, audited workstation on top of a dark-web index, not a second copy of the dark web.
+
+**What we persist**
+
+- Whether the service is on
+- Which brands are allowlisted
+- Which result IDs a user has acknowledged (plus an optional note and who acted)
+- Audit events for settings changes, searches, password reveals, CSV exports, and acknowledgements
+
+**What we do not persist**
+
+- Combo-list emails and passwords
+- Search result tables
+- A vault of leak PII
+
+**What the browser gets by default**
+
+- Masked password previews and redacted snippets
+- Unrelated emails and credentials in a snippet replaced with placeholders
+- The searched email's own password masked in-text until you reveal it
+
+PII badges (phone, card, address, IP) are short previews derived from the snippet, not full values dumped into the page.
+
+Search is always brand-scoped. You can only target that brand's tracked email assets, and acknowledgements cannot be written against another organization's brand.
+
+## How It Fits With the Rest of ChainPatrol
+
+| Related area | Relationship |
+|---|---|
+| [Brands](/concepts/brands) and EMAIL assets | Those records are the only search targets. Keep them current so domain and address options stay accurate. |
+| [Organizations](/concepts/organizations) → Services | Dark Web Monitoring is an optional org service, independent of Detection, Reviewing, Blocklisting, and Takedowns. |
+| [Detections](/concepts/detections) | Separate product. Dark Web hits are not detection records and do not enter the rules engine. |
+| [Takedowns](/concepts/takedowns) | Dark Web Monitoring is not a takedown source. |
+| [Slack](/integration/slack) | Leak-count increases notify the org's configured Slack channel. |
+| Public API / CLI | No Dark Web search endpoint. The orgs APIs and CLI only expose the `darkWebMonitoring` service flag. |
+
+ChainPatrol analysts can also check whether a monitored brand is being discussed in dark-web fraud conversations. That staff-only surface is not shown to customers.
+
+## Key Takeaways
+
+- Dark Web Monitoring is an investigation workstation, not a stored findings inbox: you search your brand's email assets, review masked hits in the session, and re-run search to see them again
+- Scope is intentional: owners and admins cannot type arbitrary queries, so one tenant cannot search another tenant's data
+- Secrets stay off the page until you ask: passwords are masked by default, reveals are explicit and audit-logged, and leak contents are not written to ChainPatrol's database
+- Slack tells you when volume jumps: a rising leak count for a monitored domain is the prompt to open Employee Protection → Dark Web and investigate

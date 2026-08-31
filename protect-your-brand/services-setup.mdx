@@ -1,6 +1,6 @@
 ---
 title: "Services Setup"
-description: "Configure ChainPatrol services like detection, monitoring, reviewing, blocklisting, and automated takedowns for your organization's brand protection."
+description: "Configure ChainPatrol services like detection, monitoring, reviewing, blocklisting, automated takedowns, and Dark Web Monitoring for your organization's brand protection."
 ---
 
 ChainPatrol offers multiple security services that can be configured based on your organization's needs. Each service can be enabled independently and requires specific permissions and approvals before activation.
@@ -38,6 +38,10 @@ ChainPatrol offers multiple security services that can be configured based on yo
   
   <Card title="Automated Takedowns" icon="bolt" color="#dc2626">
     Instant takedown submission
+  </Card>
+  
+  <Card title="Dark Web Monitoring" icon="user-secret" color="#6366f1">
+    Credential leak investigation
   </Card>
 </CardGroup>
 
@@ -327,6 +331,40 @@ ChainPatrol offers multiple security services that can be configured based on yo
 
 ---
 
+## Dark Web Monitoring
+
+<Tabs>
+  <Tab title="What It Does" icon="info">
+    Dark Web Monitoring lets organization owners and admins look up leaked credentials for allowlisted brands, using the email domains and addresses you already track. Results are masked in the session. A daily Slack alert fires when leak volume for a monitored domain increases. ChainPatrol does not store leak contents.
+
+    See the [Dark Web Monitoring](/concepts/dark-web-monitoring) concept for how search, acknowledgement, and alerts work.
+  </Tab>
+  
+  <Tab title="Who Needs It" icon="users">
+    **Ideal for:**
+    - Financial and fintech organizations monitoring employee and brand email credentials
+    - Teams that need an on-demand investigation tool rather than a stored detections inbox
+    - Organizations already tracking EMAIL assets on their brands
+  </Tab>
+  
+  <Tab title="When to Enable" icon="calendar">
+    **Prerequisites:**
+    - Organization profile complete, with brands and EMAIL assets defined
+    - Slack connected if you want leak-count alerts
+    - Account team (or ChainPatrol staff) to turn the service on and select which brands are searchable
+  </Tab>
+  
+  <Tab title="Requirements" icon="list-check">
+    **Required Approvals:**
+    - ChainPatrol account team enables the service and brand allowlist
+    
+    **Required Legal Docs:**
+    - None
+  </Tab>
+</Tabs>
+
+---
+
 ## Approval Process
 
 ### Service Enable Request Flow
@@ -390,6 +428,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
 | Blocklisting | None (but verification required) | - |
 | Takedowns | Trademark proof, Authorized representative details | Before enabling |
 | Automated Takedowns | Power of Attorney, Trademark registration, Main website URL | Before enabling |
+| Dark Web Monitoring | None | - |
 
 ### Power of Attorney Requirements
 
