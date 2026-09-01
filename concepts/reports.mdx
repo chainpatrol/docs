@@ -81,6 +81,12 @@ The **Reports page** in your dashboard shows all the reports for your organizati
 
 You can filter and search by creator, date, asset, and status to track the status of something you reported or follow up on threats flagged by your community.
 
+### Threat Actor Attribution
+
+ChainPatrol staff can attribute a report to a named **threat actor**, the group or campaign operator behind the reported assets. Attribution helps you see when separate reports trace back to the same adversary.
+
+Use the **Threat Actor** filter on the Reports, Blocklist, and Takedowns pages to narrow each view to a specific actor. You only see actors that have been attributed to reports in your organization. The same filter is available programmatically through the `threatActorIds` parameter on [`GET /organization/reports`](/external-api/organization-reports-list), which also returns the attributed actor on each report.
+
 ## How to Submit a Report
 
 Creating a report in ChainPatrol is straightforward:
