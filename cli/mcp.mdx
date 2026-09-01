@@ -1,0 +1,134 @@
+---
+title: ChainPatrol MCP server
+sidebarTitle: MCP server
+icon: plug
+description: "Serve every ChainPatrol public API operation as MCP tools, either locally over stdio with chainpatrol mcp or remotely at /api/mcp with nothing to install."
+---
+
+ChainPatrol ships an official [MCP](https://modelcontextprotocol.io) (Model Context
+Protocol) server. Every public API operation is exposed as a tool — 67 in total, covering
+asset checks and search, reports, proposal review, detections and detection configs,
+takedowns, threats, metrics, healthchecks, and organization management — so an agent never
+has to drop down to raw HTTP.
+
+The tool surface is generated from the same definitions that serve the
+[External API](/external-api/overview). A new public endpoint cannot ship without its MCP
+tool, so coverage stays complete by construction.
+
+There are two ways to connect, serving the same tools with the same authorization:
+
+<CardGroup cols={2}>
+  <Card title="Local over stdio" icon="terminal" href="#run-it-locally-over-stdio">
+    `chainpatrol mcp`, reusing the credential the CLI already has.
+  </Card>
+
+  <Card title="Remote over HTTP" icon="cloud" href="#connect-to-the-remote-endpoint">
+    Point a client at `https://app.chainpatrol.io/api/mcp`. Nothing to install.
+  </Card>
+</CardGroup>
+
+## Run it locally over stdio
+
+The server ships with the CLI, which already handles login:
+
+```bash
+npm install -g @chainpatrol/cli
+chainpatrol login
+chainpatrol mcp        # speaks MCP on stdio
+```
+
+Point an MCP client at that command. For Claude Code:
+
+```json
+{
+  "mcpServers": {
+    "chainpatrol": {
+      "command": "chainpatrol",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+The command authenticates the same way every other CLI command does: the token from
+[`chainpatrol login`](/cli/authentication), or `CHAINPATROL_API_KEY` for a service
+account or headless environment. The API key takes precedence over a stored login.
+
+```bash
+CHAINPATROL_API_KEY="your_api_key_here" chainpatrol mcp
+```
+
+`chainpatrol mcp` runs until the client disconnects and prints nothing to stdout — that
+channel carries the protocol.
+
+## Connect to the remote endpoint
+
+The same tool surface is served at `POST https://app.chainpatrol.io/api/mcp` over
+streamable HTTP, so you can connect a client with nothing installed. Authentication is
+exactly what the REST API accepts: an `x-api-key` header with your
+[API key](/external-api/authentication), or a bearer token in the `Authorization` header.
+
+For Claude Code:
+
+```json
+{
+  "mcpServers": {
+    "chainpatrol": {
+      "type": "http",
+      "url": "https://app.chainpatrol.io/api/mcp",
+      "headers": {
+        "x-api-key": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+An unauthenticated request returns `401` with a JSON-RPC error naming the credentials the
+endpoint accepts. The endpoint is stateless: each request carries its own credentials and
+is authorized by the API against that credential, the same as a REST call. Server-initiated
+streams are not supported, so `GET` returns `405` — use `POST`.
+
+## Narrow the tool surface
+
+Exposing all 67 tools costs context in the client. To trade breadth for context budget,
+restrict the exposed set to the tools a job actually needs:
+
+```bash
+# Flag, for a one-off run
+chainpatrol mcp --tools asset_check,reports_search
+
+# Environment variable, which is how MCP clients configure servers
+CHAINPATROL_MCP_TOOLS=asset_check,reports_search chainpatrol mcp
+```
+
+`--tools` takes precedence when both are set. An unknown tool name is an error, and an
+unset or blank value exposes everything.
+
+<Note>
+  Tool filtering is not access control. Authorization is enforced by the API against the
+  credential in use, whichever tools are exposed.
+</Note>
+
+## Resources and prompts
+
+Alongside the tools, the server exposes:
+
+- **Resources** — the large value lists (for example `chainpatrol://enums/asset_type`)
+  and the guides explaining what a proposal label or reject reason means. Clients fetch
+  these on demand instead of carrying them in every tool schema.
+- **Prompts** — ready-made workflows: an organization healthcheck, a trend search, and a
+  weekly customer-success sweep. A prompt is only advertised when every tool it uses is
+  exposed.
+
+## Limits and behavior
+
+- Tool results are returned as JSON text and capped at 100,000 characters. A truncated
+  result means the call was too broad — filter or paginate instead.
+- Most tools are scoped to one organization and there is no implicit default. Call
+  `user_orgs` first and pass the organization slug explicitly.
+
+<Warning>
+  The tools include real writes, and some are irreversible — the same
+  [guardrails](/cli/agents#guardrails-to-respect) as driving the CLI from an agent apply.
+</Warning>
