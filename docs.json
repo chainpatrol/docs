@@ -460,7 +460,7 @@
     },
     {
       "source": "/api",
-      "destination": "/external-api"
+      "destination": "/external-api/overview"
     },
     {
       "source": "/api/:slug*",
