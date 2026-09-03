@@ -1,0 +1,149 @@
+---
+title: Upload Attachment
+sidebarTitle: Upload Attachment
+description: "Upload evidence files such as .eml emails, screenshots, and PDFs to ChainPatrol and reference the returned URLs in report attachments."
+---
+
+## Overview
+
+The Attachment Upload endpoint lets you send evidence files (phishing emails as `.eml`, screenshots, PDFs, and more) directly to ChainPatrol instead of hosting them yourself. Upload the file, then pass the returned URL to [Create Report](/external-api/report-create) in `attachmentUrls`.
+
+Use this endpoint when you have the evidence as a file rather than an already-public URL. If your evidence is already hosted at a stable URL, you can pass that URL to `attachmentUrls` directly and skip this step.
+
+```bash
+POST https://app.chainpatrol.io/api/v2/attachment/upload
+```
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+Read-only API keys cannot upload attachments and receive a `403` response.
+
+## Request
+
+The endpoint accepts two request formats.
+
+### Raw upload
+
+Send the file bytes as the request body and pass the file name in the `fileName` query parameter:
+
+```bash
+curl -X POST "https://app.chainpatrol.io/api/v2/attachment/upload?fileName=evidence.eml" \
+  -H "X-API-KEY: YOUR_API_KEY_HERE" \
+  --data-binary @evidence.eml
+```
+
+### Multipart upload
+
+Send a `multipart/form-data` request to upload up to 10 files in one call:
+
+```bash
+curl -X POST "https://app.chainpatrol.io/api/v2/attachment/upload" \
+  -H "X-API-KEY: YOUR_API_KEY_HERE" \
+  -F "file=@evidence.eml" \
+  -F "file=@screenshot.png"
+```
+
+## Request Parameters
+
+| Parameter  | Location | Required             | Description                                                             |
+| ---------- | -------- | -------------------- | ----------------------------------------------------------------------- |
+| `fileName` | Query    | Yes, for raw uploads | File name including its extension, for example `evidence.eml`. Ignored for multipart uploads, which take each part's own file name. |
+
+## Limits
+
+| Limit               | Value                                     |
+| ------------------- | ----------------------------------------- |
+| Request body size   | 4 MB (4,194,304 bytes) per request        |
+| Files per request   | 10 (multipart)                            |
+| Rate limit          | 60 requests per minute per organization   |
+
+### Allowed file types
+
+The file extension determines the stored content type. Requests with any other extension are rejected with a `400` response.
+
+`.avif`, `.bmp`, `.csv`, `.doc`, `.docx`, `.eml`, `.gif`, `.jpeg`, `.jpg`, `.msg`, `.pdf`, `.png`, `.txt`, `.webp`
+
+<Note>
+  HTML and SVG files are not accepted because they can execute scripts when
+  rendered from a CDN.
+</Note>
+
+## Response
+
+```json
+{
+  "attachments": [
+    {
+      "url": "https://upcdn.io/.../evidence.eml",
+      "fileName": "evidence.eml",
+      "sizeBytes": 48210
+    }
+  ]
+}
+```
+
+## Response Parameters
+
+| Parameter                  | Type   | Description                                             |
+| -------------------------- | ------ | ------------------------------------------------------- |
+| `attachments`              | array  | One entry per uploaded file, in request order           |
+| `attachments[].url`        | string | Hosted URL to pass to Create Report's `attachmentUrls`  |
+| `attachments[].fileName`   | string | Stored file name                                        |
+| `attachments[].sizeBytes`  | number | Size of the stored file in bytes                        |
+
+## Errors
+
+| Status Code | Description                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------------ |
+| 400         | Empty body, missing `fileName` on a raw upload, disallowed file extension, or multipart with no file part |
+| 401         | Missing or invalid API key                                                                             |
+| 403         | The API key is read-only and cannot upload attachments                                                 |
+| 405         | Request method is not `POST`                                                                           |
+| 413         | Request body exceeds the 4 MB limit                                                                    |
+| 429         | Rate limit exceeded; retry after the current minute window                                             |
+| 502         | ChainPatrol failed to store the file; retry the request                                                |
+
+Error responses return a JSON body with an `error` field describing the failure:
+
+```json
+{
+  "error": "Upload exceeds the 4194304 byte request limit."
+}
+```
+
+## Attach the file to a report
+
+Uploading is step one of a two-step flow. Pass the returned `url` values to [Create Report](/external-api/report-create) in `attachmentUrls`:
+
+```bash
+# 1. Upload the file
+curl -X POST "https://app.chainpatrol.io/api/v2/attachment/upload?fileName=evidence.eml" \
+  -H "X-API-KEY: YOUR_API_KEY_HERE" \
+  --data-binary @evidence.eml
+# → { "attachments": [ { "url": "https://upcdn.io/.../evidence.eml", ... } ] }
+
+# 2. Reference the returned URL in the report
+curl -X POST "https://app.chainpatrol.io/api/v2/report/create" \
+  -H "X-API-KEY: YOUR_API_KEY_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "organizationSlug": "acme",
+    "title": "Phishing email campaign",
+    "assets": [{ "content": "https://phish.example", "status": "BLOCKED" }],
+    "attachmentUrls": ["https://upcdn.io/.../evidence.eml"]
+  }'
+```
+
+## Notes
+
+- Uploaded files are stored on ChainPatrol's CDN, so the URLs stay available for the lifetime of the report
+- Each upload is stored under a unique path, so uploading the same file name twice never overwrites an earlier upload
+- File names keep their original basename; path segments in `fileName` are stripped
