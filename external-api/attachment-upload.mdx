@@ -2,6 +2,7 @@
 title: Upload Attachment
 sidebarTitle: Upload Attachment
 description: "Upload evidence files — .eml messages, screenshots, PDFs — to ChainPatrol and get back a URL you can attach to a report with the External API."
+openapi: "POST /attachment/upload"
 ---
 
 ## Overview
@@ -32,21 +33,9 @@ examples.
   can forward to a registrar or host.
 </Note>
 
-```
-POST https://app.chainpatrol.io/api/v2/attachment/upload
-```
-
-## Authentication
-
-Include your API key in the `X-API-KEY` header, the same as every other endpoint — see
-[Authentication](/external-api/authentication):
-
-```bash
-X-API-KEY: your_api_key_here
-```
-
 Read-only API keys cannot upload — that role exists for cross-organization reads. Uploads
-are recorded against the organization behind the key, and count towards its API usage.
+are recorded against the organization behind the key. See
+[Authentication](/external-api/authentication) for how to send your key.
 
 ## Two ways to send a file
 
@@ -108,7 +97,7 @@ print(attachments[0]["url"])
 ### Multipart form
 
 Send `multipart/form-data` with one or more file parts. This is what a browser form,
-Postman's file picker, or `curl -F` produces. Up to **10 files** per request.
+Postman's file picker, or `curl -F` produces.
 
 The file name comes from each part's own filename, so the `fileName` query parameter is
 ignored here. Non-file form fields are ignored, and the part names themselves do not
@@ -160,21 +149,14 @@ print([attachment["url"] for attachment in attachments])
 
 </CodeGroup>
 
-## Request
+## File name handling
 
-| Parameter        | In           | Required          | Description                                                                                       |
-| ---------------- | ------------ | ----------------- | ------------------------------------------------------------------------------------------------- |
-| `X-API-KEY`      | header       | Yes               | Your API key.                                                                                     |
-| `fileName`       | query        | Raw uploads only  | File name for the uploaded bytes, including the extension (for example `evidence.eml`).           |
-| body             | body         | Yes               | The file bytes, or a `multipart/form-data` body with one or more file parts.                       |
-
-### File name handling
-
-- The extension decides how we store and serve the file, so it has to be present and on
-  the [supported list](#supported-file-types). Matching is case-insensitive.
+- The extension decides how we store and serve the file, so it has to be present and
+  accepted. Matching is case-insensitive.
 - Directory components are stripped: `../../secrets/evidence.eml` is stored as
   `evidence.eml`.
-- Names must be 200 characters or fewer and contain no control characters.
+- Names must contain no control characters, and are length-capped — the schema above gives
+  the limit.
 - Your name is otherwise preserved as-is. That matters because it is the name shown on the
   report, and the name a registrar or hosting provider sees when our takedown team forwards
   the file — so `phishing-email.eml` is worth more than `attachment1.eml`.
@@ -183,79 +165,34 @@ print([attachment["url"] for attachment in attachments])
 
 ## Supported file types
 
-The content type we serve the file with is derived from the extension, not from the
-`Content-Type` header you send, so any header your client sets is ignored.
+The accepted extensions are enumerated in the request description above, and that list is
+generated from the same constants the endpoint enforces — so it is always current.
 
-| Extension        | Stored as                                                                 |
-| ---------------- | ------------------------------------------------------------------------- |
-| `.eml`           | `message/rfc822`                                                          |
-| `.msg`           | `application/vnd.ms-outlook`                                              |
-| `.pdf`           | `application/pdf`                                                         |
-| `.doc`           | `application/msword`                                                      |
-| `.docx`          | `application/vnd.openxmlformats-officedocument.wordprocessingml.document` |
-| `.csv`           | `text/csv`                                                                |
-| `.txt`           | `text/plain`                                                              |
-| `.png`           | `image/png`                                                               |
-| `.jpg`, `.jpeg`  | `image/jpeg`                                                              |
-| `.gif`           | `image/gif`                                                               |
-| `.webp`          | `image/webp`                                                              |
-| `.avif`          | `image/avif`                                                              |
-| `.bmp`           | `image/bmp`                                                               |
+The content type we serve the file with is derived from the extension, **not** from the
+`Content-Type` header you send, so any header your client sets is ignored. `.svg` and
+`.html` are deliberately excluded: they render as active content, and files we serve should
+not.
 
-Anything else is rejected with a `400`. `.svg` and `.html` are deliberately excluded:
-they render as active content, and files we serve should not.
-
-If you need a format that is not on this list, email
+If you need a format that is not accepted, email
 [support@chainpatrol.io](mailto:support@chainpatrol.io) — a common workaround is to send
 the file inside a supported container (a PDF export, or the raw `.eml`).
 
 ## Limits
 
-| Limit                | Value                       | What happens when you exceed it            |
-| -------------------- | --------------------------- | ------------------------------------------ |
-| Request body size    | 4 MB (4,194,304 bytes)      | `413`                                      |
-| Files per request    | 10 (multipart)              | `400`                                      |
-| File name length     | 200 characters              | `400`                                      |
-| Requests per minute  | 60 per organization         | `429`                                      |
+The request body size cap and the per-request file count are stated in the schema above.
+Two things it does not tell you:
 
-The size limit applies to the whole request body, so in a multipart request all parts share
-the same 4 MB budget. For anything larger, split it across requests and attach the
-resulting URLs to the same report.
+- **The size cap applies to the whole request body**, so in a multipart request all parts
+  share one budget. For anything larger, split it across requests and attach the resulting
+  URLs to the same report.
+- **Uploads are rate limited to 60 requests per minute** per organization, or per API key
+  for keys that are not tied to one. Exceeding it returns `429`.
 
-The rate limit is counted per organization, or per API key for keys that are not tied to
-one.
-
-## Response
-
-`200 OK` returns one entry per uploaded file, in the order they were sent.
-
-```json
-{
-  "attachments": [
-    {
-      "url": "https://upcdn.io/ACCOUNT/raw/uploads/2026/09/03/api-attachments/org-42/8f14e45f-ea3a-4f0b-9b1a-1c2d3e4f5a6b/evidence.eml",
-      "fileName": "evidence.eml",
-      "sizeBytes": 48210
-    },
-    {
-      "url": "https://upcdn.io/ACCOUNT/raw/uploads/2026/09/03/api-attachments/org-42/2c1f3b7e-55d9-4a7e-8a0e-7b6c5d4e3f21/screenshot.png",
-      "fileName": "screenshot.png",
-      "sizeBytes": 182934
-    }
-  ]
-}
-```
-
-| Field                     | Type   | Description                                                                    |
-| ------------------------- | ------ | ------------------------------------------------------------------------------ |
-| `attachments`             | array  | One entry per uploaded file, in request order.                                  |
-| `attachments[].url`       | string | The URL to pass to `report.create` in `attachmentUrls`.                         |
-| `attachments[].fileName`  | string | The stored file name, after sanitising.                                         |
-| `attachments[].sizeBytes` | number | Size of the stored file in bytes.                                               |
+## The returned URL
 
 <Warning>
-  Treat `url` as opaque. Store it and pass it through — do not parse it, and do not try to
-  construct one yourself. The path layout is an implementation detail and can change.
+  Treat the `url` as opaque. Store it and pass it through — do not parse it, and do not try
+  to construct one yourself. The path layout is an implementation detail and can change.
 
   The URL is served from our CDN and is reachable by anyone who has it, which is what lets
   us forward evidence to registrars and hosting providers. The path is not guessable, but
@@ -264,43 +201,13 @@ one.
 
 ## Error responses
 
-Every error returns a JSON body with a single `error` string.
+Every error returns a JSON body with a single `error` string describing what was wrong.
+The statuses are listed with the responses above; two things worth calling out:
 
-| Status | Meaning                                                                                              |
-| ------ | ---------------------------------------------------------------------------------------------------- |
-| `400`  | Bad request — unsupported extension, missing or repeated `fileName`, empty body, an empty file part, malformed multipart, no file parts, or more than 10 files. |
-| `401`  | Missing, invalid, or expired API key.                                                                 |
-| `403`  | Read-only API key. Read-only keys exist for cross-organization reads and cannot upload.               |
-| `405`  | Wrong method — this endpoint is `POST` only.                                                          |
-| `413`  | Request body larger than 4 MB.                                                                        |
-| `429`  | Rate limit exceeded (60 requests per minute per organization).                                        |
-| `502`  | We could not store the file. Safe to retry.                                                           |
-
-Examples:
-
-```json Unsupported extension
-{
-  "error": "fileName must end in one of: .avif, .bmp, .csv, .doc, .docx, .eml, .gif, .jpeg, .jpg, .msg, .pdf, .png, .txt, .webp"
-}
-```
-
-```json Missing fileName on a raw upload
-{
-  "error": "A fileName query parameter is required for raw uploads, for example ?fileName=evidence.eml"
-}
-```
-
-```json Over the size limit
-{
-  "error": "Upload exceeds the 4194304 byte request limit."
-}
-```
-
-```json Rate limited
-{
-  "error": "Rate limit exceeded. Please try again later."
-}
-```
+- **`405` is not in the list**, because it is not a response of `POST`. The endpoint is
+  `POST` only, and any other method returns `405 Method Not Allowed`.
+- **Retry `429` and `502`, not `400`.** A `4xx` other than `429` means the request itself
+  needs fixing, and retrying it unchanged will fail the same way.
 
 ## Best practices
 
@@ -310,16 +217,11 @@ Examples:
   own; the report is what makes them reviewable.
 - **Use meaningful file names.** The name follows the file into the dashboard and into
   outbound takedown emails.
-- **Retry `502` and `429`, not `400`.** A `4xx` other than `429` means the request itself
-  needs fixing; retrying it unchanged will fail the same way.
 - **Send `.eml` rather than a screenshot of an email** when you have it. The raw message
   carries headers, which is what registrars and email providers act on.
 
 ## Notes
 
-- This endpoint is not part of the generated OpenAPI specification, because it takes raw
-  bytes and multipart bodies rather than JSON. Everything it accepts is documented on this
-  page.
 - There is no endpoint for listing, replacing, or deleting an upload. To correct a
   mistake, upload the right file and reference that URL instead; to remove evidence from a
   report, contact [support@chainpatrol.io](mailto:support@chainpatrol.io).
