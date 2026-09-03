@@ -24,7 +24,7 @@ chainpatrol reports create [--org <slug>] [options]
 | `--description <text>` | Report description. |
 | `--contact-info <text>` | Reporter contact info. |
 | `--asset <c[:status]>` | Asset to include. Repeatable. `status` is `BLOCKED`, `ALLOWED`, or `UNKNOWN`. |
-| `--attachment-url <u>` | Attachment URL. Repeatable. |
+| `--attachment-url <u>` | Attachment URL. Repeatable. If the evidence is a local file, upload it first with [`POST /attachment/upload`](/external-api/attachment-upload) and pass the returned URL. |
 | `--external-submission-link <u>` | External submission link. |
 | `--payload-file <path>` | JSON file containing the full report payload. |
 | `--dry-run` | Print the payload without submitting it. |
