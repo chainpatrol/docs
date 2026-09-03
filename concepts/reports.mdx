@@ -73,13 +73,18 @@ Reports move through three stages as they're processed:
 
 - **TODO** - The report is waiting in the queue for review
 - **IN_PROGRESS** - ChainPatrol staff or automated systems are actively reviewing it
-- **CLOSED** - The review is complete and decisions have been made on all assets
+- **CLOSED** - Decisions have been made on all proposals in the report. The dashboard labels this status **Reviewed** to clarify that the proposals have been reviewed, not that takedowns have finished.
 
 ## Finding Your Reports
 
-The **Reports page** in your dashboard shows all the reports for your organization, whether they're pending review, currently being worked on, or already closed.
+The **Reports page** in your dashboard shows all the reports for your organization, organized into four tabs:
 
-You can filter and search by creator, date, asset, and status to track the status of something you reported or follow up on threats flagged by your community.
+- **ChainPatrol Review** - TODO reports waiting for ChainPatrol's team to triage
+- **Customer Confirmation** - TODO reports escalated to your organization for approval. This is the same queue your Review page shows, and the same reports the [`needsCustomerReview` filter](/external-api/organization-reports-list) returns in the API and CLI.
+- **In Progress** - Reports actively being reviewed
+- **Reviewed** - Reports where every proposal has a decision
+
+You can filter and search by creator, date, asset, and status to track the status of something you reported or follow up on threats flagged by your community. Exporting reports to CSV respects the tab that's currently active.
 
 ## How to Submit a Report
 
@@ -101,7 +106,7 @@ Creating a report in ChainPatrol is straightforward:
 
 **During Review** - Status changes to IN_PROGRESS, assets are scanned and analyzed, evidence is evaluated, and decisions are made.
 
-**After Review** - Status changes to CLOSED, asset statuses are updated, you're notified of the outcome, and actions are taken (blocking, allowing, etc.).
+**After Review** - Status changes to CLOSED (shown as **Reviewed** in the dashboard), asset statuses are updated, you're notified of the outcome, and actions are taken (blocking, allowing, etc.).
 
 ## Report Best Practices
 
@@ -118,4 +123,4 @@ Creating a report in ChainPatrol is straightforward:
 - Multi-asset reports capture campaign scope: Grouping related threats in one report helps reviewers understand attack patterns and makes blocking entire campaigns more efficient
 - Context accelerates review decisions: Reports with screenshots, explanations, and evidence of harm move through review faster than bare URLs with no context
 - Three submission methods serve different needs: Manual reports for ad-hoc discoveries, API reports for automated detection systems, and portal reports for community submissions
-- Report status tracks progress without micromanagement: TODO, IN_PROGRESS, and CLOSED states provide visibility while letting the security team work without constant updates
+- Report status tracks progress without micromanagement: TODO, IN_PROGRESS, and CLOSED (Reviewed) states provide visibility while letting the security team work without constant updates
