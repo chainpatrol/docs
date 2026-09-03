@@ -23,7 +23,8 @@ There are two ways to connect, serving the same tools with the same authorizatio
   </Card>
 
   <Card title="Remote over HTTP" icon="cloud" href="#connect-to-the-remote-endpoint">
-    Point a client at `https://app.chainpatrol.io/api/mcp`. Nothing to install.
+    Point a client at `https://app.chainpatrol.io/api/mcp` and sign in with OAuth or an
+    API key. Nothing to install.
   </Card>
 </CardGroup>
 
@@ -64,11 +65,48 @@ channel carries the protocol.
 ## Connect to the remote endpoint
 
 The same tool surface is served at `POST https://app.chainpatrol.io/api/mcp` over
-streamable HTTP, so you can connect a client with nothing installed. Authentication is
-exactly what the REST API accepts: an `x-api-key` header with your
-[API key](/external-api/authentication), or a bearer token in the `Authorization` header.
+streamable HTTP, so you can connect a client with nothing installed. The endpoint accepts
+three credentials: an OAuth token issued through the flow below, an `x-api-key` header
+with your [API key](/external-api/authentication), or a bearer token in the
+`Authorization` header.
 
-For Claude Code:
+### Sign in with OAuth
+
+An MCP client that supports OAuth needs only the URL — no pre-shared key. For Claude
+Code:
+
+```json
+{
+  "mcpServers": {
+    "chainpatrol": {
+      "type": "http",
+      "url": "https://app.chainpatrol.io/api/mcp"
+    }
+  }
+}
+```
+
+The client registers itself and sends you to the browser, where you sign in to
+ChainPatrol as usual — magic link and SSO both work — and land on an approval screen.
+The screen names the application asking for access and the host the authorization is
+actually sent to. The application name is self-declared, so treat the host as the honest
+signal: if it is not the client you are connecting, deny.
+
+Two properties of the flow worth knowing:
+
+- Every connection shows the approval screen. There is no silent "already connected"
+  fast path, so a reconnect looks exactly like a first connection.
+- The token acts as you. Organization access follows your memberships, the same as a
+  browser session.
+
+Clients must use PKCE with the `S256` method; the `plain` method is rejected. Discovery
+metadata is published at `/.well-known/oauth-authorization-server` and
+`/.well-known/oauth-protected-resource`, and an unauthenticated `401` points at the
+latter in its `WWW-Authenticate` header, so compliant clients find the flow on their own.
+
+### Use an API key
+
+For automation and service accounts, send the key as a header instead:
 
 ```json
 {
