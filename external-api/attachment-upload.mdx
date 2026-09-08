@@ -1,7 +1,6 @@
 ---
 title: Upload Attachment
-sidebarTitle: Upload Attachment
-description: "Upload evidence files such as .eml emails, screenshots, and PDFs to ChainPatrol and reference the returned URLs in report attachments."
+openapi: "POST /attachment/upload"
 ---
 
 ## Overview
@@ -10,23 +9,7 @@ The Attachment Upload endpoint lets you send evidence files (phishing emails as 
 
 Use this endpoint when you have the evidence as a file rather than an already-public URL. If your evidence is already hosted at a stable URL, you can pass that URL to `attachmentUrls` directly and skip this step.
 
-```bash
-POST https://app.chainpatrol.io/api/v2/attachment/upload
-```
-
-## Quick Start
-
-### Authentication
-
-Include your API key in the `X-API-KEY` header:
-
-```bash
-X-API-KEY: <api-key>
-```
-
-Read-only API keys cannot upload attachments and receive a `403` response.
-
-## Request
+## Request formats
 
 The endpoint accepts two request formats.
 
@@ -51,12 +34,6 @@ curl -X POST "https://app.chainpatrol.io/api/v2/attachment/upload" \
   -F "file=@screenshot.png"
 ```
 
-## Request Parameters
-
-| Parameter  | Location | Required             | Description                                                             |
-| ---------- | -------- | -------------------- | ----------------------------------------------------------------------- |
-| `fileName` | Query    | Yes, for raw uploads | File name including its extension, for example `evidence.eml`. Ignored for multipart uploads, which take each part's own file name. |
-
 ## Limits
 
 | Limit               | Value                                     |
@@ -67,7 +44,7 @@ curl -X POST "https://app.chainpatrol.io/api/v2/attachment/upload" \
 
 ### Allowed file types
 
-The file extension determines the stored content type. Requests with any other extension are rejected with a `400` response.
+The file extension determines the stored content type. Any `Content-Type` header you send is ignored. Requests with an extension outside this list are rejected with a `400` response:
 
 `.avif`, `.bmp`, `.csv`, `.doc`, `.docx`, `.eml`, `.gif`, `.jpeg`, `.jpg`, `.msg`, `.pdf`, `.png`, `.txt`, `.webp`
 
@@ -75,29 +52,6 @@ The file extension determines the stored content type. Requests with any other e
   HTML and SVG files are not accepted because they can execute scripts when
   rendered from a CDN.
 </Note>
-
-## Response
-
-```json
-{
-  "attachments": [
-    {
-      "url": "https://upcdn.io/.../evidence.eml",
-      "fileName": "evidence.eml",
-      "sizeBytes": 48210
-    }
-  ]
-}
-```
-
-## Response Parameters
-
-| Parameter                  | Type   | Description                                             |
-| -------------------------- | ------ | ------------------------------------------------------- |
-| `attachments`              | array  | One entry per uploaded file, in request order           |
-| `attachments[].url`        | string | Hosted URL to pass to Create Report's `attachmentUrls`  |
-| `attachments[].fileName`   | string | Stored file name                                        |
-| `attachments[].sizeBytes`  | number | Size of the stored file in bytes                        |
 
 ## Errors
 
@@ -145,5 +99,7 @@ curl -X POST "https://app.chainpatrol.io/api/v2/report/create" \
 ## Notes
 
 - Uploaded files are stored on ChainPatrol's CDN, so the URLs stay available for the lifetime of the report
+- Treat the returned URL as opaque; the path layout is an implementation detail
 - Each upload is stored under a unique path, so uploading the same file name twice never overwrites an earlier upload
 - File names keep their original basename; path segments in `fileName` are stripped
+- Images are displayed inline on the report; other files are listed as downloadable evidence
