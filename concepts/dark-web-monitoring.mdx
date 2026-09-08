@@ -1,12 +1,22 @@
 ---
 title: "Dark Web Monitoring"
-description: "Search leaked credentials against your brand's tracked email domains and addresses, review masked leaks, and get Slack alerts when leaks increase."
+description: "Search leaked credentials against your brand's tracked email domains, email addresses, and crypto wallet addresses, review masked leaks, and get Slack alerts when leaks increase."
 ---
 
 ## Overview
 
-**Dark Web Monitoring** lives under **Employee Protection → Dark Web**. For now, it supports searching leaked credentials against each brand's tracked email domains and addresses.
+**Dark Web Monitoring** lives under **Employee Protection → Dark Web**. It supports searching dark web leak data against each brand's tracked assets. Three search targets are available:
+
+- **Email domains**: find leaked credentials for any address under a tracked domain.
+- **Email addresses**: find leaked credentials for a specific tracked address.
+- **Crypto wallet addresses**: find dark web mentions of a brand's tracked wallet addresses.
+
+## Search targets
+
+The target picker only lists assets already tracked on the selected brand. Email domains and addresses come from the brand's email assets. Wallet addresses come from the brand's address assets. To search a new wallet, add it as an address asset to the brand first.
+
+Wallet results show the searched address in an **Address** column, shortened for display. Email results use an **Email** column. CSV exports include the same column for the search target you ran.
 
 Leaks are shown with sensitive details masked. You can track which ones you have already reviewed.
 
-When leaks increase for a monitored domain, the system sends an alert to your configured Slack channel with a link back to the page.
+When leaks increase for a monitored domain, ChainPatrol sends an alert to your configured Slack channel with a link back to the page.
