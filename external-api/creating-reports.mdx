@@ -48,9 +48,10 @@ All endpoints are served from `https://app.chainpatrol.io/api/v2`.
 <Steps>
   <Step title="Check for an existing report (optional)">
     If your pipeline can rediscover the same threat, check first with
-    [`POST /reports/search`](/external-api/reports-search). Re-reporting an asset that
-    already has a pending report fails with a `422` and a `REPORT_ALREADY_EXISTS` error, so
-    searching first keeps your error rate meaningful.
+    [`POST /reports/search`](/external-api/reports-search). An already-reported asset is
+    skipped when the batch contains other valid assets, and a batch made up entirely of
+    already-reported assets fails with a `422` and a `REPORT_ALREADY_EXISTS` error, so
+    searching first keeps your submissions meaningful.
 
     ```bash
     curl -X POST 'https://app.chainpatrol.io/api/v2/reports/search' \
@@ -345,8 +346,17 @@ one entry per failing asset in `data.errors`, each with an `errorType`, a `messa
 }
 ```
 
-All assets must be valid for the report to be created — a `422` means no report was
-created. Fix or drop the offending assets and resubmit. Every `errorType` is listed on the
+Already-reported assets do not fail a mixed batch. When at least one asset in the
+submission is new and valid, ChainPatrol skips the assets that were already reported,
+already in the requested status, or pending review, and creates the report with the
+remaining assets. You get a `422` for these cases (`REPORT_ALREADY_EXISTS`,
+`ASSET_ALREADY_CORRECT`, `ALREADY_PENDING_REVIEW`) only when every asset in the batch is a
+no-op, because there is nothing new to review.
+
+Genuine validation failures such as `INVALID_FORMAT` or `DUPLICATE_ASSETS` still reject
+the whole batch. Fix or drop the offending assets and resubmit.
+
+A `422` always means no report was created. Every `errorType` is listed on the
 [Create Report](/external-api/report-create) reference page.
 
 For upload failures, see
