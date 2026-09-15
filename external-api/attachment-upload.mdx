@@ -9,6 +9,15 @@ The Attachment Upload endpoint lets you send evidence files (phishing emails as 
 
 Use this endpoint when you have the evidence as a file rather than an already-public URL. If your evidence is already hosted at a stable URL, you can pass that URL to `attachmentUrls` directly and skip this step.
 
+## Private storage
+
+Files uploaded with an organization API key are stored privately. The `url` in the response is a ChainPatrol link (`https://app.chainpatrol.io/api/files/...`) rather than a storage link. It opens only for signed-in members of your organization and for ChainPatrol staff; anyone else receives a 404. There is nothing to configure. Pass the URL to [Create Report](/external-api/report-create) as before, and the file is shown on the report page once attached.
+
+Each entry in the response carries a `visibility` field that says which applies:
+
+- `private`: the file is stored privately and the URL is a ChainPatrol link. This is the case for all uploads made with an organization API key.
+- `public`: anyone with the URL can open it. Only uploads made with an API key that has no organization are stored this way.
+
 ## Request formats
 
 The endpoint accepts two request formats.
@@ -63,7 +72,7 @@ The file extension determines the stored content type. Any `Content-Type` header
 | 405         | Request method is not `POST`                                                                           |
 | 413         | Request body exceeds the 4 MB limit                                                                    |
 | 429         | Rate limit exceeded; retry after the current minute window                                             |
-| 502         | ChainPatrol failed to store the file; retry the request                                                |
+| 502         | ChainPatrol failed to store the file, or could not confirm it was stored privately and discarded it; retry the request |
 
 Error responses return a JSON body with an `error` field describing the failure:
 
@@ -82,7 +91,8 @@ Uploading is step one of a two-step flow. Pass the returned `url` values to [Cre
 curl -X POST "https://app.chainpatrol.io/api/v2/attachment/upload?fileName=evidence.eml" \
   -H "X-API-KEY: YOUR_API_KEY_HERE" \
   --data-binary @evidence.eml
-# → { "attachments": [ { "url": "https://upcdn.io/.../evidence.eml", ... } ] }
+# → { "attachments": [ { "url": "https://app.chainpatrol.io/api/files/.../evidence.eml",
+#      "fileName": "evidence.eml", "sizeBytes": 48210, "visibility": "private" } ] }
 
 # 2. Reference the returned URL in the report
 curl -X POST "https://app.chainpatrol.io/api/v2/report/create" \
@@ -92,13 +102,13 @@ curl -X POST "https://app.chainpatrol.io/api/v2/report/create" \
     "organizationSlug": "acme",
     "title": "Phishing email campaign",
     "assets": [{ "content": "https://phish.example", "status": "BLOCKED" }],
-    "attachmentUrls": ["https://upcdn.io/.../evidence.eml"]
+    "attachmentUrls": ["https://app.chainpatrol.io/api/files/.../evidence.eml"]
   }'
 ```
 
 ## Notes
 
-- Uploaded files are stored on ChainPatrol's CDN, so the URLs stay available for the lifetime of the report
+- ChainPatrol stores uploaded files, so the URLs stay available for the lifetime of the report
 - Treat the returned URL as opaque; the path layout is an implementation detail
 - Each upload is stored under a unique path, so uploading the same file name twice never overwrites an earlier upload
 - File names keep their original basename; path segments in `fileName` are stripped

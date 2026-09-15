@@ -11,14 +11,15 @@ The Report Create endpoint allows you to submit assets (URLs, domains, blockchai
 
 `attachmentUrls` accepts URLs to any supported evidence file, not just images. Screenshots, `.eml` phishing emails, and PDFs all work.
 
-If your evidence is a file rather than an already-hosted URL, upload it to ChainPatrol first with [Upload Attachment](/external-api/attachment-upload), then pass the returned URL in `attachmentUrls`:
+If your evidence is a file rather than an already-hosted URL, upload it to ChainPatrol first with [Upload Attachment](/external-api/attachment-upload), then pass the returned URL in `attachmentUrls`. Files uploaded with an organization API key are stored privately and are only visible to signed-in members of your organization and ChainPatrol staff.
 
 ```bash
 # 1. Upload the file
 curl -X POST "https://app.chainpatrol.io/api/v2/attachment/upload?fileName=evidence.eml" \
   -H "X-API-KEY: YOUR_API_KEY_HERE" \
   --data-binary @evidence.eml
-# → { "attachments": [ { "url": "https://upcdn.io/.../evidence.eml", ... } ] }
+# → { "attachments": [ { "url": "https://app.chainpatrol.io/api/files/.../evidence.eml",
+#      "fileName": "evidence.eml", "sizeBytes": 48210, "visibility": "private" } ] }
 
 # 2. Reference the returned URL in the report
 curl -X POST "https://app.chainpatrol.io/api/v2/report/create" \
@@ -28,7 +29,7 @@ curl -X POST "https://app.chainpatrol.io/api/v2/report/create" \
     "organizationSlug": "acme",
     "title": "Phishing email campaign",
     "assets": [{ "content": "https://phish.example", "status": "BLOCKED" }],
-    "attachmentUrls": ["https://upcdn.io/.../evidence.eml"]
+    "attachmentUrls": ["https://app.chainpatrol.io/api/files/.../evidence.eml"]
   }'
 ```
 
