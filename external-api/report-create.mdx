@@ -7,6 +7,30 @@ openapi: "POST /report/create"
 
 The Report Create endpoint allows you to submit assets (URLs, domains, blockchain addresses, etc.) for review by the ChainPatrol team. This endpoint handles bulk submissions and provides detailed error reporting for validation failures.
 
+New to this endpoint? Start with [Creating Reports](/external-api/creating-reports) — a
+step-by-step walkthrough of the whole flow, with worked examples.
+
+## Attachments
+
+`attachmentUrls` accepts URLs of any evidence file, not just images — `.eml` and `.msg`
+messages, PDFs, documents, and screenshots all work. Images are displayed inline on the
+report; other files are listed as downloadable evidence that our takedown team can forward
+to a registrar or hosting provider.
+
+To send us the file itself rather than a link you host, upload it first with
+[Upload Attachment](/external-api/attachment-upload) and pass the URL it returns:
+
+```bash
+# 1. upload the file, get a URL back
+curl -X POST 'https://app.chainpatrol.io/api/v2/attachment/upload?fileName=evidence.eml' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  --data-binary '@evidence.eml'
+
+# 2. reference that URL here, in attachmentUrls
+```
+
+Attachments belong to the report as a whole rather than to an individual asset.
+
 ## Error Responses
 
 ### 422 Unprocessable Content

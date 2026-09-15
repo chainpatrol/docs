@@ -1,7 +1,7 @@
 ---
 icon: lightbulb
 title: Concepts
-description: Learn core ChainPatrol concepts including assets, asset status (allowed, blocked, unknown), detections, reports, proposals, reviews, and takedowns.
+description: Learn core ChainPatrol concepts including assets, asset status (allowed, blocked, unknown), detections, reports, proposals, reviews, takedowns, and Dark Web Monitoring.
 ---
 
 ## Assets
@@ -39,9 +39,9 @@ Each report has a status that indicates whether or not it has been reviewed by t
 
 - **To Do**: None of the proposals in the report have been reviewed yet
 - **In Progress**: Some of the proposals in the report have been reviewed
-- **Closed**: All of the proposals in the report have been reviewed
+- **Reviewed**: All of the proposals in the report have been reviewed (the underlying status is `CLOSED`)
 
-Reports are grouped by their status in the admin dashboard to make it easier to manage.
+Reports are grouped by their status in the admin dashboard to make it easier to manage. To Do reports are split across two tabs: **ChainPatrol Review** for reports awaiting ChainPatrol's team, and **Customer Confirmation** for reports escalated to your organization for approval.
 
 For more information about how to create reports, see the [Report stage](/reporting-flow/report) page.
 
@@ -76,9 +76,12 @@ Takedowns can have two main states:
 
 The takedown process helps ensure that confirmed malicious content is removed from platforms, reducing the potential impact on users.
 
-
 ### Takedown Tasks
 
 Each Takedown is broken down into one or more **Takedown Tasks**, which represent individual takedown actions at different provider levels. The task types depend on the asset: for URLs/pages, tasks are created for the **hosting provider**, **domain registrar**, and/or **TLD registrar** (whichever are detected); for platform-specific assets like Twitter, Telegram, or Medium, platform-specific task types are created instead.
 
 Each task progresses through its own lifecycle with statuses: todo → submitted → approved (or rejected / stale / cancelled). Tasks also carry a `retractionStatus` for cases where a takedown needs to be reversed. Tasks can be completed manually by staff or auto-completed when automated liveness checks detect the asset is down at a specific provider level.
+
+## Dark Web Monitoring
+
+Dark Web Monitoring lives under **Employee Protection → Dark Web**. For now, it supports searching leaked credentials for your brands, with alerts when new leaks appear. See [Dark Web Monitoring](/concepts/dark-web-monitoring).

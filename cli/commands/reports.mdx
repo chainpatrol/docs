@@ -24,7 +24,7 @@ chainpatrol reports create [--org <slug>] [options]
 | `--description <text>` | Report description. |
 | `--contact-info <text>` | Reporter contact info. |
 | `--asset <c[:status]>` | Asset to include. Repeatable. `status` is `BLOCKED`, `ALLOWED`, or `UNKNOWN`. |
-| `--attachment-url <u>` | Attachment URL. Repeatable. |
+| `--attachment-url <u>` | Attachment URL. Repeatable. Takes a URL, not a file path — see the note below. |
 | `--external-submission-link <u>` | External submission link. |
 | `--payload-file <path>` | JSON file containing the full report payload. |
 | `--dry-run` | Print the payload without submitting it. |
@@ -46,6 +46,22 @@ chainpatrol reports create --org acme --title "Batch report" \
 chainpatrol reports create --org acme --title "Batch report" \
   --asset "https://a.example:BLOCKED" --dry-run --output markdown
 ```
+
+<Note>
+  `--attachment-url` takes a URL that already exists. To attach a local file — an `.eml`
+  message, a screenshot, a PDF — upload it first with
+  [`POST /attachment/upload`](/external-api/attachment-upload) and pass the URL it returns:
+
+  ```bash
+  URL=$(curl -s -X POST \
+    "https://app.chainpatrol.io/api/v2/attachment/upload?fileName=evidence.eml" \
+    -H "X-API-KEY: $CHAINPATROL_API_KEY" \
+    --data-binary '@evidence.eml' | jq -r '.attachments[0].url')
+
+  chainpatrol reports create --org acme --title "Phishing email" \
+    --asset "https://phish.example:BLOCKED" --attachment-url "$URL"
+  ```
+</Note>
 
 For fields the flags do not cover — `externalReporter`, enrichments, `rawAssetsInput` —
 pass a payload file:
