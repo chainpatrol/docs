@@ -85,6 +85,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
 | endDate      | string  | No       | Filter reports created before this date (ISO 8601 format)                                             |
 | onlyRejected | boolean | No       | If true, only return reports with rejected proposals (default: false)                                 |
 | needsCustomerReview | boolean | No | If true, only return reports with at least one proposal waiting on **your** review — the same queue your Review page shows. Use it to answer "what is waiting on me?", then act on the proposals with [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review). |
+| threatActorIds | number[] | No | Filter to reports attributed to specific threat actors. Repeat the parameter for multiple IDs (`?threatActorIds=1&threatActorIds=2`). Get IDs from the `threatActor` field on reports you have already fetched. |
 
 ## Response
 
@@ -97,6 +98,10 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
       "id": "rpt_1234567890abcdef",
       "createdAt": "2024-01-15T10:30:00.000Z",
       "status": "APPROVED",
+      "threatActor": {
+        "id": 42,
+        "name": "Inferno Drainer"
+      },
       "assets": [
         {
           "id": 12345,
@@ -131,6 +136,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
 | reports[].id               | string | Unique identifier for the report                                         |
 | reports[].createdAt        | string | ISO 8601 timestamp when the report was created                           |
 | reports[].status           | string | Overall status of the report (PENDING, APPROVED, REJECTED)               |
+| reports[].threatActor      | object | The threat actor ChainPatrol attributed this report to, with `id` and `name`. `null` when the report has no attribution. Pass the `id` to `threatActorIds` to find related reports. |
 | reports[].assets           | array  | Array of assets included in the report                                   |
 | reports[].proposals        | array  | Array of proposals associated with the report                            |
 | reports[].proposals[].id   | number | Unique identifier for the proposal. Pass it to [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review) to approve, reject, or watchlist the proposal. |
@@ -248,6 +254,17 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?needsCustome
 ```
 
 Each returned report carries the proposals to act on in `proposals[]`. Take `proposals[].id` and `proposals[].asset.id` from there and pass both to [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review).
+
+### Filter by Threat Actor
+
+Get all reports attributed to specific threat actors. ChainPatrol staff attribute reports to named threat actors during review; the actors you can filter by are those attributed to reports in your organization. Repeat the parameter to include multiple actors:
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?threatActorIds=42&threatActorIds=57' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+To discover IDs, fetch reports without the filter and read the `threatActor` field on each report, or use the Threat Actor filter on the dashboard's Reports page.
 
 ### Combine Filters
 
