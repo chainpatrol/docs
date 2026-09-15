@@ -64,6 +64,7 @@ chainpatrol asset check https://phish.example
 | [`healthchecks`](/cli/commands/healthchecks) | List and run organization healthchecks |
 | [`queues`](/cli/commands/queues) | Snapshot review and takedown queues |
 | [`presets`](/cli/commands/presets) | Run saved workflows for common jobs |
+| [`mcp`](/cli/mcp) | Serve the public API to AI agents over MCP (stdio) |
 | [`setup`](/cli/agents) | Install the Claude Code skill and shell completions |
 | [`uninstall`](/cli/agents) | Remove the Claude Code skill and shell completions |
 | [`completions`](/cli/installation#shell-completions) | Output a shell completion script |
@@ -99,6 +100,10 @@ This documentation describes CLI `1.6.x`.
 
   <Card title="Using the CLI with agents" icon="robot" href="/cli/agents">
     The Claude Code skill, `--dry-run`, `--explain`, and non-interactive mode.
+  </Card>
+
+  <Card title="MCP server" icon="plug" href="/cli/mcp">
+    Serve every public API operation as MCP tools, over stdio or HTTP.
   </Card>
 </CardGroup>
 

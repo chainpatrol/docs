@@ -249,7 +249,8 @@
               "cli/installation",
               "cli/authentication",
               "cli/output",
-              "cli/agents"
+              "cli/agents",
+              "cli/mcp"
             ]
           },
           {
