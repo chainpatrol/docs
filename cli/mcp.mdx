@@ -127,6 +127,37 @@ endpoint accepts. The endpoint is stateless: each request carries its own creden
 is authorized by the API against that credential, the same as a REST call. Server-initiated
 streams are not supported, so `GET` returns `405` — use `POST`.
 
+### Blocklist-only endpoint
+
+For an integration that only needs to answer "is this a scam?", the full 67-tool surface
+is more blast radius and more context than the job needs. A second remote endpoint,
+`POST https://app.chainpatrol.io/api/mcp/blocklist`, serves exactly two read-only tools:
+
+- `asset_check` — check whether an asset is allowed or blocked
+- `asset_list` — fetch the allowlist/blocklist
+
+Use it when connecting a third-party chat bot or any integration that should look up
+threat status and nothing else. The endpoint cannot mutate anything: tool names outside
+the pair are rejected server-side. Neither tool takes an organization slug, so no
+`user_orgs` call is needed first.
+
+Authentication is the same as `/api/mcp` — OAuth, `x-api-key`, or bearer token. For a
+headless integration, an organization-scoped API key is the credential that makes sense:
+
+```json
+{
+  "mcpServers": {
+    "chainpatrol-blocklist": {
+      "type": "http",
+      "url": "https://app.chainpatrol.io/api/mcp/blocklist",
+      "headers": {
+        "x-api-key": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
 ## Narrow the tool surface
 
 Exposing all 67 tools costs context in the client. To trade breadth for context budget,
