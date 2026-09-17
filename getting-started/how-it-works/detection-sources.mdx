@@ -24,7 +24,7 @@ Detection sources operate on automated schedules, running searches across variou
 ## Available Detection Sources
 
 <Info>
-ChainPatrol supports **29 different detection sources** across multiple categories
+ChainPatrol supports **30 different detection sources** across multiple categories
 </Info>
 
 ### Search Engines
@@ -67,6 +67,12 @@ Track social media for impersonation accounts and fraudulent posts:
 <Info>
 Our enhanced X platform integration allows for more thorough detection of social media-based threats and expedited takedown processing.
 </Info>
+
+### Code Repositories
+
+Monitor public code hosting platforms for impersonation:
+
+- **GitHub Search** - Searches GitHub for repositories, user accounts, issues, pull requests, and code that impersonate your brands. Runs hourly for P1 organizations and is enabled by default at that priority. Configurable options include `searchTypes` (defaults to `repositories` and `users`; `issues`, `pull_requests`, and `code` are opt-in) and `lookbackDays` (defaults to 7, applied to repository pushes, issue and pull request updates, and account creation dates). Queries are built from your organization's brand names and automatically exclude your protected GitHub owners via `-user:` qualifiers.
 
 ### App Stores
 
