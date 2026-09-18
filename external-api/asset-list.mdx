@@ -13,6 +13,36 @@ Include your API key in the `X-API-KEY` header:
 X-API-KEY: <api-key>
 ```
 
+## Asset Types
+
+`type` is optional. Omit it to return assets of **every** asset type on a single
+pagination cursor:
+
+```json
+{ "status": "BLOCKED", "per_page": 1000 }
+```
+
+This is the cheapest way to mirror the full blocklist — one paginated sweep
+instead of one sweep per member of the `AssetType` enum. Each returned asset
+still carries its own `type`, so you can bucket the results client-side.
+
+Supply `type` to narrow the sweep to a single asset type, exactly as before:
+
+```json
+{ "type": "URL", "status": "BLOCKED", "per_page": 1000 }
+```
+
+Omit the field entirely to get the full sweep. An explicit `"type": null` is
+rejected with a 400, so a client that builds the body from a struct should leave
+the key out rather than setting it to null.
+
+<Note>
+A single response returns at most **1000** assets, whatever `per_page` asks for.
+Larger values are accepted but clamped, so always keep following `next_page`
+until it comes back `null` rather than assuming one page holds everything.
+Responses are also capped at 4MB.
+</Note>
+
 ## Sync Strategy and Removals
 
 <Warning>
@@ -31,11 +61,20 @@ When using time-based filtering (e.g., fetching only the last 5 minutes of block
 
 Asset status changes can move assets between different lists (blocklist, allowlist, unknown). Time-based queries on a single endpoint may not capture these transitions, potentially leaving your local cache with outdated information about blocked assets that should no longer be blocked.
 
+### Soft-Deleted Assets
+
+Assets that ChainPatrol has soft-deleted are excluded from every response, so a
+mirror built from this endpoint matches ChainPatrol's own blocklist snapshot.
+
+This is a change in behaviour: the endpoint previously returned soft-deleted
+assets. A mirror built before the change may be holding rows that will never
+appear again — a full re-sync clears them.
+
 ## Pagination
 
 To use pagination, include the `per_page` and `next_page` parameters in your request:
 
-- `per_page <number>`: Number of items to return per page (max: 10000)
+- `per_page <number>`: Items per page. Accepted up to 10000, but a response returns at most 1000 — always follow `next_page`.
 - `next_page <string>`: Cursor for the next page of results
 
 ### Example implementation for pagination:
@@ -43,7 +82,8 @@ To use pagination, include the `per_page` and `next_page` parameters in your req
 <CodeGroup>
 
 ```javascript JavaScript
-async function fetchAllAssets(type, status) {
+// Pass `type` to sweep one asset type, or leave it out to sweep them all.
+async function fetchAllAssets(status, type) {
   let allAssets = [];
   let nextPage = null;
   while (true) {
@@ -56,9 +96,9 @@ async function fetchAllAssets(type, status) {
           "X-API-KEY": "YOUR_API_KEY_HERE",
         },
         body: JSON.stringify({
-          type,
+          ...(type ? { type } : {}),
           status,
-          per_page: 500,
+          per_page: 1000,
           next_page: nextPage,
         }),
       }
@@ -72,13 +112,15 @@ async function fetchAllAssets(type, status) {
   }
   return allAssets;
 }
-fetchAllAssets("URL", "BLOCKED")
+// Every asset type in one sweep:
+fetchAllAssets("BLOCKED")
   .then((assets) => console.log("All assets:", assets))
   .catch((error) => console.error("Error fetching assets:", error));
 ```
 
 ```typescript TypeScript
-async function fetchAllAssets(type: string, status: string): Promise<any[]> {
+// `type` is optional — omit it to sweep every asset type on one cursor.
+async function fetchAllAssets(status: string, type?: string): Promise<any[]> {
   let allAssets: any[] = [];
   let nextPage: string | null = null;
 
@@ -92,9 +134,9 @@ async function fetchAllAssets(type: string, status: string): Promise<any[]> {
           "X-API-KEY": "YOUR_API_KEY_HERE",
         },
         body: JSON.stringify({
-          type,
+          ...(type ? { type } : {}),
           status,
-          per_page: 500,
+          per_page: 1000,
           next_page: nextPage,
         }),
       }
@@ -110,7 +152,8 @@ async function fetchAllAssets(type: string, status: string): Promise<any[]> {
   return allAssets;
 }
 
-fetchAllAssets("URL", "BLOCKED")
+// Every asset type in one sweep:
+fetchAllAssets("BLOCKED")
   .then((assets) => console.log("All assets:", assets))
   .catch((error) => console.error("Error fetching assets:", error));
 ```
@@ -118,22 +161,26 @@ fetchAllAssets("URL", "BLOCKED")
 ```python Python
 import requests
 
-def fetch_all_assets(type: str, status: str) -> list:
+# `type` is optional. Leave the key out of the body entirely to sweep every
+# asset type on one cursor.
+def fetch_all_assets(status: str, type: str | None = None) -> list:
     all_assets = []
     next_page = None
     while True:
+        body = {
+            "status": status,
+            "per_page": 1000,
+            "next_page": next_page,
+        }
+        if type is not None:
+            body["type"] = type
         response = requests.post(
             "https://app.chainpatrol.io/api/v2/asset/list",
             headers={
                 "Content-Type": "application/json",
                 "X-API-KEY": "YOUR_API_KEY_HERE",
             },
-            json={
-                "type": type,
-                "status": status,
-                "per_page": 500,
-                "next_page": next_page,
-            },
+            json=body,
         )
         data = response.json()
         all_assets.extend(data["assets"])
@@ -143,7 +190,8 @@ def fetch_all_assets(type: str, status: str) -> list:
     return all_assets
 
 try:
-    assets = fetch_all_assets("URL", "BLOCKED")
+    # Every asset type in one sweep:
+    assets = fetch_all_assets("BLOCKED")
     print("All assets:", assets)
 except Exception as error:
     print("Error fetching assets:", str(error))
