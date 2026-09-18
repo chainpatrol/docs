@@ -13,6 +13,32 @@ Include your API key in the `X-API-KEY` header:
 X-API-KEY: <api-key>
 ```
 
+## Asset Types
+
+`type` is optional. Omit it to return assets of **every** asset type on a single
+pagination cursor:
+
+```json
+{ "status": "BLOCKED", "per_page": 1000 }
+```
+
+This is the cheapest way to mirror the full blocklist — one paginated sweep
+instead of one sweep per member of the `AssetType` enum. Each returned asset
+still carries its own `type`, so you can bucket the results client-side.
+
+Supply `type` to narrow the sweep to a single asset type, exactly as before:
+
+```json
+{ "type": "URL", "status": "BLOCKED", "per_page": 1000 }
+```
+
+<Note>
+Omitting `type` matches far more rows per page, so prefer a larger `per_page`
+(up to the 10000 maximum) and keep following `next_page` until it comes back
+`null`. Responses are still capped at 4MB — if you hit that limit, lower
+`per_page`.
+</Note>
+
 ## Sync Strategy and Removals
 
 <Warning>
@@ -43,7 +69,8 @@ To use pagination, include the `per_page` and `next_page` parameters in your req
 <CodeGroup>
 
 ```javascript JavaScript
-async function fetchAllAssets(type, status) {
+// Pass `type` to sweep one asset type, or leave it out to sweep them all.
+async function fetchAllAssets(status, type) {
   let allAssets = [];
   let nextPage = null;
   while (true) {
@@ -56,9 +83,9 @@ async function fetchAllAssets(type, status) {
           "X-API-KEY": "YOUR_API_KEY_HERE",
         },
         body: JSON.stringify({
-          type,
+          ...(type ? { type } : {}),
           status,
-          per_page: 500,
+          per_page: 1000,
           next_page: nextPage,
         }),
       }
@@ -72,13 +99,15 @@ async function fetchAllAssets(type, status) {
   }
   return allAssets;
 }
-fetchAllAssets("URL", "BLOCKED")
+// Every asset type in one sweep:
+fetchAllAssets("BLOCKED")
   .then((assets) => console.log("All assets:", assets))
   .catch((error) => console.error("Error fetching assets:", error));
 ```
 
 ```typescript TypeScript
-async function fetchAllAssets(type: string, status: string): Promise<any[]> {
+// `type` is optional — omit it to sweep every asset type on one cursor.
+async function fetchAllAssets(status: string, type?: string): Promise<any[]> {
   let allAssets: any[] = [];
   let nextPage: string | null = null;
 
@@ -92,9 +121,9 @@ async function fetchAllAssets(type: string, status: string): Promise<any[]> {
           "X-API-KEY": "YOUR_API_KEY_HERE",
         },
         body: JSON.stringify({
-          type,
+          ...(type ? { type } : {}),
           status,
-          per_page: 500,
+          per_page: 1000,
           next_page: nextPage,
         }),
       }
@@ -110,7 +139,8 @@ async function fetchAllAssets(type: string, status: string): Promise<any[]> {
   return allAssets;
 }
 
-fetchAllAssets("URL", "BLOCKED")
+// Every asset type in one sweep:
+fetchAllAssets("BLOCKED")
   .then((assets) => console.log("All assets:", assets))
   .catch((error) => console.error("Error fetching assets:", error));
 ```
@@ -118,22 +148,26 @@ fetchAllAssets("URL", "BLOCKED")
 ```python Python
 import requests
 
-def fetch_all_assets(type: str, status: str) -> list:
+# `type` is optional. Leave the key out of the body entirely to sweep every
+# asset type on one cursor.
+def fetch_all_assets(status: str, type: str | None = None) -> list:
     all_assets = []
     next_page = None
     while True:
+        body = {
+            "status": status,
+            "per_page": 1000,
+            "next_page": next_page,
+        }
+        if type is not None:
+            body["type"] = type
         response = requests.post(
             "https://app.chainpatrol.io/api/v2/asset/list",
             headers={
                 "Content-Type": "application/json",
                 "X-API-KEY": "YOUR_API_KEY_HERE",
             },
-            json={
-                "type": type,
-                "status": status,
-                "per_page": 500,
-                "next_page": next_page,
-            },
+            json=body,
         )
         data = response.json()
         all_assets.extend(data["assets"])
@@ -143,7 +177,8 @@ def fetch_all_assets(type: str, status: str) -> list:
     return all_assets
 
 try:
-    assets = fetch_all_assets("URL", "BLOCKED")
+    # Every asset type in one sweep:
+    assets = fetch_all_assets("BLOCKED")
     print("All assets:", assets)
 except Exception as error:
     print("Error fetching assets:", str(error))
