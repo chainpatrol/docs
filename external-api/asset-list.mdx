@@ -61,6 +61,15 @@ When using time-based filtering (e.g., fetching only the last 5 minutes of block
 
 Asset status changes can move assets between different lists (blocklist, allowlist, unknown). Time-based queries on a single endpoint may not capture these transitions, potentially leaving your local cache with outdated information about blocked assets that should no longer be blocked.
 
+### Soft-Deleted Assets
+
+Assets that ChainPatrol has soft-deleted are excluded from every response, so a
+mirror built from this endpoint matches ChainPatrol's own blocklist snapshot.
+
+This is a change in behaviour: the endpoint previously returned soft-deleted
+assets. A mirror built before the change may be holding rows that will never
+appear again — a full re-sync clears them.
+
 ## Pagination
 
 To use pagination, include the `per_page` and `next_page` parameters in your request:

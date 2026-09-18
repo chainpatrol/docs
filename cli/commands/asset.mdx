@@ -79,7 +79,8 @@ chainpatrol asset search --id 12345 --output markdown
 ## asset list
 
 List assets in the global ChainPatrol blocklist for a given asset type. Defaults to
-`BLOCKED` assets updated in the last day — widen the window with `--from` and `--to`.
+`BLOCKED` assets, with no date filter — narrow the window with `--from` and `--to`.
+Soft-deleted assets are excluded.
 
 ```bash
 chainpatrol asset list --asset-type <type> [--from ISO --to ISO] [filters]
@@ -92,7 +93,7 @@ chainpatrol asset list --asset-type <type> [--from ISO --to ISO] [filters]
 | `--asset-status <s>` | Status filter: `BLOCKED`, `ALLOWED`, or `UNKNOWN`. Defaults to `BLOCKED`. |
 | `--from <iso>` | Start date (`YYYY-MM-DD`). |
 | `--to <iso>` | End date (`YYYY-MM-DD`). |
-| `--per-page <n>` | Page size, 1–10000. Defaults to 100. `--limit` is also accepted. |
+| `--per-page <n>` | Page size, 1–10000. Defaults to 100. A response returns at most 1000 assets regardless, so keep following `--next-page`. `--limit` is also accepted. |
 | `--next-page <cursor>` | Cursor returned by a previous response. |
 
 ```bash
