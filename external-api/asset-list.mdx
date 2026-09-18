@@ -32,11 +32,15 @@ Supply `type` to narrow the sweep to a single asset type, exactly as before:
 { "type": "URL", "status": "BLOCKED", "per_page": 1000 }
 ```
 
+Omit the field entirely to get the full sweep. An explicit `"type": null` is
+rejected with a 400, so a client that builds the body from a struct should leave
+the key out rather than setting it to null.
+
 <Note>
-Omitting `type` matches far more rows per page, so prefer a larger `per_page`
-(up to the 10000 maximum) and keep following `next_page` until it comes back
-`null`. Responses are still capped at 4MB — if you hit that limit, lower
-`per_page`.
+A single response returns at most **1000** assets, whatever `per_page` asks for.
+Larger values are accepted but clamped, so always keep following `next_page`
+until it comes back `null` rather than assuming one page holds everything.
+Responses are also capped at 4MB.
 </Note>
 
 ## Sync Strategy and Removals
@@ -61,7 +65,7 @@ Asset status changes can move assets between different lists (blocklist, allowli
 
 To use pagination, include the `per_page` and `next_page` parameters in your request:
 
-- `per_page <number>`: Number of items to return per page (max: 10000)
+- `per_page <number>`: Items per page. Accepted up to 10000, but a response returns at most 1000 — always follow `next_page`.
 - `next_page <string>`: Cursor for the next page of results
 
 ### Example implementation for pagination:
