@@ -59,7 +59,7 @@ Reviewer cannot make a definitive decision yet. This keeps the proposal in a pen
 
 Passes the review decision to another party for final judgment.
 
-**Escalate to Customer** - Requests the brand owner to review and decide. Used when staff reviewers are uncertain, asset type requires customer approval, or content is ambiguous. The customer team receives notifications (Slack/Discord) and the proposal stays pending until customer decides.
+**Escalate to Customer** - Requests the brand owner to review and decide. Used when staff reviewers are uncertain, asset type requires customer approval, or content is ambiguous. The customer team receives notifications through Slack, Discord, and [escalation emails](/integration/escalation-emails) if configured, and the proposal stays pending until customer decides.
 
 **Escalate to Team** - Passes to senior ChainPatrol analysts. Used when customer administrators are uncertain, complex cases require expert review, or there are multiple conflicting signals. Routes to senior security analysts for in-depth analysis and final decision.
 
@@ -129,7 +129,7 @@ Reviews can be escalated in two directions:
 
 ### Resolving Escalations
 
-**Customer Escalations** - The proposal stays pending until customer admin reviews it. Customer approval or rejection finalizes the decision. Notifications are sent via Slack/Discord, and superusers can override if needed.
+**Customer Escalations** - The proposal stays pending until customer admin reviews it. Customer approval or rejection finalizes the decision. Notifications are sent via Slack/Discord, and Owners and Admins can also opt in to [escalation emails](/integration/escalation-emails) that deep-link to the review page. Superusers can override if needed.
 
 **Team Escalations** - Routes to senior ChainPatrol analysts. In-depth investigation is performed. Expert decision is made and customer is notified of outcome.
 
