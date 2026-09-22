@@ -39,7 +39,7 @@ Many metrics can be filtered by brand and broken down by:
 
 **Breakdowns** - Threats by asset type, threats per brand, detections by source, category distributions
 
-**Timelines and Speed** - Threats blocked per day, takedowns completed per day, median time to takedown, trend analysis
+**Timelines and Speed** - Threats blocked per day, takedowns completed per day, median time to takedown, time to detection, trend analysis
 
 ## What Lives Inside Metrics
 
@@ -72,6 +72,23 @@ Threats blocked per brand inside your organization, showing which brands are tar
 
 **Median Time to Takedown** - Calculated from when a takedown request is created to when it is first marked completed. Available as overall median, by asset type (domains, social media, etc.), and by threat category (brand vs. employee impersonation). Lower median times indicate faster threat removal and better provider relationships.
 
+**Time to Detection** - How long each threat was already live before it was first reported to ChainPatrol, broken out by asset type. Every value is framed as a lower bound (for example, `≥ 5.0d` or `≥ 6.0h`) because the earliest evidence ChainPatrol holds is only the first time someone happened to look — the real gap is at least that long and never shorter. The chart appears as **Time to Detection by Asset Type** on the organization Metrics page (next to Median Time to Takedown) and on the global Metrics page, and it respects the same brand, date range, and country filters as the rest of the page. Lower detection times mean threats are being caught earlier in their lifetime.
+
+### Time to Detection: coverage and threshold
+
+Time to Detection is calculated over the assets your organization blocked in the selected window. For each asset, ChainPatrol measures the gap between the first moment we can prove the asset was serving (or, for social profiles, packages, ads, and app store listings, the first moment it existed) and the first report or detection that reached us. Assets that lack trustworthy first-alive evidence are excluded from the median entirely and reduce **Coverage** instead of quietly flattening the number.
+
+Two rules keep the metric honest:
+
+- **Threshold** - A median is only shown for an asset type once at least 30 dated assets contribute to it. Types below the threshold still appear with their blocked count and coverage, but the time reads as blank on the chart and as `Not enough data` in the CSV export.
+- **Coverage** - The percentage shown alongside each row is the share of blocked assets that actually contributed to the median (dated assets with a positive gap after the first report). A thin coverage number is a signal that the median for that type is based on a small sample, not that detection is faster or slower than it looks.
+
+For domains and URLs, ChainPatrol ignores platform-reported creation dates (a domain registered in 2019 and weaponized years later would otherwise report a multi-year gap). For social, packages, ads, and app store listings, an account or listing created shortly before it was caught really was made for the campaign, so the creation date counts as first-alive evidence.
+
+### Exporting metrics as CSV
+
+The **Export CSV** menu on the organization Metrics page produces per-chart CSVs for the current filters, including a **Time to Detection** export with columns `Asset Type`, `Live Before First Report (Days, At Least)`, `Dated Assets`, `Blocked Assets`, and `Coverage (%)`. Asset types below the 30-dated-asset threshold export with `Not enough data` in the days column so downstream reports don't treat a thin sample as a real median.
+
 ## How Metrics Relate to Other Concepts
 
 **Assets and Asset Scans** - When asset scans and reviews lead to an asset being blocked, that asset contributes to metrics such as New Threats, Threats by asset type, and Threats blocked per day. Ongoing scans and liveness updates ensure that metrics reflect the current state of your threat surface.
@@ -102,5 +119,5 @@ For provider performance review, you analyze median time to takedown by asset ty
 
 - Metrics reveal protection gaps: Tracking detections by channel shows where attackers focus, helping you prioritize monitoring efforts on platforms with highest threat activity
 - Time-based analysis identifies campaign patterns: Sudden spikes in detections often indicate coordinated campaigns, while steady increases suggest growing attacker interest
-- Speed metrics drive operational improvements: Median time to block and takedown completion times help identify bottlenecks in your response process
+- Speed metrics drive operational improvements: Time to Detection shows how early threats are being caught, and Median Time to Takedown shows how quickly they are being removed once found — together they surface bottlenecks on either side of the response process
 - Filtering enables strategic decisions: Breaking down metrics by brand, asset type, or threat category reveals which parts of your organization face the most risk
