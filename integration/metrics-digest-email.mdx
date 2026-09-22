@@ -1,0 +1,73 @@
+---
+icon: envelope
+title: Metrics Digest Email
+sidebarTitle: Metrics Digest Email
+description: Opt owners and admins into a daily or weekly email that summarizes new threats, takedowns filed, and takedowns completed, with a deep link back to Metrics.
+---
+
+The **metrics digest email** is an opt-in summary of your organization's recent threat activity. When enabled, ChainPatrol emails your owners and admins at **6:00 PM Eastern** with the three top-line counts from the [Metrics](/concepts/metrics) page — new threats, takedowns filed, and takedowns completed — plus a link that opens Metrics with the same date window pre-selected.
+
+Use this if your team wants a regular recap of the current threat landscape without having to open the dashboard, or if leadership wants a low-effort read on how ChainPatrol is performing.
+
+<Note>
+  The metrics digest email is rolled out gradually. If you do not see the setting described below, the feature is not yet enabled for your organization — contact ChainPatrol staff if you would like access.
+</Note>
+
+## Choose a cadence
+
+<Steps>
+  <Step title="Open Notification Settings">
+    In the [ChainPatrol dashboard](https://app.chainpatrol.io/), go to **Settings** > **Integrations** and find the **Notification Settings** card.
+  </Step>
+  <Step title="Find the Summaries section">
+    Scroll to the **Summaries** section and locate the **Activity summary** row.
+  </Step>
+  <Step title="Pick Off, Daily, or Weekly">
+    Choose one of:
+
+    - **Off** — no digest email is sent. This is the default.
+    - **Daily** — recipients get an email every day covering the last 24 hours.
+    - **Weekly** — recipients get one email on Mondays covering the last 7 days.
+
+    Changes save immediately — there is no separate save step.
+  </Step>
+</Steps>
+
+Only users with permission to update notification settings (Owners and Admins) can see or change the cadence.
+
+## Who receives it
+
+Recipients are resolved at send time from your organization's current membership:
+
+- Every **Owner** and **Admin** with an email address.
+- ChainPatrol staff (`@chainpatrol.io` addresses) are excluded automatically, so internal accounts on your org don't get a copy.
+
+There is no per-user opt-out today. If someone should stop receiving the digest, change their role or set the cadence back to **Off**.
+
+## What the email contains
+
+Each digest shows the same three totals from the [Metrics](/concepts/metrics) page, calculated for the digest's time window:
+
+- **New Threats** — assets blocked as threats during the window.
+- **Takedowns Filed** — takedown requests your organization initiated during the window.
+- **Takedowns Completed** — takedown requests that reached completed status during the window.
+
+The email also includes a button that deep-links back to the Metrics page with the same date range applied, so you can drill into breakdowns by brand, asset type, or threat category.
+
+## Delivery cadence
+
+One production cron fires at **6:00 PM Eastern** each day and decides what to send based on your cadence setting:
+
+| Setting | When it sends | Time window covered |
+| --- | --- | --- |
+| Off | Never | — |
+| Daily | Every day at 6:00 PM ET | Previous day 6:00 PM ET through today 5:59 PM ET |
+| Weekly | Mondays at 6:00 PM ET | Previous Monday 6:00 PM ET through this Monday 5:59 PM ET |
+
+Digests are sent per recipient, so a transient delivery failure to one inbox does not affect the others on your team.
+
+## Related
+
+- [Metrics](/concepts/metrics) — the dashboard the digest summarizes.
+- [Organizations](/concepts/organizations) — how Owner and Admin roles are assigned.
+- [Slack](/integration/slack#threats-feed-configuration) — real-time threat notifications in Slack, configured on the same Notification Settings card.

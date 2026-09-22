@@ -82,7 +82,8 @@
               "integration/github",
               "integration/canary-tokens",
               "integration/webhooks",
-              "integration/zapier"
+              "integration/zapier",
+              "integration/metrics-digest-email"
             ]
           }
         ]
