@@ -84,7 +84,7 @@ The **Reports page** in your dashboard shows all the reports for your organizati
 - **In Progress** - Reports actively being reviewed
 - **Reviewed** - Reports where every proposal has a decision
 
-You can filter and search by creator, date, asset, and status to track the status of something you reported or follow up on threats flagged by your community. Exporting reports to CSV respects the tab that's currently active.
+You can filter and search by creator, date, asset, and status to track the status of something you reported or follow up on threats flagged by your community. The filter menu also includes an **Attachments** section (**Has attachments** / **No attachments**) alongside the existing MX Records and Source filters, so you can narrow the list to reports that do or do not carry uploaded evidence. That is most useful for asset types whose content says little on its own, such as phone numbers and email addresses, where the attachment is the review signal. Each choice adds a removable chip to the active-filter strip and lives in the URL as `?hasAttachments=yes` or `?hasAttachments=no`, so a filtered view can be shared or bookmarked. The filter also narrows the per-tab counts and the CSV export, and it is available on the API as the `hasAttachments` parameter on [`GET /organization/reports`](/external-api/organization-reports-list). Exporting reports to CSV respects the tab that's currently active.
 
 ## How to Submit a Report
 
