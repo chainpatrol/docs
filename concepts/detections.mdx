@@ -89,6 +89,32 @@ The system automatically handles duplicate detections to prevent alert fatigue:
 
 **Different Assets, Same Campaign** - Related assets in the same attack campaign are linked via group IDs but maintained as separate detections. This allows you to report each asset individually, track takedown progress per asset, and understand campaign scope.
 
+## Exporting detections
+
+The **Detections page** in your dashboard has an **Export CSV** button in the header that downloads every detection matching your current filters, search, and sort — not just the rows scrolled into view. Use it to hand data to another tool, share a snapshot with your team, or build custom reports.
+
+Each row is one detection, with these 15 columns:
+
+| Column | Description |
+| --- | --- |
+| Detection ID | Numeric identifier for the detection |
+| Detected At | Timestamp when the detection was created (UTC) |
+| Content | The URL, handle, or other content that was flagged |
+| Asset Type | Type of asset (URL, Twitter, Discord, etc.) |
+| Confidence | Bucketed confidence: `None`, `Low`, `Medium`, or `High`, matching the badge in the table |
+| Score | Raw detection score as a percentage (0%–100%) |
+| Source | Detection source that discovered the threat |
+| Detection Config | Title of the detection config that triggered |
+| Reason | Why the detection fired |
+| Status | Asset status (for example `Blocked`, `Allowed`, or `Pending Blocked` when protection is off but the asset is queued for blocking) |
+| Liveness | Liveness status of the asset |
+| Watchlist | `Watched` or `Unwatched` |
+| Brands | Semicolon-separated list of associated brands |
+| Reported At | Timestamp of the latest report for the asset, if any |
+| Report ID | ID of the latest report for the asset, if any |
+
+The export is capped at **10,000 rows**. If your current view has more detections than that, the CSV contains the first 10,000 matching your sort order and the dashboard shows a truncation toast. Tighten your filters or narrow the date range to export the rest.
+
 ## Key Takeaways
 
 - Detection is the entry point, not the decision: A detection indicates potential threat, but review and approval are required before blocking to prevent false positives
