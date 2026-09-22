@@ -1,23 +1,26 @@
 ---
 title: Asset types
 sidebarTitle: Overview
-description: "Reference for ChainPatrol asset type enums used in reports, checks, and lists: URL, PAGE, ADDRESS, plus social, messaging, app store, and other platforms."
+description: "Reference for ChainPatrol asset type enums used in reports, checks, and lists: URL, PAGE, PUMP_FUN, ADDRESS, plus social, messaging, app store, and other platforms."
 ---
 
 The **Glossary** is a reference for **asset types**: the enum values used when you report, check, list, or filter an asset.
 
 Product ideas such as organizations, detections, reports, and takedowns are in [Concepts](/concepts/organizations).
 
-`URL`, `PAGE`, and `ADDRESS` have dedicated pages because those pages already document normalization. Every other type is listed with the same labels used in [`POST /threats/list`](/external-api/threats-list), [`POST /detection/list`](/external-api/detection-list), and [`chainpatrol asset types`](/cli/commands/asset#asset-types).
+`URL`, `PAGE`, `PUMP_FUN`, and `ADDRESS` have dedicated pages because those pages already document normalization or enrichment. Every other type is listed with the same labels used in [`POST /threats/list`](/external-api/threats-list), [`POST /detection/list`](/external-api/detection-list), and [`chainpatrol asset types`](/cli/commands/asset#asset-types).
 
 ## Core types
 
-<CardGroup cols={3}>
+<CardGroup cols={2}>
   <Card title="URL" href="/glossary/asset-types/url">
     Website URLs. Blocking a domain also covers its subdomains.
   </Card>
   <Card title="PAGE" href="/glossary/asset-types/page">
     Web pages, including paths on shared hosts in the PAGE domain list.
+  </Card>
+  <Card title="PUMP_FUN" href="/glossary/asset-types/pump-fun">
+    Pump.fun tokens, creator profiles, or platform pages. Preserves the case-sensitive Solana mint.
   </Card>
   <Card title="ADDRESS" href="/glossary/asset-types/address">
     Blockchain addresses.
