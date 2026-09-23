@@ -1,0 +1,115 @@
+---
+title: "Security Whitepaper"
+description: "How ChainPatrol protects customer data, systems, and services"
+---
+
+**Last updated:** September 22, 2026
+
+## Overview
+
+**ChainPatrol** provides brand protection services to help organizations combat phishing, impersonation, and fraud. Because our platform handles sensitive brand assets, threat intelligence, and legal documentation on behalf of our customers, security is foundational to how we build and operate.
+
+This document summarizes the administrative, technical, and physical controls ChainPatrol maintains to protect customer data and ensure the availability, confidentiality, and integrity of our services.
+
+## Compliance
+
+ChainPatrol is currently pursuing **SOC 2 Type II** certification covering the **Security, Availability, and Confidentiality** Trust Services Criteria. We are in our observation window, with an independent audit report expected by the end of Q1 2027.
+
+Our completed report, along with supporting policy documentation, will be available on our [Trust Center](https://trust.chainpatrol.com) to customers and prospects under NDA.
+
+## Security Governance
+
+Information security at ChainPatrol is governed by a formal security program built around documented policies covering access control, asset management, cryptography, data management, incident response, operations security, physical security, risk management, secure development, and third-party management.
+
+- A designated **Security Delegate** owns day-to-day implementation of security controls, risk assessments, and policy maintenance.
+- **Engineering leadership** owns development and cloud infrastructure security controls.
+- Security policies are reviewed at least annually and approved by senior management.
+- All employees and contractors acknowledge our Information Security Policy and Code of Conduct at the time of hire.
+
+### People Security
+
+- Background checks are performed for personnel with access to production systems, proportional to role and risk.
+- Employees complete security awareness training at hire and annually thereafter as part of our onboarding and ongoing training program.
+- Access to production systems is granted only after onboarding requirements (signed agreements, training, policy acknowledgment) are complete, and is revoked promptly upon termination through an automated offboarding process.
+- Company-managed devices are enrolled in centralized device management and protected by endpoint detection and response (EDR).
+- Employee access to internal tools uses centralized single sign-on (SSO), with network-level access governed by zero-trust controls.
+
+## Infrastructure & Architecture
+
+ChainPatrol operates a multi-tenant SaaS architecture hosted across established cloud and managed service providers.
+
+- Workloads run in containerized form within isolated private networks.
+- Infrastructure is managed as code via **Terraform**, with changes reviewed and tracked prior to deployment.
+- IAM roles enforce least-privilege access to production infrastructure; no shared credentials are used for standard administrative activity.
+- Production and development/staging environments are logically segregated. Production customer data is not used in development or testing without explicit approval and scrubbing of sensitive fields.
+- Core application data is stored in managed relational databases, with files stored in managed object storage.
+- Network traffic is protected by layered controls, including DDoS mitigation, web application firewall protections, security groups, and network isolation.
+
+## Data Protection
+
+Data is classified as **Confidential**, **Restricted**, or **Public**, with handling requirements scaled to sensitivity. Customer brand assets, legal documents, threat intelligence, and personnel data (e.g., names or social handles used in monitoring) are treated as Confidential or Restricted and are not stored on removable media.
+
+- **Encryption in transit:** all customer and confidential data transmitted over public networks is encrypted using TLS 1.2 or higher.
+- **Encryption at rest:** confidential data at rest is encrypted using AES-256; backups are encrypted as well.
+- **Key management** follows industry-standard practices for algorithm strength, key length, and rotation.
+- **Data retention:** customer data is retained only as long as needed for service delivery or contractual/legal obligations, and is deleted within a defined window (up to 90 days) following contract termination.
+- ChainPatrol does not store customer payment credentials or authentication secrets on behalf of customers.
+
+### Secrets Management
+
+Application secrets and credentials are managed through a dedicated secrets management vault, rather than stored in code, configuration files, or environment variables. Secrets and API keys are rotated according to risk-based policies and defined schedules.
+
+## Access Control
+
+- Customer and internal staff access to the ChainPatrol application is managed via **SSO** and **role-based access control (RBAC)**.
+- Access to production systems and data follows the principle of least privilege, requires documented approval, and is reviewed on a recurring basis.
+- Access to production customer data specifically requires approval from Engineering management.
+- Access requests, provisioning, and deprovisioning are tracked through our IT helpdesk ticketing system.
+- Audit logs capture changes to organization settings within the application, along with administrative and privileged activity across production systems.
+- Multi-factor authentication is required for privileged access to production infrastructure where available.
+
+## Secure Development
+
+ChainPatrol follows a documented Secure Development Policy incorporating secure-by-design and privacy-by-design principles (least privilege, defense-in-depth, secure defaults, fail-secure behavior).
+
+- Code changes require review and approval before merging into production branches; no single individual can develop, test, and deploy a change without independent oversight and guardrails.
+- Software supply chain security is monitored continuously via **GitHub Dependabot**, [Socket.dev](https://socket.dev) and **GitHub Secret Scanning**.
+- An independent **penetration test** of the dashboard application is performed annually.
+- While ChainPatrol does not currently operate a formal public bug bounty program, we accept, triage, and remediate externally reported vulnerabilities.
+- Vulnerabilities are prioritized and remediated according to documented, severity-based SLAs.
+
+## Integrations
+
+ChainPatrol offers optional, customer-initiated integrations with Slack, Discord, Telegram, Intercom, Zapier, and Vercel to support alerting and workflow automation. These integrations are opt-in, scoped to the minimum data needed for the integration's function, and governed by the same access control and data handling standards applied to our core platform.
+
+## Business Continuity & Disaster Recovery
+
+ChainPatrol maintains a Business Continuity and Disaster Recovery plan addressing scenarios including cloud provider outages, office disruption, and loss of supporting SaaS tools. Backups are tested annually to validate recoverability, and recovery time/point objectives are defined and reviewed for critical systems.
+
+## Incident Response
+
+ChainPatrol maintains a formal Incident Response Plan covering detection, triage, containment, eradication, recovery, and post-incident review.
+
+- Security events and incidents are triaged and assigned a severity level, with defined, severity-based remediation SLAs.
+- A designated Security Delegate leads incident response efforts, with escalation to legal and executive leadership for incidents involving potential data breaches.
+- Post-incident reviews (post-mortems) are conducted for critical incidents to capture root cause and drive long-term remediation.
+- Customers, regulators, and other affected parties are notified in accordance with contractual and legal obligations in the event of a confirmed breach.
+
+## Third-Party & Vendor Risk Management
+
+Vendors and subprocessors that access confidential data undergo a due diligence review prior to onboarding, considering their security policies, certifications (e.g., SOC 2, ISO 27001), and data handling practices. Vendor relationships are reviewed on a recurring basis, and material changes to vendor services are assessed for security impact.
+
+## Data Privacy
+
+- **Data minimization:** ChainPatrol evaluates data collection needs on a case-by-case basis and aims to collect only what is necessary to deliver our brand protection services.
+- **Consent:** Use of our platform, including scanning and monitoring functionality, is governed by our Terms of Service and customer agreements.
+- **Anonymization:** Production customer data used in staging or testing environments is stripped of identifiers and personally identifiable information (PII) prior to use, consistent with our secure development practices.
+- **Subprocessors:** ChainPatrol works with a limited set of subprocessors to deliver its services. A current subprocessor list is available upon request and will be published to our Trust Center.
+
+## Physical Security
+
+Where applicable, physical security controls (access control systems, visitor management, environmental protections) are maintained at company facilities and cloud provider data centers, consistent with our Physical Security Policy. ChainPatrol's production infrastructure is hosted entirely within cloud provider facilities that maintain their own independently audited physical security controls.
+
+## Questions
+
+For additional security documentation, including our SOC 2 Type II report once available, or to complete a security questionnaire, please visit our Trust Center or contact us at **security@chainpatrol.io**.
