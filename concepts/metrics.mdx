@@ -25,6 +25,8 @@ Metrics are always calculated for a specific organization and reflect only that 
 
 Every metrics view uses a time window (e.g., "last 30 days" or a custom range). Common time periods include last 7 days, last 30 days, last 90 days, and custom date ranges. The same metric (e.g., "New Threats") may look very different depending on the period you select.
 
+Custom date ranges picked in the Date Range picker are day-granular and interpreted as whole UTC calendar days, with the end day included in full. For example, "Jul 1 – Jul 31" covers all of July in UTC, from July 1 00:00 UTC through the end of July 31 UTC. Because list pages and CSV exports use the same UTC-day interpretation, dashboard numbers reconcile with them. If you need a window smaller than a full day, use the quick-select presets (e.g., "Last 24 hours").
+
 ### Filterable
 
 Many metrics can be filtered by brand and broken down by:
@@ -46,6 +48,7 @@ Many metrics can be filtered by brand and broken down by:
 ### Core Volume Metrics
 
 - **Reports** - How many submissions your organization received from users, partners, and integrations
+- **Submitted Assets** - How many individual assets were submitted across all reports in the selected period. One report containing three assets contributes three to this count. Shown in the General Summary next to Reports and included in the summary CSV export. Like the Reports metric, brand filters do not apply to this count.
 - **New Threats** - How many assets were blocked as threats (domains, social profiles, Telegram channels, etc.)
 - **Threats Watchlisted** - Threats you're actively watching (takedowns not appropriate or on hold)
 - **Takedowns Filed** - How many takedown requests your organization has initiated
