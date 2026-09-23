@@ -207,6 +207,7 @@
               "external-api/metrics-breakdown",
               "external-api/metrics-found",
               "external-api/metrics-found-by-source",
+              "external-api/metrics-false-positive-rate",
               "external-api/organization-metrics-list",
               "external-api/organization-metrics"
             ]
