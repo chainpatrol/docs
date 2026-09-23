@@ -79,7 +79,7 @@ chainpatrol metrics organization [--org <slug>|--slugs <list>|--all-my-orgs] [--
 | `--org <slug>` | A single organization. Mutually exclusive with `--slugs` and `--all-my-orgs`. |
 | `--slugs <list>` | Comma list of organization slugs, capped at 500. The response is the rollup across them. |
 | `--all-my-orgs` | Every organization you can see. Organization-scoped API keys are rejected. Capped at 500. |
-| `--subscription-status <list>` | With `--all-my-orgs`: only `ACTIVE`, `POC`, `PROSPECT`, or `INTEGRATION`. |
+| `--subscription-status <list>` | With `--all-my-orgs`: `ACTIVE`, `POC`, `PROSPECT`, `INTEGRATION`, or `INACTIVE`. Defaults to the live statuses (same set as `orgs list`); pass `INACTIVE` explicitly to include churned organizations. |
 | `--service-active <list>` | With `--all-my-orgs`: only organizations with the listed services active — `reporting`, `reviewing`, `protection`, `takedowns`, `detection`, `darkWebMonitoring`. |
 | `--brand-slug <slug>` | Filter by brand slug. Single organization only. |
 | `--from <iso>` / `--to <iso>` | Date range. |

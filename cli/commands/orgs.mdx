@@ -21,7 +21,7 @@ compose with AND.
 | Option | Description |
 | --- | --- |
 | `--query <text>` | Partial name match (substring, case-insensitive). |
-| `--subscription-status <l>` | Comma list: `PROSPECT`, `POC`, `ACTIVE`, `INTEGRATION`. |
+| `--subscription-status <l>` | Comma list: `PROSPECT`, `POC`, `ACTIVE`, `INTEGRATION`, `INACTIVE`. Defaults to the live statuses; pass `INACTIVE` explicitly to list churned organizations. |
 | `--service-active <l>` | Comma list of services that must be active. |
 | `--service-inactive <l>` | Comma list of services that must be inactive. |
 | `--service-automated <l>` | Services whose automation must be **on**. Only `takedowns` is accepted. |
@@ -34,11 +34,19 @@ Services are `reporting`, `reviewing`, `protection`, `takedowns`, `detection`, a
 `darkWebMonitoring`. `automated` is reported for takedowns only — that is the one service
 where manual-versus-automated changes real platform behavior.
 
+Without `--subscription-status`, the listing returns only organizations in a live status
+(`PROSPECT`, `POC`, `ACTIVE`, `INTEGRATION`). `INACTIVE` organizations never appear unless
+you ask for them, so pass `--subscription-status INACTIVE` to audit churned accounts. The
+filter does not widen access: you still only see organizations your credential can reach.
+
 ```bash
 chainpatrol orgs list --subscription-status ACTIVE
 chainpatrol orgs list --service-active takedowns --service-manual takedowns
 chainpatrol --json orgs list --subscription-status ACTIVE,POC --service-active detection
 chainpatrol --json orgs list --pending-approval-service protection,takedowns
+
+# churned orgs still running detection
+chainpatrol orgs list --subscription-status INACTIVE --service-active detection
 ```
 
 ## orgs get
