@@ -87,6 +87,7 @@
               "integration/intercom",
               "integration/github",
               "integration/canary-tokens",
+              "integration/escalation-emails",
               "integration/webhooks",
               "integration/zapier"
             ]
