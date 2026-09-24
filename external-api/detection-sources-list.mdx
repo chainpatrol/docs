@@ -15,3 +15,38 @@ Sources that do not apply to your organization's industry are omitted.
 Use this endpoint to discover valid `source` keys and their config shapes before
 calling [Create Detection Config](/external-api/detection-configs-create) or
 [Update Detection Config](/external-api/detection-configs-update).
+
+## Example: Google Ads Transparency Search
+
+The `GOOGLE_ADS_TRANSPARENCY_SEARCH` source searches the Google Ads Transparency
+Center for ads that match your organization. It runs at the organization scope
+and monitors the `google-ad` asset type. Each result is a deduplicated
+Transparency Center creative URL.
+
+By default, ChainPatrol builds queries from your brands' website domains first,
+then your brand names. If none of your brands has a website, ChainPatrol uses
+your organization's website domain. Set `query` to search a single term instead.
+
+| Field            | Default | Range  | Description                                              |
+| ---------------- | ------- | ------ | -------------------------------------------------------- |
+| `query`          | none    | n/a    | Custom domain or brand name to search                    |
+| `useDefaultQuery`| `true`  | n/a    | Use the default domain and brand name queries            |
+| `maxAssets`      | `1000`  | 1-5000 | Maximum creative URLs to emit per run                    |
+| `maxPages`       | `2`     | 1-5    | Maximum result pages to fetch per query                  |
+| `maxQueries`     | `20`    | 1-50   | Maximum domains and brand names to search per run        |
+| `resultsPerPage` | `40`    | 1-100  | Maximum creatives to request per page                    |
+
+Pass these fields as the `config` object when you call
+[Create Detection Config](/external-api/detection-configs-create):
+
+```json
+{
+  "source": "GOOGLE_ADS_TRANSPARENCY_SEARCH",
+  "config": {
+    "query": "example.com",
+    "useDefaultQuery": false,
+    "maxPages": 3,
+    "resultsPerPage": 100
+  }
+}
+```
