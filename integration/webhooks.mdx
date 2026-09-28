@@ -98,6 +98,49 @@ It is **not** sent when a proposal is escalated internally within the ChainPatro
   If a proposal is escalated to your organization more than once, you receive an event each time. Use `proposal_id` to deduplicate.
 </Note>
 
+### `asset.escalation-resolved`
+
+This event is the counterpart of `asset.status-escalated`. It is sent once when a threat that was escalated to your organization no longer needs your review, so you can close whatever you opened when the escalation arrived.
+
+It fires when:
+
+- Someone in your organization approves, rejects, or watchlists the proposal, or passes it back to the ChainPatrol team.
+- ChainPatrol resolves the escalation on your behalf, for example when an analyst pushes the proposal through while it is still waiting on you.
+
+It is **not** sent for reviews that leave the proposal waiting on your organization.
+
+```json
+{
+  "type": "asset.escalation-resolved",
+  "created_at": "2025-01-16T09:12:00.000Z",
+  "data": {
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "proposal_id": 67890,
+    "organization_id": 100,
+    "resolution": "APPROVED",
+    "resolved_by": "CUSTOMER",
+    "comment": "Confirmed, please block"
+  }
+}
+```
+
+| Field             | Description                                                                                                                                                |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `asset_id`        | ID of the asset.                                                                                                                                           |
+| `content`         | The asset itself, such as a URL, domain, or social media profile.                                                                                          |
+| `type`            | The asset type, such as `URL`.                                                                                                                             |
+| `proposal_id`     | ID of the proposal that was escalated. Matches `proposal_id` from `asset.status-escalated`.                                                                |
+| `organization_id` | ID of your organization.                                                                                                                                   |
+| `resolution`      | How the escalation was resolved: `APPROVED`, `REJECTED`, `WATCHLISTED`, or `RETURNED_TO_CHAINPATROL` (passed back to the ChainPatrol team to decide).      |
+| `resolved_by`     | `CUSTOMER` if someone in your organization resolved it, or `CHAINPATROL` if the ChainPatrol team did.                                                      |
+| `comment`         | The note left with the decision. May be `null`.                                                                                                            |
+
+<Note>
+  The payload does not include the asset's status. Approving a proposal blocks the asset shortly afterwards rather than immediately, so subscribe to `asset.status-updated` if you need the final status.
+</Note>
+
 ### `organization.threat-detection-added`
 
 This event is sent when a new threat detection is added for your organization detection tab.
@@ -119,7 +162,7 @@ When creating a webhook, you'll need to provide:
 
 1. A HTTPS endpoint URL that will receive the webhook events
 2. An optional description to help identify the webhook's purpose
-3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, and `organization.threat-detection-added`)
+3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, and `organization.threat-detection-added`)
 4. Optional HTTP headers for supported integrations (currently Google SecOps headers are available)
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
