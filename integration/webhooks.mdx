@@ -57,7 +57,14 @@ This event is sent when the status of an asset changes. The `status` field can b
 
 ### `asset.status-escalated`
 
-This event is sent when an asset's status is escalated, typically through a proposal process.
+This event is sent when ChainPatrol escalates a threat to your organization for review. Subscribe to it to find out when something needs a decision from your team, for example to open a ticket or ping an on-call channel.
+
+It fires when:
+
+- A ChainPatrol analyst passes a proposal to your organization for review.
+- Your organization has Obligatory Admin Approval enabled and an analyst approves a proposal. The proposal then waits for your organization's final approval.
+
+It is **not** sent when a proposal is escalated internally within the ChainPatrol team. It is also not sent for items moved into your review queue in bulk when Obligatory Admin Approval is first turned on.
 
 ```json
 {
@@ -66,13 +73,30 @@ This event is sent when an asset's status is escalated, typically through a prop
   "data": {
     "asset_id": 12345,
     "content": "https://example.com/phishing",
-    "type": "url",
-    "status": "BLOCKED",
+    "type": "URL",
+    "status": "UNKNOWN",
     "proposal_id": 67890,
-    "organization_id": 100
+    "organization_id": 100,
+    "comment": "Staff confirmed this as: Phishing",
+    "review_url": "https://app.chainpatrol.io/admin/your-org/review?proposalId=67890"
   }
 }
 ```
+
+| Field             | Description                                                                                                                                   |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `asset_id`        | ID of the escalated asset.                                                                                                                    |
+| `content`         | The asset itself, such as a URL, domain, or social media profile.                                                                             |
+| `type`            | The asset type, such as `URL`.                                                                                                                |
+| `status`          | The asset's current status (`BLOCKED`, `ALLOWED`, or `UNKNOWN`). Escalation doesn't change it, so it is often `UNKNOWN` while the proposal awaits your decision. |
+| `proposal_id`     | ID of the proposal awaiting your review.                                                                                                      |
+| `organization_id` | ID of your organization.                                                                                                                      |
+| `comment`         | The note left by the analyst who escalated the proposal. May be `null`.                                                                       |
+| `review_url`      | Link to the proposal on your organization's review page in the ChainPatrol dashboard.                                                         |
+
+<Note>
+  If a proposal is escalated to your organization more than once, you receive an event each time. Use `proposal_id` to deduplicate.
+</Note>
 
 ### `organization.threat-detection-added`
 
