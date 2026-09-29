@@ -6,10 +6,10 @@ description: "Query ChainPatrol organization metrics from the CLI: summary count
 ---
 
 ```bash
-chainpatrol metrics <summary|found|breakdown|organization>
+chainpatrol metrics <summary|found|breakdown|time-to-detection|organization>
 ```
 
-All four subcommands default to the trailing 3 months when you give no date range. Pass
+All subcommands default to the trailing 3 months when you give no date range. Pass
 `--from` and `--to` for an explicit window, or `--this-week` for the current ISO week.
 
 ## metrics summary
@@ -63,6 +63,35 @@ chainpatrol metrics breakdown --org acme --by day --this-week
 chainpatrol metrics breakdown --org acme --by type --from 2026-01-01 --to 2026-01-08
 chainpatrol metrics breakdown --org acme --by brand --output csv
 ```
+
+## metrics time-to-detection
+
+How long threats were already live before the earliest automated detection of the asset,
+per asset type, for distinct assets your organization blocked in the range that are still
+blocked today. The clock runs from when the asset was first seen live to its earliest
+automated detection — a human report does not stop it. Every number is a minimum and
+comes with how many blocked assets contribute to the sample. Gated per organization; a
+caller without access receives an error.
+
+```bash
+chainpatrol metrics time-to-detection --org <slug> [--from ISO --to ISO|--this-week]
+```
+
+| Option | Description |
+| --- | --- |
+| `--org <slug>` | Organization slug. |
+| `--from <iso>` / `--to <iso>` | Date range (ISO 8601). A date-only `--to` covers the whole day. |
+| `--this-week` | Use the current ISO week. |
+| `--brand <ids>` | Comma-separated brand IDs. |
+
+```bash
+chainpatrol metrics time-to-detection --org acme --this-week
+chainpatrol metrics time-to-detection --org acme --from 2026-01-01 --to 2026-02-01
+chainpatrol --json metrics time-to-detection --org acme
+```
+
+See [Time to Detection](/concepts/metrics#time-to-detection-what-counts-and-threshold)
+for what enters the sample and the 30-dated-asset threshold before a median is shown.
 
 ## metrics organization
 
