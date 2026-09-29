@@ -48,15 +48,15 @@ curl --request POST \
 
 ### Request Body
 
-| Field       | Type       | Required | Default | Constraints      | Description                                        |
-| ----------- | ---------- | -------- | ------- | ---------------- | -------------------------------------------------- |
-| `slug`      | `string`   | ✅ Yes   | -       | -                | Organization slug identifier                       |
-| `cursor`    | `number`   | ❌ No    | -       | -                | Pagination cursor from previous response           |
-| `limit`     | `number`   | ❌ No    | `50`    | Min: 1, Max: 100 | Number of results to return                        |
-| `filters`   | `Filter[]` | ❌ No    | `[]`    | -                | Array of filter objects                            |
-| `query`     | `string`   | ❌ No    | `""`    | -                | Search query for threat content (case-insensitive) |
-| `startDate` | `string`   | ❌ No    | -       | ISO 8601 format  | Start date for filtering results                   |
-| `endDate`   | `string`   | ❌ No    | -       | ISO 8601 format  | End date for filtering results                     |
+| Field       | Type       | Required | Default | Constraints       | Description                                        |
+| ----------- | ---------- | -------- | ------- | ----------------- | -------------------------------------------------- |
+| `slug`      | `string`   | ✅ Yes   | -       | -                 | Organization slug identifier                       |
+| `cursor`    | `number`   | ❌ No    | -       | -                 | `nextCursor` from the previous response            |
+| `limit`     | `number`   | ❌ No    | `50`    | Min: 1, Max: 1000 | Number of results per page                         |
+| `filters`   | `Filter[]` | ❌ No    | `[]`    | -                 | Array of filter objects                            |
+| `query`     | `string`   | ❌ No    | `""`    | -                 | Search query for threat content (case-insensitive) |
+| `startDate` | `string`   | ❌ No    | -       | ISO 8601 format   | Only detections created at or after this time      |
+| `endDate`   | `string`   | ❌ No    | -       | ISO 8601 format   | Only detections created at or before this time     |
 
 ### Filter Schema
 
@@ -198,7 +198,7 @@ Each filter object must have the following structure:
 ```typescript
 {
   detections: DetectionResult[];
-  nextCursor: number | null;
+  nextCursor?: number; // omitted on the last page
 }
 ```
 
@@ -262,6 +262,144 @@ Each item in the `detections` array has the following structure:
   "nextCursor": 12347
 }
 ```
+
+## Pagination and Incremental Sync
+
+Detections are returned newest first. There is no single-call export: an
+organization can hold hundreds of thousands of detections, far more than fit in
+one response. Page through them instead:
+
+- Set `limit` up to **1000**.
+- Pass the `nextCursor` from each response back as `cursor`.
+- Stop when a response has no `nextCursor`.
+
+<Note>
+Responses are capped at 4MB. A page that would exceed it fails with a `413`
+error instead of being cut short. Retry with a smaller `limit`. A 1000-row page
+is usually well under 1MB.
+</Note>
+
+### Fetching only new detections
+
+After an initial full sync, use `startDate` so each run only fetches what was
+created since the previous one. For 1,000–10,000 new detections a day, that is a
+handful of 1000-row pages.
+
+1. Record the time the sync starts, and send it as `endDate`. Detections created
+   while you are paging land at the front of the newest-first order, so without
+   a fixed `endDate` they would be skipped. The next run picks them up instead.
+2. Set `startDate` to the previous run's start time, minus a few minutes of
+   overlap. A detection can take a few seconds to become visible after its
+   `createdAt`, and the overlap catches it.
+3. Page until `nextCursor` is absent, and de-duplicate by `id`. The overlap
+   means some detections come back in two runs.
+
+Deleted detections are included unless you add
+`{ "property": "deleted", "operator": "notIn", "value": ["deleted"] }` to
+`filters`. To fetch only fake-domain detections, add
+`{ "property": "assetType", "operator": "in", "value": ["URL"] }`.
+
+<Warning>
+A `startDate` sync only returns detections *created* in the window. If a
+detection is reported or deleted after you fetched it, the next incremental run
+will not return it again. Run a periodic full sync (for example, daily) if you
+need those changes.
+</Warning>
+
+<CodeGroup>
+
+```javascript JavaScript
+async function fetchDetections({ slug, startDate, endDate, filters = [] }) {
+  const detections = new Map();
+  let cursor;
+
+  do {
+    const response = await fetch("https://api.chainpatrol.io/detection/list", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "<api-key>",
+      },
+      body: JSON.stringify({
+        slug,
+        limit: 1000,
+        filters,
+        ...(startDate ? { startDate } : {}),
+        ...(endDate ? { endDate } : {}),
+        ...(cursor ? { cursor } : {}),
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`detection/list failed: ${response.status}`);
+    }
+    const data = await response.json();
+    for (const detection of data.detections) {
+      detections.set(detection.id, detection);
+    }
+    cursor = data.nextCursor;
+  } while (cursor);
+
+  return [...detections.values()];
+}
+
+// Incremental run: everything created since the previous run started.
+const OVERLAP_MS = 5 * 60 * 1000;
+const syncStartedAt = new Date();
+const previousSyncStartedAt = new Date("2026-09-24T00:00:00Z"); // load from your store
+
+const newDetections = await fetchDetections({
+  slug: "your-org",
+  startDate: new Date(previousSyncStartedAt.getTime() - OVERLAP_MS).toISOString(),
+  endDate: syncStartedAt.toISOString(),
+  filters: [{ property: "assetType", operator: "in", value: ["URL"] }],
+});
+// Save `syncStartedAt` as the next run's `previousSyncStartedAt`.
+```
+
+```python Python
+from datetime import datetime, timedelta, timezone
+
+import requests
+
+def fetch_detections(slug, start_date=None, end_date=None, filters=None):
+    detections = {}
+    cursor = None
+    while True:
+        body = {"slug": slug, "limit": 1000, "filters": filters or []}
+        if start_date:
+            body["startDate"] = start_date.isoformat()
+        if end_date:
+            body["endDate"] = end_date.isoformat()
+        if cursor:
+            body["cursor"] = cursor
+        response = requests.post(
+            "https://api.chainpatrol.io/detection/list",
+            headers={"Content-Type": "application/json", "X-API-KEY": "<api-key>"},
+            json=body,
+        )
+        response.raise_for_status()
+        data = response.json()
+        for detection in data["detections"]:
+            detections[detection["id"]] = detection
+        cursor = data.get("nextCursor")
+        if not cursor:
+            break
+    return list(detections.values())
+
+# Incremental run: everything created since the previous run started.
+sync_started_at = datetime.now(timezone.utc)
+previous_sync_started_at = datetime(2026, 9, 24, tzinfo=timezone.utc)  # load from your store
+
+new_detections = fetch_detections(
+    "your-org",
+    start_date=previous_sync_started_at - timedelta(minutes=5),
+    end_date=sync_started_at,
+    filters=[{"property": "assetType", "operator": "in", "value": ["URL"]}],
+)
+# Save `sync_started_at` as the next run's `previous_sync_started_at`.
+```
+
+</CodeGroup>
 
 ## Access Control
 
@@ -359,7 +497,7 @@ interface DetectionResult {
 
 interface DetectionListResponse {
   detections: DetectionResult[];
-  nextCursor: number | null;
+  nextCursor?: number;
 }
 
 async function fetchDetectionResults(

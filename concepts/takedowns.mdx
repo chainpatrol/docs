@@ -85,6 +85,44 @@ Regardless of the platform, the purpose of a takedown is the same: **to remove d
 
 **Evidence Collection** - Each takedown includes screenshots of malicious content, technical metadata (hosting, DNS, etc.), timeline of activity, and user reports and impact evidence.
 
+## Follow an asset for status-change emails
+
+You can follow an individual asset to get an email when its status changes. Use this when you want to know as soon as a specific asset you care about is blocked or cleared.
+
+<Note>
+Following assets is enabled per organization. If you don't see the **Follow** button, contact ChainPatrol to enable it for your organization.
+</Note>
+
+### Follow or unfollow an asset
+
+1. Open a takedown to show the takedown drawer.
+2. Click **Follow** in the drawer header, next to the takedown status.
+3. The button changes to **Following** and a confirmation message appears.
+
+To stop notifications, click **Following** to unfollow the asset. Emails don't include an unsubscribe link, so the **Follow** button is the only way to turn them off.
+
+### What triggers an email
+
+ChainPatrol emails everyone following an asset when the asset reaches a new verdict:
+
+- **Blocked** to **Allowed**, or **Allowed** to **Blocked**
+- A first verdict of **Blocked** or **Allowed** for an asset that was previously **Unknown**
+
+ChainPatrol doesn't send an email when a review re-confirms the status the asset already had, or when an asset moves to **Unknown**.
+
+Each email includes:
+
+- The asset, defanged so it isn't clickable
+- The previous and new status
+- When the change happened, in UTC
+- A **View takedown** link that opens the takedown in the ChainPatrol app
+
+ChainPatrol batches status changes that happen within 60 seconds of each other into one email per person. ChainPatrol also re-checks that you still have access to the asset before sending.
+
+### Follow limit
+
+You can follow up to 100 assets per organization. ChainPatrol shows a warning when you reach 90 followed assets. Once you reach 100, unfollow an asset before following another. Unfollowing always works, even at the limit.
+
 ## Key Takeaways
 
 - Takedowns provide permanent removal while blocklists provide immediate protection: Use both together to protect users instantly via blocklists while working toward complete threat elimination through takedowns
