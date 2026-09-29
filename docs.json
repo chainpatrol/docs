@@ -65,6 +65,12 @@
               "concepts/metrics",
               "concepts/security-portal"
             ]
+          },
+          {
+            "group": "Security & Privacy",
+            "pages": [
+              "security"
+            ]
           }
         ]
       },
