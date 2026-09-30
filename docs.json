@@ -195,6 +195,13 @@
             ]
           },
           {
+            "group": "Dark Web",
+            "pages": [
+              "external-api/dark-web-credentials-targets",
+              "external-api/dark-web-credentials-search"
+            ]
+          },
+          {
             "group": "Takedowns",
             "pages": [
               "external-api/takedowns-list"
