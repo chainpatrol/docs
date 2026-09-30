@@ -5,17 +5,28 @@ openapi: "GET /organization/assets"
 
 ## Overview
 
-List all assets belonging to your organization with optional filtering by type, group, and search query. The organization is automatically inferred from your API key. This endpoint supports pagination for efficient handling of large asset collections.
+List assets belonging to an organization's allowlist with optional filtering by type, group, and search query. This endpoint supports pagination for efficient handling of large asset collections.
+
+The target organization is chosen from the optional `slug` query parameter. When `slug` is omitted, the organization is inferred from the API key.
 
 ## Quick Start
 
 ### Authentication
 
-All organization endpoints require an API key with organization access. Include your API key in the `X-API-KEY` header:
+Include your API key in the `X-API-KEY` header:
 
 ```bash
 X-API-KEY: your_api_key_here
 ```
+
+Who can call this endpoint depends on whether you pass `slug`:
+
+| Caller                              | `slug` omitted                                            | `slug` passed                                                                                        |
+| ----------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Organization-scoped API key         | Uses the organization tied to the key.                    | Allowed if it matches the key's organization, or the key belongs to an internal org. Otherwise `403`. |
+| User-scoped API key or staff session | Returns `401` — you must pass `slug` to name an organization. | Staff can target any organization. Members need an active membership on the target organization.     |
+
+Unknown or soft-deleted slugs return `404`.
 
 ### Example Request
 
@@ -80,6 +91,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?type=URL&per_
 
 | Parameter | Type   | Required | Description                                                                                                                                                                              |
 | --------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| slug      | string | No       | Organization slug. Optional for organization-scoped API keys, which resolve the organization from the key itself. Required when your credentials can reach more than one organization. |
 | type      | string | No       | Filter by asset type: `URL`, `ADDRESS`, `PAGE`, `DISCORD`, `TELEGRAM`, `TWITTER`, `INSTAGRAM`, `MEDIUM`, `GITHUB`, `YOUTUBE`, `LINKEDIN`, `TWITCH`, `TIKTOK`, `EMAIL`                  |
 | groupId   | number | No       | Filter by group ID. Use `-1` for ungrouped assets only. Omit to include all assets regardless of group assignment.                                                                      |
 | query     | string | No       | Search query to filter assets by content. Performs a case-insensitive search across asset content, name, and description fields.                                                        |
@@ -259,6 +271,15 @@ except Exception as error:
 
 ## Filtering Examples
 
+### Target a specific organization
+
+If your API key is not scoped to a single organization — for example, a user-scoped key or a staff session — pass `slug` to choose one:
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?slug=acme' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
 ### Filter by Type
 
 Get only URL assets:
@@ -306,13 +327,39 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?type=URL&grou
 
 ### 401 Unauthorized
 
-Returned when the API key is missing, invalid, or doesn't have organization access:
+Returned when the API key is missing or invalid, or when a user-scoped key or staff session omits `slug`:
 
 ```json
 {
   "error": {
     "code": "UNAUTHORIZED",
-    "message": "API key with organization access required"
+    "message": "Pass `slug` to choose an organization, or authenticate with an API key scoped to one"
+  }
+}
+```
+
+### 403 Forbidden
+
+Returned when the caller is authenticated but not authorized to read the requested organization's assets. For example, an organization-scoped API key that passes a `slug` for a different organization, or a member session without an active membership on the target organization:
+
+```json
+{
+  "error": {
+    "code": "FORBIDDEN",
+    "message": "You are not authorized to access this organization"
+  }
+}
+```
+
+### 404 Not Found
+
+Returned when the `slug` does not match an active organization:
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Organization with slug 'acme' not found"
   }
 }
 ```
@@ -352,7 +399,8 @@ Returned when query parameters are invalid:
 
 ## Notes
 
-- Organization is automatically determined from your API key
+- When `slug` is omitted, the organization is determined from your API key
+- Pass `slug` when your credentials can reach more than one organization (user-scoped keys and staff sessions)
 - All timestamps are in ISO 8601 format with UTC timezone
 - Asset `status` for organization assets is typically `ALLOWED`
 - The `group` field is `null` when an asset is not assigned to any group
