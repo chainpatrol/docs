@@ -37,14 +37,16 @@ Attachments belong to the report as a whole rather than to an individual asset.
 
 Returned when the request is syntactically valid but contains validation errors or duplicate assets. This is the most common error type and provides detailed per-asset error information.
 
+Already-reported assets do not fail a mixed batch. When a submission contains at least one new, valid asset, ChainPatrol treats assets with `ASSET_ALREADY_CORRECT`, `ALREADY_PENDING_REVIEW`, or `REPORT_ALREADY_EXISTS` outcomes as no-ops and creates the report with the remaining assets. A `422` with these error types is returned only when every asset in the batch is a no-op. Validation failures such as `INVALID_FORMAT` or `DUPLICATE_ASSETS` still reject the whole batch.
+
 | Error Type               | Description                                           | Resolution                                           |
 | ------------------------ | ----------------------------------------------------- | ---------------------------------------------------- |
 | `DUPLICATE_ASSETS`       | Same asset appears multiple times in the report       | Remove duplicate assets from submission              |
 | `INVALID_FORMAT`         | Asset format is invalid                               | Use valid URLs, domains, or blockchain addresses     |
 | `ASSET_NOT_FOUND`        | Asset could not be located or created                 | Verify asset format and accessibility                |
-| `ASSET_ALREADY_CORRECT`  | Asset already has the requested status                | No action needed - asset is already in desired state |
-| `ALREADY_PENDING_REVIEW` | Asset has a pending proposal for the requested status | Wait for existing proposal to be processed           |
-| `REPORT_ALREADY_EXISTS`  | A pending report/proposal for this asset exists       | Check existing reports or wait for processing        |
+| `ASSET_ALREADY_CORRECT`  | Asset already has the requested status                | No action needed - skipped in mixed batches; asset is already in desired state |
+| `ALREADY_PENDING_REVIEW` | Asset has a pending proposal for the requested status | No action needed - skipped in mixed batches; wait for existing proposal to be processed |
+| `REPORT_ALREADY_EXISTS`  | A pending report/proposal for this asset exists       | No action needed - skipped in mixed batches; check the existing report in your dashboard |
 | `PROCESSING_FAILED`      | Technical error occurred during asset processing      | Retry the request or contact support                 |
 | `DOMAIN_NOT_ALLOWED`     | Asset's domain is on the ignore list                  | Domain is excluded from reports per content policy   |
 | `VALIDATION_ERROR`       | Generic validation error                              | Check asset format and requirements                  |
@@ -175,7 +177,7 @@ Consider reporting specific URLs instead of the entire domain
 
 The asset already has the status you're requesting
 
-Check the current asset status before reporting
+In a mixed batch the asset is skipped and the report is created with the remaining assets; this error is only returned when every asset in the batch is a no-op
 
 No action needed - the asset is already in the desired state
 
@@ -195,7 +197,7 @@ Error payload shape is stable across 422 errors; check `data.errors` for per-ass
 
 Provide the `organizationSlug` and valid `assets` to minimize 500s caused by invalid state
 
-All assets must be valid for the report to be created
+Validation failures reject the whole batch; already-reported assets are skipped when the batch contains other valid assets
 
 A report can only be created once per email address for a specific asset
 
