@@ -9,6 +9,7 @@ The Asset Search endpoint returns a single result with four main parts:
 
 - **asset** - The matched asset: its `id`, `content`, `type`, `status`, `watchStatus`, and timestamps (`createdAt`, `updatedAt`).
 - **reports** - List of reports linked to the asset, each with `id`, `title`, `status`, and `createdAt`.
+- **scans** - List of asset scans for the resolved asset, ordered newest first. Each entry has the scan `id` and a `createdAt` timestamp (ISO 8601). Pass an `id` to [`POST /asset/scan/result`](/external-api/scan-result) to fetch the full scan result without a separate lookup. Empty when no asset was resolved.
 - **takedown** - Takedown metadata (`id`, `status`, timestamps) plus a **tasks** array. Each task has `type`, `status`, `retractionStatus`, the associated `takedownProvider` name, submission/retraction timestamps, and an optional `externalId` for the provider's tracking ID. [Learn more about takedown tasks](../general/concepts#takedown-tasks).
 - **blockedBy** - List of platforms currently consuming (blocking) the asset. Each entry has a `consumer` slug (e.g. `metamask`, `google-safe-browsing`, `quad9`), the platform's display `name`, and a `consumedAt` timestamp indicating when the platform started blocking the asset.
 
