@@ -87,9 +87,16 @@ chainpatrol metrics organization [--org <slug>|--slugs <list>|--all-my-orgs] [--
 | `--include <list>` | Fields to compute. Omit for all. |
 
 `--include` accepts `reports`, `newThreats`, `threatsWatchlisted`, `takedownsFiled`,
-`takedownsCompleted`, `domainThreats`, `twitterThreats`, `telegramThreats`, `otherThreats`,
-`blockedByType`, `blockedByDay`. Fields you leave out come back as `null`, so narrowing
-`--include` is the cheapest way to speed up a wide query.
+`takedownsInProgress`, `takedownsCompleted`, `takedownsCancelled`, `domainThreats`,
+`twitterThreats`, `telegramThreats`, `otherThreats`, `blockedByType`, `blockedByDay`.
+Fields you leave out come back as `null`, so narrowing `--include` is the cheapest way to
+speed up a wide query.
+
+`takedownsInProgress` and `takedownsCancelled` count takedowns currently in that status
+whose `updatedAt` falls in the window (same windowing as `takedownsFiled`), so they
+reconcile with the Takedowns list filtered by status over the same date range. If the API
+you're talking to doesn't return a metric your CLI version knows about, the CLI skips
+that row in the output.
 
 A multi-organization response carries totals, per-day and per-organization-per-day
 averages, and a per-organization breakdown.
@@ -99,7 +106,8 @@ averages, and a per-organization breakdown.
 chainpatrol metrics organization --org acme
 
 # just the takedown numbers
-chainpatrol metrics organization --org acme --include takedownsFiled,takedownsCompleted
+chainpatrol metrics organization --org acme \
+  --include takedownsFiled,takedownsInProgress,takedownsCompleted,takedownsCancelled
 
 # a rollup across three named orgs
 chainpatrol metrics organization --slugs acme,beta,gamma \
