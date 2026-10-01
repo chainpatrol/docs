@@ -32,13 +32,16 @@ If you have a **Slack workspace**, you can use the ChainPatrol Slack Bot to let 
   </Step>
   <Step title="Complete Slack OAuth">
 
-    In the Integrations tab, you will find an option to **Add to Slack**. Click this button, then you will be redirected to the Slack authorization page. Click **Allow**.
+    In the Integrations tab, click **Add to Slack** on the Slack card. You are redirected to the Slack authorization page. Click **Allow**.
 
     <Frame>![Step 4 - Add Bot](/images/slack-integration-authorization.png)</Frame>
     <Tip>
     Remember to select the correct workspace at the top right of the authorization page.
     </Tip>
 
+  </Step>
+  <Step title="Connect the workspace to your organization">
+    After you authorize the app, ChainPatrol opens the **Connect Slack** page. Select your organization in the **Organization** field and submit the form. The workspace now appears on the Slack card in **Settings** > **Integrations**.
   </Step>
   
 </Steps>
@@ -77,29 +80,54 @@ The ChainPatrol Slack Bot should appear in your listed apps along with other all
   </Card>
 </CardGroup>
 
-### Link Organization
+### Alert channel
 
-<Warning>
-  This step needs to be done with help from ChainPatrol staff in order for the
-  Slack Bot to work properly.
-</Warning>
+Reporters can file reports from a connected workspace right away. To receive threat alerts, the workspace also needs an alert channel. Contact ChainPatrol support with the channel's Channel ID to set one. See [Threats feed configuration](#threats-feed-configuration).
 
-**Please send ChainPatrol staff your workspace's Slack Team ID so that we can finish the automated pipeline.**
+Until an alert channel is set, the Slack card shows **No alert channel set** for that workspace with a warning icon. The workspace does not receive alerts until support configures a channel.
 
-- Follow [Slack's documentation](https://slack.com/intl/en-gb/help/articles/221769328-Locate-your-Slack-URL-or-ID#free,-pro-and-business+-subscriptions-2) to locate your Team ID.
+## Managing connected workspaces
 
-<Tip>
-  Slack refers to the Team ID as "workspace or org ID".
+The Slack card in **Settings** > **Integrations** lists every Slack workspace connected to your organization. Each row shows the workspace name and its alert channel.
 
-`https://app.slack.com/client/TXXXXXXX/CXXXXXXX`
+### Connect multiple workspaces
 
-In the above URL, the Team ID is the slug that begins with `T`.
+An organization can connect more than one Slack workspace. For example, if your company acquires another company that keeps its own Slack workspace, you can connect both workspaces to the same ChainPatrol organization. Members of either workspace can submit reports, and alerts reach both.
 
-</Tip>
+To add a workspace:
+
+1. Go to **Settings** > **Integrations**.
+2. On the Slack card, click **Add another workspace**.
+3. Authorize the ChainPatrol app in the new workspace, then connect it to your organization on the **Connect Slack** page.
+
+**Add another workspace** uses the same install flow as **Add to Slack**. It adds the new workspace alongside your existing ones instead of replacing them. Each new workspace needs its own [alert channel](#alert-channel) to receive alerts.
+
+### Choose which alerts a workspace receives
+
+By default, every connected workspace receives all of your organization's alerts. This includes report and blocklist notifications and [dark web leak alerts](/concepts/dark-web-monitoring).
+
+You can limit a workspace to a single brand's alerts instead. This is useful when each workspace belongs to a different brand, such as an acquired company. Users with permission to update integrations see these controls on each workspace row:
+
+- **This workspace is for**: Select the brand the workspace belongs to, or **No brand**.
+- **It receives**: Select **Alerts for every brand** or **_Brand_ alerts only**.
+
+For example, a workspace set to "This workspace is for Acme. It receives Acme alerts only." only gets alerts attributed to the Acme brand.
+
+<Note>
+  You must assign a brand to a workspace before you can limit it to that brand's alerts. A workspace limited to one brand does not receive alerts that have no brand attributed. Selecting **No brand** switches the workspace back to alerts for every brand.
+</Note>
+
+### Default brand for reports
+
+When a workspace has a brand assigned, reports filed from that workspace default to that brand. The **Create Report** modal pre-selects it in the **Brand** field. The field stays optional, and reporters can change or clear it before submitting.
+
+### Disconnect a workspace
+
+To disconnect a workspace, click the trash icon on its row in the Slack card, then confirm. After you disconnect a workspace, your organization stops sending alerts to it, and its members can no longer report threats to your organization. To reconnect it, install the ChainPatrol app in that workspace again.
 
 ## Usage
 
-Once the bot is added to your workspace and you have **sent ChainPatrol your Team ID**, you can use the following actions:
+Once the bot is added to your workspace and the workspace is connected to your organization, you can use the following actions:
 
 ### Slash Commands
 
@@ -138,7 +166,7 @@ In addition to submitting reports, the ChainPatrol Slack Bot can also send autom
 
   </Step>
   <Step title="Provide Channel Information to ChainPatrol">
-    Contact ChainPatrol staff with your notification channel's Channel ID to complete the integration setup. The Channel ID is a unique identifier that begins with "C" and can be found in your channel's details.
+    Contact ChainPatrol support with your notification channel's Channel ID to set it as the workspace's alert channel. If you have connected more than one workspace, tell support which workspace the channel belongs to. The Channel ID is a unique identifier that begins with "C" and can be found in your channel's details.
 
     <Tip>
       To find your Channel ID, right-click on the channel name and select "View channel details" or check the URL when viewing the channel in your browser.
@@ -193,7 +221,7 @@ In addition to submitting reports, the ChainPatrol Slack Bot can also send autom
   feeds enabled through the bot integration.
 </Warning>
 
-If [Dark Web Monitoring](/concepts/dark-web-monitoring) is enabled, increased-leak alerts for a monitored email domain are also posted to your organization's configured Slack channel. That alert is separate from the report and blocklist notification toggles above.
+If [Dark Web Monitoring](/concepts/dark-web-monitoring) is enabled, increased-leak alerts for a monitored email domain are also posted to the alert channel of each connected Slack workspace. Workspaces limited to one brand only receive leak alerts for that brand. That alert is separate from the report and blocklist notification toggles above.
 
 ## Privacy
 
