@@ -175,6 +175,7 @@
             "group": "Organization Reports",
             "pages": [
               "external-api/organization-reports-list",
+              "external-api/organization-threats-list",
               "external-api/organization-proposals-review",
               "external-api/organization-reports"
             ]

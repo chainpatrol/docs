@@ -1,0 +1,267 @@
+---
+title: List Organization Threats
+openapi: "GET /organization/threats"
+---
+
+## Overview
+
+List every asset your organization has filed a report against, together with where each investigation stands now. Each row tracks the asset through its lifecycle: report opened, escalated, blocklisted, takedown submitted, and takedown completed.
+
+This endpoint is built for threat-intel platforms such as OpenCTI. These connectors poll for changes and upsert each threat on its asset ID.
+
+This endpoint is read-only.
+
+### How this differs from other endpoints
+
+This endpoint scopes results by the **reporting** organization. An asset appears here when your organization filed a report that includes it, whatever its current status.
+
+| Endpoint | What it returns |
+| --- | --- |
+| `GET /organization/threats` | Every asset your organization reported, at any lifecycle stage |
+| [`POST /threats/list`](/external-api/threats-list) | Blocked assets only, scoped by the organization that last updated the asset |
+| [`GET /organization/assets`](/external-api/organization-assets-list) | Assets your organization **owns**, such as its own domains and social handles |
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+Organization-scoped API keys resolve the organization from the key. Pass `slug` if your credentials can reach more than one organization.
+
+### Example Request
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/threats?updatedSince=2026-09-28T00:00:00Z&per_page=500' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+```typescript TypeScript
+const params = new URLSearchParams({
+  updatedSince: "2026-09-28T00:00:00Z",
+  per_page: "500",
+});
+
+const response = await fetch(
+  `https://app.chainpatrol.io/api/v2/organization/threats?${params}`,
+  {
+    method: "GET",
+    headers: {
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+  }
+);
+
+const data = await response.json();
+console.log(data.threats);
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://app.chainpatrol.io/api/v2/organization/threats",
+    headers={"X-API-KEY": "YOUR_API_KEY_HERE"},
+    params={
+        "updatedSince": "2026-09-28T00:00:00Z",
+        "per_page": 500,
+    },
+)
+
+data = response.json()
+print(data["threats"])
+```
+
+</CodeGroup>
+
+## Query Parameters
+
+| Parameter    | Type   | Required | Description |
+| ------------ | ------ | -------- | ----------- |
+| slug         | string | No       | Organization slug. Optional for organization-scoped API keys. Required when your credentials can reach more than one organization. |
+| updatedSince | string | No       | ISO 8601 timestamp. Returns only threats changed at or after this time. A change to the asset, any of your reports on it, or its takedown counts. Omit it for a full backfill. |
+| assetType    | string | No       | Filter by asset type, for example `URL`, `TWITTER`, or `TELEGRAM`. Omit it to return every type. |
+| per_page     | number | No       | Number of threats per page. Valid range: 1-1000. Default: 100. |
+| next_page    | string | No       | Cursor returned by the previous response. Results are ordered by asset ID ascending. |
+
+## Response
+
+### Success Response
+
+```json
+{
+  "threats": [
+    {
+      "id": 48213,
+      "content": "https://example-airdrop-claim.com",
+      "type": "URL",
+      "status": "BLOCKED",
+      "state": "blocked",
+      "livenessStatus": "ALIVE",
+      "brands": [
+        { "slug": "example", "name": "Example" }
+      ],
+      "firstReportedAt": "2026-09-20T14:02:11.000Z",
+      "escalatedAt": "2026-09-20T15:30:00.000Z",
+      "blockedAt": "2026-09-20T16:05:42.000Z",
+      "takedown": {
+        "status": "IN_PROGRESS",
+        "submittedAt": "2026-09-21T09:12:00.000Z",
+        "completedAt": null
+      },
+      "detailsUrl": "https://app.chainpatrol.io/search?content=https%3A%2F%2Fexample-airdrop-claim.com&tab=reports-takedowns",
+      "updatedAt": "2026-09-21T09:12:00.000Z"
+    }
+  ],
+  "next_page": "48213"
+}
+```
+
+### Response Fields
+
+| Field                          | Type          | Description |
+| ------------------------------ | ------------- | ----------- |
+| threats                        | array         | Threats your organization has reported |
+| threats[].id                   | number        | Asset ID. Use it as the upsert key. |
+| threats[].content              | string        | Asset content, such as a URL, handle, email, or address |
+| threats[].type                 | string        | Asset type |
+| threats[].status               | string        | Raw asset status: `UNKNOWN`, `ALLOWED`, or `BLOCKED` |
+| threats[].state                | string        | Lifecycle state derived by ChainPatrol. See [Lifecycle states](#lifecycle-states). |
+| threats[].livenessStatus       | string        | `ALIVE` if the threat is reachable, `DEAD` if it is gone, or `UNKNOWN` if unchecked |
+| threats[].brands               | array         | Your brands this threat was reported against, each with `slug` and `name`. Empty when no report named a brand. |
+| threats[].firstReportedAt      | string        | When your organization first filed a report against the asset |
+| threats[].escalatedAt          | string / null | When the asset was first escalated to your organization for a decision, or `null` if it never was |
+| threats[].blockedAt            | string / null | When the asset was blocklisted, or `null` if it has not been |
+| threats[].takedown             | object / null | Takedown progress, or `null` if no takedown was opened |
+| threats[].takedown.status      | string        | Current takedown status, for example `TODO`, `IN_PROGRESS`, or `COMPLETED` |
+| threats[].takedown.submittedAt | string / null | When the first takedown request was submitted to a provider, or `null` if none was submitted yet |
+| threats[].takedown.completedAt | string / null | When the takedown was marked completed, or `null` if it has not been |
+| threats[].detailsUrl           | string        | Link to the asset's reports and takedowns in the ChainPatrol app |
+| threats[].updatedAt            | string        | Most recent change to the asset, its reports, its takedown, or that takedown's tasks. `updatedSince` filters on this value. |
+| next_page                      | string / null | Cursor for the next page, or `null` on the last page |
+
+### Brands
+
+`brands` comes from your organization's own reports, not from the asset record. Several organizations can report the same asset. You only see the brands your reports named, never another organization's brands.
+
+## Lifecycle states
+
+ChainPatrol derives `state` from the asset status and your reports on it. A decision on the asset takes priority over open reports.
+
+| State           | Meaning |
+| --------------- | ------- |
+| `investigating` | A report is open and under review |
+| `escalated`     | An open report has been passed to your organization for a decision |
+| `blocked`       | The asset is confirmed malicious and blocklisted |
+| `allowed`       | The asset is confirmed benign, for example a false positive |
+| `closed`        | Every report was reviewed, and the asset is neither blocked nor allowed |
+
+`escalatedAt` records escalation history, not current state. Suppose an asset was escalated, decided, and later reported again. It keeps its `escalatedAt` value but its `state` is `investigating`. Read `state` to know whether anything is waiting on you now.
+
+## Syncing with polling
+
+This endpoint returns current state, not an event stream. Each row shows the facts as they stand at request time. A consumer that upserts on `id` converges on the correct state, even if it misses intermediate transitions between polls.
+
+To keep an external platform in sync:
+
+1. Run a full backfill by omitting `updatedSince`.
+2. Follow `next_page` until it is `null`.
+3. Upsert each threat on `id`.
+4. Record the highest `updatedAt` across the whole sweep as your watermark.
+5. On the next poll, pass the watermark as `updatedSince`, set a few minutes earlier to cover writes that land mid-request.
+
+<Warning>
+Results are ordered by asset ID, not by `updatedAt`. A later page can contain an earlier timestamp. Drain every page before you advance your watermark.
+</Warning>
+
+<CodeGroup>
+
+```typescript TypeScript
+async function syncThreats(since?: string) {
+  let nextPage: string | null = null;
+  let watermark = since;
+
+  do {
+    const params = new URLSearchParams({ per_page: "1000" });
+    if (since) params.set("updatedSince", since);
+    if (nextPage) params.set("next_page", nextPage);
+
+    const response = await fetch(
+      `https://app.chainpatrol.io/api/v2/organization/threats?${params}`,
+      { headers: { "X-API-KEY": "YOUR_API_KEY_HERE" } }
+    );
+    const data = await response.json();
+
+    for (const threat of data.threats) {
+      await upsertThreat(threat.id, threat); // your storage
+      if (!watermark || threat.updatedAt > watermark) {
+        watermark = threat.updatedAt;
+      }
+    }
+
+    nextPage = data.next_page ?? null;
+  } while (nextPage);
+
+  return watermark; // subtract a few minutes before the next poll
+}
+```
+
+```python Python
+import requests
+
+def sync_threats(since=None):
+    next_page = None
+    watermark = since
+
+    while True:
+        params = {"per_page": 1000}
+        if since:
+            params["updatedSince"] = since
+        if next_page:
+            params["next_page"] = next_page
+
+        response = requests.get(
+            "https://app.chainpatrol.io/api/v2/organization/threats",
+            headers={"X-API-KEY": "YOUR_API_KEY_HERE"},
+            params=params,
+        )
+        data = response.json()
+
+        for threat in data["threats"]:
+            upsert_threat(threat["id"], threat)  # your storage
+            if not watermark or threat["updatedAt"] > watermark:
+                watermark = threat["updatedAt"]
+
+        next_page = data.get("next_page")
+        if not next_page:
+            break
+
+    return watermark  # subtract a few minutes before the next poll
+```
+
+</CodeGroup>
+
+## Error Responses
+
+| Status | Code           | When |
+| ------ | -------------- | ---- |
+| 400    | `BAD_REQUEST`  | `updatedSince` is not a valid ISO 8601 timestamp, or `next_page` is not a valid cursor |
+| 401    | `UNAUTHORIZED` | The API key is missing or invalid, or you omitted `slug` with a key not scoped to one organization |
+| 403    | `FORBIDDEN`    | Your credentials cannot access the organization in `slug` |
+| 404    | `NOT_FOUND`    | No organization matches `slug` |
+
+## MCP
+
+The ChainPatrol MCP server exposes this endpoint as the `organization_threats_list` tool.
+
+## Notes
+
+- All timestamps are ISO 8601 in UTC.
+- Treat the `next_page` cursor as opaque.
+- Escalations to the ChainPatrol team are internal and do not appear in this feed.
