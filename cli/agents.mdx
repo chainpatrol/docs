@@ -9,6 +9,12 @@ The CLI is designed to be driven by something other than a human: stable JSON on
 [specific exit codes](/cli/output#exit-codes), a preview mode for every write, and no
 prompts unless a terminal is attached.
 
+<Note>
+  Agents that speak MCP do not have to shell out to the CLI at all: `chainpatrol mcp`
+  serves every public API operation as MCP tools, locally or over HTTP. See the [MCP
+  server](/cli/mcp).
+</Note>
+
 ## Install the Claude Code skill
 
 ```bash
