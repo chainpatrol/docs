@@ -80,6 +80,30 @@ chainpatrol orgs assets list --asset-type URL
 chainpatrol orgs assets list --group-id 12 --per-page 250 --output csv
 ```
 
+## orgs watchlist list
+
+List the assets ChainPatrol is watching for your organization: ones you reported that were
+not blocked (dead, parked, not enough evidence, …) and are re-scanned so they can be blocked
+later. It is the same set the `threatsWatchlisted` metric counts. Pass `--org <slug>`, or
+omit it to use the organization tied to your API key.
+
+| Option | Description |
+| --- | --- |
+| `--asset-type <type>` | Filter by asset type (`URL`, `TWITTER`, …). `--type` is an alias. |
+| `--query <text>` | Search asset content (substring). |
+| `--from <iso>` / `--to <iso>` | Only assets your organization reported in this window. |
+| `--include-total` | Also print the total number of watchlisted assets. |
+| `--per-page <n>` | Page size, 1–1000. Defaults to 100. `--limit` is also accepted. |
+| `--next-page <cursor>` | Cursor returned by a previous response. |
+
+```bash
+chainpatrol orgs watchlist list --include-total
+chainpatrol orgs watchlist list --org acme --asset-type URL --output csv
+```
+
+See [`GET /organization/watchlist`](/external-api/organization-watchlist-list) for every
+field in the response.
+
 ## orgs asset-groups list
 
 List your organization's asset groups with per-group asset counts.
