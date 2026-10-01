@@ -47,6 +47,7 @@ Returned when the request is syntactically valid but contains validation errors 
 | `REPORT_ALREADY_EXISTS`  | A pending report/proposal for this asset exists       | Check existing reports or wait for processing        |
 | `PROCESSING_FAILED`      | Technical error occurred during asset processing      | Retry the request or contact support                 |
 | `DOMAIN_NOT_ALLOWED`     | Asset's domain is on the ignore list                  | Domain is excluded from reports per content policy   |
+| `FARCASTER_CHANNEL_NOT_REPORTABLE` | Asset is a Farcaster channel URL (e.g. `farcaster.xyz/~/channel/…`) | Report the Farcaster profile behind the scam instead |
 | `VALIDATION_ERROR`       | Generic validation error                              | Check asset format and requirements                  |
 
 #### Example: Duplicate Assets
@@ -170,6 +171,14 @@ The domain is on ChainPatrol's ignore list
 Contact disputes@chainpatrol.io to dispute this decision
 
 Consider reporting specific URLs instead of the entire domain
+
+**"FARCASTER_CHANNEL_NOT_REPORTABLE" errors:**
+
+Farcaster does not action takedown requests for channels
+
+Report the Farcaster profile behind the scam instead (`farcaster.xyz/username`)
+
+Farcaster profiles, casts, and mini apps remain reportable
 
 **"ASSET_ALREADY_CORRECT" errors:**
 
