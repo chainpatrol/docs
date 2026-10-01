@@ -133,3 +133,65 @@ except Exception as error:
 ```
 
 </CodeGroup>
+
+## Provider confirmation proofs
+
+Each takedown item includes a `proofs` array that surfaces evidence a provider acted on our report. Use it to attribute a removal to ChainPatrol, for example in reporting dashboards or SLA views that need to distinguish "provider confirmed they took it down" from "the asset happens to be dead."
+
+<Info>
+  Access to `proofs` is gated behind the `takedown-proof-api` organization
+  feature flag. Contact ChainPatrol to enable it for your organization. While
+  the flag is off, `proofs` is always an empty array.
+</Info>
+
+### When proofs are returned
+
+A proof only appears when all of the following are true:
+
+- The takedown's `status` is `COMPLETED`.
+- ChainPatrol received an inbound reply from the provider tagged with the `provider-confirmed-takedown` label, meaning the provider stated they acted on our report. Replies that only confirm the asset is unreachable do not count, because a provider can observe an asset is dead without our report having caused it.
+- The `takedown-proof-api` flag is enabled for the calling organization.
+
+In every other case, `proofs` is an empty array. It is never `null`. An empty `proofs` array is not evidence that the asset is still up; most providers either never reply or reply without confirming they acted.
+
+A takedown filed at several providers can be confirmed by more than one of them, so `proofs` is a list ordered newest-first. At most **5** proofs are returned per takedown; older confirmations beyond that cap are omitted.
+
+### Proof shape
+
+Every proof carries the same three top-level fields, plus a type-specific payload:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `type` | string | The kind of evidence. Currently only `provider-email`. Read this before reading any type-specific payload, and treat an unrecognized value as an opaque proof rather than an error. New `type` values will be added over time as more provider verdicts become available. |
+| `source` | string \| null | Who confirmed the takedown, in whatever form that provider identifies itself. For `provider-email` this is an address such as `abuse@example.com`. |
+| `confirmedAt` | string (ISO 8601) | When the provider confirmed the takedown. |
+| `email` | object \| null | Present when `type` is `provider-email`. `null` for every other type. |
+
+For `type: "provider-email"`, the `email` object contains:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `email.subject` | string \| null | Subject line of the provider's reply. |
+| `email.text` | string | The provider's reply, verbatim. Plain-text body where the provider sent one, otherwise the raw HTML body. Treat it as untrusted content and escape it before rendering. |
+
+Because `text` may be either plain text or raw HTML depending on what the provider sent, do not assume it is safe to render as HTML, and do not assume it is plain text when parsing.
+
+### Example response fragment
+
+```json
+{
+  "id": 12345,
+  "status": "COMPLETED",
+  "proofs": [
+    {
+      "type": "provider-email",
+      "source": "abuse@example-registrar.com",
+      "confirmedAt": "2026-09-17T14:32:11.000Z",
+      "email": {
+        "subject": "Re: Abuse report for example-phish.com",
+        "text": "Hello,\n\nWe have suspended the domain example-phish.com in response to your report.\n\nRegards,\nExample Registrar Abuse Team"
+      }
+    }
+  ]
+}
+```
