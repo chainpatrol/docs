@@ -182,6 +182,7 @@
           {
             "group": "Detections",
             "pages": [
+              "external-api/evaluating-detections",
               "external-api/detection-list",
               "external-api/detection-sources-list",
               "external-api/detection-configs-list",
@@ -191,7 +192,8 @@
               "external-api/detection-configs-run",
               "external-api/detection-configs-validate",
               "external-api/detection-drift",
-              "external-api/threats-list"
+              "external-api/threats-list",
+              "external-api/organization-watchlist-list"
             ]
           },
           {

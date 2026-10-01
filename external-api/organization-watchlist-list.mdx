@@ -1,0 +1,134 @@
+---
+title: List Organization Watchlist
+openapi: "GET /organization/watchlist"
+---
+
+## Overview
+
+List the assets ChainPatrol is watching for your organization. These are assets
+you reported that were not blocked — typically because they were dead, parked, a
+template, or lacked enough evidence — and that ChainPatrol keeps re-scanning so they
+can be blocked if they turn malicious. See [Watchlist](/concepts/watchlist) for how
+assets get there.
+
+An asset is included when its watch is enabled and your organization has filed a
+report against it. That is the same set `threatsWatchlisted` counts in
+[`/metrics/summary`](/external-api/metrics-summary), so `total` here matches the
+dashboard number.
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header. Organization API keys resolve the
+organization from the key, so `slug` is optional for them.
+
+```bash
+X-API-KEY: <api-key>
+```
+
+### Example Request
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/watchlist?assetType=URL&includeTotal=true&per_page=100' \
+  -H 'X-API-KEY: <api-key>'
+```
+
+```typescript TypeScript
+const params = new URLSearchParams({
+  assetType: "URL",
+  includeTotal: "true",
+  per_page: "100",
+});
+
+const response = await fetch(
+  `https://app.chainpatrol.io/api/v2/organization/watchlist?${params}`,
+  { headers: { "X-API-KEY": "<api-key>" } },
+);
+
+const { watchlist, total, next_page } = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://app.chainpatrol.io/api/v2/organization/watchlist",
+    headers={"X-API-KEY": "<api-key>"},
+    params={"assetType": "URL", "includeTotal": "true", "per_page": 100},
+)
+data = response.json()
+```
+
+</CodeGroup>
+
+## Query Parameters
+
+| Parameter       | Type      | Required | Default | Description                                                                                                               |
+| --------------- | --------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `slug`          | `string`  | No       | -       | Organization slug. Required only when your credentials can reach more than one organization.                              |
+| `assetType`     | `string`  | No       | -       | Filter by asset type, for example `URL` or `TWITTER`.                                                                     |
+| `query`         | `string`  | No       | -       | Only assets whose content contains this text (case-insensitive).                                                          |
+| `reportedSince` | `string`  | No       | -       | ISO 8601. Only assets your organization reported at or after this time.                                                   |
+| `reportedUntil` | `string`  | No       | -       | ISO 8601. Only assets your organization reported at or before this time.                                                  |
+| `includeTotal`  | `boolean` | No       | `false` | Also return `total`: how many watchlisted assets match across all pages. Ask on the first page only.                      |
+| `per_page`      | `number`  | No       | `100`   | Page size, 1–1000.                                                                                                        |
+| `next_page`     | `string`  | No       | -       | Cursor from the previous response.                                                                                        |
+
+<Note>
+`reportedSince` and `reportedUntil` filter on when **your organization reported**
+the asset — the same window `/metrics/summary` uses for `threatsWatchlisted`. They do
+not filter on when the asset was watchlisted. Leave both out for the whole watchlist.
+</Note>
+
+## Response
+
+```json
+{
+  "watchlist": [
+    {
+      "id": 4175269,
+      "content": "your-brand-login.example",
+      "type": "URL",
+      "status": "UNKNOWN",
+      "pendingStatus": null,
+      "livenessStatus": "DEAD",
+      "watchlistedAt": "2026-09-18T09:12:44.000Z",
+      "reason": "DEAD",
+      "firstReportedAt": "2026-09-18T09:10:02.000Z",
+      "lastScanAt": "2026-09-30T06:00:11.000Z"
+    }
+  ],
+  "next_page": "4175269",
+  "total": 212
+}
+```
+
+| Field             | Type             | Description                                                                                                                         |
+| ----------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `id`              | `number`         | Asset ID.                                                                                                                           |
+| `content`         | `string`         | Asset content (URL, handle, email, …).                                                                                              |
+| `type`            | `string`         | Asset type.                                                                                                                         |
+| `status`          | `string`         | Raw asset status: `UNKNOWN`, `ALLOWED` or `BLOCKED`.                                                                                |
+| `pendingStatus`   | `string \| null` | `"BLOCKED"` when the asset was confirmed malicious but protection is not active ("Pending Blocked"), otherwise `null`.              |
+| `livenessStatus`  | `string`         | `ALIVE`, `DEAD` or `UNKNOWN`.                                                                                                       |
+| `watchlistedAt`   | `string \| null` | When the asset was most recently put on the watchlist. `null` for assets watched before watch history was recorded.                |
+| `reason`          | `string \| null` | Why it was most recently watchlisted: `DEAD`, `PARKING`, `TEMPLATE`, `RE_REGISTERED`, `NOT_ENOUGH_EVIDENCE`, `OTHER`, …, or `null`. |
+| `firstReportedAt` | `string`         | When your organization first reported the asset.                                                                                    |
+| `lastScanAt`      | `string \| null` | When the asset was last scanned.                                                                                                    |
+
+`next_page` is `null` on the last page. `total` is present only when you set
+`includeTotal`.
+
+## Pagination
+
+Results are ordered by asset ID, ascending. Pass `next_page` back until it is `null`.
+New assets land after the cursor, so a sweep never repeats or skips a row.
+
+## Related
+
+- [Watchlist](/concepts/watchlist)
+- [`chainpatrol orgs watchlist list`](/cli/commands/orgs#orgs-watchlist-list)
+- [Evaluating detections](/external-api/evaluating-detections)

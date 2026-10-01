@@ -6,3 +6,17 @@ openapi: "POST /metrics/summary"
 ## Overview
 
 Get customer-facing organization metrics and blocked threat breakdowns for a date range.
+
+<Note>
+The date range is only applied when you send **both** `startDate` and `endDate`.
+With one or neither, every metric is all-time. Each metric filters on its own
+timestamp: threat counts (`newThreats`, `domainThreats`, …) on when the threat was
+blocked, `threatsWatchlisted` on when your organization reported the asset.
+</Note>
+
+`newThreats` counts every confirmed threat, including **pending blocks** for
+organizations whose protection is not active. To list the threats behind it, use
+[`/detection/list`](/external-api/detection-list) with the `blockStatus` filter or
+[`/threats/list`](/external-api/threats-list) with `includePending`. To list the
+assets behind `threatsWatchlisted`, use
+[`/organization/watchlist`](/external-api/organization-watchlist-list).
