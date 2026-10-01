@@ -120,13 +120,6 @@
             ]
           },
           {
-            "group": "Blocklist Sync",
-            "pages": [
-              "external-api/asset-blocklist-version",
-              "external-api/asset-blocklist-confirm"
-            ]
-          },
-          {
             "group": "Reports",
             "pages": [
               "external-api/creating-reports",
@@ -437,6 +430,14 @@
     }
   },
   "redirects": [
+    {
+      "source": "/external-api/asset-blocklist-version",
+      "destination": "/external-api/overview"
+    },
+    {
+      "source": "/external-api/asset-blocklist-confirm",
+      "destination": "/external-api/overview"
+    },
     {
       "source": "/cli",
       "destination": "/cli/overview"
