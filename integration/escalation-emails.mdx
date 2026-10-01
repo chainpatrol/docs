@@ -1,0 +1,57 @@
+---
+icon: envelope
+title: Escalation Emails
+sidebarTitle: Escalation Emails
+description: Notify selected Owners and Admins by email when ChainPatrol escalates a proposal to your team for review, with a deep link to the review page.
+---
+
+When ChainPatrol reviewers are uncertain about a proposal, they can [escalate to the customer](/concepts/reviews) so your team makes the final decision. **Escalation emails** are an opt-in notification channel that emails selected Owners and Admins whenever this happens, with a link that opens the exact proposal in the review page.
+
+Use this if your team does not monitor Slack or Discord for ChainPatrol notifications, or if you want to route escalations to specific decision-makers by email in addition to your existing channels.
+
+<Note>
+  Escalation emails are rolled out gradually. If you do not see the setting described below, the feature is not yet enabled for your organization — contact ChainPatrol staff if you would like access.
+</Note>
+
+## Configure recipients
+
+<Steps>
+  <Step title="Open Notification Settings">
+    In the [ChainPatrol dashboard](https://app.chainpatrol.io/), go to **Settings** > **Integrations** and find the **Notification Settings** card.
+  </Step>
+  <Step title="Turn on Escalations by email">
+    Toggle **Escalations by email** on. The first time you enable it, all Owners on your organization are selected as recipients automatically so escalations are never sent to nobody.
+  </Step>
+  <Step title="Adjust the recipient list">
+    Under the toggle, use the search box to add any Owner or Admin as a recipient, and click the **×** on a chip to remove someone. Only Owners and Admins are eligible, because they are the roles that can approve or reject escalated proposals.
+  </Step>
+</Steps>
+
+Changes save immediately — there is no separate save step.
+
+<Tip>
+  You cannot turn the toggle on with zero recipients selected, and you cannot remove the last recipient while the toggle is on. Turn the toggle off first if you want to stop sending escalation emails entirely.
+</Tip>
+
+Only users with permission to update notification settings (Owners and Admins) can see or change the escalation email configuration.
+
+## How delivery works
+
+**Batching** — ChainPatrol collects customer escalations over a rolling 30-minute window and sends **one email per opted-in recipient** at the end of that window, listing every proposal escalated during the window. A burst of escalations becomes one digest, not dozens of separate messages.
+
+**Deep links** — Each item in the email links directly to its review page (`/admin/{slug}/review?proposalId=...`) so the recipient can go straight to the proposal, sign in if needed, and decide. There are no approve or reject buttons in the email itself — all decisions happen in the app.
+
+**No duplicates** — Each `(review, recipient)` pair is only ever emailed once, even if delivery is retried or an escalation is re-emitted.
+
+**Current roles are used** — Recipients are resolved against current organization roles at send time. If someone was selected as a recipient but has since lost Owner or Admin standing, they are skipped for that send.
+
+## When a recipient cannot review
+
+The link in an escalation email opens the review page for a specific proposal. If the recipient's current role does not allow them to review (for example, an Owner who has been demoted to Member, or the email was forwarded to a Member), the page explains that they cannot approve, reject, or watchlist the asset, and names the Owners and Admins on their team who can make the decision instead.
+
+If the member list is still loading or the organization has no Owners or Admins, the page falls back to a role-only message asking any Owner or Admin to review.
+
+## Related
+
+- [Reviews](/concepts/reviews) — how proposals flow through review, including escalation to customer.
+- [Slack](/integration/slack#threats-feed-configuration) — configure Slack notifications alongside escalation emails on the same Notification Settings card.
