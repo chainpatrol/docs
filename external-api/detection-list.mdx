@@ -54,9 +54,12 @@ curl --request POST \
 | `cursor`    | `number`   | ❌ No    | -       | -                 | `nextCursor` from the previous response            |
 | `limit`     | `number`   | ❌ No    | `50`    | Min: 1, Max: 1000 | Number of results per page                         |
 | `filters`   | `Filter[]` | ❌ No    | `[]`    | -                 | Array of filter objects                            |
-| `query`     | `string`   | ❌ No    | `""`    | -                 | Search query for threat content (case-insensitive) |
-| `startDate` | `string`   | ❌ No    | -       | ISO 8601 format   | Only detections created at or after this time      |
-| `endDate`   | `string`   | ❌ No    | -       | ISO 8601 format   | Only detections created at or before this time     |
+| `query`        | `string`   | ❌ No    | `""`    | -                 | Search query for threat content (case-insensitive) |
+| `minScore`     | `number`   | ❌ No    | -       | Min: 0, Max: 1    | Only detections with a raw `score` at or above this value |
+| `maxScore`     | `number`   | ❌ No    | -       | Min: 0, Max: 1    | Only detections with a raw `score` at or below this value |
+| `includeTotal` | `boolean`  | ❌ No    | `false` | -                 | Also return `total`, the number of matching detections across all pages |
+| `startDate`    | `string`   | ❌ No    | -       | ISO 8601 format   | Only detections created at or after this time      |
+| `endDate`      | `string`   | ❌ No    | -       | ISO 8601 format   | Only detections created at or before this time     |
 
 ### Filter Schema
 
@@ -136,6 +139,13 @@ Each filter object must have the following structure:
 - `"medium"` - Medium confidence threat detection
 - `"high"` - High confidence threat detection
 
+<Note>
+Confidence levels bucket the raw detection score using your organization's
+thresholds, so `"high"` does not map to a fixed score. To filter on a fixed
+cut-off such as 0.8, use `minScore` and `maxScore` instead. See
+[Filtering by score](#filtering-by-score).
+</Note>
+
 **4. Asset Type Filter (`"assetType"`)**
 
 ```typescript
@@ -199,8 +209,15 @@ Each filter object must have the following structure:
 {
   detections: DetectionResult[];
   nextCursor?: number; // omitted on the last page
+  total?: number; // present only when includeTotal is true
 }
 ```
+
+| Field        | Type                | Description                                                                                                  |
+| ------------ | ------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `detections` | `DetectionResult[]` | Detections on this page, newest first                                                                        |
+| `nextCursor` | `number`            | Pass back as `cursor` to fetch the next page. Omitted on the last page                                      |
+| `total`      | `number`            | Number of detections matching the filters, search, and date range across all pages. Only present when `includeTotal` is `true` |
 
 ### Detection Result Object
 
@@ -213,6 +230,7 @@ Each item in the `detections` array has the following structure:
 | `source`        | `string`      | Source of the threat detection (ThreatDetectionSourceKey) |
 | `createdAt`     | `string`      | ISO 8601 timestamp of when threat was detected            |
 | `confidence`    | `string`      | Confidence level: "none", "low", "medium", or "high"      |
+| `score`         | `number`      | Raw detection score from 0 to 1. `confidence` is derived from this value |
 | `reportStatus`  | `string`      | Report status: "REPORTED" or "NOT_REPORTED"               |
 | `asset`         | `AssetObject` | Associated asset information                              |
 
@@ -236,6 +254,7 @@ Each item in the `detections` array has the following structure:
       "source": "GOOGLE_SEARCH",
       "createdAt": "2024-01-15T10:30:00Z",
       "confidence": "high",
+      "score": 1,
       "reportStatus": "REPORTED",
       "asset": {
         "id": 67890,
@@ -250,6 +269,7 @@ Each item in the `detections` array has the following structure:
       "source": "EXTERNAL",
       "createdAt": "2024-01-15T09:15:00Z",
       "confidence": "medium",
+      "score": 0.65,
       "reportStatus": "NOT_REPORTED",
       "asset": {
         "id": 67891,
@@ -260,6 +280,72 @@ Each item in the `detections` array has the following structure:
     }
   ],
   "nextCursor": 12347
+}
+```
+
+## Filtering by score
+
+Use `minScore` and `maxScore` to return only detections whose raw `score` falls
+within a range. Both bounds are inclusive and accept values from `0` to `1`. You
+can send either one or both.
+
+Score bounds combine with every other filter, including `confidence`, as well as
+`query`, `startDate`, and `endDate`. If `minScore` is greater than `maxScore`,
+the API returns a `400` `BAD_REQUEST` error.
+
+Use score bounds when you need a fixed cut-off. The `confidence` filter buckets
+scores using your organization's thresholds, so the score range behind each
+level can differ between organizations.
+
+## Counting detections
+
+Set `includeTotal` to `true` to add a `total` field to the response. `total` is
+the number of detections that match your filters, search, and date range across
+all pages, not just the current page. Use it to answer questions such as "how
+many URL detections score 0.8 or higher?" without paging through every result.
+
+ChainPatrol counts matches before applying `cursor`, so `total` is the same on
+every page. Counting costs an extra query, so request it on the first page of a
+sweep only. When `includeTotal` is omitted or `false`, the response has no
+`total` field.
+
+The following request counts detections with a score of 0.8 or higher. Set
+`limit` to `1` if you only need the count.
+
+```bash
+curl --request POST \
+  --url https://api.chainpatrol.io/detection/list \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "limit": 1,
+    "minScore": 0.8,
+    "includeTotal": true
+  }'
+```
+
+```json
+{
+  "detections": [
+    {
+      "id": 12345,
+      "threatContent": "Phishing site detected mimicking legitimate service",
+      "source": "GOOGLE_SEARCH",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "confidence": "medium",
+      "score": 0.92,
+      "reportStatus": "REPORTED",
+      "asset": {
+        "id": 67890,
+        "content": "https://fake-site.com",
+        "type": "URL",
+        "status": "BLOCKED"
+      }
+    }
+  ],
+  "nextCursor": 12345,
+  "total": 1834
 }
 ```
 
@@ -474,6 +560,9 @@ interface DetectionListParams {
   limit?: number;
   filters?: DetectionFilter[];
   query?: string;
+  minScore?: number;
+  maxScore?: number;
+  includeTotal?: boolean;
   startDate?: string;
   endDate?: string;
 }
@@ -491,6 +580,7 @@ interface DetectionResult {
   source: string;
   createdAt: string;
   confidence: "none" | "low" | "medium" | "high";
+  score: number;
   reportStatus: "REPORTED" | "NOT_REPORTED";
   asset: AssetObject;
 }
@@ -498,6 +588,7 @@ interface DetectionResult {
 interface DetectionListResponse {
   detections: DetectionResult[];
   nextCursor?: number;
+  total?: number;
 }
 
 async function fetchDetectionResults(
