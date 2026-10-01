@@ -19,10 +19,12 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
   The asset list request object with filtering criteria.
 
   <Expandable title="AssetListInput Properties">
-    <ParamField path="type" type="enum<string>" required>
-      The type of assets to retrieve.
-      
-      Supported types: `URL`, `PAGE`, `ADDRESS`.
+    <ParamField path="type" type="enum<string>">
+      The type of assets to retrieve. Omit the field entirely to sweep every asset type on a single cursor — each returned asset still carries its own `type`, so you can bucket the results client-side.
+
+      Supported types include `URL`, `PAGE`, `ADDRESS`, and every other member of ChainPatrol's `AssetType` enum.
+
+      An explicit `null` is rejected with a 400. Only omission opts into the full sweep, so a client that builds the request from a struct should leave the key out rather than setting it to `null`.
     </ParamField>
 
     <ParamField path="status" type="enum<string>" required>
@@ -51,11 +53,11 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
 ### Returns
 
 <ResponseField name="assets" type="array" required>
-  Array of asset objects matching the filter criteria.
+  Array of asset objects matching the filter criteria. A single response returns at most **1000** assets, whatever `per_page` asks for. Larger values are accepted but clamped, so keep following `next_page` until it comes back `null` rather than assuming one page holds everything.
 
   <Expandable title="Asset Object Properties">
     <ResponseField name="type" type="enum<string>" required>
-      The type of the asset: `URL`, `PAGE`, or `ADDRESS`.
+      The asset's type (for example `URL`, `PAGE`, or `ADDRESS`). Present on every row so callers that omit the `type` filter can bucket the sweep client-side.
     </ResponseField>
 
     <ResponseField name="content" type="string" required>
@@ -83,7 +85,7 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
 
 <CardGroup cols={2}>
   <Card title="By Asset Type" icon="filter">
-    Filter by `URL`, `PAGE`, or `ADDRESS` to focus on specific asset categories.
+    Filter by `URL`, `PAGE`, `ADDRESS`, or any other member of the `AssetType` enum. Omit `type` entirely to sweep every asset type on one cursor.
   </Card>
 
 {" "}
@@ -125,6 +127,23 @@ endDate: "2023-12-31",
 console.log(`Found ${result.assets.length} blocked URLs`);
 
 ````
+
+```typescript Sweep Every Asset Type
+// Omit `type` to mirror the full blocklist in one paginated sweep instead of
+// looping over every member of the `AssetType` enum.
+const result = await client.asset.list({
+  status: "BLOCKED",
+  startDate: "2024-01-01",
+  endDate: "2024-01-31",
+});
+
+// Each returned asset still carries its own `type`, so you can bucket
+// results client-side.
+const byType = result.assets.reduce<Record<string, number>>((acc, asset) => {
+  acc[asset.type] = (acc[asset.type] ?? 0) + 1;
+  return acc;
+}, {});
+```
 
 ```typescript Organization-Specific Query
 const result = await client.asset.list({
