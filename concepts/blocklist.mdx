@@ -132,6 +132,14 @@ Mobile apps (fake wallet apps, scam applications), browser extensions (malicious
 
 Every blocklisted asset includes comprehensive metadata: asset type, status (BLOCKED, ALLOWED, PENDING), severity, related assets, detection methods, distribution status, and update history.
 
+## Viewing confirmed threats in the dashboard
+
+Your organization's blocklisted assets appear on the **Threats** page in the dashboard sidebar. The page lists assets confirmed as threats to your brand.
+
+The dashboard shows the `BLOCKED` status as **Confirmed Threat**. This includes the status badge, the status filter, and the status column in detections CSV exports. A **Confirmed Threat** has been verified as malicious and distributed to blocklist partners. It hasn't necessarily been taken down. When a takedown is underway, the dashboard shows **Confirmed Threat · Takedown In Progress**. Once the takedown completes, it shows **Taken down**.
+
+The API, SDK, CLI, and webhooks still return the status value `BLOCKED`. You don't need to change any integrations.
+
 ## How Distribution Works
 
 Our distribution network is primarily focused on **domains and URLs**. When a domain or URL is blocklisted, it flows automatically to browsers, wallets, DNS providers, and threat intelligence partners listed below.

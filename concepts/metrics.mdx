@@ -72,6 +72,25 @@ Threats blocked per brand inside your organization, showing which brands are tar
 
 **Median Time to Takedown** - Calculated from when a takedown request is created to when it is first marked completed. Available as overall median, by asset type (domains, social media, etc.), and by threat category (brand vs. employee impersonation). Lower median times indicate faster threat removal and better provider relationships.
 
+## Organization dashboard
+
+The organization dashboard summarizes recent threat activity for the period you select: **Last 7 days**, **Last 30 days**, **Last year**, or **All time**.
+
+**Overview** - A card with two numbers for the selected period:
+
+- **New Threats** - Threats reported and confirmed by ChainPatrol staff in the period. This count includes threats that are confirmed but still pending wallet blocking, for example while protection isn't active for your organization. When some threats are pending, the caption shows how many are pending wallet blocking. Otherwise, it reads **Live in partner wallets**. Click the number to open the **Threats** page.
+- **Taken down** - Threats removed at source by the registrar, hosting provider, or platform. The caption shows this as a percentage of new threats. Click the number to open the **Takedowns** page.
+
+Except for **All time**, each number shows its change compared with the previous period of the same length.
+
+**Threats We've Protected Against** - A grid of real malicious websites and social media profiles that targeted your organization. Each example has a status badge: **Confirmed Threat**, **Confirmed Threat · Takedown In Progress**, or **Taken down**.
+
+**New Threats by Channel** - A breakdown of the period's new threats by channel, such as Websites, X (Twitter), and Other, with each channel's share of the total.
+
+<Note>
+**Confirmed Threat** means ChainPatrol has confirmed the asset and distributed it to blocklist partners. It doesn't mean the asset has been taken down.
+</Note>
+
 ## How Metrics Relate to Other Concepts
 
 **Assets and Asset Scans** - When asset scans and reviews lead to an asset being blocked, that asset contributes to metrics such as New Threats, Threats by asset type, and Threats blocked per day. Ongoing scans and liveness updates ensure that metrics reflect the current state of your threat surface.
