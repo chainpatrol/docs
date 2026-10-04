@@ -1,0 +1,146 @@
+---
+title: "ChainPatrol MCP Server"
+sidebarTitle: "MCP Server"
+icon: plug
+description: "Connect Claude, Cursor, and other AI agents to ChainPatrol with the official MCP server — hosted at app.chainpatrol.io/api/mcp, or run locally through the CLI."
+---
+
+The ChainPatrol [MCP](https://modelcontextprotocol.io) server gives AI agents the whole
+public API as tools: asset checks and search, reports, proposal review, detections and
+detection configs, takedowns, threats, metrics, healthchecks, and organization
+management. If an operation is in the [API reference](/external-api/overview), the agent
+can call it.
+
+There are two ways to connect:
+
+- **Hosted**: point your client at a URL and sign in through your browser. Nothing to install.
+- **Local**: run `chainpatrol mcp` from the [CLI](/cli/overview) on your own machine.
+
+Both expose the same tools and enforce the same permissions as your ChainPatrol account
+or API key.
+
+## Hosted server
+
+```
+https://app.chainpatrol.io/api/mcp
+```
+
+The server uses OAuth. The first time your client connects, it opens a ChainPatrol sign-in
+and consent page in your browser. After you approve it, the client stores the token and
+reconnects on its own. Clients that support dynamic client registration need nothing but
+the URL.
+
+<Tabs>
+  <Tab title="Claude Code">
+    ```bash
+    claude mcp add --transport http chainpatrol https://app.chainpatrol.io/api/mcp
+    ```
+
+    Then run `/mcp` inside Claude Code and pick `chainpatrol` to sign in.
+
+  </Tab>
+  <Tab title="Claude.ai / Claude Desktop">
+    Open **Settings → Connectors → Add custom connector**, name it `ChainPatrol`, and paste
+    `https://app.chainpatrol.io/api/mcp` as the URL. Click **Connect** to sign in.
+  </Tab>
+  <Tab title="Cursor">
+    Add this to `~/.cursor/mcp.json` (or `.cursor/mcp.json` in a project):
+
+    ```json
+    {
+      "mcpServers": {
+        "chainpatrol": {
+          "url": "https://app.chainpatrol.io/api/mcp"
+        }
+      }
+    }
+    ```
+
+  </Tab>
+  <Tab title="Other clients">
+    Any client that supports the Streamable HTTP transport can connect to
+    `https://app.chainpatrol.io/api/mcp`. If the client supports MCP OAuth, it finds the
+    authorization server through the `WWW-Authenticate` header on the first `401`.
+  </Tab>
+</Tabs>
+
+### Using an API key instead
+
+For service accounts and headless agents that can't complete a browser sign-in, send an
+[API key](/external-api/authentication) in the `X-API-KEY` header:
+
+```bash
+claude mcp add --transport http chainpatrol https://app.chainpatrol.io/api/mcp \
+  --header "X-API-KEY: <your api key>"
+```
+
+## Local server (CLI)
+
+The server also ships with the [ChainPatrol CLI](/cli/installation), which handles login
+for you:
+
+```bash
+npm install -g @chainpatrol/cli
+chainpatrol login
+chainpatrol mcp        # speaks MCP on stdio
+```
+
+Point your MCP client at that command. For Claude Code:
+
+```bash
+claude mcp add chainpatrol -- chainpatrol mcp
+```
+
+Or in any client that takes an `mcpServers` config:
+
+```json
+{
+  "mcpServers": {
+    "chainpatrol": {
+      "command": "chainpatrol",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+To use a service account, set `CHAINPATROL_API_KEY` instead of running `chainpatrol login`.
+
+### Configuration
+
+| Variable                 | Purpose                                                       |
+| ------------------------ | ------------------------------------------------------------- |
+| `CHAINPATROL_API_KEY`    | API key. Takes precedence over a stored login.                |
+| `CHAINPATROL_API_URL`    | API base URL. Defaults to `https://app.chainpatrol.io`.       |
+| `CHAINPATROL_CONFIG_DIR` | Where credentials are read from.                              |
+| `CHAINPATROL_MCP_TOOLS`  | Comma-separated tool names to expose. Everything, by default. |
+
+`chainpatrol mcp --tools asset_check,asset_list` does the same as `CHAINPATROL_MCP_TOOLS`
+for a single run, and wins when both are set. Narrowing the tool list saves context
+budget but is not an access control. The API enforces authorization against the
+credential in use.
+
+## What the server exposes
+
+- **Tools**: one for each public API operation. Most tools are scoped to one
+  organization and there is no implicit default, so call `user_orgs` first and pass the
+  organization slug explicitly.
+- **Resources**: the long value lists, such as `chainpatrol://enums/asset_type`, and
+  guides explaining what each proposal label and reject reason means.
+- **Prompts**: ready-made workflows that take an organization slug:
+
+| Prompt                 | What it does                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `org_healthcheck`      | Audits one organization across detection, reviewing, blocklisting, and takedowns, and reports what needs attention. |
+| `trend_search`         | Compares a recent window against a baseline to surface spikes: new attack channels, campaigns, or targeting. |
+| `cs_weekly_health`     | Weekly customer health review: threats found, summary metrics, and whether detectors are producing results.   |
+| `detection_evaluation` | Counts confirmed threats, domain detections, watchlist size, and high-score detections. See [Evaluating detections](/external-api/evaluating-detections). |
+
+## Example prompts
+
+Once connected, ask in plain language:
+
+- "Is `claim-airdrop-example.xyz` on the ChainPatrol blocklist?"
+- "Run the org healthcheck for `acme`."
+- "Which reports for `acme` are waiting on customer review?"
+- "How many threats did we find for `acme` this week, and from which sources?"
