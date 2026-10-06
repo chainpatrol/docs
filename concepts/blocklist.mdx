@@ -134,9 +134,9 @@ Every blocklisted asset includes comprehensive metadata: asset type, status (BLO
 
 ## Viewing confirmed threats in the dashboard
 
-Your organization's blocklisted assets appear on the **Threats** page in the dashboard sidebar. The page lists assets confirmed as threats to your brand.
+Your organization's blocklisted assets appear on the **Confirmed Threats** page in the dashboard sidebar. The page lists assets confirmed as threats to your brand.
 
-The dashboard shows the `BLOCKED` status as **Confirmed Threat**. This includes the status badge, the status filter, and the status column in detections CSV exports. A **Confirmed Threat** has been verified as malicious and distributed to blocklist partners. It hasn't necessarily been taken down. When a takedown is underway, the dashboard shows **Confirmed Threat · Takedown In Progress**. Once the takedown completes, it shows **Taken down**.
+The dashboard shows the `BLOCKED` status as **Confirmed Threat**. This includes the status badge, the status filter, and the status column in detections CSV exports. A **Confirmed Threat** has been verified as malicious and distributed to blocklist partners. It hasn't necessarily been taken down. When a takedown is underway, the dashboard shows **Confirmed Threat · Takedown In Progress**. Once the takedown completes, it shows **Taken down**. In the detections table, hover over a **Confirmed Threat** badge to see a tooltip explaining that ChainPatrol has reviewed the asset, added it to the blocklist, and is running a takedown.
 
 The API, SDK, CLI, and webhooks still return the status value `BLOCKED`. You don't need to change any integrations.
 
