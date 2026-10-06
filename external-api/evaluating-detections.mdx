@@ -1,0 +1,129 @@
+---
+title: Evaluating detections
+description: "Answer the usual evaluation questions — confirmed threats, domain detections, the watchlist, high-confidence detections — with one API request each."
+---
+
+When you first evaluate ChainPatrol over the API, the questions are usually counts:
+how many confirmed threats, how many detections, how many watched, how many above a
+confidence cut-off. Each one below is a single request with `includeTotal: true`, so
+you get the number without paging through every result.
+
+<Warning>
+**Don't add a date window unless you mean one.** Every date filter cuts off older
+history, and each endpoint filters on a different timestamp:
+
+| Endpoint | `startDate` / `endDate` (or equivalent) filter on | With no dates |
+| --- | --- | --- |
+| [`/detection/list`](/external-api/detection-list) | when the detection was created | everything |
+| [`/threats/list`](/external-api/threats-list) | when the threat was blocked (`blockedAt`) | **last day only** |
+| [`/organization/watchlist`](/external-api/organization-watchlist-list) | when your organization reported the asset | everything |
+| [`/metrics/summary`](/external-api/metrics-summary) | each metric's own timestamp, and only when **both** dates are set | all-time |
+</Warning>
+
+Throughout, exclude deleted detections with
+`{ "property": "deleted", "operator": "notIn", "value": ["deleted"] }`, because
+`/detection/list` includes them by default.
+
+## How many confirmed threats do we have?
+
+A confirmed threat is an asset ChainPatrol reviewed and blocked. If protection is
+not active for your organization, confirmed threats are held as **Pending Blocked**
+instead of being enforced, but they are still confirmed. Include both.
+
+```bash
+curl -X POST https://api.chainpatrol.io/metrics/summary \
+  -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
+  -d '{ "slug": "your-org" }'
+```
+
+`metrics.newThreats` is the all-time count, with `domainThreats`, `twitterThreats`,
+`telegramThreats` and `otherThreats` as the breakdown. To list them from your
+detections:
+
+```bash
+curl -X POST https://api.chainpatrol.io/detection/list \
+  -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
+  -d '{
+    "slug": "your-org",
+    "limit": 100,
+    "includeTotal": true,
+    "filters": [
+      { "property": "blockStatus", "operator": "in", "value": ["blocked", "pending"] },
+      { "property": "deleted", "operator": "notIn", "value": ["deleted"] }
+    ]
+  }'
+```
+
+The two numbers can differ: `newThreats` also counts threats you reported yourself
+that no detector produced. To list every confirmed threat regardless of source, use
+`/threats/list` with `includePending: true` and an early `startDate`.
+
+## How many detections for domains do we have?
+
+```bash
+curl -X POST https://api.chainpatrol.io/detection/list \
+  -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
+  -d '{
+    "slug": "your-org",
+    "limit": 100,
+    "includeTotal": true,
+    "filters": [
+      { "property": "assetType", "operator": "in", "value": ["URL", "PAGE", "IPFS"] },
+      { "property": "deleted", "operator": "notIn", "value": ["deleted"] }
+    ]
+  }'
+```
+
+`total` counts detections. Several detections can point at the same domain, so
+de-duplicate by `asset.id` if you need unique domains.
+
+## How many watchlisted domains are there?
+
+```bash
+curl 'https://app.chainpatrol.io/api/v2/organization/watchlist?assetType=URL&includeTotal=true' \
+  -H 'X-API-KEY: <api-key>'
+```
+
+Leave out `assetType` for the whole watchlist. That `total` matches
+`threatsWatchlisted` in `/metrics/summary`. Each item's `reason` says why it is being
+watched (`DEAD`, `PARKING`, `NOT_ENOUGH_EVIDENCE`, …).
+
+## How many detections are over 80% (or 90%) confidence?
+
+Use the raw `score` cut-off, not the `confidence` filter. Confidence levels are
+bucketed from the score with your organization's own thresholds, so `"high"` is not a
+fixed percentage.
+
+```bash
+curl -X POST https://api.chainpatrol.io/detection/list \
+  -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
+  -d '{
+    "slug": "your-org",
+    "limit": 100,
+    "minScore": 0.8,
+    "includeTotal": true,
+    "filters": [
+      { "property": "deleted", "operator": "notIn", "value": ["deleted"] }
+    ]
+  }'
+```
+
+`minScore` is inclusive. Change it to `0.9` for the 90% question, and page with
+`nextCursor` to list every match.
+
+## From the CLI or an AI agent
+
+The same questions with the [ChainPatrol CLI](/cli/commands/detections):
+
+```bash
+chainpatrol detections list --org your-org --block-status blocked,pending --include-total
+chainpatrol detections list --org your-org --asset-type URL,PAGE,IPFS --include-total
+chainpatrol orgs watchlist list --org your-org --asset-type URL --include-total
+chainpatrol detections list --org your-org --min-score 0.8 --include-total
+```
+
+The CLI has no flag to exclude deleted detections, so its `detections list` totals
+include them. Use the API requests above when the exact number matters.
+
+The [ChainPatrol MCP server](/mcp-server) includes a `detection_evaluation` prompt that runs all of
+these for an organization and reports the counts.

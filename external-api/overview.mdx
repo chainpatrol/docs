@@ -96,21 +96,6 @@ Look up, submit, scan, and unblock individual assets.
   </Card>
 </CardGroup>
 
-## Blocklist sync
-
-Sync the blocklist as hashed prefixes, so clients never download the full list of blocked
-content. This is the mechanism the ChainPatrol browser extension uses.
-
-<CardGroup cols={2}>
-  <Card title="Get Blocklist Version" icon="code-branch" href="/external-api/asset-blocklist-version">
-    Discover the current snapshot, recent-additions feed, and algorithm version.
-  </Card>
-
-  <Card title="Confirm Prefix Matches" icon="fingerprint" href="/external-api/asset-blocklist-confirm">
-    Resolve full hashes for local prefix hits.
-  </Card>
-</CardGroup>
-
 ## Reports
 
 <CardGroup cols={2}>
@@ -249,6 +234,20 @@ List detections, inspect their sources, and manage the detection configs that pr
 
   <Card title="List Threats" icon="triangle-exclamation" href="/external-api/threats-list">
     List threats for your organization.
+  </Card>
+</CardGroup>
+
+## Dark Web
+
+Search leaked credentials for targets already tracked by a brand.
+
+<CardGroup cols={2}>
+  <Card title="List Dark Web Credential Targets" icon="list" href="/external-api/dark-web-credentials-targets">
+    Find the email domains, email addresses, and wallet addresses available to search.
+  </Card>
+
+  <Card title="Search Dark Web Credentials" icon="user-secret" href="/external-api/dark-web-credentials-search">
+    Search for leaked credentials tied to a tracked target.
   </Card>
 </CardGroup>
 
