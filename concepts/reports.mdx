@@ -86,6 +86,32 @@ The **Reports page** in your dashboard shows all the reports for your organizati
 
 You can filter and search by creator, date, asset, and status to track the status of something you reported or follow up on threats flagged by your community. Exporting reports to CSV respects the tab that's currently active.
 
+## Viewing a report
+
+Opening a report shows everything on one scrollable page:
+
+- **Description** - The report's title and description.
+- **Attachments** - Screenshots and files the reporter uploaded. If the report has none, this section shows an **Add screenshots** row so you can add evidence.
+- **Reported assets** - A gallery of cards, one per asset. Each card shows the asset's latest scan capture, review status, liveness, and the proposed status change (for example, block or allow). An approved block proposal shows a red **Confirmed Threat** badge. Reports with one asset show a full-width capture instead of a gallery. Reports with several assets include review-category filter chips above the gallery.
+
+The **Display Images** setting on the report controls how captures appear: **Hidden**, **Blur**, or visible.
+
+### Asset details panel
+
+Click **Details** on an asset card to open the details panel. On a single-asset report, click **View scan details**. The panel opens in place of the report's Properties sidebar and contains:
+
+- The full scan, with tabs for each capture
+- Scan history
+- Detection checks
+- Reviews and related reports
+- The review toolbar
+
+Use the previous and next buttons in the panel to move between assets. The report URL keeps track of the open asset with an `?asset=<proposalId>` parameter, so you can share a link that opens the report with that asset's panel already open.
+
+<Note>
+You approve or reject an asset only from the details panel. Asset cards don't have review buttons, so reviewers always see the full scan before deciding.
+</Note>
+
 ## How to Submit a Report
 
 Creating a report in ChainPatrol is straightforward:
