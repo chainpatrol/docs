@@ -117,7 +117,10 @@
               "external-api/asset-parse",
               "external-api/asset-scan",
               "external-api/scan-result",
-              "external-api/asset-details"
+              "external-api/asset-details",
+              "external-api/asset-follow",
+              "external-api/asset-unfollow",
+              "external-api/asset-follows-list"
             ]
           },
           {

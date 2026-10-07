@@ -52,7 +52,7 @@ Agents can load these docs from [llms.txt](https://chainpatrol.com/docs/llms.txt
 
 ## Assets
 
-Look up, submit, scan, and unblock individual assets.
+Look up, submit, scan, unblock, and follow individual assets.
 
 <CardGroup cols={2}>
   <Card title="Asset Check" icon="shield-check" href="/external-api/asset-check">
@@ -93,6 +93,18 @@ Look up, submit, scan, and unblock individual assets.
 
   <Card title="Get Asset Details" icon="circle-info" href="/external-api/asset-details">
     Deprecated — use Asset Check or Asset Search.
+  </Card>
+
+  <Card title="Follow Asset" icon="bell" href="/external-api/asset-follow">
+    Get emailed when an asset's status changes or its takedown completes.
+  </Card>
+
+  <Card title="Unfollow Asset" icon="bell-slash" href="/external-api/asset-unfollow">
+    Stop the emails for an asset.
+  </Card>
+
+  <Card title="List Followed Assets" icon="list" href="/external-api/asset-follows-list">
+    See every asset you follow, with its status and takedown.
   </Card>
 </CardGroup>
 
