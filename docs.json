@@ -101,6 +101,7 @@
             "pages": [
               "external-api/overview",
               "external-api/authentication",
+              "mcp-server",
               "external-api/deprecation-policy"
             ]
           },
@@ -116,14 +117,10 @@
               "external-api/asset-parse",
               "external-api/asset-scan",
               "external-api/scan-result",
-              "external-api/asset-details"
-            ]
-          },
-          {
-            "group": "Blocklist Sync",
-            "pages": [
-              "external-api/asset-blocklist-version",
-              "external-api/asset-blocklist-confirm"
+              "external-api/asset-details",
+              "external-api/asset-follow",
+              "external-api/asset-unfollow",
+              "external-api/asset-follows-list"
             ]
           },
           {
@@ -182,6 +179,7 @@
           {
             "group": "Detections",
             "pages": [
+              "external-api/evaluating-detections",
               "external-api/detection-list",
               "external-api/detection-sources-list",
               "external-api/detection-configs-list",
@@ -191,7 +189,8 @@
               "external-api/detection-configs-run",
               "external-api/detection-configs-validate",
               "external-api/detection-drift",
-              "external-api/threats-list"
+              "external-api/threats-list",
+              "external-api/organization-watchlist-list"
             ]
           },
           {
@@ -435,6 +434,14 @@
     }
   },
   "redirects": [
+    {
+      "source": "/external-api/asset-blocklist-version",
+      "destination": "/external-api/overview"
+    },
+    {
+      "source": "/external-api/asset-blocklist-confirm",
+      "destination": "/external-api/overview"
+    },
     {
       "source": "/cli",
       "destination": "/cli/overview"
