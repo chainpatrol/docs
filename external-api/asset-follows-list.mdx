@@ -1,0 +1,101 @@
+---
+title: List Followed Assets
+openapi: "GET /asset/follows"
+---
+
+## Overview
+
+List every asset you follow in an organization, newest first, with each asset's
+current status and your organization's takedown for it.
+
+Use it to see status changes without waiting for email: poll it and compare `status`
+and `takedown.status` with what you saw last time. Each person can follow at most 100
+assets per organization, so the list is never paginated.
+
+It needs a user-scoped API key or a signed-in session,
+and shows only **your** follows — not those of other people in your organization.
+
+## Quick Start
+
+### Authentication
+
+Include your user-scoped API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+### Example Request
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/asset/follows' \
+  -H 'X-API-KEY: <api-key>'
+```
+
+```typescript TypeScript
+const response = await fetch("https://app.chainpatrol.io/api/v2/asset/follows", {
+  headers: { "X-API-KEY": "<api-key>" },
+});
+
+const { follows, followCount, limit } = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://app.chainpatrol.io/api/v2/asset/follows",
+    headers={"X-API-KEY": "<api-key>"},
+)
+data = response.json()
+```
+
+</CodeGroup>
+
+## Query Parameters
+
+| Parameter | Type     | Required | Description                                                                                  |
+| --------- | -------- | -------- | -------------------------------------------------------------------------------------------- |
+| `slug`    | `string` | No       | Organization slug. Required only when your credentials can reach more than one organization. |
+
+## Response
+
+```json
+{
+  "follows": [
+    {
+      "assetId": 4175269,
+      "content": "your-brand-login.example",
+      "type": "URL",
+      "status": "BLOCKED",
+      "deleted": false,
+      "followedAt": "2026-10-06T22:34:47.912Z",
+      "takedown": { "id": 8812, "status": "IN_PROGRESS" }
+    }
+  ],
+  "followCount": 1,
+  "limit": 100,
+  "warnThreshold": 90,
+  "canFollowMore": true,
+  "warning": null
+}
+```
+
+| Field                       | Type             | Description                                                                                         |
+| --------------------------- | ---------------- | --------------------------------------------------------------------------------------------------- |
+| `follows[].assetId`         | `number`         | Asset ID.                                                                                           |
+| `follows[].content`         | `string`         | Asset content (URL, handle, address, …).                                                            |
+| `follows[].type`            | `string`         | Asset type.                                                                                         |
+| `follows[].status`          | `string`         | Current asset status: `UNKNOWN`, `ALLOWED` or `BLOCKED`.                                            |
+| `follows[].deleted`         | `boolean`        | The asset was deleted. It sends no more emails but still counts toward `limit` until you unfollow.  |
+| `follows[].followedAt`      | `string`         | When you started following the asset.                                                              |
+| `follows[].takedown`        | `object \| null` | Your organization's takedown for the asset — its `id` and `status` — or `null` if there is none.    |
+| `followCount`               | `number`         | How many assets you follow in this organization.                                                    |
+| `limit`, `warnThreshold`, `canFollowMore`, `warning` | | Your follow limit, as in [Follow Asset](/external-api/asset-follow#response).          |
+
+## Related
+
+- [Follow Asset](/external-api/asset-follow)
+- [Unfollow Asset](/external-api/asset-unfollow)

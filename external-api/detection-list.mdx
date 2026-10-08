@@ -57,6 +57,16 @@ curl --request POST \
 | `query`     | `string`   | ❌ No    | `""`    | -                 | Search query for threat content (case-insensitive) |
 | `startDate` | `string`   | ❌ No    | -       | ISO 8601 format   | Only detections created at or after this time      |
 | `endDate`   | `string`   | ❌ No    | -       | ISO 8601 format   | Only detections created at or before this time     |
+| `minScore`  | `number`   | ❌ No    | -       | 0–1, inclusive    | Only detections whose raw `score` is at least this |
+| `maxScore`  | `number`   | ❌ No    | -       | 0–1, inclusive    | Only detections whose raw `score` is at most this  |
+| `includeTotal` | `boolean` | ❌ No | `false` | -                 | Also return `total`, the match count across pages  |
+
+<Warning>
+`startDate` and `endDate` filter on when the **detection** was created, not on
+when the asset was first seen, reported or blocked. Leave both out when you want
+every detection: a date window silently drops older history, which reads as
+missing results rather than as a filter.
+</Warning>
 
 ### Filter Schema
 
@@ -136,7 +146,43 @@ Each filter object must have the following structure:
 - `"medium"` - Medium confidence threat detection
 - `"high"` - High confidence threat detection
 
-**4. Asset Type Filter (`"assetType"`)**
+**4. Block Status Filter (`"blockStatus"`)**
+
+```typescript
+{
+  "property": "blockStatus",
+  "operator": "in" | "notIn",
+  "value": ("blocked" | "pending")[]
+}
+```
+
+Selects detections whose asset is a **confirmed threat**:
+
+- `"blocked"` - the asset is on the blocklist (`asset.status` is `"BLOCKED"`)
+- `"pending"` - the asset was confirmed malicious but is not enforced yet,
+  because protection is not active for your organization
+  (`asset.pendingStatus` is `"BLOCKED"`). The ChainPatrol app labels these
+  **Pending Blocked**.
+
+Pass both values to get every confirmed threat, the way the app counts them. The
+`assetStatus` filter only sees `asset.status`, so `assetStatus: ["BLOCKED"]`
+leaves pending blocks out.
+
+**5. Deleted Filter (`"deleted"`)**
+
+```typescript
+{
+  "property": "deleted",
+  "operator": "in" | "notIn",
+  "value": ["deleted"]
+}
+```
+
+Deleted detections are **included by default**. Add
+`{ "property": "deleted", "operator": "notIn", "value": ["deleted"] }` to leave
+them out, or use `"in"` to return only deleted detections.
+
+**6. Asset Type Filter (`"assetType"`)**
 
 ```typescript
 {
@@ -199,6 +245,7 @@ Each filter object must have the following structure:
 {
   detections: DetectionResult[];
   nextCursor?: number; // omitted on the last page
+  total?: number; // only when includeTotal is true
 }
 ```
 
@@ -213,6 +260,7 @@ Each item in the `detections` array has the following structure:
 | `source`        | `string`      | Source of the threat detection (ThreatDetectionSourceKey) |
 | `createdAt`     | `string`      | ISO 8601 timestamp of when threat was detected            |
 | `confidence`    | `string`      | Confidence level: "none", "low", "medium", or "high"      |
+| `score`         | `number`      | Raw model score (0–1) that `confidence` is bucketed from  |
 | `reportStatus`  | `string`      | Report status: "REPORTED" or "NOT_REPORTED"               |
 | `asset`         | `AssetObject` | Associated asset information                              |
 
@@ -224,6 +272,7 @@ Each item in the `detections` array has the following structure:
 | `content` | `string` | Asset content (URL, address, username, etc.)  |
 | `type`    | `string` | Asset type (AssetType enum value)             |
 | `status`  | `string` | Current asset status (AssetStatus enum value) |
+| `pendingStatus` | `string \| null` | A reviewed status that has not taken effect yet. `"BLOCKED"` means confirmed malicious but not enforced because protection is not active ("Pending Blocked"). `null` when nothing is pending. |
 
 ### Complete Response Example
 
@@ -236,12 +285,14 @@ Each item in the `detections` array has the following structure:
       "source": "GOOGLE_SEARCH",
       "createdAt": "2024-01-15T10:30:00Z",
       "confidence": "high",
+      "score": 0.97,
       "reportStatus": "REPORTED",
       "asset": {
         "id": 67890,
         "content": "https://fake-site.com",
         "type": "URL",
-        "status": "BLOCKED"
+        "status": "BLOCKED",
+        "pendingStatus": null
       }
     },
     {
@@ -250,18 +301,54 @@ Each item in the `detections` array has the following structure:
       "source": "EXTERNAL",
       "createdAt": "2024-01-15T09:15:00Z",
       "confidence": "medium",
+      "score": 0.71,
       "reportStatus": "NOT_REPORTED",
       "asset": {
         "id": 67891,
         "content": "0x1234567890123456789012345678901234567890",
         "type": "ADDRESS",
-        "status": "BLOCKED"
+        "status": "UNKNOWN",
+        "pendingStatus": "BLOCKED"
       }
     }
   ],
   "nextCursor": 12347
 }
 ```
+
+## Counting and Score Cut-offs
+
+To count detections without paging through them, send `includeTotal: true`. The
+response then carries `total`: how many detections match your filters, search and
+date range across all pages. It is counted before the cursor is applied, so every
+page of a sweep reports the same number. It costs an extra count query, so ask for
+it on the first page rather than on every page.
+
+`confidence` is bucketed from `score` using your organization's own thresholds, so
+`"high"` does not mean a fixed score. For a fixed cut-off such as "over 80%", use
+`minScore` (and optionally `maxScore`) instead:
+
+```bash
+curl --request POST \
+  --url https://api.chainpatrol.io/detection/list \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "limit": 10,
+    "minScore": 0.8,
+    "includeTotal": true,
+    "filters": [
+      { "property": "deleted", "operator": "notIn", "value": ["deleted"] }
+    ]
+  }'
+```
+
+`minScore` greater than `maxScore` is rejected with a `400`.
+
+See [Evaluating detections](/external-api/evaluating-detections) for the
+questions people usually ask when they first look at this data, and the request
+that answers each one.
 
 ## Pagination and Incremental Sync
 
@@ -463,7 +550,13 @@ fetchDetectionResults({
 
 ```typescript TypeScript
 interface DetectionFilter {
-  property: "source" | "assetStatus" | "assetType" | "confidence";
+  property:
+    | "source"
+    | "assetStatus"
+    | "blockStatus"
+    | "deleted"
+    | "assetType"
+    | "confidence";
   operator: "in" | "notIn";
   value: string[];
 }
@@ -476,6 +569,9 @@ interface DetectionListParams {
   query?: string;
   startDate?: string;
   endDate?: string;
+  minScore?: number;
+  maxScore?: number;
+  includeTotal?: boolean;
 }
 
 interface AssetObject {
@@ -483,6 +579,7 @@ interface AssetObject {
   content: string;
   type: string;
   status: string;
+  pendingStatus: string | null;
 }
 
 interface DetectionResult {
@@ -491,6 +588,7 @@ interface DetectionResult {
   source: string;
   createdAt: string;
   confidence: "none" | "low" | "medium" | "high";
+  score: number;
   reportStatus: "REPORTED" | "NOT_REPORTED";
   asset: AssetObject;
 }
@@ -498,6 +596,7 @@ interface DetectionResult {
 interface DetectionListResponse {
   detections: DetectionResult[];
   nextCursor?: number;
+  total?: number;
 }
 
 async function fetchDetectionResults(

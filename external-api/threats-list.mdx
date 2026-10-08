@@ -48,6 +48,21 @@ curl --request POST \
 | `sorting`   | `SortingConfig[]` | ❌ No    | `[{key: "id", direction: "asc"}]` | -                 | Array of sorting configurations              |
 | `per_page`  | `number`          | ❌ No    | `10`                              | Min: 1, Max: 100  | Number of threats to return per page         |
 | `next_page` | `string`          | ❌ No    | -                                 | Positive integer  | Cursor for fetching the next page of results |
+| `includePending` | `boolean`    | ❌ No    | `false`                           | -                 | Also return pending blocks (see below)       |
+
+<Warning>
+With no `startDate` and no `endDate`, this endpoint returns only threats blocked in
+the **last day**. Both dates filter on `blockedAt`. To list every confirmed threat,
+send an early `startDate` such as `"2020-01-01"`.
+</Warning>
+
+### Pending blocks
+
+If protection is not active for your organization, ChainPatrol still reviews what it
+finds, but confirmed threats are parked as **Pending Blocked** instead of being
+enforced on the blocklist. They are left out by default, because this endpoint feeds
+blocklist consumers. Set `includePending: true` to include them. They come back with
+`pendingStatus: "BLOCKED"`, and their `blockedAt` is when the block was confirmed.
 
 ### Sorting Configuration
 
@@ -135,6 +150,7 @@ Each item in the `threats` array has the following structure:
 | `content`   | `string` | Threat content (URL, address, username, etc.) |
 | `type`      | `string` | Asset type (AssetType enum value)             |
 | `blockedAt` | `string` | ISO 8601 timestamp of when asset was blocked  |
+| `pendingStatus` | `string \| null` | `"BLOCKED"` for a pending block (only returned with `includePending`), otherwise `null` |
 
 ### Complete Response Example
 
@@ -182,7 +198,8 @@ If you attempt to access threats without proper permissions, you will receive a 
 
 ## Default Behavior
 
-- **Date Range**: If no `startDate` or `endDate` is provided, the API defaults to returning threats from the last 1 day
+- **Date Range**: If no `startDate` or `endDate` is provided, the API defaults to returning threats from the last 1 day. With only `startDate`, `endDate` defaults to now; with only `endDate`, `startDate` defaults to one day before it
+- **Pending blocks**: Left out unless `includePending` is `true`
 - **Pagination**: If no `next_page` is provided, returns the first page of results
 - **Sorting**: Defaults to sorting by `id` in ascending order
 - **Page Size**: Defaults to 10 results per page (max 100)
@@ -249,6 +266,7 @@ interface ThreatListParams {
   sorting?: SortingConfig[];
   per_page?: number;
   next_page?: string;
+  includePending?: boolean;
 }
 
 interface ThreatResult {
@@ -256,6 +274,7 @@ interface ThreatResult {
   content: string;
   type: string;
   blockedAt: string;
+  pendingStatus: string | null;
 }
 
 interface ThreatListResponse {
