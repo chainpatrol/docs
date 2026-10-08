@@ -80,11 +80,38 @@ The ChainPatrol Slack Bot should appear in your listed apps along with other all
   </Card>
 </CardGroup>
 
-### Alert channel
+### Set alert and auto-reporting channels
 
-Reporters can file reports from a connected workspace right away. To receive threat alerts, the workspace also needs an alert channel. Contact ChainPatrol support with the channel's Channel ID to set one. See [Threats feed configuration](#threats-feed-configuration).
+Reporters can file reports from a connected workspace right away. To receive threat alerts, the workspace also needs an alert channel. You can also set an optional auto-reporting channel. Users with permission to update integrations set both channels on the Slack card.
 
-Until an alert channel is set, the Slack card shows **No alert channel set** for that workspace with a warning icon. The workspace does not receive alerts until support configures a channel.
+- **Alert channel**: ChainPatrol posts this workspace's alerts in this channel. Pick a channel your security team already watches.
+- **Auto-reporting channel** (optional): Anyone in this channel can paste a suspicious link, and ChainPatrol files a report for it automatically. ChainPatrol replies in the message's thread with a ✅. If the link is already blocked or reported, the reply says so instead. Use a channel kept for this purpose, not your alert channel or a busy chat. Every link posted there is reported.
+
+<Steps>
+  <Step title="Add ChainPatrol to the channel">
+    In the Slack channel, send `/invite @ChainPatrol`. If you skip this, Slack blocks ChainPatrol from the channel and nothing arrives.
+  </Step>
+  <Step title="Copy the channel ID">
+    Click the channel's name at the top of the channel. At the bottom of the **About** tab, copy the **Channel ID**. Use the ID, not the channel name.
+  </Step>
+  <Step title="Save the channel on the Slack card">
+    Go to **Settings** > **Integrations** and expand the workspace's row on the Slack card. Paste the ID into **Alert channel ID** or **Auto-reporting channel ID (optional)**, then click **Save channels**.
+  </Step>
+</Steps>
+
+Channel IDs start with `C` (or `G` for some private channels), for example:
+
+```text
+C06EEACQUR4
+```
+
+After you save, the next alert goes to the new alert channel. For auto-reporting, links posted from then on are reported. Earlier messages are not. To turn auto-reporting off, clear the **Auto-reporting channel ID** field and save.
+
+<Note>
+  Each auto-reporting channel can belong to only one organization. If another organization already uses the channel, ChainPatrol refuses the save with "Another organization already uses that auto-reporting channel." Contact ChainPatrol support if the channel belongs to you. Your organization can reuse its own auto-reporting channel across its workspaces.
+</Note>
+
+Until an alert channel is set, the Slack card shows **No alert channel set** for that workspace with a warning icon, and the workspace does not receive alerts. If you can't update integrations, ask an admin of your organization to add one.
 
 ## Managing connected workspaces
 
@@ -100,7 +127,7 @@ To add a workspace:
 2. On the Slack card, click **Add another workspace**.
 3. Authorize the ChainPatrol app in the new workspace, then connect it to your organization on the **Connect Slack** page.
 
-**Add another workspace** uses the same install flow as **Add to Slack**. It adds the new workspace alongside your existing ones instead of replacing them. Each new workspace needs its own [alert channel](#alert-channel) to receive alerts.
+**Add another workspace** uses the same install flow as **Add to Slack**. It adds the new workspace alongside your existing ones instead of replacing them. Each new workspace needs its own [alert channel](#set-alert-and-auto-reporting-channels) to receive alerts.
 
 ### Choose which alerts a workspace receives
 
@@ -165,12 +192,8 @@ In addition to submitting reports, the ChainPatrol Slack Bot can also send autom
     </Warning>
 
   </Step>
-  <Step title="Provide Channel Information to ChainPatrol">
-    Contact ChainPatrol support with your notification channel's Channel ID to set it as the workspace's alert channel. If you have connected more than one workspace, tell support which workspace the channel belongs to. The Channel ID is a unique identifier that begins with "C" and can be found in your channel's details.
-
-    <Tip>
-      To find your Channel ID, right-click on the channel name and select "View channel details" or check the URL when viewing the channel in your browser.
-    </Tip>
+  <Step title="Set the alert channel">
+    Copy the channel's Channel ID and save it as the workspace's alert channel on the Slack card in **Settings** > **Integrations**. See [Set alert and auto-reporting channels](#set-alert-and-auto-reporting-channels). If you have connected more than one workspace, set the alert channel on the row for the workspace that contains the channel.
 
   </Step>
   <Step title="Access Integration Settings">
