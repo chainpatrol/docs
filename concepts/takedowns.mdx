@@ -87,7 +87,7 @@ Regardless of the platform, the purpose of a takedown is the same: **to remove d
 
 ## Follow an asset for status-change emails
 
-You can follow an individual asset to get an email when its status changes. Use this when you want to know as soon as a specific asset you care about is blocked or cleared.
+Following assets is available to every organization. You can follow an individual asset to get an email when its status changes and when its takedown is complete. Use this when you want to know as soon as a specific asset you care about is blocked or cleared, and when the content behind it comes down.
 
 <Tip>
 You can also follow and unfollow assets from the API, and list the assets you follow. See [Follow Asset](/external-api/asset-follow), [Unfollow Asset](/external-api/asset-unfollow), and [List Followed Assets](/external-api/asset-follows-list).
@@ -118,6 +118,29 @@ Each email includes:
 - A **View takedown** link that opens the takedown in the ChainPatrol app
 
 ChainPatrol batches status changes that happen within 60 seconds of each other into one email per person. ChainPatrol also re-checks that you still have access to the asset before sending.
+
+### Takedown completed emails
+
+Following an asset also gets you a separate email when the asset's takedown reaches **COMPLETED**. The subject is **A takedown you follow is complete**. You don't need to do anything extra. The same **Follow** button controls both emails, so you can't turn one on without the other.
+
+Each email includes:
+
+- The asset, defanged so it isn't clickable
+- The organization whose threat list the asset is on
+- When the takedown completed, in UTC
+- A **View takedown** link that opens the takedown in the ChainPatrol app
+
+A completed takedown means the reported content has come down or the provider has acted on it.
+
+ChainPatrol groups takedowns that complete within 60 seconds of each other into one email per person. For example, if five takedowns you follow complete together, you get one email with the subject **5 takedowns you follow are complete**. ChainPatrol re-checks your organization membership at send time. If you've lost access to the organization, you stop getting these emails.
+
+If an asset is on more than one organization's threat list, only one organization owns its takedown. You still get the email when you follow the asset from your own organization, even if a different organization owns the takedown.
+
+If a takedown is reopened and completed again, ChainPatrol sends a new email for the second completion.
+
+<Note>
+Status-change and takedown-completed emails are sent separately. If an asset is blocked and its takedown completes close together, you may get two emails in quick succession.
+</Note>
 
 ### Follow limit
 
