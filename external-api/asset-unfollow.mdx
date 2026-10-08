@@ -1,0 +1,92 @@
+---
+title: Unfollow Asset
+openapi: "POST /asset/unfollow"
+---
+
+## Overview
+
+Stop the emails for an asset you follow. It undoes [Follow Asset](/external-api/asset-follow),
+and a follow made with the **Follow** button in the app can be undone here too.
+
+Unfollowing is never refused because of the follow limit — it is how you get back
+under it. Unfollowing an asset you do not follow is not an error.
+
+Like following, it needs a user-scoped API key or a
+signed-in session.
+
+## Quick Start
+
+### Authentication
+
+Include your user-scoped API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+### Example Request
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/asset/unfollow' \
+  -H 'X-API-KEY: <api-key>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "assetId": 4175269 }'
+```
+
+```typescript TypeScript
+const response = await fetch("https://app.chainpatrol.io/api/v2/asset/unfollow", {
+  method: "POST",
+  headers: {
+    "X-API-KEY": "<api-key>",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ assetId: 4175269 }),
+});
+
+const { following, followCount } = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/asset/unfollow",
+    headers={"X-API-KEY": "<api-key>"},
+    json={"assetId": 4175269},
+)
+data = response.json()
+```
+
+</CodeGroup>
+
+## Request Body
+
+| Field     | Type     | Required | Description                                                                                  |
+| --------- | -------- | -------- | -------------------------------------------------------------------------------------------- |
+| `content` | `string` | One of   | Asset content: a URL, domain, wallet address, social profile, etc.                           |
+| `assetId` | `number` | One of   | ChainPatrol asset ID.                                                                        |
+| `slug`    | `string` | No       | Organization slug. Required only when your credentials can reach more than one organization. |
+
+## Response
+
+The same shape as [Follow Asset](/external-api/asset-follow#response), with
+`following` set to `false`.
+
+```json
+{
+  "assetId": 4175269,
+  "following": false,
+  "followCount": 11,
+  "limit": 100,
+  "warnThreshold": 90,
+  "canFollowMore": true,
+  "warning": null
+}
+```
+
+## Related
+
+- [Follow Asset](/external-api/asset-follow)
+- [List Followed Assets](/external-api/asset-follows-list)

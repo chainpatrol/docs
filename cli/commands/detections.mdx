@@ -118,14 +118,26 @@ chainpatrol detections list --org <slug> [filters]
 | `--reported <list>` | Comma list: `reported`, `not_reported`. |
 | `--country-code <list>` | Comma list of 2-letter ISO country codes. |
 | `--only-deleted` | Return only soft-deleted detections. Without it, both deleted and non-deleted are returned. |
-| `--from <iso>` / `--to <iso>` | Date range (ISO 8601). |
+| `--block-status <list>` | Comma list: `blocked`, `pending`. Both together select every confirmed threat, including **Pending Blocked** ones for organizations without active protection. |
+| `--min-score <n>` | Only detections with a raw score of at least `n` (0–1). Use this rather than `--confidence` for a fixed cut-off such as `0.8`. |
+| `--max-score <n>` | Only detections with a raw score of at most `n` (0–1). |
+| `--include-total` | Also print how many detections match across all pages. |
+| `--from <iso>` / `--to <iso>` | Date range (ISO 8601) on when the detection was created. Leave both out for every detection. |
+
+Each row shows the confidence and raw score. Pending blocks are shown as `PENDING_BLOCKED`
+rather than `UNKNOWN`.
 
 ```bash
 chainpatrol detections list --org acme --confidence medium,high
 chainpatrol detections list --org acme --source twitter --liveness ALIVE
 chainpatrol detections list --org acme --reported not_reported --watchlist ENABLED
 chainpatrol detections list --org acme --brand 12,34 --country-code US,GB
+chainpatrol detections list --org acme --min-score 0.8 --include-total
+chainpatrol detections list --org acme --block-status blocked,pending --include-total
 ```
+
+See [Evaluating detections](/external-api/evaluating-detections) for the usual counting
+questions.
 
 ## configs list
 
