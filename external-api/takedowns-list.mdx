@@ -195,3 +195,40 @@ Because `text` may be either plain text or raw HTML depending on what the provid
   ]
 }
 ```
+
+## Review label
+
+Each takedown item carries a `label` field: the review label applied when the asset was last adjudicated, such as `Brand Impersonation` or `Employee Impersonation`. This is the label half of the app's "Label & Brand" column, taken from the most recent review on the asset's latest status update, and is resolved the same way the dashboard shows it, so the API and the app always agree.
+
+- `label` is a string when a reviewer applied one.
+- `label` is `null` when no review on the asset's latest status update carries a label. The internally stored empty-string default is normalized to `null` for the same reason.
+
+Use `label` alongside `brand` to distinguish, for example, a phishing site impersonating a brand (`Brand Impersonation`) from one impersonating an employee of that brand (`Employee Impersonation`), without having to open the dashboard.
+
+## Counting matches with `includeTotal`
+
+By default `/takedowns/list` paginates with a cursor and does not report how many takedowns match your filters in total. Getting that number otherwise means walking every page. Pass `includeTotal: true` to opt in to a `total_count` field in the response:
+
+- `total_count` is the number of takedowns matching the request's filters (`takedownStatus`, `livenessStatus`, date ranges, and so on), **ignoring pagination**. `0` is a valid value when the filters match nothing.
+- `total_count` is `null` when `includeTotal` was omitted or `false`. The field itself is always present on the response.
+- Counting is opt-in because it runs a second query over the full filtered set. On an organization with many takedowns, that is not free; only ask for it when you actually need the number.
+
+Example request:
+
+```json
+{
+  "per_page": 100,
+  "takedownStatus": ["COMPLETED"],
+  "includeTotal": true
+}
+```
+
+Example response:
+
+```json
+{
+  "takedowns": [ /* ... */ ],
+  "next_page": "...",
+  "total_count": 4821
+}
+```
