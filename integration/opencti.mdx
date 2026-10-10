@@ -1,0 +1,151 @@
+---
+icon: shield-halved
+title: OpenCTI
+description: Pull ChainPatrol threat intelligence into your OpenCTI instance — phishing domains, fake social profiles and impersonation accounts, with the full investigation lifecycle behind each one.
+---
+
+The ChainPatrol OpenCTI connector is an **external-import** connector for [OpenCTI](https://filigran.io/solutions/open-cti/). It imports the threats ChainPatrol investigates for your organization, and optionally the global blocklist, as indicators and observables your analysts can pivot on and your detection rules can threshold on.
+
+It is a **pull** connector: you run it inside your network, against your own OpenCTI. ChainPatrol never needs a route into your infrastructure.
+
+## What it imports
+
+The connector has two feeds, configured independently. Most deployments only want the first.
+
+### Your organization's threats (on by default)
+
+Everything ChainPatrol has investigated on your behalf, **from the moment a report is filed**, not just once it is confirmed. Each asset carries labels describing where it is in its lifecycle:
+
+| Label | Meaning |
+| --- | --- |
+| `chainpatrol:status:investigating` | A report was filed and is under review |
+| `chainpatrol:status:escalated` | ChainPatrol passed it to your team for a decision |
+| `chainpatrol:status:blocked` | Confirmed malicious and on the [blocklist](/concepts/blocklist) |
+| `chainpatrol:status:allowed` | Cleared as a false positive. The indicator is **revoked** |
+| `chainpatrol:status:closed` | Reviewed, but neither blocked nor cleared |
+| `chainpatrol:takedown:open` \| `submitted` \| `completed` \| `cancelled` \| `retracted` | [Takedown](/concepts/takedowns) progress |
+| `chainpatrol:liveness:alive` \| `dead` \| `unknown` | Whether the asset is still reachable |
+| `chainpatrol:brand:<slug>` | Which of your [brands](/concepts/brands) it impersonates |
+
+This feed is marked **TLP:AMBER** by default, because it names your brands and your open investigations.
+
+### The global blocklist (off by default)
+
+Every asset on the ChainPatrol blocklist, roughly 500,000 entities, with **no organization context**: no brands, no reporting history, no takedown progress. Every asset is labelled `chainpatrol:status:blocked`.
+
+This feed is marked **TLP:CLEAR** by default. It is off by default because the first run imports the whole blocklist.
+
+<Note>
+If you enable both feeds, an asset that is on the global blocklist *and* was reported for your organization carries both TLP:CLEAR and TLP:AMBER. That is deliberate: the fact that it is blocked is public, but the investigation context around it is not.
+</Note>
+
+## How each asset is modelled
+
+Each asset becomes up to four kinds of OpenCTI object:
+
+- **Indicator**: a STIX pattern such as `[url:value = 'https://…']`, carrying the labels, the score and, for cleared assets, `revoked: true`.
+- **Observable**: the asset itself. The indicator is linked to it with a `based-on` relationship.
+- **User-Account**: for social media profiles, the handle, linked to the observable with `related-to`.
+- **Notes**: one per lifecycle transition (reported, escalated, blocked, takedown submitted…), each with a link to the asset's page in ChainPatrol.
+
+| ChainPatrol asset type | Example | OpenCTI observable |
+| --- | --- | --- |
+| `URL` | `evil.example` | Domain-Name |
+| `PAGE` | `linktr.ee/evil` | Url |
+| Social platforms (`TWITTER`, `TELEGRAM`, `DISCORD`, …) | `twitter.com/evil` | Url, plus User-Account for profiles |
+| `EMAIL` | `scam@evil.example` | Email-Addr |
+| `PHONE_NUMBER` | `+15550001111` | Phone-Number |
+
+Crypto addresses (`ADDRESS`) and IP addresses are not imported yet.
+
+## Scores
+
+Every indicator carries an `x_opencti_score` reflecting how sure ChainPatrol is, so you can build detection rules on a threshold. **Only blocked assets are marked for detection** (`x_opencti_detection: true`). An open report is a claim, not a finding.
+
+| State | Default score | Marked for detection |
+| --- | --- | --- |
+| investigating / closed | 25 | No |
+| escalated | 50 | No |
+| blocked | 90 | **Yes** |
+| allowed | 0 | No, and the indicator is revoked |
+
+You can change any of these scores. See [Configuration](#configuration).
+
+<Warning>
+OpenCTI's built-in indicator decay rules revoke indicators whose score falls to 20 or below, and lower every score over time. Keep open reports above 20, or open investigations will be revoked as soon as they arrive. URL indicators decay fastest under the default rules, so if you want open URL reports to stay active for long, raise their score or adjust your decay rules in OpenCTI under **Settings → Customization → Decay rules**.
+</Warning>
+
+## Requirements
+
+- OpenCTI **7.261008.0**. The connector is built against the matching `pycti` version, so run a connector release that matches your platform.
+- A ChainPatrol API key. Create one in the [ChainPatrol dashboard](https://app.chainpatrol.io/admin) under **Settings → API Keys**.
+
+## Install
+
+Add the connector to your OpenCTI `docker-compose.yml`:
+
+```yaml
+  connector-chainpatrol:
+    image: chainpatrol/opencti-connector:latest
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_CHAINPATROL_ID}   # any UUIDv4, unique per instance
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=ChainPatrol
+      - CONNECTOR_SCOPE=chainpatrol
+      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_DURATION_PERIOD=PT1H
+      - CHAINPATROL_API_KEY=${CHAINPATROL_API_KEY}
+    restart: always
+```
+
+Then start it:
+
+```bash
+docker compose up -d connector-chainpatrol
+```
+
+The connector appears in OpenCTI under **Data → Ingestion → Connectors**, where you can follow each run.
+
+## Configuration
+
+Every setting is an environment variable. When running from source, the same settings can go in `config.yml` under `chainpatrol:`, using the lower-case name without the prefix (for example `CHAINPATROL_ORG_FEED_TLP` becomes `org_feed_tlp`). Environment variables win over the file.
+
+| Variable | Default | Notes |
+| --- | --- | --- |
+| `CHAINPATROL_API_KEY` | — | **Required** |
+| `CHAINPATROL_ORGANIZATION_SLUG` | — | Only needed if your key can reach several organizations |
+| `CHAINPATROL_ORG_FEED_ENABLED` | `true` | Your organization's threats |
+| `CHAINPATROL_ORG_FEED_TLP` | `amber` | `clear`, `green`, `amber`, `amber+strict` or `red` |
+| `CHAINPATROL_ORG_FEED_PAGE_SIZE` | `100` | 1–1000 |
+| `CHAINPATROL_BLOCKLIST_FEED_ENABLED` | `false` | The global blocklist |
+| `CHAINPATROL_BLOCKLIST_FEED_TLP` | `clear` | |
+| `CHAINPATROL_BLOCKLIST_FEED_PAGE_SIZE` | `1000` | 1–1000 |
+| `CHAINPATROL_POLL_OVERLAP_MINUTES` | `10` | See [Polling](#polling) |
+| `CHAINPATROL_SCORE_INVESTIGATING` | `25` | Score for each lifecycle state, 0–100 |
+| `CHAINPATROL_SCORE_CLOSED` | `25` | |
+| `CHAINPATROL_SCORE_ESCALATED` | `50` | |
+| `CHAINPATROL_SCORE_BLOCKED` | `90` | Must be at least as high as every other score. Also used for the global blocklist |
+| `CHAINPATROL_SCORE_ALLOWED` | `0` | Allowed assets are revoked whatever their score |
+| `CONNECTOR_DURATION_PERIOD` | `PT1H` | Time between runs, as an ISO-8601 duration |
+
+The connector refuses to start if the API key is missing, if both feeds are disabled, if a TLP, page size or score is out of range, or if any state scores higher than `blocked`. A misconfiguration fails loudly rather than running as a silent no-op.
+
+## Polling
+
+The **first run is a full backfill**: every threat in your history is imported. Later runs only fetch what changed since the previous run.
+
+Each run rewinds its starting point by `CHAINPATROL_POLL_OVERLAP_MINUTES` so that a change landing mid-run is never missed. Re-reading a few minutes is harmless, because every update is an upsert. If a run fails, the next one retries the same window instead of skipping it.
+
+<Tip>
+A full backfill of a large organization can produce well over a hundred thousand OpenCTI queue messages. Scale up your OpenCTI workers for the first sync.
+</Tip>
+
+## Labels you add are safe
+
+OpenCTI adds labels without removing old ones, so an asset that moved from `investigating` to `blocked` would otherwise carry both. Before each update the connector removes the outdated `chainpatrol:status:*`, `chainpatrol:takedown:*` and `chainpatrol:liveness:*` label. It never removes `chainpatrol:brand:*` labels, since several brands can apply, and it never touches labels outside the `chainpatrol:` prefix, so your analysts' labels and other connectors' labels are left alone.
+
+## Support
+
+For help with the connector, your data or your API key, contact [support@chainpatrol.io](mailto:support@chainpatrol.io).
