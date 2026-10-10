@@ -436,6 +436,10 @@
   },
   "redirects": [
     {
+      "source": "/mcp",
+      "destination": "/mcp-server"
+    },
+    {
       "source": "/external-api/asset-blocklist-version",
       "destination": "/external-api/overview"
     },
