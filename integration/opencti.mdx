@@ -124,6 +124,10 @@ docker compose up -d connector-chainpatrol
 
 The connector appears in OpenCTI under **Data → Ingestion → Connectors**, where you can follow each run.
 
+<Tip>
+The example uses the admin token for brevity. For anything beyond a trial, run the connector as its own OpenCTI user: create one under **Settings → Security → Users**, add it to a group with the Connector role (OpenCTI ships one called *Connectors*), and set `OPENCTI_TOKEN` to its API token. Every imported entity then shows that user as its creator instead of `admin`, so ChainPatrol data is easy to filter, and gets that group's confidence level instead of the admin's.
+</Tip>
+
 ## Configuration
 
 Every setting is an environment variable. When running from source, the same settings can go in `config.yml` under `chainpatrol:`, using the lower-case name without the prefix (for example `CHAINPATROL_ORG_FEED_TLP` becomes `org_feed_tlp`). Environment variables win over the file.
