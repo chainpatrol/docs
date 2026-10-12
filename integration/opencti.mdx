@@ -24,8 +24,14 @@ Everything ChainPatrol has investigated on your behalf, **from the moment a repo
 | `chainpatrol:status:allowed` | Cleared as a false positive. The indicator is **revoked** |
 | `chainpatrol:status:closed` | Reviewed, but neither blocked nor cleared |
 | `chainpatrol:takedown:open` \| `submitted` \| `completed` \| `cancelled` \| `retracted` | [Takedown](/concepts/takedowns) progress |
-| `chainpatrol:liveness:alive` \| `dead` \| `unknown` | Whether the asset is still reachable |
-| `chainpatrol:brand:<slug>` | Which of your [brands](/concepts/brands) it impersonates |
+| `chainpatrol:target:<slug>` | Which of your [brands](/concepts/brands) it impersonates |
+| `chainpatrol:uptime:alive` \| `dead` \| `unknown` | Whether the asset was reachable at the last check |
+
+The label names are chosen so the status sorts first. OpenCTI orders an entity's labels alphabetically and its list views show only the first one, so the status is the label you see in every list.
+
+<Note>
+Connector versions before October 2026 used `chainpatrol:brand:*` and `chainpatrol:liveness:*`. The first run after upgrading re-sends your organization's threats once and replaces the old labels as it goes.
+</Note>
 
 This feed is marked **TLP:AMBER** by default, because it names your brands and your open investigations.
 
@@ -57,6 +63,16 @@ Each asset becomes up to four kinds of OpenCTI object:
 | `PHONE_NUMBER` | `+15550001111` | Phone-Number |
 
 Crypto addresses (`ADDRESS`) and IP addresses are not imported yet.
+
+The indicator and the observable both carry a one-line summary of the asset, for example *"Confirmed malicious and blocked by ChainPatrol on 2026-09-18. First reported 2026-09-17. Impersonates 1Inch. Takedown completed. It was unreachable at the last check."*, and a link to the asset's page in ChainPatrol. Whichever one an analyst lands on first, they have the story.
+
+## Validity and decay
+
+An indicator's **valid from** date is the time of the sync that sent it, not the date the asset was reported or blocked. OpenCTI starts its decay clock at that date, so a historical one would make most of your history arrive already expired: OpenCTI would revoke a phishing site blocked a year ago that ChainPatrol still blocks. The real dates are kept as the indicator's **original creation date** and in its notes.
+
+The connector only re-sends assets that changed, so it also **re-sends every blocked asset every 7 days** (`CHAINPATROL_REFRESH_INTERVAL_DAYS`). That restarts their decay before OpenCTI's shortest built-in lifetime runs out, so a blocked asset stays active for as long as ChainPatrol blocks it. Assets in any other state are left to decay normally.
+
+The global blocklist is too large to refresh this way. Its entries decay unless ChainPatrol updates them. If that matters to you, add a decay exclusion rule for them in OpenCTI.
 
 ## Scores
 
@@ -123,6 +139,7 @@ Every setting is an environment variable. When running from source, the same set
 | `CHAINPATROL_BLOCKLIST_FEED_TLP` | `clear` | |
 | `CHAINPATROL_BLOCKLIST_FEED_PAGE_SIZE` | `1000` | 1–1000 |
 | `CHAINPATROL_POLL_OVERLAP_MINUTES` | `10` | See [Polling](#polling) |
+| `CHAINPATROL_REFRESH_INTERVAL_DAYS` | `7` | How often every blocked asset is re-sent. See [Validity and decay](#validity-and-decay). `0` turns it off |
 | `CHAINPATROL_SCORE_INVESTIGATING` | `25` | Score for each lifecycle state, 0–100 |
 | `CHAINPATROL_SCORE_CLOSED` | `25` | |
 | `CHAINPATROL_SCORE_ESCALATED` | `50` | |
@@ -144,7 +161,7 @@ A full backfill of a large organization can produce well over a hundred thousand
 
 ## Labels you add are safe
 
-OpenCTI adds labels without removing old ones, so an asset that moved from `investigating` to `blocked` would otherwise carry both. Before each update the connector removes the outdated `chainpatrol:status:*`, `chainpatrol:takedown:*` and `chainpatrol:liveness:*` label. It never removes `chainpatrol:brand:*` labels, since several brands can apply, and it never touches labels outside the `chainpatrol:` prefix, so your analysts' labels and other connectors' labels are left alone.
+OpenCTI adds labels without removing old ones, so an asset that moved from `investigating` to `blocked` would otherwise carry both. Before each update the connector removes the outdated `chainpatrol:status:*`, `chainpatrol:takedown:*` and `chainpatrol:uptime:*` label. It never removes `chainpatrol:target:*` labels, since several brands can apply, and it never touches labels outside the `chainpatrol:` prefix, so your analysts' labels and other connectors' labels are left alone.
 
 ## Support
 
