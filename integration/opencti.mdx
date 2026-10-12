@@ -24,8 +24,14 @@ Everything ChainPatrol has investigated on your behalf, **from the moment a repo
 | `chainpatrol:status:allowed` | Cleared as a false positive. The indicator is **revoked** |
 | `chainpatrol:status:closed` | Reviewed, but neither blocked nor cleared |
 | `chainpatrol:takedown:open` \| `submitted` \| `completed` \| `cancelled` \| `retracted` | [Takedown](/concepts/takedowns) progress |
-| `chainpatrol:liveness:alive` \| `dead` \| `unknown` | Whether the asset is still reachable |
-| `chainpatrol:brand:<slug>` | Which of your [brands](/concepts/brands) it impersonates |
+| `chainpatrol:target:<slug>` | Which of your [brands](/concepts/brands) it impersonates |
+| `chainpatrol:uptime:alive` \| `dead` \| `unknown` | Whether the asset was reachable at the last check |
+
+The labels are on both the indicator and the observable. The label names are chosen so the status sorts first. OpenCTI orders an entity's labels alphabetically and its list views show only the first one, so the status is the label you see in every list.
+
+<Note>
+Connector versions before October 2026 used `chainpatrol:brand:*` and `chainpatrol:liveness:*`. The first run after upgrading re-sends your organization's threats once and replaces the old labels as it goes.
+</Note>
 
 This feed is marked **TLP:AMBER** by default, because it names your brands and your open investigations.
 
@@ -44,7 +50,7 @@ If you enable both feeds, an asset that is on the global blocklist *and* was rep
 Each asset becomes up to four kinds of OpenCTI object:
 
 - **Indicator**: a STIX pattern such as `[url:value = 'https://…']`, carrying the labels, the score and, for cleared assets, `revoked: true`.
-- **Observable**: the asset itself. The indicator is linked to it with a `based-on` relationship.
+- **Observable**: the asset itself, carrying the same labels, score and summary as the indicator. The indicator is linked to it with a `based-on` relationship.
 - **User-Account**: for social media profiles, the handle, linked to the observable with `related-to`.
 - **Notes**: one per lifecycle transition (reported, escalated, blocked, takedown submitted…), each with a link to the asset's page in ChainPatrol.
 
@@ -57,6 +63,16 @@ Each asset becomes up to four kinds of OpenCTI object:
 | `PHONE_NUMBER` | `+15550001111` | Phone-Number |
 
 Crypto addresses (`ADDRESS`) and IP addresses are not imported yet.
+
+The indicator and the observable both carry a one-line summary of the asset, for example *"Confirmed malicious and blocked by ChainPatrol on 2026-01-17. First reported 2026-01-17. Impersonates Jane Doe. Takedown completed. It was unreachable at the last check."*, and a link to the asset's page in ChainPatrol. Whichever one an analyst lands on first, they have the story.
+
+## Validity and decay
+
+An indicator's **valid from** date is the time of the sync that sent it, not the date the asset was reported or blocked. OpenCTI starts its decay clock at that date, so a historical one would make most of your history arrive already expired: OpenCTI would revoke a phishing site blocked a year ago that ChainPatrol still blocks. The real dates are kept as the indicator's **original creation date** and in its notes.
+
+The connector only re-sends assets that changed, so it also **re-sends every blocked asset every 7 days** (`CHAINPATROL_REFRESH_INTERVAL_DAYS`). That restarts their decay before OpenCTI's shortest built-in lifetime runs out, so a blocked asset stays active for as long as ChainPatrol blocks it. Assets in any other state are left to decay normally.
+
+The global blocklist is too large to refresh this way. Its entries decay unless ChainPatrol updates them. If that matters to you, add a decay exclusion rule for them in OpenCTI.
 
 ## Scores
 
@@ -108,6 +124,10 @@ docker compose up -d connector-chainpatrol
 
 The connector appears in OpenCTI under **Data → Ingestion → Connectors**, where you can follow each run.
 
+<Tip>
+The example uses the admin token for brevity. For anything beyond a trial, run the connector as its own OpenCTI user: create one under **Settings → Security → Users**, add it to a group with the Connector role (OpenCTI ships one called *Connectors*), and set `OPENCTI_TOKEN` to its API token. Every imported entity then shows that user as its creator instead of `admin`, so ChainPatrol data is easy to filter, and gets that group's confidence level instead of the admin's.
+</Tip>
+
 ## Configuration
 
 Every setting is an environment variable. When running from source, the same settings can go in `config.yml` under `chainpatrol:`, using the lower-case name without the prefix (for example `CHAINPATROL_ORG_FEED_TLP` becomes `org_feed_tlp`). Environment variables win over the file.
@@ -123,6 +143,7 @@ Every setting is an environment variable. When running from source, the same set
 | `CHAINPATROL_BLOCKLIST_FEED_TLP` | `clear` | |
 | `CHAINPATROL_BLOCKLIST_FEED_PAGE_SIZE` | `1000` | 1–1000 |
 | `CHAINPATROL_POLL_OVERLAP_MINUTES` | `10` | See [Polling](#polling) |
+| `CHAINPATROL_REFRESH_INTERVAL_DAYS` | `7` | How often every blocked asset is re-sent. See [Validity and decay](#validity-and-decay). `0` turns it off |
 | `CHAINPATROL_SCORE_INVESTIGATING` | `25` | Score for each lifecycle state, 0–100 |
 | `CHAINPATROL_SCORE_CLOSED` | `25` | |
 | `CHAINPATROL_SCORE_ESCALATED` | `50` | |
@@ -144,7 +165,63 @@ A full backfill of a large organization can produce well over a hundred thousand
 
 ## Labels you add are safe
 
-OpenCTI adds labels without removing old ones, so an asset that moved from `investigating` to `blocked` would otherwise carry both. Before each update the connector removes the outdated `chainpatrol:status:*`, `chainpatrol:takedown:*` and `chainpatrol:liveness:*` label. It never removes `chainpatrol:brand:*` labels, since several brands can apply, and it never touches labels outside the `chainpatrol:` prefix, so your analysts' labels and other connectors' labels are left alone.
+OpenCTI adds labels without removing old ones, so an asset that moved from `investigating` to `blocked` would otherwise carry both. Before each update the connector removes the outdated `chainpatrol:status:*`, `chainpatrol:takedown:*` and `chainpatrol:uptime:*` label. It never removes `chainpatrol:target:*` labels, since several brands can apply, and it never touches labels outside the `chainpatrol:` prefix, so your analysts' labels and other connectors' labels are left alone.
+
+## Investigating in OpenCTI
+
+Once the first sync has run, the examples below work on any OpenCTI instance with the connector attached. The screenshots use made-up example data for a fictional brand, Acme Exchange.
+
+<Frame>![Imported indicators, newest first, status label first](/images/opencti/indicators-list.png)</Frame>
+
+### Find what is still live
+
+Open **Observations → Indicators**, add a **Label** filter for `chainpatrol:status:blocked`, and a second one for `chainpatrol:uptime:alive`. What is left is every confirmed phishing site, fake profile or scam page that was still reachable at ChainPatrol's last check. Those are the ones to block first or escalate. Save the filter to keep it as a standing work queue.
+
+<Frame>![Indicators filtered to blocked and still reachable](/images/opencti/filter-blocked-alive.png)</Frame>
+
+The colour of the status label tells you the state at a glance: red for blocked, orange for escalated, yellow for investigating, grey for closed and green for allowed. On a narrow screen the label text can be cut off, but the colour still shows.
+
+### Check a domain, URL or handle from an alert
+
+Paste the value from a SIEM alert, a reported email or a support ticket into OpenCTI's global search. Every match shows its ChainPatrol status, and the **Analyses** column counts its lifecycle notes.
+
+<Frame>![Global search for a suspicious domain](/images/opencti/global-search.png)</Frame>
+
+Open the observable to see the one-line summary, the score, the labels and a link to the asset in ChainPatrol. You don't need to click through to the indicator.
+
+<Frame>![An observable with its ChainPatrol summary and labels](/images/opencti/observable-overview.png)</Frame>
+
+### Follow a case from report to takedown
+
+Open the indicator. Its **original creation date** is when ChainPatrol first saw the asset. **Valid from** is the sync that sent it, which keeps OpenCTI's decay running from today rather than from the first report. **Detection** is on only for blocked assets.
+
+<Frame>![A blocked indicator](/images/opencti/indicator-overview.png)</Frame>
+
+Scroll to **Notes about this entity** for the timeline, newest first: reported, escalated, blocked, takedown submitted and takedown completed. Each note links to the asset's page in ChainPatrol, where the reports, evidence and takedown history live.
+
+<Frame>![Lifecycle notes on an indicator](/images/opencti/indicator-notes.png)</Frame>
+
+### See everything impersonating one brand
+
+Filter on `chainpatrol:target:<your-brand>` to scope a campaign. Brands and the people ChainPatrol protects for you, such as executives, each get their own label. Add a status or takedown label to narrow it further, for example everything targeting your brand that is still under investigation.
+
+<Frame>![Indicators targeting one brand](/images/opencti/filter-target-brand.png)</Frame>
+
+### Track takedowns
+
+`chainpatrol:takedown:completed`, `submitted`, `open` and `cancelled` show where each removal stands. Use the export button on a filtered list for your own reporting.
+
+<Frame>![Indicators with a completed takedown](/images/opencti/filter-takedown-completed.png)</Frame>
+
+### Pivot from a social profile to the account
+
+A social media profile becomes a URL observable linked to a **User-Account** holding the handle. Open the observable's **Knowledge** tab to reach it, and use the handle to correlate across your other sources.
+
+<Frame>![A social profile linked to its User-Account](/images/opencti/social-user-account.png)</Frame>
+
+### Build detection on confirmed threats only
+
+Point detection rules and exports at indicators with **Detection = Yes**, or a score of at least 90. That is exactly the blocked set. Open reports (score 25) and cleared false positives (score 0, revoked) stay out of your blocklists.
 
 ## Support
 
