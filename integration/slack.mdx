@@ -118,6 +118,23 @@ For a given message, click on the kebab menu and then select the `Create Report`
   </Card>
 </CardGroup>
 
+### Create Report modal
+
+The slash command, the `Create Report` shortcut, and the proactive report button all open the same **Create Report** modal.
+
+- **Organization**: The organization the report is filed under. If your workspace is linked to exactly one organization, the bot pre-fills this field. You can still change it.
+- **Brand** (optional): The organization's brand that the scam impersonates. The picker only lists the selected organization's own brand and its products. Individuals your organization protects, such as executives, are not listed. To report an impersonation of a person, leave this field blank. Changing the organization clears the selected brand.
+
+When you pick a brand, ChainPatrol routes the report to that brand. The brand is pre-filled when ChainPatrol reviews the report. It also decides which Letter of Authorization, Power of Attorney, and trademark registration ChainPatrol files a takedown with. If you leave the field blank, the report is submitted without a brand, as before.
+
+<Tip>
+  Use the Brand field if your organization has multiple brands, such as a subsidiary or an acquired product. Most organizations with a single brand can leave it blank.
+</Tip>
+
+If the selected brand doesn't belong to the chosen organization, the modal stays open and shows the error "That brand belongs to a different organization. Pick it again." on the Brand field. Select the brand again and resubmit.
+
+The confirmation message the bot sends after submission includes the selected brand.
+
 ## Threats Feed Configuration
 
 In addition to submitting reports, the ChainPatrol Slack Bot can also send automated notifications about threats and reports to your Slack channels. This creates a real-time threats feed that keeps your team informed about security activity.
