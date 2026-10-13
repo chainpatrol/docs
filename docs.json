@@ -88,7 +88,8 @@
               "integration/github",
               "integration/canary-tokens",
               "integration/webhooks",
-              "integration/zapier"
+              "integration/zapier",
+              "integration/opencti"
             ]
           }
         ]
@@ -434,6 +435,10 @@
     }
   },
   "redirects": [
+    {
+      "source": "/mcp",
+      "destination": "/mcp-server"
+    },
     {
       "source": "/external-api/asset-blocklist-version",
       "destination": "/external-api/overview"
