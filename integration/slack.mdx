@@ -85,7 +85,7 @@ The ChainPatrol Slack Bot should appear in your listed apps along with other all
 Reporters can file reports from a connected workspace right away. To receive threat alerts, the workspace also needs an alert channel. You can also set an optional auto-reporting channel. Users with permission to update integrations set both channels on the Slack card.
 
 - **Alert channel**: ChainPatrol posts this workspace's alerts in this channel. Pick a channel your security team already watches.
-- **Auto-reporting channel** (optional): Anyone in this channel can paste a suspicious link, and ChainPatrol files a report for it automatically. ChainPatrol replies in the message's thread with a ✅. If the link is already blocked or reported, the reply says so instead. Use a channel kept for this purpose, not your alert channel or a busy chat. Every link posted there is reported.
+- **Auto-reporting channel** (optional): Use the Slack Connect channel your workspace shares with ChainPatrol. Anyone in this channel can paste a suspicious link, and ChainPatrol files a report for it automatically. ChainPatrol replies in the message's thread with a ✅. If the link is already blocked or reported, the reply says so instead. Use a channel kept for this purpose, not your alert channel or a busy chat. Every link posted there is reported.
 
 <Steps>
   <Step title="Add ChainPatrol to the channel">
@@ -106,6 +106,19 @@ C06EEACQUR4
 ```
 
 After you save, the next alert goes to the new alert channel. For auto-reporting, links posted from then on are reported. Earlier messages are not. To turn auto-reporting off, clear the **Auto-reporting channel ID** field and save.
+
+### Channel checks
+
+When you save a new channel ID, ChainPatrol checks with Slack that the channel belongs to the connected workspace. If the check fails, the save is refused and the **Could not save channels** message explains why:
+
+| Situation | Message |
+| --- | --- |
+| The alert channel isn't in this workspace | "Channel C… is not in this Slack workspace. Check the channel ID, and for a private channel, add the ChainPatrol app to it first." |
+| The auto-reporting channel isn't shared between this workspace and ChainPatrol | "Channel C… is not shared between this Slack workspace and ChainPatrol. Use the Slack Connect channel set up with ChainPatrol." |
+| ChainPatrol can't reach the workspace | "We can't reach this Slack workspace. Reconnect Slack from the integrations page, then set the channel." |
+| Slack doesn't respond in time | "Couldn't check the channel with Slack. Try again in a moment." |
+
+Saving a channel that is already set skips the check, so you can still change other settings on the card.
 
 <Note>
   Each auto-reporting channel can belong to only one organization. If another organization already uses the channel, ChainPatrol refuses the save with "Another organization already uses that auto-reporting channel." Contact ChainPatrol support if the channel belongs to you. Your organization can reuse its own auto-reporting channel across its workspaces.
