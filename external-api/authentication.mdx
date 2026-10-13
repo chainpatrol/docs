@@ -14,3 +14,49 @@ with the value of your API key in your request:
 ```bash
 'X-API-KEY': '<your api key>'
 ```
+
+## API key permissions
+
+Every API key has a permission that controls whether it can change data:
+
+| Permission | What the key can do | Use it for |
+| --- | --- | --- |
+| **Read only** | Call every read endpoint. Requests to endpoints that change data are refused. | Data exports, reporting dashboards, and service accounts that only read data |
+| **Read & write** | Call every endpoint, including endpoints that create, update, or delete data. | Submitting reports, managing assets, and other integrations that write data |
+
+You choose the permission when you create a key in the [ChainPatrol dashboard](https://app.chainpatrol.io/admin) under **Settings → API Keys**. **Read only** is preselected in the create dialog. Select **Read & write** if your integration needs to change data. Each key in the API Keys list shows a badge with its permission.
+
+<Note>
+  API keys created before permissions were introduced are **Read & write**. Existing integrations keep working without changes.
+</Note>
+
+### Endpoints that require Read & write
+
+A Read only key can't call any endpoint that changes data. These include:
+
+- Submitting reports and assets, such as [creating reports](/external-api/creating-reports) and [Asset Submit](/external-api/asset-submit)
+- Managing organization assets and asset groups, such as [Add Organization Assets](/external-api/organization-assets-add)
+- Following and unfollowing assets, creating disputes, and reviewing proposals
+- Configuring webhooks with [Configure Webhook](/external-api/webhook-config)
+- Uploading attachments with [Upload Attachment](/external-api/attachment-upload)
+
+Some endpoints look like reads but run a new operation, so they also require **Read & write**:
+
+- [Start Asset Scan](/external-api/asset-scan) (`POST /asset/scan`)
+- [Search Dark Web Credentials](/external-api/dark-web-credentials-search) (`POST /dark-web/credentials/search`)
+
+### Read only key errors
+
+When a Read only key calls an endpoint that changes data, ChainPatrol returns a `403 Forbidden` response. The error message names the endpoint and tells you the key is read-only:
+
+```text
+"<endpoint>" changes data, and this API key is read-only. Create an API key with read & write access to make changes.
+```
+
+The attachment upload endpoint returns a `403` response with this body:
+
+```json
+{ "error": "This API key is read-only and cannot upload attachments." }
+```
+
+To fix the error, create a new key with the **Read & write** permission and use it in your integration.
