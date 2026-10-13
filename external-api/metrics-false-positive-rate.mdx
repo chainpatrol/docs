@@ -1,0 +1,154 @@
+---
+title: Get False Positive Rate by Asset Type
+openapi: "POST /metrics/false-positive-rate"
+---
+
+## Overview
+
+Report the share of blocks your organization made that were later reversed, broken down
+by asset type. Use this endpoint to see where reviewers are most often wrong and to
+compare accuracy across surfaces such as domains, X/Twitter accounts, or Google Ads.
+
+<Note>
+  This endpoint is gated behind the `false-positive-rate-by-surface` feature flag on a
+  per-organization basis. If the flag is not enabled for your organization, the API
+  returns a 403 Forbidden error. Contact ChainPatrol to enable access.
+</Note>
+
+## How the rate is calculated
+
+For each asset type, ChainPatrol computes:
+
+- **Denominator (`blocked`)** — Non-pending block events created in the date range on
+  proposals owned by your organization. Every time an asset was set to `blocked`
+  through review counts once, even if the same asset was blocked more than once in the
+  range.
+- **Numerator (`falsePositives`)** — Of that cohort, how many of those assets are no
+  longer `blocked` today.
+- **Rate (`falsePositiveRate`)** — `falsePositives / blocked`, expressed as a value
+  between 0 and 1.
+
+The date range bounds when the asset was **blocked**. Whether the block still stands
+is read as of now. A recent range will read low simply because reversals for those
+blocks have not happened yet — give the window time to age before quoting a rate from
+it.
+
+This matches the definition ChainPatrol staff use internally, so customer-facing
+numbers reconcile with the internal false-positive attribution board instead of
+competing with it.
+
+## What the response includes
+
+- One row per asset type that saw at least one block in the range, ordered by number
+  blocked (descending). Asset types with no false positives are included with a rate
+  of `0`; asset types with no blocks at all in the range are omitted, since they have
+  no rate to report.
+- `blocked` is returned alongside the rate so callers can tell a well-supported number
+  (many blocks) apart from a rate driven by a handful of decisions.
+- Asset types come back as the API enum name (for example `DOMAIN`, `TWITTER_ACCOUNT`,
+  `GOOGLE_AD`), matching every other v2 metrics endpoint.
+
+## Caveats worth documenting
+
+Three things this number is not, all inherited from the shared definition and all
+worth knowing before quoting it to a stakeholder:
+
+<Warning>
+  **The denominator counts block events, not distinct assets.** An asset blocked twice
+  in the range counts twice. This runs a little higher than a `COUNT(DISTINCT asset)`
+  view of the same period.
+</Warning>
+
+<Warning>
+  **Asset status is global, not per organization.** If organization B reported an
+  asset that staff later reversed, and organization A also blocked the same asset in
+  the range, A sees a false positive here even though the reversal was driven by B's
+  report.
+</Warning>
+
+<Warning>
+  **Blocks whose asset record has since been removed are dropped.** The staff
+  attribution board counts those; this endpoint does not.
+</Warning>
+
+## Date and filter handling
+
+- `startDate` and `endDate` are both optional. Omit them to report over all time.
+- Date-only values (`YYYY-MM-DD`) are interpreted in UTC. `startDate` begins at
+  midnight UTC and `endDate` covers the whole day (through 23:59:59.999 UTC). Pass a
+  full ISO 8601 timestamp for a precise cut-off.
+- `brandIds` restricts the cohort to assets belonging to specific brands in your
+  organization.
+- `countryCodes` restricts the cohort to assets that have at least one scan from one
+  of the listed ISO 3166-1 alpha-2 countries.
+
+## Example request
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/false-positive-rate \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org-slug",
+    "startDate": "2026-06-01",
+    "endDate": "2026-06-30",
+    "brandIds": [123]
+  }'
+```
+
+## Example response
+
+```json
+{
+  "byAssetType": [
+    {
+      "assetType": "DOMAIN",
+      "blocked": 412,
+      "falsePositives": 6,
+      "falsePositiveRate": 0.014563106796116505
+    },
+    {
+      "assetType": "TWITTER_ACCOUNT",
+      "blocked": 128,
+      "falsePositives": 3,
+      "falsePositiveRate": 0.0234375
+    },
+    {
+      "assetType": "GOOGLE_AD",
+      "blocked": 47,
+      "falsePositives": 0,
+      "falsePositiveRate": 0
+    }
+  ]
+}
+```
+
+## Using the JavaScript SDK
+
+The `@chainpatrol/sdk` API client exposes this endpoint as
+`getMetricsFalsePositiveRate`. `startDate` and `endDate` accept the same date-only or
+full-timestamp strings as the raw HTTP endpoint.
+
+```typescript
+import { ChainPatrolApiClient } from "@chainpatrol/sdk";
+
+const client = new ChainPatrolApiClient({
+  apiKey: "cp_live_your_api_key_here",
+});
+
+const { byAssetType } = await client.getMetricsFalsePositiveRate({
+  slug: "your-org-slug",
+  startDate: "2026-06-01",
+  endDate: "2026-06-30",
+  brandIds: [123],
+});
+
+for (const row of byAssetType) {
+  const rate =
+    row.falsePositiveRate == null
+      ? "—"
+      : `${(row.falsePositiveRate * 100).toFixed(1)}%`;
+  console.log(`${row.assetType}: ${row.falsePositives}/${row.blocked} (${rate})`);
+}
+```

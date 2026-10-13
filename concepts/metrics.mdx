@@ -64,6 +64,10 @@ Many metrics can be filtered by brand and broken down by:
 
 Threats blocked per brand inside your organization, showing which brands are targeted more heavily. Use this to identify most-targeted brands, allocate protection resources, track brand-specific campaigns, and compare threat levels across portfolio.
 
+**By False Positive Rate (per asset type):**
+
+The share of blocks your organization made in a date range that have since been reversed, broken down by asset type. It surfaces where reviewers are most often wrong and helps compare accuracy across surfaces (domains, X/Twitter accounts, Google Ads, and so on). The date range bounds when the asset was blocked while the reversal is read as of now, so a recent range reads low simply because its reversals have not happened yet. This breakdown is available on the Metrics page when the `false-positive-rate-by-surface` feature flag is enabled for your organization, and also via the [`POST /metrics/false-positive-rate`](/external-api/metrics-false-positive-rate) API endpoint.
+
 ### Time-Series and Speed Metrics
 
 **Threats Blocked Per Day** - Shows how many assets were blocked on each day in the selected range. Helps identify threat spikes, track seasonal patterns, measure detection effectiveness, and spot coordinated campaigns.
