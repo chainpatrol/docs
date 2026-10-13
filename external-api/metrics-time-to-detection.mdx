@@ -1,0 +1,10 @@
+---
+title: Get Time to Detection
+openapi: "POST /metrics/time-to-detection"
+---
+
+## Overview
+
+Get how long threats were already live before the earliest automated detection of the asset, broken down by asset type. See [Time to Detection](/concepts/metrics#time-to-detection-what-counts-and-threshold) for what enters the sample and why every median is published as a lower bound.
+
+The endpoint is gated per organization. Callers whose organization does not have Time to Detection enabled receive `403 FORBIDDEN`.
