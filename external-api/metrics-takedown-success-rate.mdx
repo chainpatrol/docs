@@ -1,0 +1,135 @@
+---
+title: Get Takedown Success Rate
+openapi: "POST /metrics/takedown-success-rate"
+---
+
+## Overview
+
+Get the share of your organization's takedowns that ended in a removal, broken down by
+asset type, for a date range. Use this endpoint to see how often a filed takedown
+actually results in the threat coming down, and which asset types resolve most
+reliably.
+
+<Note>
+  This endpoint is gated behind the `takedown-success-rate` feature flag on a
+  per-organization basis. If the flag is not enabled for your organization, the API
+  returns a 403 Forbidden error. Contact ChainPatrol to enable access. The same flag
+  controls the Takedown Success Rate chart on the dashboard Metrics page.
+</Note>
+
+## How takedowns are counted
+
+- **First-filing cohort** — A takedown enters the cohort based on when it was first
+  submitted to a provider. The date range filters on that first filing, not on when
+  the takedown was opened or completed. This is different from the takedown-time
+  metrics, which key on completion.
+- **Never-filed takedowns are excluded** — Takedowns that were opened but never
+  submitted to a provider do not count toward the denominator. The metric answers
+  "when a takedown is filed, does the threat come down?", so internal triage decisions
+  are left out.
+- **Re-filed takedowns stay in their original window** — Because the cohort keys on
+  the first filing, a takedown that is filed again later cannot drift between
+  reporting periods.
+- **Outcomes are read as of now** — The date range bounds the filing, but each
+  takedown's current status determines the outcome. A recent cohort can read low
+  simply because its cases have not had time to resolve. Use `stillOpen` to see how
+  much of the denominator is unfinished rather than failed.
+
+## Response fields
+
+Each entry in `byAssetType` covers one asset type, sorted descending by `submitted`.
+Asset types use the same enum names as the rest of the v2 API (for example
+`GOOGLE_FORM`).
+
+- `submitted` — takedowns whose first provider filing fell in the range.
+- `completed` — of those, how many ended in a completed takedown.
+- `stillOpen` — of those, how many have not yet reached an outcome.
+- `successRate` — `completed / submitted`, from 0 to 1. Still-open takedowns count
+  against this rate.
+- `resolvedSuccessRate` — `completed / (submitted - stillOpen)`, from 0 to 1, or
+  `null` when nothing in the group has resolved yet. This rate only considers
+  takedowns that reached an outcome, so it is higher than `successRate` whenever work
+  is still outstanding.
+
+## Date handling
+
+- `startDate` and `endDate` are both optional. Omit them to include every takedown
+  ever filed.
+- Date-only values (`YYYY-MM-DD`) are interpreted in UTC. `startDate` begins at
+  midnight UTC and `endDate` covers the whole day (through 23:59:59.999 UTC). Pass a
+  full ISO 8601 timestamp for a precise cut-off.
+
+## Filtering
+
+The optional filters match the other takedown metrics endpoints:
+
+- `blockLabel` — only include assets blocked with this review label, for example
+  `"Brand Impersonation"`.
+- `brandType` — only include assets belonging to brands of this type (`INDIVIDUAL`,
+  `ORGANIZATION`, or `PRODUCT`).
+- `countryCodes` — only include assets scanned from these ISO 3166-1 alpha-2
+  countries.
+- `brandIds` — only include assets belonging to these brands.
+
+## Example request
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/takedown-success-rate \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org-slug",
+    "startDate": "2026-07-01",
+    "endDate": "2026-07-31"
+  }'
+```
+
+## Example response
+
+```json
+{
+  "byAssetType": [
+    {
+      "assetType": "URL",
+      "submitted": 120,
+      "completed": 95,
+      "stillOpen": 15,
+      "successRate": 0.7916666666666666,
+      "resolvedSuccessRate": 0.9047619047619048
+    },
+    {
+      "assetType": "TWITTER",
+      "submitted": 40,
+      "completed": 28,
+      "stillOpen": 10,
+      "successRate": 0.7,
+      "resolvedSuccessRate": 0.9333333333333333
+    }
+  ]
+}
+```
+
+## Using the JavaScript SDK
+
+The ChainPatrol JavaScript SDK exposes this endpoint as
+`getMetricsTakedownSuccessRate`. The SDK accepts date-only strings and widens a
+date-only `endDate` to cover the full UTC day before sending the request.
+
+```typescript
+import { ChainPatrolApiClient, staticApiKey } from "@chainpatrol/sdk/api";
+
+const client = new ChainPatrolApiClient({
+  credential: staticApiKey("<API_KEY>"),
+});
+
+const { byAssetType } = await client.getMetricsTakedownSuccessRate({
+  slug: "your-org-slug",
+  startDate: "2026-07-01",
+  endDate: "2026-07-31",
+});
+
+for (const row of byAssetType) {
+  console.log(row.assetType, row.successRate, row.stillOpen);
+}
+```
