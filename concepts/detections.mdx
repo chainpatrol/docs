@@ -9,6 +9,8 @@ A **detection** is a potential security threat that has been automatically ident
 
 Detections represent automated findings from ChainPatrol's continuous monitoring across the internet.
 
+ChainPatrol detects threats across multiple languages. The system uses LLM-based cross-language recognition to classify non-English threats. Some detection rules are English-specific, so non-English threats identified through LLM recognition may not always reach the confidence threshold for automatic blocking — but they will be correctly classified for auto-reporting at minimum. Auto-reported non-English threats enter the review queue where human reviewers can make the final call on whether to block or allow the asset.
+
 ### Components of a Detection
 
 Each detection contains:
