@@ -171,13 +171,13 @@ OpenCTI adds labels without removing old ones, so an asset that moved from `inve
 
 Once the first sync has run, the examples below work on any OpenCTI instance with the connector attached. The screenshots use made-up example data for a fictional brand, Acme Exchange.
 
-<Frame>![Imported indicators, newest first, status label first](/images/opencti/indicators-list.png)</Frame>
+<Frame>![Imported indicators, newest first, status label first](/images/opencti/indicators-list.webp)</Frame>
 
 ### Find what is still live
 
 Open **Observations → Indicators**, add a **Label** filter for `chainpatrol:status:blocked`, and a second one for `chainpatrol:uptime:alive`. What is left is every confirmed phishing site, fake profile or scam page that was still reachable at ChainPatrol's last check. Those are the ones to block first or escalate. Save the filter to keep it as a standing work queue.
 
-<Frame>![Indicators filtered to blocked and still reachable](/images/opencti/filter-blocked-alive.png)</Frame>
+<Frame>![Indicators filtered to blocked and still reachable](/images/opencti/filter-blocked-alive.webp)</Frame>
 
 The colour of the status label tells you the state at a glance: red for blocked, orange for escalated, yellow for investigating, grey for closed and green for allowed. On a narrow screen the label text can be cut off, but the colour still shows.
 
@@ -185,39 +185,39 @@ The colour of the status label tells you the state at a glance: red for blocked,
 
 Paste the value from a SIEM alert, a reported email or a support ticket into OpenCTI's global search. Every match shows its ChainPatrol status, and the **Analyses** column counts its lifecycle notes.
 
-<Frame>![Global search for a suspicious domain](/images/opencti/global-search.png)</Frame>
+<Frame>![Global search for a suspicious domain](/images/opencti/global-search.webp)</Frame>
 
 Open the observable to see the one-line summary, the score, the labels and a link to the asset in ChainPatrol. You don't need to click through to the indicator.
 
-<Frame>![An observable with its ChainPatrol summary and labels](/images/opencti/observable-overview.png)</Frame>
+<Frame>![An observable with its ChainPatrol summary and labels](/images/opencti/observable-overview.webp)</Frame>
 
 ### Follow a case from report to takedown
 
 Open the indicator. Its **original creation date** is when ChainPatrol first saw the asset. **Valid from** is the sync that sent it, which keeps OpenCTI's decay running from today rather than from the first report. **Detection** is on only for blocked assets.
 
-<Frame>![A blocked indicator](/images/opencti/indicator-overview.png)</Frame>
+<Frame>![A blocked indicator](/images/opencti/indicator-overview.webp)</Frame>
 
 Scroll to **Notes about this entity** for the timeline, newest first: reported, escalated, blocked, takedown submitted and takedown completed. Each note links to the asset's page in ChainPatrol, where the reports, evidence and takedown history live.
 
-<Frame>![Lifecycle notes on an indicator](/images/opencti/indicator-notes.png)</Frame>
+<Frame>![Lifecycle notes on an indicator](/images/opencti/indicator-notes.webp)</Frame>
 
 ### See everything impersonating one brand
 
 Filter on `chainpatrol:target:<your-brand>` to scope a campaign. Brands and the people ChainPatrol protects for you, such as executives, each get their own label. Add a status or takedown label to narrow it further, for example everything targeting your brand that is still under investigation.
 
-<Frame>![Indicators targeting one brand](/images/opencti/filter-target-brand.png)</Frame>
+<Frame>![Indicators targeting one brand](/images/opencti/filter-target-brand.webp)</Frame>
 
 ### Track takedowns
 
 `chainpatrol:takedown:completed`, `submitted`, `open` and `cancelled` show where each removal stands. Use the export button on a filtered list for your own reporting.
 
-<Frame>![Indicators with a completed takedown](/images/opencti/filter-takedown-completed.png)</Frame>
+<Frame>![Indicators with a completed takedown](/images/opencti/filter-takedown-completed.webp)</Frame>
 
 ### Pivot from a social profile to the account
 
 A social media profile becomes a URL observable linked to a **User-Account** holding the handle. Open the observable's **Knowledge** tab to reach it, and use the handle to correlate across your other sources.
 
-<Frame>![A social profile linked to its User-Account](/images/opencti/social-user-account.png)</Frame>
+<Frame>![A social profile linked to its User-Account](/images/opencti/social-user-account.webp)</Frame>
 
 ### Build detection on confirmed threats only
 
