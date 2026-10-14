@@ -179,7 +179,7 @@
             ]
           },
           {
-            "group": "Detections",
+            "group": "Threat Detection",
             "pages": [
               "external-api/evaluating-detections",
               "external-api/detection-list",
