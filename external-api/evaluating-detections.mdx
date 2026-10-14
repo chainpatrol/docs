@@ -1,11 +1,11 @@
 ---
-title: Evaluating detections
-description: "Answer the usual evaluation questions — confirmed threats, domain detections, the watchlist, high-confidence detections — with one API request each."
+title: Evaluating suspected threats
+description: "Answer the usual evaluation questions — confirmed threats, suspected threats on domains, the watchlist, high-confidence suspected threats — with one API request each."
 ---
 
 When you first evaluate ChainPatrol over the API, the questions are usually counts:
-how many confirmed threats, how many detections, how many watched, how many above a
-confidence cut-off. Each one below is a single request with `includeTotal: true`, so
+how many confirmed threats, how many suspected threats, how many watched, how many
+above a confidence cut-off. Each one below is a single request with `includeTotal: true`, so
 you get the number without paging through every result.
 
 <Warning>
@@ -14,13 +14,13 @@ history, and each endpoint filters on a different timestamp:
 
 | Endpoint | `startDate` / `endDate` (or equivalent) filter on | With no dates |
 | --- | --- | --- |
-| [`/detection/list`](/external-api/detection-list) | when the detection was created | everything |
+| [`/detection/list`](/external-api/detection-list) | when the suspected threat was created | everything |
 | [`/threats/list`](/external-api/threats-list) | when the threat was blocked (`blockedAt`) | **last day only** |
 | [`/organization/watchlist`](/external-api/organization-watchlist-list) | when your organization reported the asset | everything |
 | [`/metrics/summary`](/external-api/metrics-summary) | each metric's own timestamp, and only when **both** dates are set | all-time |
 </Warning>
 
-Throughout, exclude deleted detections with
+Throughout, exclude deleted suspected threats with
 `{ "property": "deleted", "operator": "notIn", "value": ["deleted"] }`, because
 `/detection/list` includes them by default.
 
@@ -37,8 +37,8 @@ curl -X POST https://api.chainpatrol.io/metrics/summary \
 ```
 
 `metrics.newThreats` is the all-time count, with `domainThreats`, `twitterThreats`,
-`telegramThreats` and `otherThreats` as the breakdown. To list them from your
-detections:
+`telegramThreats` and `otherThreats` as the breakdown. To list the confirmed ones
+among your suspected threats:
 
 ```bash
 curl -X POST https://api.chainpatrol.io/detection/list \
@@ -58,7 +58,7 @@ The two numbers can differ: `newThreats` also counts threats you reported yourse
 that no detector produced. To list every confirmed threat regardless of source, use
 `/threats/list` with `includePending: true` and an early `startDate`.
 
-## How many detections for domains do we have?
+## How many suspected threats on domains do we have?
 
 ```bash
 curl -X POST https://api.chainpatrol.io/detection/list \
@@ -74,8 +74,8 @@ curl -X POST https://api.chainpatrol.io/detection/list \
   }'
 ```
 
-`total` counts detections. Several detections can point at the same domain, so
-de-duplicate by `asset.id` if you need unique domains.
+`total` counts suspected threats. Several suspected threats can point at the same
+domain, so de-duplicate by `asset.id` if you need unique domains.
 
 ## How many watchlisted domains are there?
 
@@ -88,7 +88,7 @@ Leave out `assetType` for the whole watchlist. That `total` matches
 `threatsWatchlisted` in `/metrics/summary`. Each item's `reason` says why it is being
 watched (`DEAD`, `PARKING`, `NOT_ENOUGH_EVIDENCE`, …).
 
-## How many detections are over 80% (or 90%) confidence?
+## How many suspected threats are over 80% (or 90%) confidence?
 
 Use the raw `score` cut-off, not the `confidence` filter. Confidence levels are
 bucketed from the score with your organization's own thresholds, so `"high"` is not a
@@ -122,7 +122,7 @@ chainpatrol orgs watchlist list --org your-org --asset-type URL --include-total
 chainpatrol detections list --org your-org --min-score 0.8 --include-total
 ```
 
-The CLI has no flag to exclude deleted detections, so its `detections list` totals
+The CLI has no flag to exclude deleted suspected threats, so its `detections list` totals
 include them. Use the API requests above when the exact number matters.
 
 The [ChainPatrol MCP server](/mcp-server) includes a `detection_evaluation` prompt that runs all of

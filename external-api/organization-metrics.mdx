@@ -198,6 +198,10 @@ except Exception as error:
 }
 ```
 
+`totalDetections` counts suspected threats: every detection result in the date range
+that has not been deleted, whether or not it was later confirmed. Confirmed threats
+are counted in `threatsBlockedCount`.
+
 ## Error Handling
 
 | Status Code               | Description                                                          |

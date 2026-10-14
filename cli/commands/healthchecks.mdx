@@ -2,7 +2,7 @@
 title: healthchecks command — list and run org healthchecks
 sidebarTitle: healthchecks
 icon: heart-pulse
-description: "List and run ChainPatrol organization healthchecks from the CLI across detections, reviewing, takedowns, and asset liveness, with CI-friendly exit codes."
+description: "List and run ChainPatrol organization healthchecks from the CLI across detection, reviewing, takedowns, and asset liveness, with CI-friendly exit codes."
 ---
 
 ```bash
@@ -10,7 +10,7 @@ chainpatrol healthchecks <list|run <id>|run --all>
 ```
 
 Healthchecks are the platform's own view of whether an organization's pipeline is working:
-are detections still returning results, is the review queue piling up, are takedowns
+are detection configs still returning results, is the review queue piling up, are takedowns
 stuck. Each one returns a uniform shape — `id`, `severity`, `observed`, `threshold`,
 `findings`, `suggestedAction` — so a script can treat them all the same way.
 
