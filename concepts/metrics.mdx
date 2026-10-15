@@ -74,12 +74,21 @@ Threats blocked per brand inside your organization, showing which brands are tar
 
 ## Organization dashboard
 
-The organization dashboard summarizes recent threat activity for the period you select: **Last 7 days**, **Last 30 days**, **Last year**, or **All time**.
+The organization dashboard summarizes recent threat activity for the period you select: **Last 7 days**, **Last 30 days**, **Last year**, or **All time**. The dashboard opens on **Last 30 days**. If your organization has no new threats and no takedowns in the last 30 days, the dashboard opens on **All time** instead and shows the note "No new threats or takedowns in the last 30 days, so this shows all time." Selecting a period yourself, including **Last 30 days**, always overrides this fallback.
 
-**Overview** - A card with two numbers for the selected period:
+**Overview** - A card with two numbers for the selected period. Under each number, a stacked bar breaks the total into parts that always add up to the number above it.
 
-- **New Threats** - Threats reported and confirmed by ChainPatrol staff in the period. This count includes threats that are confirmed but still pending wallet blocking, for example while protection isn't active for your organization. When some threats are pending, the caption shows how many are pending wallet blocking. Otherwise, it reads **Live in partner wallets**. Click the number to open the **Confirmed Threats** page.
-- **Taken down** - Threats removed at source by the registrar, hosting provider, or platform. The caption shows this as a percentage of new threats. Click the number to open the **Takedowns** page.
+- **New Threats** - Threats reported and confirmed by ChainPatrol staff in the period. This count includes threats that are confirmed but still pending wallet blocking, for example while protection isn't active for your organization. The breakdown shows what happened to these threats:
+  - **Taken down** - The takedown is complete.
+  - **Takedown in progress** - A takedown is open.
+  - **No takedown** - No takedown has been filed.
+
+  Click the number to open the **Confirmed Threats** page.
+- **Taken down** - Takedowns completed in the period, where the registrar, hosting provider, or platform removed the threat at source. The breakdown splits these by when the threat was found:
+  - **Found this period** - The threat was first confirmed inside the selected period.
+  - **Found earlier** - The threat was confirmed before the selected period.
+
+  This explains why **Taken down** can be higher than **New Threats**. Takedowns completed this period often include threats confirmed in earlier periods. Click the number to open the **Takedowns** page.
 
 Except for **All time**, each number shows its change compared with the previous period of the same length.
 
