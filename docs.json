@@ -88,7 +88,9 @@
               "integration/github",
               "integration/canary-tokens",
               "integration/webhooks",
-              "integration/zapier"
+              "integration/zapier",
+              "integration/opencti",
+              "integration/meta-brand-rights-protection"
             ]
           }
         ]
@@ -117,7 +119,10 @@
               "external-api/asset-parse",
               "external-api/asset-scan",
               "external-api/scan-result",
-              "external-api/asset-details"
+              "external-api/asset-details",
+              "external-api/asset-follow",
+              "external-api/asset-unfollow",
+              "external-api/asset-follows-list"
             ]
           },
           {
@@ -174,7 +179,7 @@
             ]
           },
           {
-            "group": "Detections",
+            "group": "Threat Detection",
             "pages": [
               "external-api/evaluating-detections",
               "external-api/detection-list",
@@ -431,6 +436,10 @@
     }
   },
   "redirects": [
+    {
+      "source": "/mcp",
+      "destination": "/mcp-server"
+    },
     {
       "source": "/external-api/asset-blocklist-version",
       "destination": "/external-api/overview"

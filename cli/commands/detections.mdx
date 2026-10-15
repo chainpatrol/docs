@@ -2,7 +2,7 @@
 title: detections command — run and manage detection configs
 sidebarTitle: detections
 icon: radar
-description: "Run ChainPatrol detection configs on demand, validate that they still return results, catch query drift, list detection results, and update a config."
+description: "Run ChainPatrol detection configs on demand, validate that they still return results, catch query drift, list suspected threats, and update a config."
 ---
 
 ```bash
@@ -26,7 +26,7 @@ chainpatrol detections healthcheck --org <slug> [options]
 | `--source <key>` | Filter by detection source key. |
 | `--min-results <n>` | Minimum recent results a config must have produced. |
 | `--lookback-hours <n>` | Lookback window, in hours. |
-| `--run` | Run the detections before validating them. |
+| `--run` | Run the detection configs before validating them. |
 | `--include-disabled` | Include disabled configs. |
 
 ```bash
@@ -95,7 +95,8 @@ chainpatrol detections run --org acme --config-id 42
 
 ## detections list
 
-List recent detection results, with the same filters as the app's Detections view.
+List recent suspected threats (unconfirmed results from automated detection), with the same
+filters as the app's Suspected Threats page.
 Confidence comes back as a human-readable level rather than a raw score.
 
 ```bash
@@ -117,12 +118,12 @@ chainpatrol detections list --org <slug> [filters]
 | `--watchlist <list>` | Comma list: `ENABLED`, `DISABLED`. |
 | `--reported <list>` | Comma list: `reported`, `not_reported`. |
 | `--country-code <list>` | Comma list of 2-letter ISO country codes. |
-| `--only-deleted` | Return only soft-deleted detections. Without it, both deleted and non-deleted are returned. |
+| `--only-deleted` | Return only soft-deleted suspected threats. Without it, both deleted and non-deleted are returned. |
 | `--block-status <list>` | Comma list: `blocked`, `pending`. Both together select every confirmed threat, including **Pending Blocked** ones for organizations without active protection. |
-| `--min-score <n>` | Only detections with a raw score of at least `n` (0–1). Use this rather than `--confidence` for a fixed cut-off such as `0.8`. |
-| `--max-score <n>` | Only detections with a raw score of at most `n` (0–1). |
-| `--include-total` | Also print how many detections match across all pages. |
-| `--from <iso>` / `--to <iso>` | Date range (ISO 8601) on when the detection was created. Leave both out for every detection. |
+| `--min-score <n>` | Only suspected threats with a raw score of at least `n` (0–1). Use this rather than `--confidence` for a fixed cut-off such as `0.8`. |
+| `--max-score <n>` | Only suspected threats with a raw score of at most `n` (0–1). |
+| `--include-total` | Also print how many suspected threats match across all pages. |
+| `--from <iso>` / `--to <iso>` | Date range (ISO 8601) on when the suspected threat was created. Leave both out for every suspected threat. |
 
 Each row shows the confidence and raw score. Pending blocks are shown as `PENDING_BLOCKED`
 rather than `UNKNOWN`.
@@ -136,7 +137,7 @@ chainpatrol detections list --org acme --min-score 0.8 --include-total
 chainpatrol detections list --org acme --block-status blocked,pending --include-total
 ```
 
-See [Evaluating detections](/external-api/evaluating-detections) for the usual counting
+See [Evaluating suspected threats](/external-api/evaluating-detections) for the usual counting
 questions.
 
 ## configs list
@@ -188,4 +189,4 @@ chainpatrol detections configs update --org acme --config-id 42 \
 - [`GET /organization/detections`](/external-api/detection-list)
 - [`GET /organization/detection-configs`](/external-api/detection-configs-list)
 - [`POST /organization/detection-configs/{id}`](/external-api/detection-configs-update)
-- [Detections concept](/concepts/detections)
+- [Suspected threats concept](/concepts/detections)

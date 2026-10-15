@@ -1,7 +1,7 @@
 ---
 icon: lightbulb
 title: Concepts
-description: Learn core ChainPatrol concepts including assets, asset status (allowed, blocked, unknown), detections, reports, proposals, reviews, takedowns, and Dark Web Monitoring.
+description: Learn core ChainPatrol concepts including assets, asset status (allowed, blocked, unknown), suspected threats, reports, proposals, reviews, takedowns, and Dark Web Monitoring.
 ---
 
 ## Assets
@@ -23,9 +23,11 @@ If the asset has not been reviewed by ChainPatrol, it will have the following st
 
 - **Unknown** - The asset has not been reviewed by ChainPatrol.
 
-## Detections
+## Suspected Threats
 
-Detections are potential malicious activities that have been automatically identified by our system. Our automated detection system continuously monitors various platforms and networks to identify potential threats and suspicious activities related to your assets.
+Suspected threats are potentially malicious assets and activities that our system has identified automatically but that have **not been confirmed**. Our automated detection system continuously monitors various platforms and networks to identify potential threats and suspicious activities related to your assets.
+
+A suspected threat becomes a confirmed threat only after it is reviewed and blocked; confirmed threats are counted as **threats blocked**. The API returns suspected threats from [`POST /detection/list`](/external-api/detection-list), where each one is a detection result. See [Suspected Threats](/concepts/detections) for the full lifecycle.
 
 ## Reports
 

@@ -15,8 +15,71 @@ description: "Search dark web leak data against a brand's tracked email domains,
 
 The target picker only lists assets already tracked on the selected brand. Email domains and addresses come from the brand's email assets. Wallet addresses come from the brand's address assets. To search a new wallet, add it as an address asset to the brand first.
 
-Wallet results show the searched address in an **Address** column, shortened for display. Email results use an **Email** column. CSV exports include the same column for the search target you ran.
+## Search quota
 
-Leaks are shown with sensitive details masked. You can track which ones you have already reviewed.
+A **Monthly searches** meter next to the search controls shows how many searches the brand has used this calendar month. The meter also shows when the quota resets, at 00:00 UTC on the first day of the next month. ChainPatrol does not store search results.
+
+## Results
+
+Domain, email, and wallet searches share one table layout. Each row shows:
+
+- **Severity**: the triage level for the record.
+- **Identity**: the leaked email address, or the searched wallet address shortened for display. If an identity appears in more than one leak, the row shows **Seen in N leaks**.
+- **Credential**: whether the record contains a plaintext password, a hash, or no password.
+- **Exposed data**: other personal data found in the record, such as phone numbers, IP addresses, or payment cards.
+- **Leak · source**: the breach dataset or dark web site the record came from.
+- **Breach date**: when the leak was recorded.
+- **Status**: **Open** or **Acknowledged**.
+
+Leaks are shown with sensitive details masked. CSV exports include an **Email** or **Address** column for the search target you ran.
+
+### Severity
+
+ChainPatrol assigns each result a severity based on the data it exposes:
+
+| Severity | Criteria |
+| --- | --- |
+| **Critical** | Plaintext password leaked in the last 12 months. The account may still be usable with it. |
+| **High** | Plaintext password from an older leak, or payment card data exposed alongside the record. |
+| **Medium** | Hashed password, or personal data exposed without a password. |
+| **Low** | Identity appears in a leak without a password or other exposed data. |
+
+Results are sorted by severity first, then by breach date with the most recent first. You can re-sort by the **Severity** and **Breach date** columns.
+
+### Summary tiles and filters
+
+Summary tiles above the table show the number of exposed identities, **Critical** and **High** results, **Plaintext passwords**, and **Open** results. Click a tile to filter the table to those results. Click it again to clear the filter.
+
+To narrow results further:
+
+- Use the search box to match emails, leak names, and sources.
+- Use the **Severity**, **Password** (**Plaintext**, **Hash**, or **No password**), and **Status** (**Open** or **Acknowledged**) filters.
+
+For domain searches, switch from **Records** to **By identity** to group rows by email address. Each group shows how many distinct leaks include that identity.
+
+Leak counts are based on distinct leak sources, not rows. A single dump often contains many rows for the same identity, and those rows count as one leak.
+
+### Acknowledging results
+
+You can track which leaks you have already reviewed. Click a row's status to toggle it between **Open** and **Acknowledged**.
+
+To act on several results at once, select rows with the checkboxes. Then choose one of the bulk actions:
+
+- **Acknowledge**: mark the selected results as reviewed.
+- **Mark open**: return the selected results to **Open**.
+- **Copy identities**: copy the selected email or wallet addresses to your clipboard.
+
+### Record details
+
+Click a row to open the record drawer. The drawer shows:
+
+- The record's severity and the reason ChainPatrol assigned it.
+- A credential grid with the masked password, its format, and the breach date.
+- Collapsible sections for exposed data, recommended next steps, matched context, and details about the leak.
+- Other leaks for the same email or wallet, with the severity of each.
+
+Press **J** to move to the next record and **K** to move to the previous one. The drawer follows the table's current sort order.
+
+## Slack alerts
 
 When leaks increase for a monitored domain, ChainPatrol sends an alert to your configured Slack channel with a link back to the page.
