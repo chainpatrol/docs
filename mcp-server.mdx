@@ -6,7 +6,7 @@ description: "Connect Claude, Cursor, and other AI agents to the ChainPatrol MCP
 ---
 
 The ChainPatrol [MCP](https://modelcontextprotocol.io) server gives AI agents the whole
-public API as tools: asset checks and search, reports, proposal review, detections and
+public API as tools: asset checks and search, reports, proposal review, suspected threats and
 detection configs, takedowns, threats, metrics, healthchecks, and organization
 management. If an operation is in the [API reference](/external-api/overview), the agent
 can call it.
@@ -134,7 +134,7 @@ credential in use.
 | `org_healthcheck`      | Audits one organization across detection, reviewing, blocklisting, and takedowns, and reports what needs attention. |
 | `trend_search`         | Compares a recent window against a baseline to surface spikes: new attack channels, campaigns, or targeting. |
 | `cs_weekly_health`     | Weekly customer health review: threats found, summary metrics, and whether detectors are producing results.   |
-| `detection_evaluation` | Counts confirmed threats, domain detections, watchlist size, and high-score detections. See [Evaluating detections](/external-api/evaluating-detections). |
+| `detection_evaluation` | Counts confirmed threats, suspected threats on domains, watchlist size, and high-score suspected threats. See [Evaluating suspected threats](/external-api/evaluating-detections). |
 
 ## Example prompts
 

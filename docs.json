@@ -89,7 +89,8 @@
               "integration/canary-tokens",
               "integration/webhooks",
               "integration/zapier",
-              "integration/opencti"
+              "integration/opencti",
+              "integration/meta-brand-rights-protection"
             ]
           }
         ]
@@ -178,7 +179,7 @@
             ]
           },
           {
-            "group": "Detections",
+            "group": "Threat Detection",
             "pages": [
               "external-api/evaluating-detections",
               "external-api/detection-list",

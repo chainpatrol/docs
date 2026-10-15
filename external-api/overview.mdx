@@ -6,7 +6,7 @@ description: "Index of every ChainPatrol External API endpoint for blocklist int
 
 We work with leading browsers, antivirus tools, security apps, marketplaces, and wallets to
 block scam links, contract addresses, and wallet addresses before a user interacts with the
-scam. The API also lets customers pull all of ChainPatrol's threat data — detections, reports,
+scam. The API also lets customers pull all of ChainPatrol's threat data — suspected threats, reports,
 takedowns, and blocklist changes — directly into their own SOC for centralized monitoring.
 ChainPatrol's APIs are offered as a free service to browsers, antivirus tools, security apps,
 marketplaces, and wallets.
@@ -140,7 +140,7 @@ Look up, submit, scan, unblock, and follow individual assets.
 
 <CardGroup cols={2}>
   <Card title="Configure Webhook" icon="bell" href="/external-api/webhook-config">
-    Receive real-time notifications for asset status updates and threat detections.
+    Receive real-time notifications for asset status updates and new suspected threats.
   </Card>
 </CardGroup>
 
@@ -203,13 +203,13 @@ Manage the assets and asset groups your organization owns.
   </Card>
 </CardGroup>
 
-## Detections
+## Threat detection
 
-List detections, inspect their sources, and manage the detection configs that produce them.
+List suspected threats, inspect their sources, and manage the detection configs that find them.
 
 <CardGroup cols={2}>
-  <Card title="List Detections" icon="list" href="/external-api/detection-list">
-    List detection results.
+  <Card title="List Suspected Threats" icon="list" href="/external-api/detection-list">
+    List unconfirmed results from automated detection.
   </Card>
 
   <Card title="List Detection Sources" icon="book-open" href="/external-api/detection-sources-list">

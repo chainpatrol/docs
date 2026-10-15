@@ -135,7 +135,7 @@ Sources run on automated schedules that vary by:
 2. **Configure included terms** - Add all your brand names, product names, and common misspellings
 3. **Set excluded terms** - Add your legitimate domains to reduce false positives
 4. **Adjust thresholds** - Set appropriate auto-reporting thresholds based on your risk tolerance
-5. **Monitor results** - Review initial detections to fine-tune your configuration
+5. **Monitor results** - Review the first suspected threats to fine-tune your configuration
 
 ### Optimizing Detection Coverage
 
@@ -159,7 +159,7 @@ Each detection source respects platform-specific rate limits. The system automat
 
 ### Resource Usage
 
-Detection sources are optimized for efficiency. Results are processed in batches to avoid overwhelming the system, duplicate assets are automatically filtered out, sources run in parallel when possible, and failed detections are logged but don't block other sources.
+Detection sources are optimized for efficiency. Results are processed in batches to avoid overwhelming the system, duplicate assets are automatically filtered out, sources run in parallel when possible, and failed source runs are logged but don't block other sources.
 
 Our infrastructure is designed to handle high-volume monitoring without impacting detection speed or accuracy.
 
@@ -168,4 +168,4 @@ Our infrastructure is designed to handle high-volume monitoring without impactin
 - Start broad, then refine: Enable core sources first (search engines and social media), then expand to specialized sources based on where your threats appear
 - Quality over quantity: Well-configured included and excluded terms on fewer sources beats poorly configured monitoring across all platforms
 - Different sources catch different threats: A domain might not show in Google Search but appear in Certstream, so layer your coverage for comprehensive protection
-- Auto-reporting works best after calibration: Review initial detections manually to fine-tune your thresholds before enabling automatic blocking
+- Auto-reporting works best after calibration: Review the first suspected threats manually to fine-tune your thresholds before enabling automatic blocking
