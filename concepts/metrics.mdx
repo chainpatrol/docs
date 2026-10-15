@@ -72,6 +72,16 @@ Threats blocked per brand inside your organization, showing which brands are tar
 
 **Median Time to Takedown** - Calculated from when a takedown request is created to when it is first marked completed. Available as overall median, by asset type (domains, social media, etc.), and by threat category (brand vs. employee impersonation). Lower median times indicate faster threat removal and better provider relationships.
 
+<Note>
+By default, median time to takedown excludes crypto address (`ADDRESS`) takedowns. A single address is often reported across many platforms, and address takedowns are frequently completed in batches. Their durations vary widely and would skew the number for domains and social profiles.
+
+This default applies to the overall median, the by-asset-type breakdown, the trend, the by-provider breakdown, and the dashboard tile. The by-asset-type chart on the Metrics page doesn't show an Address bar.
+
+To include addresses, filter explicitly to the `ADDRESS` asset type or the `CRYPTO` asset type group. The by-provider breakdown has no asset type filter, so it always excludes addresses.
+
+The `/metrics/takedown-time`, `/metrics/takedown-time/trend`, and `/metrics/takedown-time/by-provider` API responses include an `excludedAssetTypes` array that lists the asset types left out. The CLI labels the unfiltered median as `all asset types except ADDRESS`.
+</Note>
+
 ## How Metrics Relate to Other Concepts
 
 **Assets and Asset Scans** - When asset scans and reviews lead to an asset being blocked, that asset contributes to metrics such as New Threats, Threats by asset type, and Threats blocked per day. Ongoing scans and liveness updates ensure that metrics reflect the current state of your threat surface.
