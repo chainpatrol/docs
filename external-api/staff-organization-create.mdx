@@ -134,6 +134,9 @@ endpoint.
 
 - The request is validated with the same rules as the app's create form, so
   anything the app refuses is refused here too.
+- Omitted settings take the app form's defaults: reporting, reviewing and
+  detection on, customer review off, and subscription status `PROSPECT`.
+  Other services stay off unless you enable them.
 - Enabling an automated service (for example `isAutomatedReviewingActive`)
   requires its manual counterpart (`isReviewingActive`).
 - Official assets already owned by another organization are skipped rather
