@@ -116,6 +116,8 @@ When you save a new channel ID, ChainPatrol checks with Slack that the channel b
 | The alert channel isn't in this workspace | "Channel C… is not in this Slack workspace. Check the channel ID, and for a private channel, add the ChainPatrol app to it first." |
 | The auto-reporting channel isn't shared between this workspace and ChainPatrol | "Channel C… is not shared between this Slack workspace and ChainPatrol. Use the Slack Connect channel set up with ChainPatrol." |
 | ChainPatrol can't reach the workspace | "We can't reach this Slack workspace. Reconnect Slack from the integrations page, then set the channel." |
+| The workspace hasn't granted the permission needed to check the alert channel | "This Slack workspace hasn't given ChainPatrol permission to check channels. Click "Update permissions" on this workspace, or if you don't see it, reconnect the workspace with "Add another workspace", then set the channel." See [Update workspace permissions](#update-workspace-permissions). |
+| ChainPatrol's Slack app can't check the auto-reporting channel | "ChainPatrol's Slack app is missing a permission it needs to check this channel. Contact ChainPatrol support; trying again won't help." |
 | Slack doesn't respond in time | "Couldn't check the channel with Slack. Try again in a moment." |
 
 Saving a channel that is already set skips the check, so you can still change other settings on the card.
@@ -160,6 +162,20 @@ For example, a workspace set to "This workspace is for Acme. It receives Acme al
 ### Default brand for reports
 
 When a workspace has a brand assigned, reports filed from that workspace default to that brand. The **Create Report** modal pre-selects it in the **Brand** field. The field stays optional, and reporters can change or clear it before submitting.
+
+### Update workspace permissions
+
+If a connected workspace hasn't granted ChainPatrol all the Slack permissions it needs, some features may not work. For example, you can't save an alert channel. Workspaces connected before ChainPatrol added these permissions to its install request are the most likely to need an update.
+
+When a workspace is missing a permission, its row on the Slack card shows a warning icon. Users with permission to update integrations also see an **Update permissions** button on that row. Other users see a warning asking them to contact an admin of your organization.
+
+To update permissions:
+
+1. On the Slack card, click **Update permissions** on the workspace's row.
+2. On Slack's approval screen, choose the same workspace at the top right, then click **Allow**. The button's tooltip names the workspace to choose.
+3. ChainPatrol shows **Slack permissions updated**. Click **Back to Slack settings** to return to the Slack card.
+
+Approving adds the missing permissions to the ones the workspace already granted. It doesn't disconnect the workspace or change its channels.
 
 ### Disconnect a workspace
 
