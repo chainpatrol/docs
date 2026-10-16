@@ -112,9 +112,14 @@ console.log(data.dashboardUrl);
   },
   "brands": [{ "id": 91, "name": "Acme" }],
   "brandAssetErrors": [],
+  "skippedAssets": [],
   "dashboardUrl": "https://app.chainpatrol.io/admin/acme/dashboard"
 }
 ```
+
+`skippedAssets` lists assets that were not added or allowlisted because they
+are currently blocked, for example a known scam domain passed as an official
+asset. Review them before allowlisting anything by hand.
 
 `brandAssetErrors` lists brands whose official assets could not be added. The
 organization and its brands are still created; add those assets again from the
@@ -141,8 +146,7 @@ endpoint.
   requires its manual counterpart (`isReviewingActive`).
 - Official assets already owned by another organization are skipped rather
   than reassigned.
-- Through a staff MCP connection (OAuth from an AI assistant), the website,
-  `officialAssets` and brand `officialAssets` are refused with `403`, because
-  those assets are allowlisted automatically. Create the organization and its
-  brands over MCP, then add the assets in the app. Staff API keys are not
-  limited this way.
+- Assets that are currently **blocked** are never added to the organization or
+  allowlisted, whether they come in as the website, `officialAssets` or a
+  brand's `officialAssets`. They are listed in `skippedAssets` instead, and the
+  organization is still created.
