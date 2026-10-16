@@ -236,6 +236,12 @@
             ]
           },
           {
+            "group": "Staff",
+            "pages": [
+              "external-api/staff-organization-create"
+            ]
+          },
+          {
             "group": "Healthchecks",
             "pages": [
               "external-api/healthchecks-list",
