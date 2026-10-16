@@ -141,3 +141,8 @@ endpoint.
   requires its manual counterpart (`isReviewingActive`).
 - Official assets already owned by another organization are skipped rather
   than reassigned.
+- Through a staff MCP connection (OAuth from an AI assistant), the website,
+  `officialAssets` and brand `officialAssets` are refused with `403`, because
+  those assets are allowlisted automatically. Create the organization and its
+  brands over MCP, then add the assets in the app. Staff API keys are not
+  limited this way.
