@@ -80,7 +80,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?type=URL&per_
 
 | Parameter | Type   | Required | Description                                                                                                                                                                              |
 | --------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type      | string | No       | Filter by asset type: `URL`, `ADDRESS`, `PAGE`, `DISCORD`, `TELEGRAM`, `TWITTER`, `INSTAGRAM`, `MEDIUM`, `GITHUB`, `YOUTUBE`, `LINKEDIN`, `TWITCH`, `TIKTOK`, `EMAIL`                  |
+| type      | string | No       | Filter by asset type: `URL`, `ADDRESS`, `PAGE`, `PUMP_FUN`, `DISCORD`, `TELEGRAM`, `TWITTER`, `INSTAGRAM`, `MEDIUM`, `GITHUB`, `YOUTUBE`, `LINKEDIN`, `TWITCH`, `TIKTOK`, `EMAIL`                  |
 | groupId   | number | No       | Filter by group ID. Use `-1` for ungrouped assets only. Omit to include all assets regardless of group assignment.                                                                      |
 | query     | string | No       | Search query to filter assets by content. Performs a case-insensitive search across asset content, name, and description fields.                                                        |
 | per_page  | number | No       | Number of assets to return per page. Valid range: 1-1000. Default: 100. Use larger values for bulk operations and smaller values for responsive UI pagination.                         |
