@@ -6,7 +6,7 @@ description: "List ChainPatrol organizations and filter them by subscription sta
 ---
 
 ```bash
-chainpatrol orgs <list|get <slug>|assets list|asset-groups list>
+chainpatrol orgs <list|get <slug>|assets list|assets set-expiry|asset-groups list>
 ```
 
 `orgs list` and `orgs get` operate on the organizations your credential can see. The
@@ -78,6 +78,33 @@ key.
 ```bash
 chainpatrol orgs assets list --asset-type URL
 chainpatrol orgs assets list --group-id 12 --per-page 250 --output csv
+```
+
+Each asset with an expiry shows `expires=<date>`; CSV and JSON output include `allowlistExpiresAt`
+and `allowlistExpiredAt`.
+
+## orgs assets set-expiry
+
+Set, renew or clear when assets drop off your organization's allowlist. After the expiry passes,
+assets stay on your organization for a 14-day grace period, then are removed from it; their status
+does not change. See [Expiry](/concepts/allowlist#expiry).
+
+Pass one or more asset IDs (from `orgs assets list`) and exactly one of `--expires`, `--in` or
+`--clear`. Needs an organization API key with write access, or an organization owner or admin.
+
+| Option | Description |
+| --- | --- |
+| `--expires <date>` | Expiry date. `YYYY-MM-DD` expires at the end of that day (UTC); an ISO date-time is used as given. |
+| `--in <duration>` | Expire after a duration from today: `30d`, `6m`, `1y`. Expires at the end of that day (UTC). |
+| `--clear` | Remove the expiry so the assets stay indefinitely. |
+| `--id <n>` | Asset ID. Repeatable; positional and comma-separated IDs also work. |
+| `--org <slug>` | Organization slug. Omit it with an organization-scoped API key. |
+| `--dry-run` | Show what would change without changing it. |
+
+```bash
+chainpatrol orgs assets set-expiry 12345 12346 --in 6m
+chainpatrol orgs assets set-expiry 12345 --expires 2027-04-30
+chainpatrol orgs assets set-expiry 12345 --clear --org acme
 ```
 
 ## orgs watchlist list
