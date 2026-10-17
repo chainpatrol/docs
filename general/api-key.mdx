@@ -11,7 +11,18 @@ To access ChainPatrol's APIs and services, you'll need an API key. Here's how to
 1. Go to your [Organization Dashboard](https://app.chainpatrol.io/admin)
 2. Navigate to the organization's `settings` page
 3. Navigate to `API keys`
-4. Click on `Create Key` and pick your settings
+4. Click on `Create Key` and pick your settings, including the key's permission
+
+## API Key Permissions
+
+Every API key is either **Read only** or **Read & write**. **Read only** is preselected when you create a key, and each key in the list shows a badge with its permission.
+
+- **Read only**: Can call every read endpoint. Requests to endpoints that change data return `403 Forbidden`.
+  - Best for data exports and service accounts that only read data
+- **Read & write**: Can call every endpoint, including those that change data
+  - Required to submit reports, manage assets, upload attachments, start asset scans, or search dark web credentials
+
+Keys created before permissions were introduced are **Read & write**, so existing integrations keep working. See [API key permissions](/external-api/authentication#api-key-permissions) for the full list of endpoints that require **Read & write**.
 
 ## Types of API Keys
 
