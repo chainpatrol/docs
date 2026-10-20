@@ -1,0 +1,152 @@
+---
+title: Create Organization (Staff)
+openapi: "POST /staff/organization/create"
+---
+
+<Warning>
+  This endpoint is only available to ChainPatrol staff. Customer API keys and
+  customer accounts receive `403 Forbidden`.
+</Warning>
+
+## Overview
+
+Create a new customer organization exactly as ChainPatrol staff do from
+**Staff → Organizations → Create** in the app. In one call it:
+
+- creates the organization with the services you enable
+- adds the owner (reusing an existing user with that email) as `OWNER`, and
+  the calling staff user as `ADMIN`
+- creates the default asset groups and any initial brands
+- creates the website as a monitored asset and allowlists it, together with
+  any official assets you list
+
+## Authentication
+
+Authenticate with a **staff user API key** in the `X-API-KEY` header, or a
+staff session token as `Authorization: Bearer <token>`. Organization API keys,
+customer users, and read-only staff service accounts are refused.
+
+### Example Request
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/staff/organization/create' \
+  -H 'X-API-KEY: YOUR_STAFF_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "organization": {
+      "name": "Acme",
+      "slug": "acme",
+      "websiteUrl": "https://acme.com",
+      "twitterHandle": "@acme",
+      "subscriptionStatus": "PROSPECT",
+      "accountExecName": "Jane Doe",
+      "accountExecEmail": "jane@chainpatrol.io",
+      "isReportingActive": true,
+      "isReviewingActive": true,
+      "isDetectionActive": true,
+      "requiresCustomerReview": true
+    },
+    "owner": {
+      "fullName": "John Smith",
+      "email": "john@acme.com"
+    },
+    "brands": [
+      {
+        "name": "Acme",
+        "slug": "acme",
+        "type": "ORGANIZATION",
+        "includedTerms": "*acme*",
+        "officialAssets": ["https://twitter.com/acme"]
+      }
+    ]
+  }'
+```
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/staff/organization/create",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_STAFF_API_KEY",
+    },
+    body: JSON.stringify({
+      organization: {
+        name: "Acme",
+        slug: "acme",
+        websiteUrl: "https://acme.com",
+        accountExecName: "Jane Doe",
+        accountExecEmail: "jane@chainpatrol.io",
+      },
+      owner: { fullName: "John Smith", email: "john@acme.com" },
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data.dashboardUrl);
+```
+
+</CodeGroup>
+
+## Response
+
+```json
+{
+  "organization": {
+    "id": 1234,
+    "name": "Acme",
+    "slug": "acme",
+    "description": null,
+    "websiteUrl": "https://acme.com",
+    "subscriptionStatus": "PROSPECT",
+    "createdAt": "2026-10-15T12:00:00.000Z"
+  },
+  "owner": {
+    "id": 5678,
+    "email": "john@acme.com",
+    "fullName": "John Smith"
+  },
+  "brands": [{ "id": 91, "name": "Acme" }],
+  "brandAssetErrors": [],
+  "skippedAssets": [],
+  "dashboardUrl": "https://app.chainpatrol.io/admin/acme/dashboard"
+}
+```
+
+`skippedAssets` lists assets that were not added or allowlisted because they
+are currently blocked, for example a known scam domain passed as an official
+asset. Review them before allowlisting anything by hand.
+
+`brandAssetErrors` lists brands whose official assets could not be added. The
+organization and its brands are still created; add those assets again from the
+app or the [Add Organization Assets](/external-api/organization-assets-add)
+endpoint.
+
+## Errors
+
+| Status | When                                                                                                              |
+| ------ | ----------------------------------------------------------------------------------------------------------------- |
+| `400`  | Validation failed, e.g. an invalid Twitter handle, unsupported asset, or brand term conflict. The message names the field. |
+| `401`  | No API key or session was provided.                                                                                |
+| `403`  | The caller is not ChainPatrol staff, or the credential is read-only.                                               |
+| `409`  | The organization slug or a brand slug is taken, or the website already belongs to another organization.            |
+
+## Notes
+
+- The request is validated with the same rules as the app's create form, so
+  anything the app refuses is refused here too.
+- Omitted settings take the app form's defaults: reporting, reviewing and
+  detection on, customer review off, and subscription status `PROSPECT`.
+  Other services stay off unless you enable them.
+- Enabling an automated service (for example `isAutomatedReviewingActive`)
+  requires its manual counterpart (`isReviewingActive`).
+- Official assets already owned by another organization are skipped rather
+  than reassigned.
+- Assets that are currently **blocked** are never added to the organization or
+  allowlisted, whether they come in as the website, `officialAssets` or a
+  brand's `officialAssets`. They are listed in `skippedAssets` instead, and the
+  organization is still created.
