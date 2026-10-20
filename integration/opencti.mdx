@@ -122,7 +122,7 @@ Then start it:
 docker compose up -d connector-chainpatrol
 ```
 
-The connector appears in OpenCTI under **Data → Ingestion → Connectors**, where you can follow each run.
+The connector appears in OpenCTI under **Integrations**, on the **Deployed** tab, where you can follow each run.
 
 <Tip>
 The example uses the admin token for brevity. For anything beyond a trial, run the connector as its own OpenCTI user: create one under **Settings → Security → Users**, add it to a group with the Connector role (OpenCTI ships one called *Connectors*), and set `OPENCTI_TOKEN` to its API token. Every imported entity then shows that user as its creator instead of `admin`, so ChainPatrol data is easy to filter, and gets that group's confidence level instead of the admin's.
@@ -151,7 +151,13 @@ Every setting is an environment variable. When running from source, the same set
 | `CHAINPATROL_SCORE_ALLOWED` | `0` | Allowed assets are revoked whatever their score |
 | `CONNECTOR_DURATION_PERIOD` | `PT1H` | Time between runs, as an ISO-8601 duration |
 
-The connector refuses to start if the API key is missing, if both feeds are disabled, if a TLP, page size or score is out of range, or if any state scores higher than `blocked`. A misconfiguration fails loudly rather than running as a silent no-op.
+The connector checks its setup before it registers with OpenCTI. If something is wrong it exits with a one-line message naming the setting at fault, for example `ChainPatrol rejected CHAINPATROL_API_KEY (401)` or `OpenCTI rejected OPENCTI_TOKEN`. It checks that:
+
+- `OPENCTI_URL`, `OPENCTI_TOKEN` and `CONNECTOR_ID` are set, and `CONNECTOR_ID` is a UUID;
+- OpenCTI accepts `OPENCTI_TOKEN` and ChainPatrol accepts `CHAINPATROL_API_KEY`;
+- at least one feed is enabled, every TLP, page size and score is in range, and no state scores higher than `blocked`.
+
+Check the connector's logs with `docker compose logs connector-chainpatrol` if it does not appear in OpenCTI after a minute.
 
 ## Polling
 
