@@ -158,6 +158,7 @@
               "external-api/organization-assets-list",
               "external-api/organization-assets-add",
               "external-api/organization-assets-update",
+              "external-api/organization-assets-expiry",
               "external-api/organization-assets-remove"
             ]
           },
