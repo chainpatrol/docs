@@ -6,7 +6,7 @@ description: "List ChainPatrol organizations by subscription status, service tog
 ---
 
 ```bash
-chainpatrol orgs <list|get <slug>|assets list|asset-groups list>
+chainpatrol orgs <list|get <slug>|assets list|assets set-expiry|asset-groups list>
 ```
 
 `orgs list` and `orgs get` operate on the organizations your credential can see. The
@@ -80,6 +80,45 @@ chainpatrol orgs assets list --asset-type URL
 chainpatrol orgs assets list --group-id 12 --per-page 250 --output csv
 ```
 
+Assets with an allowlist expiry show `expires=<date>` in the default output. CSV output adds
+`allowlistExpiresAt` and `allowlistExpiredAt` columns.
+
+## orgs assets set-expiry
+
+Set, renew, or clear when assets drop off your organization's allowlist. Use it to manage
+[allowlist expiry](/concepts/allowlist#expiry) in bulk from scripts. After the expiry, assets
+stay on your organization for a 14-day grace period. Then ChainPatrol removes them from your
+organization. Their status doesn't change.
+
+Requires an organization API key with write access, or a login for an organization owner or
+admin.
+
+```bash
+chainpatrol orgs assets set-expiry <asset-id...> (--expires <date> | --in <duration> | --clear)
+```
+
+Pass exactly one of `--expires`, `--in`, or `--clear`.
+
+| Option | Description |
+| --- | --- |
+| `--expires <date>` | Expiry date. A date like `2027-04-30` expires at the end of that UTC day. A full ISO 8601 date-time is used as given. |
+| `--in <duration>` | Expire after a duration from today, such as `30d`, `6m`, or `1y`. Expires at the end of that UTC day. |
+| `--clear` | Remove the expiry so the assets stay indefinitely. |
+| `--id <n>` | Asset ID. Repeatable. Positional and comma-separated IDs also work. |
+| `--org <slug>` | Organization slug. Omit it for organization API keys. |
+| `--dry-run` | Show what would change without changing it. |
+
+The expiry must be in the future.
+
+```bash
+chainpatrol orgs assets set-expiry 12345 12346 --in 6m
+chainpatrol orgs assets set-expiry 12345 --expires 2027-04-30
+chainpatrol orgs assets set-expiry 12345 --clear --org acme
+```
+
+See [`POST /organization/assets/expiry`](/external-api/organization-assets-set-expiry) for the
+underlying API.
+
 ## orgs watchlist list
 
 List the assets ChainPatrol is watching for your organization: ones you reported that were
@@ -136,6 +175,7 @@ chainpatrol --json brands list | jq '.brands[] | {id, name}'
 ## Related
 
 - [`GET /organization/assets`](/external-api/organization-assets-list)
+- [`POST /organization/assets/expiry`](/external-api/organization-assets-set-expiry)
 - [`GET /organization/asset-groups`](/external-api/organization-asset-groups-list)
 - [`GET /organization/brands`](/external-api/organization-brands)
 - [Organizations concept](/concepts/organizations) and [Brands concept](/concepts/brands)

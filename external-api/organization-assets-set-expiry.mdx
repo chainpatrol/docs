@@ -1,0 +1,136 @@
+---
+title: Set Organization Asset Expiry
+openapi: "POST /organization/assets/expiry"
+---
+
+## Overview
+
+Set, renew, or clear the allowlist expiry for a batch of your organization's assets. Use it for assets that should only stay on your allowlist for a while, such as a partner's site or a campaign page, and to manage expiry from scripts instead of the dashboard.
+
+When the expiry passes, the assets stay `ALLOWED` and stay on your organization for a 14-day grace period. After that, ChainPatrol removes them from your organization. Their global status doesn't change. Setting a new date on an expired asset renews it and ends its grace period. See [Allowlist expiry](/concepts/allowlist#expiry) for the full lifecycle.
+
+<Note>
+  This endpoint requires an organization API key with write access, or credentials for a user who is an owner or admin of the organization.
+</Note>
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/expiry",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetIds: [12345, 12346],
+      expiresAt: "2027-04-30T23:59:59Z",
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/organization/assets/expiry",
+    headers={
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    json={
+        "assetIds": [12345, 12346],
+        "expiresAt": "2027-04-30T23:59:59Z",
+    },
+)
+
+data = response.json()
+print(data)
+```
+
+```bash cURL
+curl -X POST "https://app.chainpatrol.io/api/v2/organization/assets/expiry" \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: YOUR_API_KEY_HERE" \
+  -d '{
+    "assetIds": [12345, 12346],
+    "expiresAt": "2027-04-30T23:59:59Z"
+  }'
+```
+
+</CodeGroup>
+
+## Request Body
+
+| Field     | Type             | Required | Description                                                                                                                                         |
+| --------- | ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| assetIds  | number[]         | Yes      | IDs of your organization's assets to update. 1–5000 per request.                                                                                     |
+| expiresAt | string \| null   | Yes      | When the assets expire, as an ISO 8601 date-time in the future (for example `2027-04-30T23:59:59Z`). Pass `null` to clear the expiry.               |
+| slug      | string           | No       | Organization slug. Optional for organization API keys. Required when your credentials can reach more than one organization.                         |
+
+<Tip>
+  To match the dashboard, which expires assets at the end of a UTC day, use a time of `23:59:59Z`.
+</Tip>
+
+## Response
+
+### Success Response
+
+```json
+{
+  "updatedCount": 2,
+  "expiresAt": "2027-04-30T23:59:59.000Z"
+}
+```
+
+### Response Fields
+
+| Field        | Type           | Description                                          |
+| ------------ | -------------- | ---------------------------------------------------- |
+| updatedCount | number         | Number of assets updated                             |
+| expiresAt    | string \| null | The expiry that was set, or `null` when it was cleared |
+
+## Clear an Expiry
+
+Pass `null` to remove the expiry so the assets stay on your organization indefinitely:
+
+```bash
+curl -X POST "https://app.chainpatrol.io/api/v2/organization/assets/expiry" \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: YOUR_API_KEY_HERE" \
+  -d '{ "assetIds": [12345], "expiresAt": null }'
+```
+
+## Error Responses
+
+| Status | Code          | Cause                                                                                                   |
+| ------ | ------------- | ------------------------------------------------------------------------------------------------------- |
+| 400    | `BAD_REQUEST` | `expiresAt` is not in the future, or the request body is invalid                                        |
+| 401    | `UNAUTHORIZED` | The API key is missing or invalid                                                                      |
+| 403    | `FORBIDDEN`   | The API key is read-only, or the user isn't an owner or admin of the organization                       |
+| 404    | `NOT_FOUND`   | One or more asset IDs aren't on your organization. The response lists the missing IDs and nothing is updated. |
+
+## Notes
+
+- The update is all-or-nothing. If any asset ID isn't on your organization, no expiry is changed.
+- Each change is recorded in the organization's Audit Log.
+- [`GET /organization/assets`](/external-api/organization-assets-list) returns each asset's `allowlistExpiresAt` and `allowlistExpiredAt`.
+- You can also set expiry from the CLI with [`chainpatrol orgs assets set-expiry`](/cli/commands/orgs#orgs-assets-set-expiry).

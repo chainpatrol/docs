@@ -105,7 +105,9 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?type=URL&per_
         "name": "URLs"
       },
       "createdAt": "2024-01-15T10:30:00.000Z",
-      "updatedAt": "2024-01-15T10:30:00.000Z"
+      "updatedAt": "2024-01-15T10:30:00.000Z",
+      "allowlistExpiresAt": "2027-04-30T23:59:59.000Z",
+      "allowlistExpiredAt": null
     },
     {
       "id": 12346,
@@ -116,7 +118,9 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?type=URL&per_
       "description": null,
       "group": null,
       "createdAt": "2024-01-15T11:00:00.000Z",
-      "updatedAt": "2024-01-15T11:00:00.000Z"
+      "updatedAt": "2024-01-15T11:00:00.000Z",
+      "allowlistExpiresAt": null,
+      "allowlistExpiredAt": null
     }
   ],
   "next_page": "12347"
@@ -137,6 +141,8 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/assets?type=URL&per_
 | assets[].group       | object | Group object containing `id` and `name` if asset is assigned to a group, null if ungrouped   |
 | assets[].createdAt   | string | ISO 8601 timestamp when the asset was created                                                 |
 | assets[].updatedAt   | string | ISO 8601 timestamp when the asset was last updated                                            |
+| assets[].allowlistExpiresAt | string \| null | When the asset's allowlist entry expires. `null` when it never expires. Set it with [`POST /organization/assets/expiry`](/external-api/organization-assets-set-expiry). |
+| assets[].allowlistExpiredAt | string \| null | When the expiry passed and the 14-day grace period started. `null` while the expiry is still ahead, or when there is none. |
 | next_page            | string | Cursor token for the next page of results. Undefined/null when no more results are available. |
 
 ## Pagination
