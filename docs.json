@@ -192,7 +192,8 @@
               "external-api/detection-configs-validate",
               "external-api/detection-drift",
               "external-api/threats-list",
-              "external-api/organization-watchlist-list"
+              "external-api/organization-watchlist-list",
+              "external-api/organization-threat-examples"
             ]
           },
           {

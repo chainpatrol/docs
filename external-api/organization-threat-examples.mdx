@@ -1,0 +1,144 @@
+---
+title: Organization Threat Examples
+openapi: "GET /organization/threat-examples"
+---
+
+## Overview
+
+Get a small set of your organization's best confirmed threats, each with the screenshot
+ChainPatrol shows for it in the app. Use it to build reports or snapshots of what
+ChainPatrol has caught for an organization. This endpoint is read-only.
+
+A threat is **confirmed** when your organization blocked the asset: its `status` is
+`BLOCKED` or its `pendingStatus` is `BLOCKED`. This is the same scope as the dashboard
+threat counts and the Confirmed Threats page. Because pending blocks count, it also works
+for organizations whose protection is not active yet.
+
+The response also includes `totalCount` and `countsByType`. Both cover every confirmed
+threat that matched, not only the returned examples.
+
+The MCP server exposes this endpoint as the `organization_threat_examples` tool. See
+[MCP server](/mcp-server).
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header. You need an organization API key, or a
+user API key with access to the organization. Organization API keys resolve the
+organization from the key, so `slug` is optional for them.
+
+```bash
+X-API-KEY: <api-key>
+```
+
+### Example Request
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/threat-examples?limit=5&since=2026-10-01' \
+  -H 'X-API-KEY: <api-key>'
+```
+
+```typescript TypeScript
+const params = new URLSearchParams({ limit: "5", since: "2026-10-01" });
+
+const response = await fetch(
+  `https://app.chainpatrol.io/api/v2/organization/threat-examples?${params}`,
+  { headers: { "X-API-KEY": "<api-key>" } },
+);
+
+const { examples, totalCount, countsByType } = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://app.chainpatrol.io/api/v2/organization/threat-examples",
+    headers={"X-API-KEY": "<api-key>"},
+    params={"limit": 5, "since": "2026-10-01"},
+)
+data = response.json()
+```
+
+</CodeGroup>
+
+## Query Parameters
+
+| Parameter | Type     | Required | Default | Description                                                                                                       |
+| --------- | -------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+| `slug`    | `string` | No       | -       | Organization slug. Required only when your credentials can reach more than one organization.                      |
+| `limit`   | `number` | No       | `10`    | How many examples to return, 1–50.                                                                                |
+| `since`   | `string` | No       | -       | ISO 8601 date or timestamp. Only threats confirmed (blocked) at or after this time, for example the start of a threat hunt. |
+
+<Note>
+`since` filters on when the threat was **confirmed**. Threats with no recorded
+confirmation time are left out when you set it. It also applies to `totalCount` and
+`countsByType`.
+</Note>
+
+## Response
+
+```json
+{
+  "examples": [
+    {
+      "id": 4175269,
+      "content": "your-brand-login.example",
+      "type": "URL",
+      "status": "BLOCKED",
+      "pendingStatus": null,
+      "livenessStatus": "ALIVE",
+      "brands": [{ "slug": "your-brand", "name": "Your Brand" }],
+      "confirmedAt": "2026-10-12T14:03:21.000Z",
+      "screenshotUrl": "https://...",
+      "takedown": { "status": "COMPLETED", "completedAt": "2026-10-14T09:00:00.000Z" },
+      "detailsUrl": "https://app.chainpatrol.io/..."
+    }
+  ],
+  "totalCount": 230,
+  "countsByType": [
+    { "type": "URL", "count": 180 },
+    { "type": "TWITTER", "count": 50 }
+  ]
+}
+```
+
+| Field                     | Type             | Description                                                                                                  |
+| ------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------ |
+| `examples`                | `array`          | The picked examples, best first.                                                                             |
+| `examples[].id`           | `number`         | Asset ID.                                                                                                    |
+| `examples[].content`      | `string`         | Asset content (URL, handle, email, …).                                                                       |
+| `examples[].type`         | `string`         | Asset type.                                                                                                  |
+| `examples[].status`       | `string`         | Raw asset status.                                                                                            |
+| `examples[].pendingStatus`| `string \| null` | `"BLOCKED"` when the asset was confirmed malicious but protection is not active, otherwise `null`.           |
+| `examples[].livenessStatus` | `string`       | `ALIVE`, `DEAD` or `UNKNOWN`.                                                                                |
+| `examples[].brands`       | `array`          | Your brands the threat was reported against. Empty when no report named one.                                 |
+| `examples[].confirmedAt`  | `string \| null` | When the threat was confirmed. `null` for older records that never stored it.                                |
+| `examples[].screenshotUrl`| `string \| null` | The image ChainPatrol shows for the threat (page capture, profile image or ad creative), or `null`.          |
+| `examples[].takedown`     | `object \| null` | Takedown `status` and `completedAt`, or `null` if no takedown was opened.                                    |
+| `examples[].detailsUrl`   | `string`         | Link to the asset's reports and takedowns in the ChainPatrol app.                                            |
+| `totalCount`              | `number`         | How many confirmed threats matched, before picking examples.                                                 |
+| `countsByType`            | `array`          | Confirmed threats that matched per asset type (`type`, `count`), largest first.                              |
+
+## Ranking
+
+ChainPatrol orders examples so the most representative threats come first:
+
+1. Lookalike domains (`URL`) and impersonating social accounts come before other asset
+   types, such as app listings, APKs, or tokens.
+2. Assets with detailed screenshots come next, ahead of unscored screenshots and assets
+   without one.
+3. Results are spread across asset types, so one cluster of similar threats does not
+   crowd out the rest.
+4. Recency breaks ties.
+
+Near-blank captures always sort last.
+
+## Related
+
+- [List Organization Watchlist](/external-api/organization-watchlist-list)
+- [Evaluating suspected threats](/external-api/evaluating-detections)
+- [MCP server](/mcp-server)
