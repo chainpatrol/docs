@@ -125,6 +125,69 @@ Allowlist management is restricted to **organization administrators and authoriz
 
 Limiting access helps ensure that allowlists remain accurate, intentional, and aligned with security best practices.
 
+## Expiry
+
+You can set an expiry date on allowlisted assets. Use expiry for assets you only control for a limited time, such as campaign sites, event pages, temporary preview deployments, or accounts that you plan to retire. When the date passes, ChainPatrol reminds you and eventually removes the asset from your organization, so stale assets don't stay on your allowlist indefinitely.
+
+Organization owners and admins can set, change, or clear an expiry in the dashboard.
+
+To manage expiry from scripts or agents, use [`POST /organization/assets/expiry`](/external-api/organization-assets-set-expiry), the [`chainpatrol orgs assets set-expiry`](/cli/commands/orgs#orgs-assets-set-expiry) CLI command, or the `organization_assets_set_expiry` [MCP](/mcp-server) tool. These require an organization API key with write access, or an owner or admin login. [`GET /organization/assets`](/external-api/organization-assets-list) returns each asset's `allowlistExpiresAt` and `allowlistExpiredAt`.
+
+### Expiry options
+
+When you set an expiry, choose one of the following:
+
+- **In 6 months** - Expires at the end of the day (UTC), 6 months from today
+- **In 1 year** - Expires at the end of the day (UTC), 1 year from today
+- **On a date** - Expires at the end of the chosen day (UTC). The date must be in the future.
+- **Never** - Clears the expiry so the asset never expires
+
+### Set an expiry on existing assets
+
+On the **Allowlist** page in the dashboard, you can set an expiry in three ways:
+
+- **One asset** - Click **Set expiry** on the asset's row (or **Edit expiry** if the asset already has one).
+- **One brand** - Select **Select all in &lt;brand&gt;** to select every asset in that brand group, then click **Set expiry** in the selection bar.
+- **Multiple assets** - Select the assets you want, then click **Set expiry** in the selection bar.
+
+Choose an option in the dialog and save.
+
+### Set an expiry when adding assets
+
+The **Add Assets** dialog includes an **Allowlist expiry** picker. It defaults to **Never**. Select **In 6 months**, **In 1 year**, or a custom date to apply that expiry to every asset you add.
+
+### Track expiring assets
+
+Each asset with an expiry shows a badge on the **Allowlist** page:
+
+| Badge | Meaning |
+| --- | --- |
+| `Expires <date>` | The expiry is more than 30 days away |
+| `Expires in N days` | The asset expires within 30 days |
+| `Expired · removed <date>` | The expiry date has passed. The asset is removed from your organization on the date shown unless you renew it. |
+
+Use the **Expiry** filter to show only assets that are **Expiring within 30 days** or **Expired**. When any asset has passed its expiry date, the page shows a banner with a **Review expired** button that applies the **Expired** filter.
+
+### What happens when an asset expires
+
+1. **Expiry date passes** - The asset stays `ALLOWED` and stays on your organization for a 14-day grace period.
+2. **Renew during the grace period** - Set a new expiry or choose **Never** to keep the asset. Renewing clears the expired state.
+3. **Grace period ends** - ChainPatrol removes the asset from your organization automatically. ChainPatrol stops monitoring the asset for your organization, but doesn't change the asset's global `ALLOWED` status.
+
+Each automatic removal appears in the **Audit Log** as **Asset Removed from Organization**, with an allowlist expiry reason.
+
+### Expiry digest email
+
+Organization owners and admins receive at most one digest email per day that lists:
+
+- Assets that expire in 30 days
+- Assets that expire in 7 days
+- Assets that have just expired
+- A final reminder for assets that are removed in 3 days
+- Assets that were removed from the organization
+
+ChainPatrol only sends the digest on days with something to report.
+
 ### Best Practices for Allowlist Management
 
 1. **Be Conservative** - Only allowlist assets you definitively control and trust
