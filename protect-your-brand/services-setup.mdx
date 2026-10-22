@@ -298,8 +298,8 @@ ChainPatrol offers multiple security services that can be configured based on yo
         All services must be enabled and functioning properly
       </Step>
       
-      <Step title="Upload Power of Attorney">
-        Valid POA document must be uploaded
+      <Step title="Add legal authority">
+        Upload a Letter of Authorization (LoA) or Power of Attorney (POA), or grant takedown authorization
       </Step>
       
       <Step title="Configure Website URL">
@@ -318,13 +318,15 @@ ChainPatrol offers multiple security services that can be configured based on yo
     - ChainPatrol legal team approval
     
     **Required Legal Docs:**
-    - **Power of Attorney (POA) document** - Authorizes ChainPatrol to submit takedown requests on your behalf
+    - **Letter of Authorization (LoA), Power of Attorney (POA), or takedown authorization** - Authorizes ChainPatrol to submit takedown requests on your behalf
     - Main website URL for your organization
     - Trademark registration documents
     - Authorized signatory information
     
     <Warning>
-    **Important:** Automated Takedowns cannot be enabled without these prerequisites. The service will remain disabled until both the POA document and website URL are provided.
+    You can turn on Automated Takedowns, or send an enable request to the Organization Owner, before your organization has an LoA, POA, or takedown authorization on file. In that case, ChainPatrol shows a modal explaining that automated takedowns aren't fully operational yet. Select **Go to Legal Documents** to open **Settings → Legal Documents**, or **Later** to dismiss it.
+
+    Until you add one, takedowns that need an LoA or takedown authorization wait in **Pending Input**. ChainPatrol releases them automatically once you upload one. Only organization-level documents count toward this check.
     </Warning>
   </Tab>
 </Tabs>
@@ -393,12 +395,12 @@ ChainPatrol offers multiple security services that can be configured based on yo
 | Obligatory Organization Admin Approval | None | - |
 | Blocklisting | None (but verification required) | - |
 | Takedowns | Trademark proof, Authorized representative details | Before enabling |
-| Automated Takedowns | Power of Attorney, Trademark registration, Main website URL | Before enabling |
+| Automated Takedowns | LoA, POA, or takedown authorization; Trademark registration; Main website URL | Before takedowns can be submitted (takedowns wait in Pending Input until then) |
 | Dark Web Monitoring | None | - |
 
 ### Power of Attorney Requirements
 
-For Automated Takedowns, your Power of Attorney document must:
+For Automated Takedowns, ChainPatrol accepts a Letter of Authorization, a Power of Attorney, or a takedown authorization. If you upload an LoA or POA document, it must:
 
 <AccordionGroup>
   <Accordion title="Authorization Scope" icon="scale-balanced">
@@ -423,7 +425,7 @@ For Automated Takedowns, your Power of Attorney document must:
 </AccordionGroup>
 
 <Tip>
-**How to upload:** Navigate to Organization Settings → Documents → Upload Power of Attorney
+**How to upload:** Navigate to **Settings → Legal Documents** and upload your LoA or POA, or grant takedown authorization.
 </Tip>
 
 ### Trademark Documentation
