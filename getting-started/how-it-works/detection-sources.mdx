@@ -24,7 +24,7 @@ Detection sources operate on automated schedules, running searches across variou
 ## Available Detection Sources
 
 <Info>
-ChainPatrol supports **29 different detection sources** across multiple categories
+ChainPatrol supports **30 different detection sources** across multiple categories
 </Info>
 
 ### Search Engines
@@ -81,6 +81,20 @@ Monitor mobile app stores and browser extension marketplaces:
 One category among several — specialized sources for cryptocurrency and blockchain threats, relevant to brands with a crypto or DeFi presence:
 
 - **DexScreener Search** - Monitors DeFi protocols and tokens for impersonation
+- **Pump.fun Token Search** - Searches pump.fun tokens for each of your brand and organization names. Banned coins are skipped and duplicate tokens across queries are removed. Matching token pages (`https://pump.fun/coin/<mint>`) are submitted as `PUMP_FUN` assets. Results include both Solana and EVM mints. Enabled by default for crypto and web3 organizations.
+
+<Tip>
+Pump.fun Token Search returns the newest tokens first by default. To change this, set the optional `sort` (`created_timestamp`, `market_cap`, `last_trade_timestamp`, `reply_count`, or `last_reply`) and `order` (`DESC` or `ASC`) fields on the source config. Each query returns up to 100 tokens by default. To change this cap, set `maxResults` to a value from 10 to 500:
+
+```json
+{
+  "useDefaultQuery": true,
+  "sort": "market_cap",
+  "order": "DESC",
+  "maxResults": 250
+}
+```
+</Tip>
 
 ### Specialized Sources
 
