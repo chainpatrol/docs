@@ -152,7 +152,57 @@ curl -X POST 'https://app.chainpatrol.io/api/v2/organization/assets' \
 | assets[].content       | string | Yes      | Asset content: URL, blockchain address, social media handle, email, domain, etc.            |
 | assets[].name          | string | No       | Display name for the asset. Useful for identifying assets in your dashboard.                |
 | assets[].description   | string | No       | Description providing context about the asset's purpose or usage.                           |
+| expiresAt              | string | No       | Allowlist expiry for every asset in the request, as an ISO 8601 date-time in the future (for example `2027-04-30T23:59:59Z`). |
 | assets[].groupId       | number | No       | Group ID to assign the asset to. Must be a valid group belonging to your organization.      |
+| assets[].expiresAt     | string | No       | Allowlist expiry for this asset, as an ISO 8601 date-time in the future. Overrides the request's `expiresAt`. |
+
+### Set an Allowlist Expiry
+
+Pass `expiresAt` to give the assets you add an [allowlist expiry](/concepts/allowlist#expiry), for example for a partner's site or a campaign page. This saves a separate call to [`POST /organization/assets/expiry`](/external-api/organization-assets-set-expiry).
+
+- Set `expiresAt` at the top level to apply one date to every asset in the request.
+- Set `assets[].expiresAt` to give an asset its own date, for example when importing a CSV with different end dates. An asset's own date overrides the top-level one.
+- Omit both to add assets without an expiry.
+
+After the expiry passes, the assets stay on your organization for a 14-day grace period. Then ChainPatrol removes them from your organization. Their status doesn't change.
+
+ChainPatrol checks every date before adding anything. If any date isn't in the future, the request fails with `400 BAD_REQUEST` and no assets are added. Assets that fail to add get no expiry.
+
+```bash
+curl -X POST 'https://app.chainpatrol.io/api/v2/organization/assets' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "expiresAt": "2027-04-30T23:59:59Z",
+    "assets": [
+      { "content": "https://partner-a.example.com" },
+      { "content": "https://partner-b.example.com", "expiresAt": "2026-12-31T23:59:59Z" }
+    ]
+  }'
+```
+
+Each added asset's result includes the `expiresAt` that ChainPatrol saved:
+
+```json
+{
+  "results": [
+    {
+      "content": "https://partner-a.example.com",
+      "success": true,
+      "id": 12345,
+      "expiresAt": "2027-04-30T23:59:59.000Z"
+    },
+    {
+      "content": "https://partner-b.example.com",
+      "success": true,
+      "id": 12346,
+      "expiresAt": "2026-12-31T23:59:59.000Z"
+    }
+  ],
+  "successCount": 2,
+  "errorCount": 0
+}
+```
 
 ### Supported Asset Types
 
@@ -238,6 +288,7 @@ When some assets succeed and others fail:
 | results[].success | boolean | Whether the asset was successfully added                         |
 | results[].id | number | Asset ID (only present when success is true)                            |
 | results[].error | string | Error message (only present when success is false)                   |
+| results[].expiresAt | string \| null | Allowlist expiry saved for the asset, or `null` when none was set. Only present for added assets. If saving the expiry fails, the asset is still added and this is `null`. |
 | successCount | number | Total number of assets successfully added                               |
 | errorCount   | number | Total number of assets that failed to be added                          |
 
@@ -438,4 +489,5 @@ const response = await fetch(
 - The endpoint returns partial success - some assets may succeed while others fail
 - Organization is automatically determined from your API key
 - Group IDs must belong to your organization
+- Use `expiresAt` to set an allowlist expiry in the same call. See [Set an Allowlist Expiry](#set-an-allowlist-expiry).
 - Asset validation happens during processing; invalid formats will be reported in the results

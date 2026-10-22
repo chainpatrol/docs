@@ -131,7 +131,7 @@ You can set an expiry date on allowlisted assets. Use expiry for assets you only
 
 Organization owners and admins can set, change, or clear an expiry in the dashboard.
 
-To manage expiry from scripts or agents, use [`POST /organization/assets/expiry`](/external-api/organization-assets-set-expiry), the [`chainpatrol orgs assets set-expiry`](/cli/commands/orgs#orgs-assets-set-expiry) CLI command, or the `organization_assets_set_expiry` [MCP](/mcp-server) tool. These require an organization API key with write access, or an owner or admin login. [`GET /organization/assets`](/external-api/organization-assets-list) returns each asset's `allowlistExpiresAt` and `allowlistExpiredAt`.
+To manage expiry from scripts or agents, use [`POST /organization/assets/expiry`](/external-api/organization-assets-set-expiry), the `expiresAt` field on [`POST /organization/assets`](/external-api/organization-assets-add#set-an-allowlist-expiry) when adding assets, the [`chainpatrol orgs assets set-expiry`](/cli/commands/orgs#orgs-assets-set-expiry) CLI command, or the `organization_assets_set_expiry` [MCP](/mcp-server) tool. These require an organization API key with write access, or an owner or admin login. [`GET /organization/assets`](/external-api/organization-assets-list) returns each asset's `allowlistExpiresAt` and `allowlistExpiredAt`.
 
 ### Expiry options
 

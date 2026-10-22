@@ -133,4 +133,5 @@ curl -X POST "https://app.chainpatrol.io/api/v2/organization/assets/expiry" \
 - The update is all-or-nothing. If any asset ID isn't on your organization, no expiry is changed.
 - Each change is recorded in the organization's Audit Log.
 - [`GET /organization/assets`](/external-api/organization-assets-list) returns each asset's `allowlistExpiresAt` and `allowlistExpiredAt`.
+- To set an expiry while adding assets, pass `expiresAt` to [`POST /organization/assets`](/external-api/organization-assets-add#set-an-allowlist-expiry).
 - You can also set expiry from the CLI with [`chainpatrol orgs assets set-expiry`](/cli/commands/orgs#orgs-assets-set-expiry).
