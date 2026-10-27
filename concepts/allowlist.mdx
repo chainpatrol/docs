@@ -88,6 +88,31 @@ If an allowlisted asset shows suspicious behavior or is believed to be compromis
 
 This ensures that trust is not absolute and that compromised official assets do not become blind spots.
 
+## Expiry
+
+Some assets should only stay on your allowlist for a while, such as a partner's website or a campaign that runs for a season. Give these assets an **expiry date** and ChainPatrol removes them from your organization when it passes, so the allowlist doesn't fill up with relationships that have ended.
+
+### What happens when an asset expires
+
+1. **Reminders** - Organization owners and admins get a daily email digest that lists assets expiring in 30 days and in 7 days.
+2. **Expiry** - On the expiry date the asset is marked **Expired** and a **14-day grace period** starts. It stays allowed and on your organization during the grace period, so you can renew it if the relationship continues.
+3. **Final reminder** - The digest warns you again 3 days before the grace period ends.
+4. **Removal** - When the grace period ends, the asset is removed from your organization and monitoring for it stops. The digest lists what was removed.
+
+<Info>
+Expiry removes the asset from your organization; it does not change the asset's status. An allowed asset stays **ALLOWED**, so it is still treated as safe and is not flagged as a threat. Each removal is recorded in your organization's audit log, the same way a manual removal is.
+</Info>
+
+### Setting an expiry
+
+- **When adding assets** - In the **Add Assets** dialog, choose an expiry: in 6 months, in 1 year, or on a date. Through the API, pass `expiresAt` to [Add Organization Assets](/external-api/organization-assets-add#setting-an-expiry-when-adding).
+- **On the Allowlist page** - Use **Set expiry** on an asset, or select several and set one date for all of them. Filter the list by **Expiring soon** or **Expired** to see what needs attention.
+- **From the API, CLI or MCP** - Use the [Set Asset Expiry](/external-api/organization-assets-expiry) endpoint, the `chainpatrol orgs assets set-expiry` [CLI command](/cli/commands/orgs), or the `organization_assets_set_expiry` tool in the [MCP server](/mcp-server).
+
+An expiry date runs to the end of that day in UTC. Setting a new date on an expired asset renews it and ends its grace period. Clearing the expiry keeps the asset indefinitely.
+
+Organization owners and admins can set, renew and clear expiry dates.
+
 ## Granularity of Allowlists
 
 Allowlists in ChainPatrol can be configured at different levels:
@@ -132,6 +157,7 @@ Limiting access helps ensure that allowlists remain accurate, intentional, and a
 3. **Document Decisions** - Maintain internal documentation of why assets were allowlisted
 4. **Remove Compromised Assets** - Immediately remove any asset suspected of being compromised
 5. **Re-add After Verification** - Only re-allowlist assets after confirming they're secure and under your control
+6. **Set Expiry for Temporary Assets** - Give partner and campaign assets an [expiry date](#expiry) so they are removed when they are no longer needed
 
 ## Key Takeaways
 
