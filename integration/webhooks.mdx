@@ -22,7 +22,7 @@ You can manage your webhooks through the [ChainPatrol dashboard](https://app.cha
 5. Update webhook configurations
 6. Delete webhooks
 
-Each webhook delivery is logged and can be inspected for debugging purposes, including the full request and response details.
+Each webhook delivery is logged and can be inspected for debugging purposes, including the request and response details.
 
 ## Event Types
 
@@ -160,12 +160,31 @@ This event is sent when a new suspected threat is added to the Suspected Threats
 
 When creating a webhook, you'll need to provide:
 
-1. A HTTPS endpoint URL that will receive the webhook events
+1. An HTTPS endpoint URL on a public host that will receive the webhook events (see [Endpoint URL requirements](#endpoint-url-requirements))
 2. An optional description to help identify the webhook's purpose
 3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, and `organization.threat-detection-added`)
 4. Optional HTTP headers for supported integrations (currently Google SecOps headers are available)
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
+
+### Endpoint URL requirements
+
+The subscriber URL must use `https://` and point to a public host. ChainPatrol rejects the URL when you save it if it uses any of the following:
+
+- `http://`
+- `localhost` or an internal hostname, such as `*.local`, `*.internal`, or a single-label name like `myserver`
+- A private, loopback, or link-local IP address, such as `10.0.0.5`, `127.0.0.1`, or `169.254.169.254`
+
+ChainPatrol checks the URL again at send time against every address the host resolves to. If any address is not public, ChainPatrol refuses the delivery.
+
+ChainPatrol does not follow redirects. A `3xx` response is recorded as a failure, so set the URL to the final destination.
+
+To test webhooks locally, expose your local server through an HTTPS tunnel such as [ngrok](https://ngrok.com) and use the public tunnel URL:
+
+```bash
+ngrok http 3000
+# Use the https://<id>.ngrok-free.app URL as the webhook URL
+```
 
 ### Custom HTTP Headers
 
@@ -175,6 +194,8 @@ ChainPatrol supports specific hardcoded HTTP headers that can be configured for 
 - `X-Webhook-Access-Key`: Your webhook access key
 
 When configuring a webhook for Google SecOps, you can provide values for these headers, and they will be automatically included in all webhook requests sent to your endpoint, allowing Google SecOps to authenticate and process the webhook events.
+
+Saved header values are never shown again. When you edit a webhook, the header fields are blank, with a masked placeholder showing the last 4 characters of the stored value. Leave a field blank to keep the stored value, or type a new value to replace it. Delivery details show these headers and the `X-ChainPatrol-Signature` header as `[REDACTED]`.
 
 ## Signature Verification
 
@@ -214,13 +235,15 @@ Each webhook delivery attempt is logged with one of the following statuses:
 
 Webhooks will be retried up to 3 times with an exponential backoff if your endpoint returns a non-2xx status code. If your endpoint returns a 2xx status code, then the webhook will not be retried.
 
-You can view the delivery status, payload, request, and response details for each webhook attempt in the dashboard.
+Each attempt has a 30-second budget. Refused destinations, redirects, and timeouts are recorded as `FAILURE` and are not retried.
+
+You can view the delivery status, payload, request, and response details for each webhook attempt in the dashboard. Stored responses keep only the first 2 KB of the body and a few headers.
 
 ## Security
 
 Webhooks are sent over HTTPS and are signed with a secret that is unique to your account. You should:
 
-1. Only use HTTPS endpoints
+1. Use an HTTPS endpoint on a public host (ChainPatrol rejects anything else)
 2. Keep your webhook secret secure and never commit it to version control
 3. Always verify the signature of incoming webhooks
 4. Contact us immediately if you suspect your webhook secret has been compromised
