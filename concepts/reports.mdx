@@ -109,8 +109,19 @@ Click **Details** on an asset card to open the details panel. On a single-asset 
 Use the previous and next buttons in the panel to move between assets. The report URL keeps track of the open asset with an `?asset=<proposalId>` parameter, so you can share a link that opens the report with that asset's panel already open.
 
 <Note>
-You approve or reject an asset only from the details panel. Asset cards don't have review buttons, so reviewers always see the full scan before deciding.
+Asset cards don't have Approve or Reject buttons. To review a single asset, open its details panel so you see the full scan before you decide.
 </Note>
+
+### Bulk approving escalated assets
+
+If you're an organization admin, you can approve several assets that ChainPatrol escalated to you in one step:
+
+1. On the report page, select the checkbox on each asset card you want to approve. Only assets escalated to your organization that you haven't answered yet have a checkbox. To select all of them, click **Select all awaiting your review**.
+2. Click **Approve N**, where N is the number of selected assets.
+
+The **Review** page supports the same flow. Select proposals in the list, or click **Select All**, then click **Approve N**.
+
+ChainPatrol runs the same checks on each proposal as it does for a single approval. Block proposals keep the label and brand ChainPatrol recorded when escalating them. If ChainPatrol can't determine a label, it skips that proposal and asks you to open it and choose a label. Proposals that fail stay selected. A notification shows how many were approved and why the first failure happened. To reject assets, open each one in the details panel.
 
 ## How to Submit a Report
 
