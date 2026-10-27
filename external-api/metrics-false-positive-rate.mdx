@@ -1,0 +1,37 @@
+---
+title: Get False Positive Rate
+openapi: "POST /metrics/false-positive-rate"
+---
+
+## Overview
+
+Get the share of blocks in a date range that were later reversed, for one organization or several. Use it to track detection quality over time or compare organizations side by side.
+
+- Pass `slug` for one organization. Org-scoped API keys can omit it to use their own organization.
+- Pass `slugs` (1 to 200 organization slugs) for several organizations. `slug` and `slugs` are mutually exclusive.
+- Every slug must be one your API key can access. A single unknown or forbidden slug fails the whole request.
+
+The date range bounds when the asset was blocked. Whether the block still stands is read as of now, so a recent range reads low because its reversals have not happened yet.
+
+## Response
+
+- `total`: pooled across every requested organization. The rate is total false positives divided by total blocks, not an average of per-organization rates.
+- `byOrganization`: one row per requested organization, sorted by blocks descending. An organization with 0 blocks in the range has a `null` rate.
+- `byAssetType`: one row per asset type blocked in the range, including types with no false positives.
+
+## Example
+
+```bash
+curl -X POST https://app.chainpatrol.io/api/v2/metrics/false-positive-rate \
+  -H "X-API-KEY: $CHAINPATROL_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "slugs": ["acme", "globex"],
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-30"
+  }'
+```
+
+## From MCP
+
+The [MCP server](/mcp-server) exposes the same operation as the `metrics_false_positive_rate` tool.
