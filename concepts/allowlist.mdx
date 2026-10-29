@@ -106,7 +106,7 @@ Expiry removes the asset from your organization; it does not change the asset's 
 ### Setting an expiry
 
 - **When adding assets** - In the **Add Assets** dialog, choose an expiry: in 6 months, in 1 year, or on a date. Through the API, pass `expiresAt` to [Add Organization Assets](/external-api/organization-assets-add#setting-an-expiry-when-adding).
-- **On the Allowlist page** - Use **Set expiry** on an asset, or select several and set one date for all of them. Filter the list by **Expiring soon** or **Expired** to see what needs attention.
+- **On the Brand Assets page** - Use **Set expiry** on an asset, or select several and set one date for all of them. Filter the list by **Expiring soon** or **Expired** to see what needs attention.
 - **From the API, CLI or MCP** - Use the [Set Asset Expiry](/external-api/organization-assets-expiry) endpoint, the `chainpatrol orgs assets set-expiry` [CLI command](/cli/commands/orgs), or the `organization_assets_set_expiry` tool in the [MCP server](/mcp-server).
 
 An expiry date runs to the end of that day in UTC. Setting a new date on an expired asset renews it and ends its grace period. Clearing the expiry keeps the asset indefinitely.
