@@ -10,6 +10,11 @@ The Report Create endpoint allows you to submit assets (URLs, domains, blockchai
 New to this endpoint? Start with [Creating Reports](/external-api/creating-reports) — a
 step-by-step walkthrough of the whole flow, with worked examples.
 
+<Note>
+  This endpoint needs an API key with **Read & write** permission. A read-only key gets
+  `403 Forbidden`. See [Key permissions](/external-api/authentication#key-permissions).
+</Note>
+
 ## Attachments
 
 `attachmentUrls` accepts URLs of any evidence file, not just images — `.eml` and `.msg`
