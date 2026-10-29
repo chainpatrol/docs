@@ -156,14 +156,69 @@ This event is sent when a new suspected threat is added to the Suspected Threats
 }
 ```
 
+### `audit-log.created`
+
+This event is sent for every customer-visible entry recorded in your organization's audit log. Internal entries are never sent. See [Stream audit logs to your SIEM](#stream-audit-logs-to-your-siem).
+
+```json
+{
+  "type": "audit-log.created",
+  "created_at": "2026-10-28T12:00:01.000Z",
+  "data": {
+    "id": 48211,
+    "event_type": "api_key.created",
+    "occurred_at": "2026-10-28T12:00:00.000Z",
+    "organization": { "id": 100, "slug": "your-org" },
+    "actor": {
+      "type": "user",
+      "id": 512,
+      "name": "Jane Doe",
+      "email": "jane@example.com"
+    },
+    "target": { "type": "api_key", "id": 903 },
+    "changes": {
+      "before": null,
+      "after": { "name": "Production server" }
+    },
+    "ip_address": "203.0.113.24",
+    "user_agent": "Mozilla/5.0"
+  }
+}
+```
+
+| Field          | Description                                                                                                                      |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `id`           | ID of the audit log entry. Retries reuse the same `id`, so use it to drop duplicates.                                            |
+| `event_type`   | The action that was recorded, such as `api_key.created`.                                                                         |
+| `occurred_at`  | When the action happened, in UTC.                                                                                                |
+| `organization` | The `id` and `slug` of your organization.                                                                                        |
+| `actor`        | Who performed the action. ChainPatrol staff appear with the name `ChainPatrol Team` and an empty `email`.                        |
+| `target`       | What the action affected. Includes `name` and `email` when the target is a user.                                                 |
+| `changes`      | The values `before` and `after` the action. Either may be `null`.                                                                |
+| `ip_address`   | IP address the action came from. `null` for ChainPatrol staff actions.                                                           |
+| `user_agent`   | User agent the action came from. `null` for ChainPatrol staff actions.                                                           |
+
+## Stream audit logs to your SIEM
+
+Use the `audit-log.created` event to send your organization's audit log to a SIEM such as Splunk or Google SecOps. ChainPatrol POSTs each customer-visible audit log entry to every active webhook in your organization that has `audit-log.created` switched on.
+
+Deliveries use the same [signature](#signature-verification), [retries](#delivery-status-and-retries), delivery log, and **Test** button as other events. If all 3 retries fail, ChainPatrol drops the event.
+
+To set it up:
+
+1. On your organization's **Audit Log** page, click **Stream to SIEM**. This opens the Webhooks page. The button appears at organization level only and requires permission to create webhooks.
+2. Create a webhook pointing at your SIEM's HTTP ingestion endpoint.
+3. Switch on the `audit-log.created` event.
+4. If your SIEM needs a token, add it as an `Authorization` header under [Custom HTTP Headers](#custom-http-headers).
+
 ## Webhook Configuration
 
 When creating a webhook, you'll need to provide:
 
 1. A HTTPS endpoint URL that will receive the webhook events
-2. An optional description to help identify the webhook's purpose
-3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, and `organization.threat-detection-added`)
-4. Optional HTTP headers for supported integrations (currently Google SecOps headers are available)
+2. An optional description to help identify the webhook's purpose (up to 500 characters)
+3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, and `audit-log.created`)
+4. Optional HTTP headers for supported integrations (Google SecOps headers and an `Authorization` header are available)
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
 
@@ -175,6 +230,8 @@ ChainPatrol supports specific hardcoded HTTP headers that can be configured for 
 - `X-Webhook-Access-Key`: Your webhook access key
 
 When configuring a webhook for Google SecOps, you can provide values for these headers, and they will be automatically included in all webhook requests sent to your endpoint, allowing Google SecOps to authenticate and process the webhook events.
+
+For other destinations, such as a SIEM, you can set an `Authorization` header. Use it for values like `Bearer <token>` or `Splunk <token>`. Headers with other names, such as Datadog's `DD-API-KEY`, aren't supported yet.
 
 ## Signature Verification
 
