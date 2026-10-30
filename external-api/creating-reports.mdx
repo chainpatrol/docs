@@ -35,8 +35,9 @@ flowchart LR
 
 You need:
 
-- **An API key**, sent as `X-API-KEY` on every request. See
-  [Authentication](/external-api/authentication).
+- **An API key with Read & write permission**, sent as `X-API-KEY` on every request.
+  New keys are read-only by default, and a read-only key gets `403 Forbidden` here. See
+  [Authentication](/external-api/authentication#key-permissions).
 - **Your organization slug** — the identifier in your dashboard URL
   (`https://app.chainpatrol.io/<slug>`). If your key is scoped to a single organization you
   can omit `organizationSlug` and we will use the key's organization.

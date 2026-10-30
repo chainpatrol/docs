@@ -9,11 +9,31 @@ description: Create and use ChainPatrol API keys — including organization vs. 
 To access ChainPatrol's APIs and services, you'll need an API key. Here's how to get one:
 
 1. Go to your [Organization Dashboard](https://app.chainpatrol.io/admin)
-2. Navigate to the organization's `settings` page
-3. Navigate to `API keys`
-4. Click on `Create Key` and pick your settings
+2. In the sidebar, open **Developer › API Keys**
+3. Click **Create Key**, pick your settings, and click **Create**
+4. Copy the key from the confirmation dialog. It is shown only once
+
+Only organization owners and admins can create API keys.
+
+<Warning>
+  New keys are **Read only** by default. To submit reports or make any other change through
+  the API, select **Read & write** when you create the key. See
+  [Key Permissions](#key-permissions).
+</Warning>
 
 ## Types of API Keys
+
+### Key Permissions
+
+- **Read only** (default): Can query and export data, but cannot submit reports or make
+  other changes
+- **Read & write**: Full API access, including submitting reports and making changes
+
+A read-only key gets `403 Forbidden` from any endpoint that changes data, such as
+[Create Report](/external-api/report-create). A key's permission can't be changed after
+it is created, so create a new **Read & write** key and revoke the old one. Integration
+organizations can only create read-only keys; email
+[support@chainpatrol.io](mailto:support@chainpatrol.io) if yours needs write access.
 
 ### Organization vs User Keys
 
