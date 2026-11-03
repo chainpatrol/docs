@@ -302,7 +302,9 @@ The fields you will use most. The full schema, including every optional field, i
 <Note>
   `organizationSlug`, `discordGuildId`, and `telegramGroupId` are three ways to name the
   same thing. Use `organizationSlug` unless you are building a Discord or Telegram
-  integration and only have the platform's ID to hand.
+  integration and only have the platform's ID to hand. Whichever you use, your key must be
+  authorized for that organization. Without credentials you get `401 Unauthorized`, and
+  another organization's key gets `403 Forbidden`.
 </Note>
 
 ## Attachments in more detail
