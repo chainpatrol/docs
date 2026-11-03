@@ -1,0 +1,56 @@
+---
+title: Get Time to Detection
+openapi: "POST /metrics/time-to-detection"
+---
+
+## Overview
+
+Get how long threats were already live before ChainPatrol's automation first detected
+them, per asset type. It covers the distinct assets your organization blocked in a
+date range that are still blocked today.
+
+<Note>
+  This endpoint is gated behind the `time-to-detection-chart` feature flag on a
+  per-organization basis. If the flag is not enabled for your organization, the API
+  returns a 403 Forbidden error. Contact ChainPatrol to enable access.
+</Note>
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/time-to-detection \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "startDate": "2026-08-01",
+    "endDate": "2026-10-31"
+  }'
+```
+
+## Request Body
+
+| Field          | Type       | Required | Description                                                                                          |
+| -------------- | ---------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| `slug`         | `string`   | ✅ Yes   | Organization slug.                                                                                   |
+| `startDate`    | `string`   | ❌ No    | Only assets blocked on or after this date. A date-only value (`YYYY-MM-DD`) starts at midnight UTC.   |
+| `endDate`      | `string`   | ❌ No    | Only assets blocked on or before this date. A date-only value covers the whole day in UTC.           |
+| `brandIds`     | `number[]` | ❌ No    | Only assets belonging to these brands.                                                               |
+| `countryCodes` | `string[]` | ❌ No    | Only assets scanned from these ISO 3166-1 alpha-2 countries.                                         |
+
+## How it is measured
+
+The clock runs from the first time anyone saw the asset live to its earliest automated
+detection, for any organization. A human report does not stop the clock, including
+your own.
+
+`byAssetType` has one entry per asset type, most blocks first:
+
+| Field               | Description                                                                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `blocked`           | Distinct assets of this type blocked in the range and still blocked today.                                                      |
+| `withEvidence`      | Of those, how many enter the median: they have an accepted live date and an automated detection after it.                       |
+| `medianDaysAtLeast` | Median days the asset was live before it was detected. `null` when `withEvidence` is 0.                                         |
+
+The median is always a minimum: the live date is the first time anyone saw the asset,
+and it may have been live before that. For URLs and pages only a date the site was
+seen serving counts, so a domain registration date never enters the number.

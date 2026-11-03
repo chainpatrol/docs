@@ -1,0 +1,55 @@
+---
+title: Get Takedown Success Rate
+openapi: "POST /metrics/takedown-success-rate"
+---
+
+## Overview
+
+Get the share of takedowns that ended in a removal, per asset type, for takedowns
+first filed with a provider in a date range.
+
+<Note>
+  This endpoint is gated behind the `takedown-success-rate` feature flag on a
+  per-organization basis. If the flag is not enabled for your organization, the API
+  returns a 403 Forbidden error. Contact ChainPatrol to enable access.
+</Note>
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/takedown-success-rate \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "startDate": "2026-08-01",
+    "endDate": "2026-09-30"
+  }'
+```
+
+## Request Body
+
+| Field          | Type       | Required | Description                                                                                                      |
+| -------------- | ---------- | -------- | ---------------------------------------------------------------------------------------------------------------- |
+| `slug`         | `string`   | ✅ Yes   | Organization slug.                                                                                               |
+| `startDate`    | `string`   | ❌ No    | Only takedowns first filed on or after this date. A date-only value (`YYYY-MM-DD`) starts at midnight UTC.       |
+| `endDate`      | `string`   | ❌ No    | Only takedowns first filed on or before this date. A date-only value covers the whole day in UTC.                |
+| `brandIds`     | `number[]` | ❌ No    | Only assets belonging to these brands.                                                                           |
+| `brandType`    | `string`   | ❌ No    | Only brands of this type: `INDIVIDUAL`, `ORGANIZATION` or `PRODUCT`.                                             |
+| `blockLabel`   | `string`   | ❌ No    | Only assets blocked with this review label, such as `Brand Impersonation`.                                       |
+| `countryCodes` | `string[]` | ❌ No    | Only assets scanned from these ISO 3166-1 alpha-2 countries.                                                     |
+
+## Reading the response
+
+`byAssetType` has one entry per asset type, most takedowns first:
+
+| Field                 | Description                                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `submitted`           | Takedowns first filed with a provider in the range. Takedowns opened but never filed are not counted.       |
+| `completed`           | Of those, how many ended in a removal.                                                                       |
+| `stillOpen`           | Of those, how many have no outcome yet.                                                                      |
+| `successRate`         | `completed / submitted`, from 0 to 1. Takedowns still being worked count against it.                        |
+| `resolvedSuccessRate` | `completed / (submitted - stillOpen)`, from 0 to 1, or `null` when none has an outcome yet.                  |
+
+Outcomes are read as of now, so a recent range has more takedowns still open and a
+lower `successRate`. Compare `resolvedSuccessRate` when you want the rate among
+takedowns that have finished.

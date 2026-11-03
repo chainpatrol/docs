@@ -103,6 +103,7 @@
             "pages": [
               "external-api/overview",
               "external-api/authentication",
+              "general/api-key",
               "mcp-server",
               "external-api/deprecation-policy"
             ]
@@ -194,6 +195,7 @@
               "external-api/detection-configs-validate",
               "external-api/detection-drift",
               "external-api/threats-list",
+              "external-api/organization-threats-list",
               "external-api/organization-watchlist-list"
             ]
           },
@@ -217,6 +219,12 @@
               "external-api/metrics-breakdown",
               "external-api/metrics-found",
               "external-api/metrics-found-by-source",
+              "external-api/metrics-takedown-time",
+              "external-api/metrics-takedown-time-by-provider",
+              "external-api/metrics-takedown-time-trend",
+              "external-api/metrics-takedown-success-rate",
+              "external-api/metrics-false-positive-rate",
+              "external-api/metrics-time-to-detection",
               "external-api/organization-metrics-list",
               "external-api/organization-metrics"
             ]

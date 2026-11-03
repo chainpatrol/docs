@@ -1,0 +1,47 @@
+---
+title: Get Time to Takedown Trend
+openapi: "POST /metrics/takedown-time/trend"
+---
+
+## Overview
+
+Get the median time to takedown for each month of a trailing window, with the change
+from the previous month. Months are bucketed by when the takedown completed.
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/takedown-time/trend \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "months": 6,
+    "assetTypes": ["URL", "TWITTER"]
+  }'
+```
+
+## Request Body
+
+| Field          | Type          | Required | Default | Description                                                                                       |
+| -------------- | ------------- | -------- | ------- | ------------------------------------------------------------------------------------------------- |
+| `slug`         | `string`      | ✅ Yes   | -       | Organization slug.                                                                                |
+| `months`       | `number`      | ❌ No    | `12`    | Size of the window in whole months, 2 to 36, counting the current month.                          |
+| `assetTypes`   | `AssetType[]` | ❌ No    | -       | Up to 5 asset types, one series each. Omit for a single series pooled across asset types.         |
+| `brandIds`     | `number[]`    | ❌ No    | -       | Only assets belonging to these brands.                                                            |
+| `brandType`    | `string`      | ❌ No    | -       | Only brands of this type: `INDIVIDUAL`, `ORGANIZATION` or `PRODUCT`.                              |
+| `blockLabel`   | `string`      | ❌ No    | -       | Only assets blocked with this review label, such as `Brand Impersonation`.                        |
+| `countryCodes` | `string[]`    | ❌ No    | -       | Only assets scanned from these ISO 3166-1 alpha-2 countries.                                      |
+
+The pooled series leaves crypto addresses (`ADDRESS`) out, and `excludedAssetTypes`
+says so. Pass `ADDRESS` in `assetTypes` to get its own series. See
+[Time to Takedown](/external-api/metrics-takedown-time) for why.
+
+## Reading the response
+
+- `periods` lists every month in the window as `yyyy-MM`, oldest first.
+- Each series has one point per month. A month with no completed takedowns has a
+  `null` median and a `count` of 0. The pooled series has `assetType: null`.
+- `change` compares the latest month that had completed takedowns with the one before
+  it, skipping empty months. A negative `percentChange` means takedowns got faster,
+  and `direction` reads it for you as `improved`, `worsened` or `unchanged`. Both are
+  `null` when there is no earlier month to compare with.
