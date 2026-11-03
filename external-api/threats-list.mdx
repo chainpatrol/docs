@@ -17,7 +17,7 @@ X-API-KEY: <api-key>
 
 ```bash
 curl --request POST \
-  --url https://api.chainpatrol.io/threats/list \
+  --url https://app.chainpatrol.io/api/v2/threats/list \
   --header 'Content-Type: application/json' \
   --header 'X-API-KEY: <api-key>' \
   --data '{
@@ -210,7 +210,7 @@ If you attempt to access threats without proper permissions, you will receive a 
 
 ```javascript JavaScript
 async function fetchThreats(params) {
-  const response = await fetch("https://api.chainpatrol.io/threats/list", {
+  const response = await fetch("https://app.chainpatrol.io/api/v2/threats/list", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -285,7 +285,7 @@ interface ThreatListResponse {
 async function fetchThreats(
   params: ThreatListParams
 ): Promise<ThreatListResponse> {
-  const response = await fetch("https://api.chainpatrol.io/threats/list", {
+  const response = await fetch("https://app.chainpatrol.io/api/v2/threats/list", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

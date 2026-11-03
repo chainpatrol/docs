@@ -1,0 +1,49 @@
+---
+title: Get False Positive Rate
+openapi: "POST /metrics/false-positive-rate"
+---
+
+## Overview
+
+Get the share of blocks that were later reversed, for assets blocked in a date range.
+A block counts as a false positive when the asset is no longer blocked today.
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/false-positive-rate \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "startDate": "2026-08-01",
+    "endDate": "2026-09-30"
+  }'
+```
+
+## Request Body
+
+| Field          | Type       | Required | Description                                                                                                                     |
+| -------------- | ---------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `slug`         | `string`   | ❌ No    | Organization slug. Optional with an organization API key, which uses its own organization. Do not send it with `slugs`.         |
+| `slugs`        | `string[]` | ❌ No    | Several organizations at once, up to 200. Each one is checked against your credentials, and one you cannot access fails the call. |
+| `startDate`    | `string`   | ❌ No    | Only assets blocked on or after this date. A date-only value (`YYYY-MM-DD`) starts at midnight UTC.                              |
+| `endDate`      | `string`   | ❌ No    | Only assets blocked on or before this date. A date-only value covers the whole day in UTC.                                      |
+| `brandIds`     | `number[]` | ❌ No    | Only assets belonging to these brands.                                                                                          |
+| `countryCodes` | `string[]` | ❌ No    | Only assets scanned from these ISO 3166-1 alpha-2 countries.                                                                    |
+
+## Reading the response
+
+Every breakdown has `blocked`, `falsePositives` and `falsePositiveRate`
+(`falsePositives / blocked`, from 0 to 1, or `null` when nothing was blocked).
+
+- `total` pools every requested organization: all false positives over all blocks,
+  not an average of per-organization rates.
+- `byOrganization` has one entry per requested organization, most blocks first. An
+  organization that blocked nothing in the range is listed with `blocked: 0`.
+- `byAssetType` lists every asset type blocked in the range, including types with no
+  false positives.
+
+<Warning>
+  Whether a block still stands is read as of now. A recent range reads low because
+  its reversals have not happened yet, so compare ranges that have had the same time
+  to settle.
+</Warning>

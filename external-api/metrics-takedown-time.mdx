@@ -1,0 +1,61 @@
+---
+title: Get Time to Takedown
+openapi: "POST /metrics/takedown-time"
+---
+
+## Overview
+
+Get the median time from a takedown starting to its completion, for takedowns
+completed in a date range: one median pooled across everything in scope (`overall`)
+and one per asset type (`byAssetType`).
+
+The clock starts when the takedown first moves to In Progress, or when it was opened
+if it never did, and stops the first time it is completed.
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/takedown-time \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "startDate": "2026-10-01",
+    "endDate": "2026-10-31",
+    "assetTypeGroups": ["DOMAINS", "SOCIALS"]
+  }'
+```
+
+## Request Body
+
+| Field             | Type          | Required | Description                                                                                                                          |
+| ----------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `slug`            | `string`      | ✅ Yes   | Organization slug.                                                                                                                   |
+| `startDate`       | `string`      | ❌ No    | Only takedowns completed on or after this date. A date-only value (`YYYY-MM-DD`) starts at midnight UTC.                             |
+| `endDate`         | `string`      | ❌ No    | Only takedowns completed on or before this date. A date-only value covers the whole day in UTC.                                      |
+| `assetTypes`      | `AssetType[]` | ❌ No    | Only these asset types. Combined with `assetTypeGroups` as a union.                                                                  |
+| `assetTypeGroups` | `string[]`    | ❌ No    | Only asset types in these groups: `DOMAINS`, `SOCIALS`, `APP_STORES`, `ADS`, `EXTENSIONS`, `CRYPTO`, `EMAIL`, `PACKAGES`, `OTHER`.   |
+| `brandIds`        | `number[]`    | ❌ No    | Only assets belonging to these brands.                                                                                               |
+| `brandType`       | `string`      | ❌ No    | Only brands of this type: `INDIVIDUAL`, `ORGANIZATION` or `PRODUCT`.                                                                 |
+| `blockLabel`      | `string`      | ❌ No    | Only assets blocked with this review label, such as `Brand Impersonation`.                                                           |
+| `countryCodes`    | `string[]`    | ❌ No    | Only assets scanned from these ISO 3166-1 alpha-2 countries.                                                                         |
+
+<Note>
+  Crypto address (`ADDRESS`) takedowns are left out unless you filter to them with
+  `assetTypes` or the `CRYPTO` group. An address is reported on many sites at once,
+  and how long that takes depends on how many platforms you want covered, so it would
+  skew the median for domains and socials. `excludedAssetTypes` in the response lists
+  what was left out.
+</Note>
+
+## Reading the response
+
+- Each median is given in minutes, hours and days. `count` is the number of completed
+  takedowns behind it.
+- `overall` is the median of every takedown in scope, not a median of the
+  per-type medians, so you cannot work it out from `byAssetType`. It is `null` when
+  no takedown in scope completed in the range.
+
+For the same median per hosting provider or registrar, use
+[`/metrics/takedown-time/by-provider`](/external-api/metrics-takedown-time-by-provider).
+For month-by-month figures, use
+[`/metrics/takedown-time/trend`](/external-api/metrics-takedown-time-trend).

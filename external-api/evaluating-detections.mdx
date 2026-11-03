@@ -31,7 +31,7 @@ not active for your organization, confirmed threats are held as **Pending Blocke
 instead of being enforced, but they are still confirmed. Include both.
 
 ```bash
-curl -X POST https://api.chainpatrol.io/metrics/summary \
+curl -X POST https://app.chainpatrol.io/api/v2/metrics/summary \
   -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
   -d '{ "slug": "your-org" }'
 ```
@@ -41,7 +41,7 @@ curl -X POST https://api.chainpatrol.io/metrics/summary \
 among your suspected threats:
 
 ```bash
-curl -X POST https://api.chainpatrol.io/detection/list \
+curl -X POST https://app.chainpatrol.io/api/v2/detection/list \
   -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
   -d '{
     "slug": "your-org",
@@ -61,7 +61,7 @@ that no detector produced. To list every confirmed threat regardless of source, 
 ## How many suspected threats on domains do we have?
 
 ```bash
-curl -X POST https://api.chainpatrol.io/detection/list \
+curl -X POST https://app.chainpatrol.io/api/v2/detection/list \
   -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
   -d '{
     "slug": "your-org",
@@ -95,7 +95,7 @@ bucketed from the score with your organization's own thresholds, so `"high"` is 
 fixed percentage.
 
 ```bash
-curl -X POST https://api.chainpatrol.io/detection/list \
+curl -X POST https://app.chainpatrol.io/api/v2/detection/list \
   -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
   -d '{
     "slug": "your-org",
