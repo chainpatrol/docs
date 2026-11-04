@@ -1,0 +1,52 @@
+---
+title: Pump.fun
+description: Use the PUMP_FUN asset type to report Pump.fun tokens, creator profiles, or platform pages while preserving the case-sensitive Solana mint identifier.
+---
+
+The `PUMP_FUN` asset type represents a Pump.fun token, creator profile, or platform page. It is detected automatically when you submit any URL on the `pump.fun` domain.
+
+Unlike the `PAGE` asset type, which lowercases its content during normalization, `PUMP_FUN` preserves the exact casing of the path. This matters because Solana mint addresses are case-sensitive base58 strings, and a lowercased mint no longer resolves to the same token.
+
+<Info>
+  You do not need to specify `PUMP_FUN` manually. Submit the full Pump.fun URL and ChainPatrol classifies it for you.
+</Info>
+
+## Coverage
+
+| URL shape | Example | Identifier stored |
+| --- | --- | --- |
+| Token page | `https://pump.fun/coin/6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P` | The mint address (case preserved) |
+| Creator profile | `https://pump.fun/profile/someuser` | `profile/someuser` |
+| Other platform pages | `https://pump.fun/board` | The path (e.g. `board`) |
+
+Pump.fun assets flow through the same scan, watchlist, safe-preview, takedown, reporting, filtering, and snapshot paths as other asset types.
+
+## Token enrichment
+
+When a `/coin/{mint}` asset is scanned, ChainPatrol enriches the scan with structured token data pulled from Pump.fun. Reviewers see this as the first tab on the scan detail view, before browser screenshots.
+
+The enrichment includes:
+
+- **Identity** — token name, symbol, description, and logo
+- **Creator** — creator wallet address, Pump.fun username, and profile image
+- **Market** — current market cap (SOL and USD) and all-time-high market cap
+- **Socials** — linked Twitter, Telegram, and website URLs
+- **Bonding curve** — bonding curve address, completion status, and PumpSwap pool if graduated
+- **Status** — banned, NSFW, currently live, verified, and any security verdict
+
+This gives reviewers immediate context on token identity and legitimacy without depending on the Pump.fun UI, whose default modal can obscure screenshots.
+
+## Submitting
+
+Pass the full Pump.fun URL to any submission endpoint. ChainPatrol parses it and stores it as `PUMP_FUN`.
+
+```bash
+curl -X POST https://app.chainpatrol.io/api/v2/asset/submit \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: YOUR_API_KEY' \
+  -d '{
+    "type": "PUMP_FUN",
+    "content": "https://pump.fun/coin/6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+    "status": "BLOCKED"
+  }'
+```
