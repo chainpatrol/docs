@@ -21,3 +21,64 @@ Include your API key in the `X-API-KEY` header:
 ```bash
 X-API-KEY: <api-key>
 ```
+
+## Scan enrichments
+
+By default, each entry in a search result's `scans` array is minimal: just the scan `id` and `createdAt`. Pass `includeEnrichments: true` to opt in to the enrichment payloads attached to those scans — including the `browser_capture` entry whose `screenshotUrl` and `domUrl` point at the captured page.
+
+### When to use it
+
+Turn on `includeEnrichments` when you need to look at *what* a scan found rather than just that it ran. The most common case is grabbing the screenshot and DOM capture produced by `browser_capture`; others include DNS records, WHOIS/RDAP data, phone lookups, and threat-intel verdicts.
+
+Leave it off for list views and bulk audits. Enrichment payloads are large, and the extra bytes add up quickly across many assets and many scans.
+
+### Shape and limits
+
+- `enrichments` is attached to a scan only when `includeEnrichments` is set **and** the scan is one of the asset's **10 most recent**. Older scans are still listed, just without the `enrichments` field.
+- The field is an array. An **empty array** means the scan genuinely has no enrichments. An **absent field** means they were not fetched for that scan.
+- When combining `includeEnrichments: true` with `assetIds` for a bulk lookup, the request is capped at **10 asset IDs** per call. Beyond that, split the IDs across several requests, or drop `includeEnrichments`. The `assetIds` cap only applies when enrichments are requested; `assetIds` on its own is unbounded.
+
+Each enrichment object has:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | number | Enrichment ID. |
+| `type` | string | Enrichment kind, e.g. `browser_capture`, `dns`, `content_and_metadata`, `threat_intel`, `phone_lookup`. |
+| `source` | string | Provider that produced the enrichment, in the stored lower-case form, e.g. `whois`, `urlscan`, `rdap`, `chainpatrol_browser`, `x_api`. |
+| `status` | string | `PENDING`, `IN_PROGRESS`, `COMPLETED`, or `FAILED`. |
+| `output` | object \| null | Provider payload. Shape varies by `type`. For `browser_capture`, `output` carries `screenshotUrl` and `domUrl`. |
+| `createdAt` | string (ISO 8601) | When the enrichment was created. |
+
+### Example
+
+```json
+{
+  "content": "example-phish.com",
+  "includeEnrichments": true
+}
+```
+
+```json
+{
+  "asset": { "id": 12345, "content": "example-phish.com", "...": "..." },
+  "scans": [
+    {
+      "id": 98765,
+      "createdAt": "2026-10-01T12:00:00.000Z",
+      "enrichments": [
+        {
+          "id": 55501,
+          "type": "browser_capture",
+          "source": "chainpatrol_browser",
+          "status": "COMPLETED",
+          "output": {
+            "screenshotUrl": "https://cdn.chainpatrol.io/.../screenshot.png",
+            "domUrl": "https://cdn.chainpatrol.io/.../dom.html"
+          },
+          "createdAt": "2026-10-01T12:00:12.000Z"
+        }
+      ]
+    }
+  ]
+}
+```
