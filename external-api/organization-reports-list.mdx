@@ -84,7 +84,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
 | startDate    | string  | No       | Filter reports created after this date (ISO 8601 format)                                              |
 | endDate      | string  | No       | Filter reports created before this date (ISO 8601 format)                                             |
 | onlyRejected | boolean | No       | If true, only return reports with rejected proposals (default: false)                                 |
-| needsCustomerReview | boolean | No | If true, only return reports with at least one proposal waiting on **your** review — the same queue your Review page shows. Use it to answer "what is waiting on me?", then act on the proposals with [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review). |
+| needsCustomerReview | boolean | No | If true, only return reports with at least one proposal waiting on **your** review — the same queue your Review page shows. A proposal qualifies when ChainPatrol escalated it to you and you have not answered yet; approving, rejecting, or escalating it back to ChainPatrol all count as answering. Reports your organization submitted itself are **not** included: ChainPatrol triages those and staff approval blocks the asset without you. Neither is Obligatory Organization Admin Approval enough on its own. Use this to answer "what is waiting on me?", then act on the proposals with [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review). |
 
 ## Response
 
@@ -240,7 +240,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?onlyRejected
 
 ### Filter Reports Awaiting Your Review
 
-Get the reports with at least one proposal waiting on your organization — the same queue your Review page shows:
+Get the reports with at least one proposal ChainPatrol escalated to you and you have not answered — the same queue your Review page shows. Reports you submitted yourself are decided by ChainPatrol staff and do not appear here, though they are still returned unfiltered:
 
 ```bash
 curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?needsCustomerReview=true&limit=20' \
