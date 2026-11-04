@@ -85,6 +85,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?limit=50' \
 | endDate      | string  | No       | Filter reports created before this date (ISO 8601 format)                                             |
 | onlyRejected | boolean | No       | If true, only return reports with rejected proposals (default: false)                                 |
 | needsCustomerReview | boolean | No | If true, only return reports with at least one proposal waiting on **your** review — the same queue your Review page shows. Use it to answer "what is waiting on me?", then act on the proposals with [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review). |
+| hasAttachments | boolean | No | Filter on evidence files uploaded with the report. Set to `true` to return only reports that carry at least one attachment; set to `false` to return only reports with none. Omit to return both. Soft-deleted attachments are ignored on both sides, so the two values are exact complements of each other. |
 
 ## Response
 
@@ -248,6 +249,17 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?needsCustome
 ```
 
 Each returned report carries the proposals to act on in `proposals[]`. Take `proposals[].id` and `proposals[].asset.id` from there and pass both to [`POST /organization/proposals/{proposalId}/review`](/external-api/organization-proposals-review).
+
+### Filter by Attachments
+
+Get only reports that were submitted with evidence files (screenshots, `.eml` messages, etc.):
+
+```bash
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports?hasAttachments=true' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+This is most useful for asset types where the content alone says little, such as phone numbers or email addresses, and the attachment is the review signal. Set `hasAttachments=false` to find the reports with none.
 
 ### Combine Filters
 
