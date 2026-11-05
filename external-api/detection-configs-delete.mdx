@@ -28,3 +28,8 @@ that source on its next run. To stop such a source durably, call
 - The config's `deletedAt` and `updatedAt` are set, and a history row is written
   with unchanged status so default-sync jobs don't treat the deletion as a
   status change.
+
+<Note>
+  This endpoint requires an organization API key, or an organization owner or admin
+  (signed in, or using their own user API key). A member-role credential gets `403 Forbidden`.
+</Note>

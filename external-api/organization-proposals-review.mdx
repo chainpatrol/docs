@@ -265,7 +265,7 @@ A conditional requirement was not met, or the asset type cannot be watchlisted:
 
 ### 403 Forbidden
 
-The credential is not a customer member of the organization, or a safety check refused the write:
+The credential is not an organization API key or an owner or admin of the organization, or a safety check refused the write:
 
 ```json
 {
@@ -435,7 +435,7 @@ A `409` means either the asset does not match or the proposal is already resolve
 
 ## Notes
 
-- Reviews must be attributed to a customer-role member of the organization. Staff credentials are refused with `403`.
+- Reviews must be made with an organization API key, or by an organization owner or admin (signed in, or using their own user API key). A member-role credential is refused with `403`, and so are staff credentials.
 - Asset status is global: assets are unique on type and content, so approving blocks the asset everywhere rather than only for your organization.
 - Not every asset type can be watchlisted. Types the watchlist cannot re-check are refused with `400` instead of silently skipping the park.
 - `GET /organization/reports` returns `proposals[].id` specifically so proposals can be addressed here.
