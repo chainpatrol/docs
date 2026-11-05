@@ -1,7 +1,7 @@
 ---
 title: Creating Reports
 sidebarTitle: Creating Reports
-description: "End-to-end guide to submitting phishing reports through the ChainPatrol External API, including uploading .eml and screenshot evidence and attaching it to a report."
+description: "Submit reports through the ChainPatrol External API: upload .eml and screenshot evidence, attach it to POST /report/create, and handle common errors."
 ---
 
 ## Overview
@@ -35,8 +35,9 @@ flowchart LR
 
 You need:
 
-- **An API key**, sent as `X-API-KEY` on every request. See
-  [Authentication](/external-api/authentication).
+- **An API key with Read & write permission**, sent as `X-API-KEY` on every request.
+  New keys are read-only by default, and a read-only key gets `403 Forbidden` here. See
+  [Authentication](/external-api/authentication#key-permissions).
 - **Your organization slug** — the identifier in your dashboard URL
   (`https://app.chainpatrol.io/<slug>`). If your key is scoped to a single organization you
   can omit `organizationSlug` and we will use the key's organization.
