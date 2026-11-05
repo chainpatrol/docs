@@ -8,8 +8,9 @@ openapi: "POST /user/orgs"
 List the organizations accessible to the current user, along with each one's
 subscription status, which services are enabled (reporting, reviewing, protection,
 takedowns, detection, and dark web monitoring), integration connection status, whether
-obligatory organization admin approval is enabled, the org-level Letter of Authorization
-and Power of Attorney attachments, and every org-level trademark registration on file.
+obligatory organization admin approval is enabled, the Letter of Authorization
+and Power of Attorney attachments for the org and for brands with their own documents, and
+the trademark registrations on the org's live brands.
 
 ## Notes
 
@@ -19,10 +20,17 @@ and Power of Attorney attachments, and every org-level trademark registration on
   `discord`, `vercel`, `intercom`, and `moderation` are booleans; `telegram` reports both a
   connected flag and a group count, since an organization can have multiple Telegram
   groups.
-- `legalDocuments` has `letterOfAuthorization` and `powerOfAttorney` entries, each
-  reporting whether the document is present along with its file name and URL.
-- `trademarkRegistrations` is the full list of org-level trademarks with their issuing
-  office, registration number, and a certificate PDF link when one has been uploaded — use
-  it to identify which customers have or have not added trademarks.
+- `legalDocuments` has org-level `letterOfAuthorization` and `powerOfAttorney` entries,
+  each shaped as `{ present, fileName, fileUrl }`. A deleted document reads as
+  `present: false`.
+- `legalDocuments.brands` lists each live brand that uses its own documents instead of the
+  organization's. Each entry has `brandId`, `brandSlug`, `brandName`, and that brand's
+  `letterOfAuthorization` and `powerOfAttorney` in the same shape. Brands that use the
+  organization's documents are left out.
+- `trademarkRegistrations` comes from the trademarks on the organization's live brands, with
+  their issuing office, registration number, and a certificate PDF link when one has been
+  uploaded. A mark on several brands (same office and registration number) is listed once.
+  Each `id` is a brand trademark id. Use it to identify which customers have or have not
+  added trademarks.
 - The optional `subscriptionStatus`, `services`, and `obligatoryAdminApproval` filters
   narrow the result server-side. `INACTIVE` organizations are always excluded.

@@ -56,6 +56,10 @@ chainpatrol orgs get <slug>
 The caller must have access: an organization-scoped API key must match the slug, and a user
 session or key needs an active membership unless the user is staff.
 
+Both `orgs list` and `orgs get` show a per-brand legal summary for brands with their own
+documents, in the form `brands=<slug>(LOA=... POA=...)`. `orgs get` also prints each
+brand's document URLs. CSV output includes a `brandLegalDocuments` column.
+
 ```bash
 chainpatrol orgs get acme
 chainpatrol --json orgs get acme
