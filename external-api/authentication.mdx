@@ -46,3 +46,10 @@ old key.
   Integration organizations can only create read-only keys. If your organization needs
   write access, email [support@chainpatrol.io](mailto:support@chainpatrol.io).
 </Note>
+
+## User keys and membership
+
+A user (personal) API key acts as the person who created it. It stops working once that
+person leaves the organization or their user account is deleted, and requests return
+`401 Unauthorized` as if the key were revoked. Organization keys are not affected, so use
+an organization key for shared integrations.

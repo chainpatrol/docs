@@ -7,3 +7,10 @@ openapi: "POST /detection/configs/validate"
 
 Validate detection configs by checking their recent results (the suspected threats
 each config found), optionally running each config first.
+
+<Note>
+  Validation without a run works with any key. With `runBeforeValidate: true`, the
+  request follows the same rule as [Run Detection Configs](/external-api/detection-configs-run):
+  you need an organization API key, or an owner or admin credential. A read-only key or a
+  member-role credential gets `403 Forbidden`.
+</Note>

@@ -7,3 +7,10 @@ openapi: "POST /healthchecks/detections/silent-configs"
 
 Validates that each enabled detection config has produced at least the configured
 minimum number of results within the lookback window.
+
+<Note>
+  With `runBeforeValidate: true`, this endpoint runs detection configs first and follows the
+  same rule as [Run Detection Configs](/external-api/detection-configs-run): you need an
+  organization API key, or an owner or admin credential. A read-only key or a member-role
+  credential gets `403 Forbidden`.
+</Note>

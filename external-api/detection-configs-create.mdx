@@ -36,3 +36,8 @@ instead.
   organization-wide config.
 - The config and an initial history row are written in one transaction so
   default-sync jobs don't disable it.
+
+<Note>
+  This endpoint requires an organization API key, or an organization owner or admin
+  (signed in, or using their own user API key). A member-role credential gets `403 Forbidden`.
+</Note>
