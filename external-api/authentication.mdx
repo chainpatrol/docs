@@ -1,10 +1,12 @@
 ---
 title: "External API Authentication"
-description: "Authenticate ChainPatrol External API requests with an X-API-KEY header and learn how to request an API key for phishing detection and takedown endpoints."
+description: "Authenticate ChainPatrol External API requests with an X-API-KEY header, create an API key from your dashboard, and choose read-only or read & write access."
 ---
 
-We use **API keys** to authenticate requests. You can get an API key from us
-by [booking a demo](https://calendar.app.google/mbHSej2xYwa4X9b59).
+We use **API keys** to authenticate requests. Organization owners and admins can
+create one from **Developer › API Keys** in the
+[ChainPatrol dashboard](https://app.chainpatrol.io/admin). See
+[Get Your API Key](/general/api-key) for a walkthrough.
 
 ## How to authenticate a request
 
@@ -14,3 +16,33 @@ with the value of your API key in your request:
 ```bash
 'X-API-KEY': '<your api key>'
 ```
+
+## Key permissions
+
+Every API key has one of two permissions, chosen when you create it:
+
+| Permission              | What the key can do                                             |
+| ----------------------- | --------------------------------------------------------------- |
+| **Read only** (default) | Query and export data                                           |
+| **Read & write**        | Everything a read-only key can, plus endpoints that change data |
+
+Submitting reports needs a **Read & write** key. So does every other endpoint that
+creates or changes data, such as [Create Report](/external-api/report-create),
+[Asset Submit](/external-api/asset-submit), [Dispute Create](/external-api/dispute-create),
+and adding, updating or removing [organization assets](/external-api/organization-assets-add)
+and [asset groups](/external-api/organization-asset-groups-create).
+
+Calling one of these with a read-only key returns `403 Forbidden` with a message like:
+
+```text
+"reportCreate" changes data, and this API key is read-only. Create an API key with read & write access to make changes.
+```
+
+A key's permission can't be changed after it is created. To get write access, create a
+new key with **Read & write** selected, switch your integration to it, then revoke the
+old key.
+
+<Note>
+  Integration organizations can only create read-only keys. If your organization needs
+  write access, email [support@chainpatrol.io](mailto:support@chainpatrol.io).
+</Note>

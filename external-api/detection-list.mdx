@@ -27,7 +27,7 @@ X-API-KEY: <api-key>
 
 ```bash
 curl --request POST \
-  --url https://api.chainpatrol.io/detection/list \
+  --url https://app.chainpatrol.io/api/v2/detection/list \
   --header 'Content-Type: application/json' \
   --header 'X-API-KEY: <api-key>' \
   --data '{
@@ -342,7 +342,7 @@ it on the first page rather than on every page.
 
 ```bash
 curl --request POST \
-  --url https://api.chainpatrol.io/detection/list \
+  --url https://app.chainpatrol.io/api/v2/detection/list \
   --header 'Content-Type: application/json' \
   --header 'X-API-KEY: <api-key>' \
   --data '{
@@ -413,7 +413,7 @@ async function fetchDetections({ slug, startDate, endDate, filters = [] }) {
   let cursor;
 
   do {
-    const response = await fetch("https://api.chainpatrol.io/detection/list", {
+    const response = await fetch("https://app.chainpatrol.io/api/v2/detection/list", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -472,7 +472,7 @@ def fetch_detections(slug, start_date=None, end_date=None, filters=None):
         if cursor:
             body["cursor"] = cursor
         response = requests.post(
-            "https://api.chainpatrol.io/detection/list",
+            "https://app.chainpatrol.io/api/v2/detection/list",
             headers={"Content-Type": "application/json", "X-API-KEY": "<api-key>"},
             json=body,
         )
@@ -522,7 +522,7 @@ If you attempt to query an organization without proper permissions, you will rec
 
 ```javascript JavaScript
 async function fetchDetectionResults(params) {
-  const response = await fetch("https://api.chainpatrol.io/detection/list", {
+  const response = await fetch("https://app.chainpatrol.io/api/v2/detection/list", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -614,7 +614,7 @@ interface DetectionListResponse {
 async function fetchDetectionResults(
   params: DetectionListParams
 ): Promise<DetectionListResponse> {
-  const response = await fetch("https://api.chainpatrol.io/detection/list", {
+  const response = await fetch("https://app.chainpatrol.io/api/v2/detection/list", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -1,0 +1,45 @@
+---
+title: Get Time to Takedown by Provider
+openapi: "POST /metrics/takedown-time/by-provider"
+---
+
+## Overview
+
+Get the median time from a takedown starting to its completion, per provider the
+takedown was filed against, for takedowns completed in a date range. Use it to see
+which hosts and registrars act quickly and which are slow.
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/takedown-time/by-provider \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "startDate": "2026-08-01",
+    "endDate": "2026-10-31",
+    "roles": ["HOSTING_PROVIDER", "DOMAIN_REGISTRAR"]
+  }'
+```
+
+## Request Body
+
+| Field          | Type       | Required | Description                                                                                                       |
+| -------------- | ---------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| `slug`         | `string`   | ✅ Yes   | Organization slug.                                                                                                |
+| `startDate`    | `string`   | ❌ No    | Only takedowns completed on or after this date. A date-only value (`YYYY-MM-DD`) starts at midnight UTC.          |
+| `endDate`      | `string`   | ❌ No    | Only takedowns completed on or before this date. A date-only value covers the whole day in UTC.                   |
+| `roles`        | `string[]` | ❌ No    | Only these provider roles: `HOSTING_PROVIDER`, `DOMAIN_REGISTRAR`, `TLD_REGISTRAR`. Omit for every role.           |
+| `brandIds`     | `number[]` | ❌ No    | Only assets belonging to these brands.                                                                            |
+| `brandType`    | `string`   | ❌ No    | Only brands of this type: `INDIVIDUAL`, `ORGANIZATION` or `PRODUCT`.                                              |
+| `blockLabel`   | `string`   | ❌ No    | Only assets blocked with this review label, such as `Brand Impersonation`.                                        |
+| `countryCodes` | `string[]` | ❌ No    | Only assets scanned from these ISO 3166-1 alpha-2 countries.                                                      |
+
+## Reading the response
+
+- `byProvider` has one entry per provider and role, fastest median first. A takedown
+  filed against both a host and a registrar counts once under each.
+- `count` is the number of completed takedowns behind each median.
+- Crypto address (`ADDRESS`) takedowns are always left out, and
+  `excludedAssetTypes` says so. See
+  [Time to Takedown](/external-api/metrics-takedown-time) for why.

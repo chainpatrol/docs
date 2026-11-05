@@ -1,0 +1,193 @@
+---
+title: Get Organization Report
+openapi: "GET /organization/reports/{reportId}"
+---
+
+## Overview
+
+Get one of your organization's reports by its ID, with what happened to each asset in it: ChainPatrol's review, whether the asset is blocked, whether it was still online when last checked, and your organization's takedown.
+
+Use it to answer "what happened to this report?" or "why is this still live?" for a report you already have, for example from a report link in the ChainPatrol app. The ID is the number at the end of the link: `app.chainpatrol.io/admin/<slug>/reports/<reportId>`. To find reports by filters instead, use [`GET /organization/reports`](/external-api/organization-reports-list).
+
+The organization is inferred from your API key. Only your organization's reports are returned: any other ID returns `404`, the same as an ID that doesn't exist.
+
+## Quick Start
+
+### Authentication
+
+Include your API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Example Request
+
+<CodeGroup>
+
+```typescript TypeScript
+const reportId = 1823334;
+
+const response = await fetch(
+  `https://app.chainpatrol.io/api/v2/organization/reports/${reportId}`,
+  {
+    method: "GET",
+    headers: {
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+  }
+);
+
+const { report } = await response.json();
+console.log(report.assets);
+```
+
+```python Python
+import requests
+
+report_id = 1823334
+
+response = requests.get(
+    f"https://app.chainpatrol.io/api/v2/organization/reports/{report_id}",
+    headers={
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+)
+
+report = response.json()["report"]
+print(report["assets"])
+```
+
+```bash cURL
+curl -X GET 'https://app.chainpatrol.io/api/v2/organization/reports/1823334' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE'
+```
+
+</CodeGroup>
+
+## Path Parameters
+
+| Parameter | Type   | Required | Description                                                                    |
+| --------- | ------ | -------- | ------------------------------------------------------------------------------ |
+| reportId  | number | Yes      | The report's ID, as in its link: `app.chainpatrol.io/admin/<slug>/reports/<reportId>` |
+
+## Query Parameters
+
+| Parameter | Type   | Required | Description                                                                                                                         |
+| --------- | ------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| slug      | string | No       | Organization slug. Leave it out with an organization API key, which already decides the organization. Needed only when your credentials can reach more than one organization. |
+
+## Response
+
+### Success Response
+
+```json
+{
+  "report": {
+    "id": 1823334,
+    "title": "Fake wallet site",
+    "description": "Phishing site impersonating our wallet",
+    "status": "IN_PROGRESS",
+    "reportedByCustomer": true,
+    "slaDueAt": "2026-10-21T18:00:00.000Z",
+    "duplicateOfId": null,
+    "createdAt": "2026-10-20T18:00:00.000Z",
+    "updatedAt": "2026-10-21T09:12:00.000Z",
+    "assets": [
+      {
+        "proposalId": 4321,
+        "reviewStatus": "APPROVED",
+        "asset": {
+          "id": 12345,
+          "type": "URL",
+          "content": "https://fake-wallet.example",
+          "status": "BLOCKED",
+          "livenessStatus": "ALIVE"
+        },
+        "takedown": {
+          "id": 987,
+          "status": "IN_PROGRESS",
+          "createdAt": "2026-10-20T19:05:00.000Z",
+          "updatedAt": "2026-10-21T08:40:00.000Z"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Response Fields
+
+| Field                                   | Type           | Description                                                                                                  |
+| --------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------ |
+| report.id                               | number         | The report's ID                                                                                              |
+| report.title                            | string         | The report's title                                                                                           |
+| report.description                      | string         | The report's description                                                                                     |
+| report.status                           | string \| null | The report's status: `TODO`, `IN_PROGRESS` or `CLOSED`                                                       |
+| report.reportedByCustomer               | boolean        | Whether your organization submitted the report                                                               |
+| report.slaDueAt                         | string \| null | SLA deadline for the report. `null` when no SLA applies                                                      |
+| report.duplicateOfId                    | number \| null | ID of the report this one duplicates. `null` when it isn't a duplicate                                       |
+| report.createdAt / report.updatedAt     | string         | ISO 8601 timestamps                                                                                          |
+| report.assets                           | array          | Each asset in the report, oldest first                                                                       |
+| report.assets[].proposalId              | number         | The proposal for this asset in this report                                                                   |
+| report.assets[].reviewStatus            | string         | ChainPatrol's review of this asset in this report: `PENDING`, `APPROVED` or `REJECTED`                       |
+| report.assets[].asset.id                | number         | The asset's ID                                                                                               |
+| report.assets[].asset.type              | string         | The asset type, such as `URL`, `TWITTER` or `ADDRESS`                                                        |
+| report.assets[].asset.content           | string         | The asset itself: the URL, handle or address                                                                 |
+| report.assets[].asset.status            | string         | The asset's status now: `BLOCKED`, `ALLOWED` or `UNKNOWN`                                                    |
+| report.assets[].asset.livenessStatus    | string         | Whether the asset was still online when last checked: `ALIVE`, `DEAD` or `UNKNOWN`                          |
+| report.assets[].takedown                | object \| null | Your organization's takedown of this asset. `null` when none was started                                    |
+| report.assets[].takedown.status         | string         | `TODO`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`, `PENDING_INPUT`, `PENDING_EVIDENCE`, `PENDING_RETRACTION`, `RETRACTION_SENT` or `RETRACTED` |
+| report.assets[].takedown.createdAt / updatedAt | string  | When the takedown started and when it last changed                                                           |
+
+## Error Responses
+
+### 401 Unauthorized
+
+The API key is missing or invalid:
+
+```json
+{
+  "message": "Authentication required. Provide API key or valid session.",
+  "code": "UNAUTHORIZED"
+}
+```
+
+### 403 Forbidden
+
+You passed a `slug` for an organization your credentials can't access.
+
+### 404 Not Found
+
+No report with this ID belongs to your organization, either because it doesn't exist or because it belongs to another organization:
+
+```json
+{
+  "message": "Report not found",
+  "code": "NOT_FOUND"
+}
+```
+
+## Use Cases
+
+### Why is this still live?
+
+An asset that's `BLOCKED` is already on ChainPatrol's blocklist, so wallets and browsers that use it warn people. Being offline is a separate step: the takedown with the site's host or platform. Read the two together:
+
+```typescript
+const { report } = await response.json();
+
+for (const { asset, takedown } of report.assets) {
+  if (asset.livenessStatus === "ALIVE") {
+    console.log(
+      `${asset.content} is ${asset.status} and still online; takedown: ${takedown?.status ?? "not started"}`
+    );
+  }
+}
+```
+
+## Notes
+
+- The takedown shown is your organization's. A takedown another organization filed on the same asset isn't included.
+- `livenessStatus` is from the last check, not a live request.
+- All timestamps are ISO 8601 in UTC.

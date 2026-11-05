@@ -153,6 +153,26 @@ curl -X POST 'https://app.chainpatrol.io/api/v2/organization/assets' \
 | assets[].name          | string | No       | Display name for the asset. Useful for identifying assets in your dashboard.                |
 | assets[].description   | string | No       | Description providing context about the asset's purpose or usage.                           |
 | assets[].groupId       | number | No       | Group ID to assign the asset to. Must be a valid group belonging to your organization.      |
+| assets[].expiresAt     | string | No       | Allowlist expiry for this asset, as an ISO 8601 date-time in the future. Overrides the request's `expiresAt`. |
+| expiresAt              | string | No       | Allowlist expiry for every asset in the request, as an ISO 8601 date-time in the future. See [Setting an expiry when adding](#setting-an-expiry-when-adding). |
+
+### Setting an expiry when adding
+
+Assets that should only stay for a while, such as a partner's site, can be given an [allowlist expiry](/concepts/allowlist#expiry) in the same request. Set `expiresAt` on the request to apply one date to every asset, or on an asset to give it its own date. An asset's own date overrides the request's.
+
+```json
+{
+  "expiresAt": "2027-04-30T23:59:59Z",
+  "assets": [
+    { "content": "https://partner-one.example" },
+    { "content": "https://partner-two.example", "expiresAt": "2026-12-31T23:59:59Z" }
+  ]
+}
+```
+
+- The expiry is only set on assets that were added. Assets that fail to add get none.
+- Each date must be in the future. If any is not, the request returns `400` and nothing is added.
+- To change an expiry later, use [Set Organization Asset Expiry](/external-api/organization-assets-expiry).
 
 ### Supported Asset Types
 
@@ -238,6 +258,7 @@ When some assets succeed and others fail:
 | results[].success | boolean | Whether the asset was successfully added                         |
 | results[].id | number | Asset ID (only present when success is true)                            |
 | results[].error | string | Error message (only present when success is false)                   |
+| results[].expiresAt | string \| null | The allowlist expiry saved for the asset, or `null` when none was set (only present when success is true) |
 | successCount | number | Total number of assets successfully added                               |
 | errorCount   | number | Total number of assets that failed to be added                          |
 

@@ -156,13 +156,56 @@ This event is sent when a new suspected threat is added to the Suspected Threats
 }
 ```
 
+### `audit-log.created`
+
+This event is sent when an action is recorded in your organization's Audit Log, such as a brand being edited, a member being added or removed, or an API key being created. It carries what your admins see on the Audit Log page. Use it to stream those changes into a SIEM.
+
+```json
+{
+  "type": "audit-log.created",
+  "created_at": "2026-11-03T15:04:05.000Z",
+  "data": {
+    "id": 98765,
+    "event_type": "member.added",
+    "occurred_at": "2026-11-03T15:04:04.000Z",
+    "organization": { "id": 100, "slug": "your-org" },
+    "actor": { "type": "user", "id": 42, "name": "Jane Admin", "email": "jane@example.com" },
+    "target": { "type": "user", "id": 77, "name": "New Analyst", "email": "analyst@example.com" },
+    "changes": {
+      "before": null,
+      "after": {
+        "organizationId": 100,
+        "userId": 77,
+        "email": "analyst@example.com",
+        "fullName": "New Analyst",
+        "role": "MEMBER"
+      }
+    },
+    "ip_address": "203.0.113.10",
+    "user_agent": "Mozilla/5.0"
+  }
+}
+```
+
+| Field          | Description                                                                                                                                                                 |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`           | ID of the audit log entry. Use it to deduplicate.                                                                                                                           |
+| `event_type`   | What happened, such as `brand.updated`, `member.added`, `member.removed`, `service.setting.updated` or `api_key.created`.                                                    |
+| `occurred_at`  | When the action was recorded.                                                                                                                                               |
+| `organization` | Your organization's `id` and `slug`.                                                                                                                                        |
+| `actor`        | Who did it. `type` is `user` for someone in your organization, `staff` for the ChainPatrol team, or `system` for an automatic change. Staff actions show `name` as `ChainPatrol Team` with an empty `email`. |
+| `target`       | What was changed, by `type` (such as `brand`, `organization`, `user` or `api_key`) and `id`. When the target is a user, `name` and `email` are included.                    |
+| `changes`      | The values `before` and `after` the action, where the action records them. Either may be `null`.                                                                            |
+| `ip_address`   | IP address the action came from. `null` for staff actions and when none was recorded.                                                                                       |
+| `user_agent`   | Browser or client that made the request. `null` for staff actions and when none was recorded.                                                                               |
+
 ## Webhook Configuration
 
 When creating a webhook, you'll need to provide:
 
 1. A HTTPS endpoint URL that will receive the webhook events
 2. An optional description to help identify the webhook's purpose
-3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, and `organization.threat-detection-added`)
+3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, and `audit-log.created`)
 4. Optional HTTP headers for supported integrations (currently Google SecOps headers are available)
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
