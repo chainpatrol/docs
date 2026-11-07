@@ -83,6 +83,7 @@
               "integration/discord",
               "integration/telegram",
               "integration/slack",
+              "integration/chainpatrol-assistant",
               "integration/vercel",
               "integration/intercom",
               "integration/github",
