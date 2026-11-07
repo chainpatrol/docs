@@ -8,8 +8,9 @@ description: "Connect Claude, Cursor, and other AI agents to the ChainPatrol MCP
 The ChainPatrol [MCP](https://modelcontextprotocol.io) server gives AI agents the whole
 public API as tools: asset checks and search, reports, proposal review, suspected threats and
 detection configs, takedowns, threats, metrics, healthchecks, and organization
-management. If an operation is in the [API reference](/external-api/overview), the agent
-can call it.
+management. Every operation in the [API reference](/external-api/overview) is a tool the
+agent can call, except [Upload Attachment](/external-api/attachment-upload): to attach a file
+to a report, upload it yourself and pass the returned URL in `attachmentUrls`.
 
 There are two ways to connect:
 

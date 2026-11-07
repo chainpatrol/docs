@@ -24,7 +24,8 @@ const chainpatrol = new ChainPatrolClient({ apiKey: "<API_KEY>" });
       The `baseUrl` property is an optional property that specifies the API URL. You
       only need to specify this if you are using a proxy server.
 
-      Defaults to `https://app.chainpatrol.io/v2/`
+      Defaults to `https://app.chainpatrol.io/api/`. The client adds `v2/...` to
+      this address itself, so don't include `v2` in the value you pass.
     </ParamField>
 
   </Expandable>

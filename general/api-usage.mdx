@@ -1,0 +1,35 @@
+---
+icon: gauge
+title: API Usage
+description: See how many ChainPatrol API calls your organization made, which endpoints and API keys they used, and how many failed, on the API Usage page.
+---
+
+The **API Usage** page shows how your integration uses the ChainPatrol API: how many calls it made, which endpoints it called, which API key each call used, and how many calls failed.
+
+## Open the page
+
+In the [ChainPatrol dashboard](https://app.chainpatrol.io/admin), open **Developer › API Usage** in the sidebar.
+
+Only organization **Owners** and **Admins** can see this page.
+
+## Choose a time range
+
+Pick a range at the top of the page: **Last 3 hours**, **Last 24 hours** (the default), **Last 7 days**, **Last 30 days** or **Last 90 days**. Calls from the current hour are included.
+
+## What the page shows
+
+- **Total calls**, **Successful** and **Errors** for the range. A call is successful when the API answered with a `2xx` status code. Any other status counts as an error.
+- **By endpoint**: calls, successes and errors for each endpoint, such as `POST /asset/check`. Click a row to see how many calls returned each status code, for example `401 Unauthorized` or `429 Too Many Requests`.
+- **By API key**: calls, successes and errors for each API key, with the key's name, whether it is a live or test key, and the first characters of the key. Keys that have since been revoked are marked **REVOKED**.
+
+If there were no calls in the range, the page says **No API calls in this period**.
+
+## What is counted
+
+Calls made with an API key that belongs to your organization are counted. Calls made without an API key are not.
+
+Endpoints are listed by their route, not the exact URL, so calls to `GET /organization/assets/{assetId}` for different assets are grouped together.
+
+<Tip>
+  A rising **Errors** count with `401 Unauthorized` usually means a key was revoked or mistyped. See [Get Your API Key](/general/api-key) to create a new one.
+</Tip>
