@@ -108,19 +108,21 @@ If you have a shared Slack channel (Slack Connect) with ChainPatrol, the bot can
 
 ## Alerts
 
-The bot posts alerts to each workspace's alert channel. Choose which alerts it posts on **Settings → Notifications**.
+The bot posts alerts to each workspace's alert channel. Choose which alerts it posts on **Settings → Notifications**, in the **Slack & Discord** tab.
 
-<Frame>![The Notifications settings page](/images/slack/notifications.png)</Frame>
+<Frame>![The Slack & Discord tab of the Notifications settings page](/images/slack/notifications.png)</Frame>
 
-| Section | Setting | What it posts |
-| --- | --- | --- |
-| New reports | **Blocked assets** | New reports for assets you've blocked |
-| New reports | **Allowed assets** | New reports for assets you've allowed |
-| New reports | **Reports from ChainPatrol** | Reports our staff and automated detection create alongside your own |
-| Blocklist changes | **Blocklist additions** | Assets newly confirmed as threats and added to your blocklist. Off by default |
-| Escalations | **Slack and Discord** | Proposals that need your team's review, as they happen |
+| Setting | What it posts |
+| --- | --- |
+| **Blocked assets** | New reports for assets you've blocked |
+| **Allowed assets** | New reports for assets you've allowed |
+| **Reports from ChainPatrol** | Reports our staff and automated detection create alongside your own |
+| **Blocklist additions** | Assets newly confirmed as threats and added to your blocklist. Off by default |
+| **Escalated threats** | Threats ChainPatrol hands to your team to decide on, as they happen |
 
-These settings apply to every connected Slack and Discord channel. Escalations can also go by email, which you set up on the same page.
+Each switch applies to every connected Slack and Discord channel. The tab shows how many switches are on (for example, **4 of 5**), and **Manage connections** takes you to **Settings → Integrations**. If no Slack workspace or Discord server is connected yet, the tab shows a **Connect** button instead.
+
+Escalated threats can also go by email. Set that up in the **Email** tab of the same page.
 
 <Tip>
   **Blocklist additions** is the most important alert. It means ChainPatrol has
