@@ -50,8 +50,13 @@ If you have a **Telegram group**, you can use the ChainPatrol Telegram Bot to le
     <Frame>![Step 2 - Integrations](/images/telegram-bot-integrations.png)</Frame>
 
   </Step>
-  <Step title="Add the group details">
-    Click on "Add New Telegram Group" and configure the group details.
+  <Step title="Connect your group">
+    Open **Telegram** and click **Sign in with Telegram**. Once you're signed in, add your group in one of two ways:
+
+    - **Add through Telegram** opens the ChainPatrol bot in Telegram.
+    - **Add group manually** lets you enter the group's name and ID yourself.
+
+    If you can't sign in with Telegram, click **Login manually** to enter the group's name and ID instead.
 
     <Frame>![Step 2 - Add details](/images/telegram-bot-integration-details.png)</Frame>
 
@@ -80,7 +85,9 @@ Once the bot is added to your group and the connection process is complete, you 
 
 ### Auto-Link Monitoring
 
-The ChainPatrol Telegram Bot automatically monitors all links shared in your group chat. This feature provides an additional layer of protection for your community:
+Auto-link monitoring is off by default. To turn it on, go to **Settings → Integrations → Telegram** and switch on **Auto-link** for the group. You can turn it on or off for each group separately.
+
+When it's on, the bot checks the links shared in your group chat:
 
 - **Real-time Scanning**: Every link posted in the group is instantly checked against ChainPatrol's extensive database of known scams and malicious URLs.
 - **Automatic Alerts**: If a potentially harmful link is detected, the bot immediately notifies the group, warning members about the potential risk.

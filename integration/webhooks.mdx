@@ -13,7 +13,7 @@ This is especially useful if you opt to use our [Asset List](/external-api/asset
 
 ## Managing Webhooks
 
-You can manage your webhooks through the [ChainPatrol dashboard](https://app.chainpatrol.io/admin) under `Settings > Webhooks`. From here you can:
+You can manage your webhooks through the [ChainPatrol dashboard](https://app.chainpatrol.io/admin) under **Developer › Webhooks** in the sidebar. From here you can:
 
 1. Create new webhooks
 2. View and monitor webhook deliveries
@@ -32,7 +32,7 @@ This event is used for testing your webhook endpoint. It is sent when you click 
 
 ```json
 {
-  "event": "debug.test",
+  "type": "debug.test",
   "created_at": "2023-08-31T00:00:00.000Z",
   "data": {}
 }
@@ -255,7 +255,13 @@ Each webhook delivery attempt is logged with one of the following statuses:
 - `SUCCESS`: The delivery was successful (received 2xx response)
 - `FAILURE`: The delivery failed
 
-Webhooks will be retried up to 3 times with an exponential backoff if your endpoint returns a non-2xx status code. If your endpoint returns a 2xx status code, then the webhook will not be retried.
+A delivery is retried only when ChainPatrol couldn't reach your endpoint at all, for example if the connection was refused. In that case it is retried up to 3 times.
+
+Once your endpoint answers, the delivery is not retried, whatever the answer:
+
+- A `2xx` status code is recorded as `SUCCESS`.
+- Any other status code is recorded as `FAILURE`. Redirects (`3xx`) are not followed, so set the webhook URL to the final address.
+- If your endpoint doesn't answer within 30 seconds, the delivery is recorded as `FAILURE` and not retried, because your endpoint may already have processed it.
 
 You can view the delivery status, payload, request, and response details for each webhook attempt in the dashboard.
 

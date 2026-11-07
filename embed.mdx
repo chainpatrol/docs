@@ -28,9 +28,14 @@ The widget accepts the following URL parameters:
 
 | Parameter | Description                           | Default  | Options                        |
 | --------- | ------------------------------------- | -------- | ------------------------------ |
-| `slug`    | Your organization's unique identifier | none     | your org slug                  |
+| `slug`    | The organization whose metrics are shown | `mountaintop` | `chainpatrol`, `mountaintop`, `zenrock` |
+| `timeRange` | The period the metrics cover | `all` | `24h`, `7d`, `30d`, `90d`, `180d`, `365d`, `all` |
 | `theme`   | The color theme of the widget         | `dark`   | `light`, `dark`, `transparent` |
 | `width`   | The width of the widget               | `1000px` | Any valid CSS width value      |
+
+<Note>
+  The widget only supports the three organizations listed. Any other `slug` shows Mountaintop's metrics.
+</Note>
 
 ## Example URLs
 
