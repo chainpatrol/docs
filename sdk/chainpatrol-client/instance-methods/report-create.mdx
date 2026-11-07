@@ -1,0 +1,87 @@
+---
+title: "report.create"
+description: "Create a ChainPatrol report with one or more suspicious assets, a title, description and evidence, using the SDK's report.create method."
+---
+
+The `report.create` method creates a report for ChainPatrol to review, the same as the [Create Report](/external-api/report-create) API endpoint.
+
+## Method Signature
+
+```typescript
+client.report.create(request: ReportCreateInput): Promise<ReportCreateOutput>
+```
+
+## Example
+
+<CodeGroup>
+
+```typescript Code
+const report = await client.report.create({
+  organizationSlug: "your-org",
+  title: "Fake airdrop site",
+  description: "Shared in our Discord, asks users to connect their wallet.",
+  assets: [{ content: "https://fake-airdrop.example" }],
+});
+
+console.log(report);
+```
+
+```json Output
+{
+  "id": 12345,
+  "createdAt": "2026-11-07T00:00:00.000Z",
+  "organization": {
+    "id": 1,
+    "slug": "your-org",
+    "name": "Your Org"
+  }
+}
+```
+
+</CodeGroup>
+
+## Parameters
+
+The request takes the same fields as the [Create Report](/external-api/report-create) endpoint. The most common ones:
+
+<ParamField path="request" type="ReportCreateInput" required>
+  <Expandable title="ReportCreateInput Properties" defaultOpen>
+    <ParamField path="assets" type="object[]" required>
+      The assets to report. Each one has a `content` (a URL, domain, social profile, address, email or phone number) and an optional proposed `status`, which defaults to `BLOCKED`.
+
+      Phone numbers must include a country code, for example `+14155552671`. Without one, the SDK throws a validation error before sending the request.
+    </ParamField>
+
+    <ParamField path="organizationSlug" type="string">
+      The organization the report is for.
+    </ParamField>
+
+    <ParamField path="title" type="string">
+      A title for the report, at least 3 characters.
+    </ParamField>
+
+    <ParamField path="description" type="string">
+      More detail about the report. Supports Markdown.
+    </ParamField>
+
+    <ParamField path="attachmentUrls" type="string[]">
+      URLs of files to attach as evidence. Upload a file with [Upload Attachment](/external-api/attachment-upload) to get a URL.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+See [Create Report](/external-api/report-create) for every field.
+
+## Returns
+
+<ResponseField name="id" type="number" required>
+  The ID of the new report.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string" required>
+  When the report was created.
+</ResponseField>
+
+<ResponseField name="organization" type="object | null" required>
+  The organization the report was created for, with its `id`, `slug` and `name`. `null` when the report isn't linked to an organization.
+</ResponseField>

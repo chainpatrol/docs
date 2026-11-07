@@ -105,6 +105,7 @@
               "external-api/overview",
               "external-api/authentication",
               "general/api-key",
+              "general/api-usage",
               "mcp-server",
               "external-api/deprecation-policy"
             ]
@@ -363,7 +364,8 @@
                     "pages": [
                       "sdk/chainpatrol-client/instance-methods/asset-check",
                       "sdk/chainpatrol-client/instance-methods/asset-list",
-                      "sdk/chainpatrol-client/instance-methods/asset-submit"
+                      "sdk/chainpatrol-client/instance-methods/asset-submit",
+                      "sdk/chainpatrol-client/instance-methods/report-create"
                     ]
                   }
                 ]

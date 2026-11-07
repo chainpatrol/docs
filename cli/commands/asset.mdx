@@ -68,12 +68,14 @@ chainpatrol asset search [<content> ...] [--id <id> ...]
 | --- | --- |
 | `--id <number>` | Asset ID. Repeatable for bulk lookup. |
 | `--asset <content>` | Asset content. Repeatable, and an alternative to positional arguments. |
+| `--include-enrichments` | Also return the enrichments from each asset's 10 newest scans, including the browser capture's `screenshotUrl`. |
 
 ```bash
 chainpatrol asset search https://phish.example
 chainpatrol asset search --id 4175269
 chainpatrol --json asset search --id 4175269 --id 4144496 --id 4642520
 chainpatrol asset search --id 12345 --output markdown
+chainpatrol --json asset search --id 4175269 --include-enrichments
 ```
 
 ## asset list

@@ -1,6 +1,6 @@
 ---
 title: url()
-description: Check whether a URL is a phishing or scam site with ThreatDetector.url(), returning an ALLOWED, BLOCKED, or UNKNOWN status plus an optional redirectUrl.
+description: Check whether a URL is a phishing or scam site with ThreatDetector.url(), returning an ALLOWED, BLOCKED, UNKNOWN or IGNORED status plus an optional redirectUrl.
 ---
 
 <Note>
@@ -32,7 +32,15 @@ console.log(result);
     ok: true,
     url: "mountaintop-finance.com",
     status: "BLOCKED",
-    redirectUrl: "https://app.chainpatrol.io/warning?originUrl=https://www.mountaintop-finance.com"
+    redirectUrl: "https://app.chainpatrol.io/preview?target=https%3A%2F%2Fwww.mountaintop-finance.com&originUrl=https%3A%2F%2Fwww.mountaintop-finance.com"
+}
+```
+
+```js Output (Ignored)
+{
+    ok: true,
+    url: "https://www.mountaintop-finance.com",
+    status: "IGNORED",
 }
 ```
 
@@ -77,8 +85,11 @@ If the check was successful, the object will contain the following properties:
       The `url` property is the URL that was checked.
     </ParamField>
 
-    <ParamField body="status" type="'ALLOWED' | 'BLOCKED' | 'UNKNOWN'" required>
+    <ParamField body="status" type="'ALLOWED' | 'BLOCKED' | 'UNKNOWN' | 'IGNORED'" required>
       The `status` property indicates whether the URL is allowed or blocked.
+      It is `IGNORED` when the domain was added with
+      [`ignore()`](/sdk/threat-detector/instance-methods/ignore), for example
+      after a user chose to continue at their own risk.
     </ParamField>
 
     <ParamField body="redirectUrl" type="string">
@@ -86,9 +97,10 @@ If the check was successful, the object will contain the following properties:
       detector detects a threat. This property will only be present if the
       `status` property is set to `BLOCKED`.
 
-      By default, the detector will return the ChainPatrol warning page URL,
-      but you can override this by specifying your own `redirectUrl` in when
-      instantiating the `ThreatDetector`.
+      By default, the detector returns the ChainPatrol warning page,
+      `https://app.chainpatrol.io/preview`, with the checked URL in the `target`
+      and `originUrl` query parameters. You can override this by passing your
+      own `redirectUrl` when creating the `ThreatDetector`.
     </ParamField>
 
   </Expandable>

@@ -45,9 +45,10 @@ const detector = new ThreatDetector({
       The `apiKey` property is the API Key for accessing ChainPatrol's APIs. We
       recommend using an environment variable to store your API Key.
 
-      This property is required when the `mode` property is set to `cloud`.
-      If `proxyUrl` is set, this property is not required as the proxy server
-      will handle the authentication.
+      This property is required when the `mode` property is set to `cloud`,
+      even if `proxyUrl` is set. Leaving it out throws a `Missing API key`
+      error. The key is sent in the `X-API-KEY` header, so if your proxy adds
+      the real key on the server, pass any non-empty placeholder here.
     </ParamField>
 
     <ParamField body="proxyUrl" type="string">
