@@ -119,6 +119,7 @@ chainpatrol detections list --org <slug> [filters]
 | `--reported <list>` | Comma list: `reported`, `not_reported`. |
 | `--country-code <list>` | Comma list of 2-letter ISO country codes. |
 | `--only-deleted` | Return only soft-deleted suspected threats. Without it, both deleted and non-deleted are returned. |
+| `--exclude-deleted` | Leave soft-deleted suspected threats out, so totals match the app. Can't be combined with `--only-deleted`. |
 | `--block-status <list>` | Comma list: `blocked`, `pending`. Both together select every confirmed threat, including **Pending Blocked** ones for organizations without active protection. |
 | `--min-score <n>` | Only suspected threats with a raw score of at least `n` (0–1). Use this rather than `--confidence` for a fixed cut-off such as `0.8`. |
 | `--max-score <n>` | Only suspected threats with a raw score of at most `n` (0–1). |

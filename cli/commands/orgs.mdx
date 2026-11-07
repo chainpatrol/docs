@@ -21,7 +21,7 @@ compose with AND.
 | Option | Description |
 | --- | --- |
 | `--query <text>` | Partial name match (substring, case-insensitive). |
-| `--subscription-status <l>` | Comma list: `PROSPECT`, `POC`, `ACTIVE`, `INTEGRATION`. |
+| `--subscription-status <l>` | Comma list: `PROSPECT`, `POC`, `ACTIVE`, `INTEGRATION`, `PROTECTION`, `INACTIVE`. Defaults to every status except `INACTIVE`; pass `INACTIVE` to list churned organizations. |
 | `--service-active <l>` | Comma list of services that must be active. |
 | `--service-inactive <l>` | Comma list of services that must be inactive. |
 | `--service-automated <l>` | Services whose automation must be **on**. Only `takedowns` is accepted. |
@@ -29,6 +29,9 @@ compose with AND.
 | `--pending-approval-active` | Only organizations with an open service-enable approval awaiting sign-off. |
 | `--pending-approval-inactive` | Only organizations with no pending service-enable approvals. |
 | `--pending-approval-service <l>` | Only organizations with a pending approval for `protection` (Blocklisting) and/or `takedowns`. |
+| `--obligatory-approval-active` | Only organizations with [Obligatory Organization Admin Approval](/concepts/organizations#obligatory-organization-admin-approval) turned on. |
+| `--obligatory-approval-inactive` | Only organizations with it turned off. Can't be combined with `--obligatory-approval-active` or `--obligatory-approval-asset-type`. |
+| `--obligatory-approval-asset-type <l>` | Comma list of asset types. Only organizations where the approval is on and covers every listed type. An organization with no types selected counts as covering all of them. |
 
 Services are `reporting`, `reviewing`, `protection`, `takedowns`, `detection`, and
 `darkWebMonitoring`. `automated` is reported for takedowns only — that is the one service
