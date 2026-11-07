@@ -82,9 +82,9 @@ Assets on the watchlist are scanned at different frequencies based on how long t
 
 | Time on Watchlist | Scan Frequency |
 |-------------------|----------------|
-| < 6 hours | Hourly |
-| < 24 hours | Every 2 hours |
-| < 2 days | Every 4 hours |
+| < 3 hours | Hourly |
+| < 6 hours | Every 2 hours |
+| < 24 hours | Every 4 hours |
 | < 7 days | Every 6 hours |
 | < 2 weeks | Every 12 hours |
 | < 1 month | Daily |
@@ -95,18 +95,9 @@ Frequent early scans catch rapid changes; frequency decreases if asset remains s
 
 **BLOCKED Assets** (less frequent monitoring):
 
-| Time on Watchlist | Scan Frequency |
-|-------------------|----------------|
-| < 6 hours | Every 3 hours |
-| < 24 hours | Every 6 hours |
-| < 2 days | Every 12 hours |
-| < 7 days | Every 18 hours |
-| < 2 weeks | Every 36 hours |
-| < 1 month | Every 3 days |
-| < 2 months | Every 6 days |
-| > 2 months | Every 12 days |
+Blocked assets are scanned half as often as the table above: twice the time between scans at each step. Blocked assets are already protected, so monitoring focuses on confirming takedown success.
 
-Blocked assets are already protected, so monitoring focuses on confirming takedown success.
+Actual timing varies by asset. A scan may run a little later when it is queued, or earlier when an in-progress takedown is nearing its deadline.
 
 ### Removal from Watchlist
 
@@ -114,7 +105,7 @@ Assets are automatically removed from the watchlist when:
 
 - **Status Changes to ALLOWED** - Asset confirmed as legitimate
 - **Asset Comes Online** - Previously dead asset becomes accessible (pushed to review queue)
-- **30 Days in UNKNOWN** - Decay factor removes long-term uncertain assets
+- **2 Weeks in UNKNOWN** - Decay factor removes uncertain assets 2 weeks after they were last added to the watchlist, unless they came back online
 - **Takedown Success** - Asset goes offline during takedown
 - **Provider Suspension** - Hosting provider suspends the asset
 - **Manual Removal** - Analyst decides monitoring is no longer needed
@@ -124,4 +115,4 @@ Assets are automatically removed from the watchlist when:
 - Watchlist solves the gray area problem: When you suspect an asset might be malicious but lack evidence to block, watchlisting lets you monitor for changes without premature action
 - Automatic takedown monitoring saves manual work: Every takedown automatically adds the asset to watchlist, eliminating the need to manually check if content has been removed
 - Adaptive frequency optimizes resources: Recent additions scan frequently to catch rapid changes, while stable assets scan less often to avoid wasting resources on unlikely updates
-- 30-day decay prevents bloat: Assets that stay UNKNOWN for a month without becoming malicious are automatically removed, keeping monitoring focused on active threats
+- 2-week decay prevents bloat: Assets that stay UNKNOWN for 2 weeks without becoming malicious are automatically removed, keeping monitoring focused on active threats

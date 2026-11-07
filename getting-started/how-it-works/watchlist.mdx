@@ -16,7 +16,7 @@ We remove assets from the watchlist for three reasons:
 
 - **Asset Allowed** - Asset status changed to ALLOWED
 - **Comes Back Online** - Previously dead asset becomes accessible again
-- **Offline Too Long** - Asset has been offline for more than 30 days
+- **Still Unconfirmed** - Asset is still UNKNOWN 2 weeks after it was last added to the watchlist
 
 <Info>
 For more details about the watchlist concept, see our [Concepts documentation](/concepts/watchlist).
@@ -79,9 +79,9 @@ Assets that are not yet blocked are scanned more frequently:
 
 | Time on Watchlist | Scan Frequency |
 |-------------------|----------------|
-| < 6 hours | Hourly |
-| < 24 hours | Every 2 hours |
-| < 2 days | Every 4 hours |
+| < 3 hours | Hourly |
+| < 6 hours | Every 2 hours |
+| < 24 hours | Every 4 hours |
 | < 7 days | Every 6 hours |
 | < 2 weeks | Every 12 hours |
 | < 1 month | Daily |
@@ -90,18 +90,9 @@ Assets that are not yet blocked are scanned more frequently:
 
 ### BLOCKED Assets
 
-Blocked assets are scanned less frequently since they're already protected:
+Blocked assets are scanned half as often as the table above: twice the time between scans at each step. Blocked assets are already protected, so monitoring focuses on confirming takedown success.
 
-| Time on Watchlist | Scan Frequency |
-|-------------------|----------------|
-| < 6 hours | Every 3 hours |
-| < 24 hours | Every 6 hours |
-| < 2 days | Every 12 hours |
-| < 7 days | Every 18 hours |
-| < 2 weeks | Every 36 hours |
-| < 1 month | Every 3 days |
-| < 2 months | Every 6 days |
-| > 2 months | Every 12 days |
+Actual timing varies by asset. A scan may run a little later when it is queued, or earlier when an in-progress takedown is nearing its deadline.
 
 **Why the difference?** UNKNOWN and ALLOWED assets need closer monitoring to catch when they become malicious. BLOCKED assets are already protected, so we primarily monitor to confirm takedown success.
 
@@ -119,7 +110,7 @@ If an asset's liveness status changes from `DEAD` to `ALIVE` or `UNKNOWN`, we re
 
 ### Decay Factor
 
-**UNKNOWN Assets - 30 Day Limit** - If an asset is in `UNKNOWN` status, we remove it from the watchlist after 30 days. If an asset hasn't become malicious after a month, it's unlikely to pose a threat.
+**UNKNOWN Assets - 2 Week Limit** - If an asset is in `UNKNOWN` status, we remove it from the watchlist 2 weeks after it was last added, unless it came back online. If an asset hasn't become malicious after 2 weeks, it's unlikely to pose a threat.
 
 **Takedown Success** - If the asset was watchlisted during the takedown process and the takedown is in `IN_PROGRESS` state, when the asset goes offline or the takedown provider suspends the asset, it's removed from the watchlist since the takedown was successful.
 
@@ -137,4 +128,4 @@ If an asset's liveness status changes from `DEAD` to `ALIVE` or `UNKNOWN`, we re
 - Watchlist is for the gray area: Use it when you suspect an asset might be malicious but don't have enough evidence to block yet
 - Automatic takedown monitoring saves time: Every takedown automatically watchlists the asset to detect when it goes offline, eliminating manual checking
 - Adaptive frequency optimizes resources: Recent additions scan hourly while stable assets scan less often, so you catch changes quickly without wasting scans
-- 30-day decay prevents watchlist bloat: UNKNOWN assets that haven't become malicious after a month are automatically removed, keeping your monitoring focused
+- 2-week decay prevents watchlist bloat: UNKNOWN assets that haven't become malicious after 2 weeks are automatically removed, keeping your monitoring focused

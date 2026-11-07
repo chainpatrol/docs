@@ -71,6 +71,7 @@ Takedowns in ChainPatrol progress through several statuses across their lifecycl
 - **TODO**: The takedown record has been created and is queued to be filed with the relevant host, registrar, or platform.
 - **IN_PROGRESS**: The takedown request has been submitted to the provider, and ChainPatrol is actively monitoring the asset for removal.
 - **PENDING_INPUT**: Action on the takedown is paused while awaiting direction from the customer. This commonly occurs when a provider claims an asset is legitimate / not a threat, or when internal analysts suspect it might be legitimate. Pausing prevents unintended action across shifts in a 24/7 team environment while next steps are discussed with the customer via Slack, Telegram, or in-app notes.
+- **PENDING_EVIDENCE**: Action on the takedown is paused while ChainPatrol waits for evidence it needs before filing, for example for an email address or phone number report.
 - **COMPLETED**: The provider or platform has removed the offending asset, and the takedown is successfully resolved.
 - **CANCELLED**: The takedown was cancelled, such as when an asset is confirmed to be legitimate, duplicate, or resolved without action.
 
