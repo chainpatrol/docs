@@ -1,0 +1,192 @@
+---
+title: Asset Connections
+openapi: "POST /asset/connections"
+---
+
+## Overview
+
+Asset Connections answers two questions about one asset: **what led to it**, and
+**where it leads**. ChainPatrol records a link whenever one asset names another in a
+scan: an ad's landing page, a post's URL, a redirect, a page's outbound links, a
+profile's claimed website, a wallet a page asks victims to pay. This endpoint follows
+those links out from the asset you name, a few hops on each side, and returns two
+graphs:
+
+- **upstream** - what leads to the asset: the ads and posts that link to it, the pages
+  and accounts that published them, the profiles that claim it.
+- **downstream** - where the asset leads: what it redirects to, links to, loads, submits
+  forms to, claims as its own or asks to be paid at.
+
+Each graph is a list of **assets** and a list of **links** between them. A link reads
+as a sentence, `fromAssetId` → `type` → `toAssetId`: `PUBLISHED`, `LINKS_TO`,
+`REDIRECTS_TO`, `CLAIMS`, `REPLIES_TO`, `REPOSTS`, `MENTIONS`, `DEPENDS_ON`,
+`MEMBER_OF`, `LOADS`, `SUBMITS_TO` or `USES_WALLET`. Assets carry the same `id`,
+`type`, `content` and `status` that [Asset Search](/external-api/asset-search)
+returns.
+
+<Note>
+Asset Connections is being rolled out one organization at a time. An organization
+API key that is not part of the rollout receives `403` with the message "Asset
+connections are not available for this organization". Contact ChainPatrol to ask
+for access.
+</Note>
+
+## Quick Start
+
+### Authentication
+
+Include your organization API key in the `X-API-KEY` header:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+### Example Request
+
+Name the asset by its content (a URL, domain, address, social profile, …) or by its
+ChainPatrol `assetId` — exactly one of the two. `depth` and `limit` are optional.
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/asset/connections' \
+  -H 'X-API-KEY: <api-key>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "content": "your-brand-login.example", "depth": 2 }'
+```
+
+```typescript TypeScript
+const response = await fetch("https://app.chainpatrol.io/api/v2/asset/connections", {
+  method: "POST",
+  headers: {
+    "X-API-KEY": "<api-key>",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ content: "your-brand-login.example", depth: 2 }),
+});
+
+const { asset, upstream, downstream } = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/asset/connections",
+    headers={"X-API-KEY": "<api-key>"},
+    json={"content": "your-brand-login.example", "depth": 2},
+)
+data = response.json()
+```
+
+</CodeGroup>
+
+## Request Body
+
+| Field     | Type     | Required | Description                                                                                                                                                          |
+| --------- | -------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `assetId` | `number` | One of   | ChainPatrol asset ID, as returned by Asset Search or in a previous response's `assets`.                                                                              |
+| `content` | `string` | One of   | Asset content: a URL, domain, wallet address, social profile, app listing, etc. Parsed the way Asset Search parses it.                                               |
+| `depth`   | `number` | No       | Hops to follow on each side, `1` to `3`. Default `2`. One hop is the assets directly linked to yours; two also follows their links.                                   |
+| `limit`   | `number` | No       | Links of each type to read per asset on each side, `1` to `100`. Default `10`. Per type, so one redirect still shows behind fifty outbound links.                     |
+
+## Response
+
+A phishing site promoted by a Meta ad, redirecting to a wallet drainer that links to
+the brand's real site:
+
+```json
+{
+  "asset": {
+    "id": 4175269,
+    "type": "URL",
+    "content": "your-brand-login.example",
+    "status": "BLOCKED"
+  },
+  "upstream": {
+    "assets": [
+      { "id": 4175269, "type": "URL", "content": "your-brand-login.example", "status": "BLOCKED", "hops": 0, "expanded": true, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null },
+      { "id": 4175301, "type": "META_AD", "content": "facebook.com/ads/library/?id=1499561385379659", "status": "BLOCKED", "hops": 1, "expanded": true, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null },
+      { "id": 4175298, "type": "FACEBOOK", "content": "facebook.com/brand-support-desk", "status": "UNKNOWN", "hops": 2, "expanded": false, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null }
+    ],
+    "links": [
+      { "fromAssetId": 4175301, "type": "LINKS_TO", "toAssetId": 4175269, "firstSeenAt": "2026-11-02T09:14:51.000Z", "lastSeenAt": "2026-11-08T21:40:03.000Z" },
+      { "fromAssetId": 4175298, "type": "PUBLISHED", "toAssetId": 4175301, "firstSeenAt": "2026-11-02T09:14:51.000Z", "lastSeenAt": "2026-11-08T21:40:03.000Z" }
+    ]
+  },
+  "downstream": {
+    "assets": [
+      { "id": 4175269, "type": "URL", "content": "your-brand-login.example", "status": "BLOCKED", "hops": 0, "expanded": true, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null },
+      { "id": 4175310, "type": "URL", "content": "wallet-drainer.example", "status": "BLOCKED", "hops": 1, "expanded": true, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null },
+      { "id": 102, "type": "URL", "content": "your-brand.example", "status": "ALLOWED", "hops": 2, "expanded": false, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": "allowed" }
+    ],
+    "links": [
+      { "fromAssetId": 4175269, "type": "REDIRECTS_TO", "toAssetId": 4175310, "firstSeenAt": "2026-11-02T09:15:07.000Z", "lastSeenAt": "2026-11-08T21:40:12.000Z" },
+      { "fromAssetId": 4175310, "type": "LINKS_TO", "toAssetId": 102, "firstSeenAt": "2026-11-02T09:15:07.000Z", "lastSeenAt": "2026-11-08T21:40:12.000Z" }
+    ]
+  }
+}
+```
+
+### Top level
+
+| Field        | Type     | Description                                                                 |
+| ------------ | -------- | --------------------------------------------------------------------------- |
+| `asset`      | `object` | The asset you named: `id`, `type`, `content`, `status`.                      |
+| `upstream`   | `graph`  | What leads to the asset. Its `assets` list starts with the asset itself.    |
+| `downstream` | `graph`  | Where the asset leads. Its `assets` list starts with the asset itself.      |
+
+### Each asset in a graph
+
+| Field                | Type               | Description                                                                                                                                                                                                                                    |
+| -------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                 | `number`           | ChainPatrol asset ID.                                                                                                                                                                                                                          |
+| `type`               | `string`           | Asset type, e.g. `URL`, `TWITTER`, `META_AD`, `FACEBOOK`, `ADDRESS`. See [Asset Types](/glossary/asset-types/page).                                                                                                                           |
+| `content`            | `string`           | Asset content.                                                                                                                                                                                                                                 |
+| `status`             | `string`           | `BLOCKED`, `ALLOWED` or `UNKNOWN`.                                                                                                                                                                                                             |
+| `hops`               | `number`           | Links between this asset and yours on the path that first reached it. `0` for your asset.                                                                                                                                                      |
+| `expanded`           | `boolean`          | Whether this asset's own links on this side were read. `false` past `depth`, past the per-hop cap, or when `stop` is set.                                                                                                                      |
+| `hasMoreLinks`       | `boolean`          | Whether this asset has more links on this side than `limit` allowed.                                                                                                                                                                           |
+| `truncatedLinkTypes` | `string[]`         | The link types it has more of than `limit` allowed. Ask again with this asset's `id` as `assetId` to read them.                                                                                                                               |
+| `stop`               | `string \| null`   | Why this asset's links were not followed although within `depth`: `parking` (a parking or for-sale page), `furniture` (a platform page every site links to), `allowed` (an asset reviewed and allowed), `allowed-site` (a subdomain of an allowed site). Each of these joins unrelated assets, so the walk shows the asset and stops. |
+
+### Each link in a graph
+
+| Field         | Type     | Description                                                                 |
+| ------------- | -------- | --------------------------------------------------------------------------- |
+| `fromAssetId` | `number` | The asset the link starts from.                                             |
+| `type`        | `string` | How the two are linked, read as from → type → to. See the list above.       |
+| `toAssetId`   | `number` | The asset the link points to.                                               |
+| `firstSeenAt` | `string` | When the link was first observed (ISO 8601, UTC).                           |
+| `lastSeenAt`  | `string` | When the link was last observed (ISO 8601, UTC).                            |
+
+<Note>
+Links are observed relationships read from ChainPatrol's scans. An asset scanned
+before links were recorded, or never scanned, has none. Links read from a scan of
+another organization's own asset (its allowlisted domain, account or app) are left
+out, the same way [Asset Search](/external-api/asset-search) and
+[Get Scan Result](/external-api/scan-result) leave out that organization's scans.
+</Note>
+
+## Walking further
+
+A response is bounded: `depth` hops, `limit` links of each type per asset, and at
+most 25 assets expanded per hop. Two fields say where there is more. An asset with
+`expanded: false` and no `stop` sat past the bounds; an asset with `hasMoreLinks: true`
+had more links of the types in `truncatedLinkTypes` than `limit` allowed. In both cases,
+call the endpoint again with that asset's `id` as `assetId` to continue from it.
+
+## Errors
+
+| Status | When                                                                                                      |
+| ------ | --------------------------------------------------------------------------------------------------------- |
+| `400`  | Both or neither of `content` and `assetId` were sent, `depth` is outside `1`–`3`, or `limit` is outside `1`–`100`. |
+| `401`  | No API key was sent.                                                                                      |
+| `403`  | The organization is not part of the rollout, or the key is a user key rather than an organization key.    |
+| `404`  | ChainPatrol has no such asset.                                                                            |
+
+## Related
+
+- [Asset Search](/external-api/asset-search)
+- [Get Scan Result](/external-api/scan-result)
+- [Asset Types](/glossary/asset-types/page)

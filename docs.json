@@ -117,6 +117,7 @@
               "external-api/asset-list",
               "external-api/asset-changelog",
               "external-api/asset-search",
+              "external-api/asset-connections",
               "external-api/asset-submit",
               "external-api/asset-unblock",
               "external-api/asset-parse",
