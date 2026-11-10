@@ -136,7 +136,7 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/metrics?startDate=20
 | metrics.reports                | number | Total number of reports filed                              |
 | metrics.newThreats             | number | Number of new threats blocked                              |
 | metrics.threatsWatchlisted     | number | Number of threats watchlisted (0 for brand-filtered queries) |
-| metrics.takedownsFiled         | number | Total number of takedown requests filed                    |
+| metrics.takedownsFiled         | number | Number of takedowns filed in the date range, counted by the date each takedown first moved to In Progress. Excludes deleted takedowns. Applies with or without `brandId`. |
 | metrics.takedownsCompleted     | number | Total number of takedowns successfully completed           |
 | metrics.domainThreats          | number | Number of URL/domain threats blocked                       |
 | metrics.twitterThreats         | number | Number of Twitter threats blocked                          |

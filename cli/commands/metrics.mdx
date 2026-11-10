@@ -166,6 +166,9 @@ chainpatrol metrics organization [--org <slug>|--slugs <list>|--all-my-orgs] [--
 `blockedByType`, `blockedByDay`. Fields you leave out come back as `null`, so narrowing
 `--include` is the cheapest way to speed up a wide query.
 
+`takedownsFiled` counts takedowns by the date they first moved to In Progress, not by
+last-updated date, and excludes deleted takedowns.
+
 A multi-organization response carries totals, per-day and per-organization-per-day
 averages, and a per-organization breakdown.
 
