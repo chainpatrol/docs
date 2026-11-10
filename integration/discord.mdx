@@ -26,11 +26,13 @@ can use the following link to add the bot:
 
 [🚀 Add ChainPatrol to your server](https://chainpatrol.com/bot/install)
 
-Next, you need to configure the bot to send reports to your admin dashboard on ChainPatrol. Right now,
-this is can be done by reaching out to us [via email](mailto:support@chainpatrol.io?subject=%5BDiscord%20Bot%5D%20Setup%20integration%20with%20ChainPatrol&body=Hi,%20I%20would%20like%20to%20link%20the%20Discord%20bot%20to%20my%20ChainPatrol%20account%20as%20described%20here:%20https://chainpatrol.io/docs/general/discord-bot.%0A%0AThanks!)
-and letting us know that you want to add the bot to your server. We will create an organization
-for you on ChainPatrol and you can then use the `/setup connect` slash command to link your Discord server
-to your organization on ChainPatrol.
+Next, connect your Discord server to your ChainPatrol organization so reports reach your dashboard. You need to be an **Owner** or **Admin** of the organization.
+
+1. In the [ChainPatrol dashboard](https://app.chainpatrol.io/admin), go to **Settings → Integrations → Discord** and click **Add to Discord**.
+2. Discord asks you to pick your server and approve the bot.
+3. Discord sends you back to ChainPatrol's **Connect Discord** page. Pick your organization and click **Connect**.
+
+Each organization can be connected to one Discord server, and each server to one organization.
 
 To check that the bot is working, you can use the `/setup status` command to see if the bot is
 connected to your ChainPatrol organization.
@@ -187,8 +189,11 @@ Check out [Discord's Role Management 101](https://support.discord.com/hc/en-us/a
 
 The bot does not collect any personal information. It only collects the URL and
 the Discord ID for the user that submitted the report (in case a moderator needs
-more information about why the URL is a scam). The bot does not store any information
-about the server it is added to.
+more information about why the URL is a scam).
+
+For each connected server, ChainPatrol stores the server ID and the bot's settings for it: the
+channels it monitors or skips, the moderator roles, usernames and channel it notifies, and the
+channel it posts reports to.
 
 For more information, please read ChainPatrol's [privacy policy](https://chainpatrol.com/legal/privacy).
 
