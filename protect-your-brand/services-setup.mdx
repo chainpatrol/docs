@@ -3,7 +3,7 @@ title: "Services Setup"
 description: "Enable ChainPatrol services such as detection, reviewing, blocklisting, and automated takedowns, plus the approvals and legal documents each one requires."
 ---
 
-ChainPatrol offers multiple security services that can be configured based on your organization's needs. Each service can be enabled independently and requires specific permissions and approvals before activation.
+ChainPatrol offers multiple security services that can be configured based on your organization's needs. Most services can be turned on independently. Takedowns can only be turned on once Blocklisting is on. Blocklisting and Takedowns, and their automated versions, also need an Organization Owner's approval when someone other than an Owner turns them on.
 
 <Info>
 **Where to find Services:** Navigate to your organization settings → Services
@@ -68,7 +68,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
   
   <Tab title="Requirements" icon="list-check">
     **Required Approvals:**
-    - Organization Owner approval (if requested by a member)
+    - None: anyone who can manage services can turn it on directly
     - ChainPatrol staff review for initial setup
     
     **Required Legal Docs:**
@@ -101,7 +101,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
   
   <Tab title="Requirements" icon="list-check">
     **Required Approvals:**
-    - Organization Owner approval (if requested by a member)
+    - None: anyone who can manage services can turn it on directly
     
     **Required Legal Docs:**
     - None
@@ -132,7 +132,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
   
   <Tab title="Requirements" icon="list-check">
     **Required Approvals:**
-    - Organization Owner approval (if requested by a member)
+    - None: anyone who can manage services can turn it on directly
     
     **Required Legal Docs:**
     - None
@@ -257,7 +257,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
   
   <Tab title="When to Enable" icon="calendar">
     **Prerequisites:**
-    - Enable Detection, Monitoring, and Reviewing services
+    - Turn on Blocklisting first. Takedowns can't be turned on without it, because without Blocklisting confirmed threats stay pending and no takedown is filed
     - Verify your organization has proper brand protection policies in place
     - Be ready for ChainPatrol to represent your organization in takedown communications
   </Tab>
@@ -366,12 +366,12 @@ ChainPatrol offers multiple security services that can be configured based on yo
     Organization Owners can disable any service at any time
   </Card>
   
-  <Card title="Member Requests" icon="users">
-    Members with OrganizationServices:update permission can request to disable services
+  <Card title="Members" icon="users">
+    Members with OrganizationServices:update permission can disable services too. Turning a service off never needs approval
   </Card>
   
   <Card title="Immediate Effect" icon="bolt">
-    Disabling services takes effect immediately for the requesting owner
+    Disabling a service takes effect immediately, whoever turns it off
   </Card>
   
   <Card title="Data Preservation" icon="database">
@@ -423,7 +423,7 @@ For Automated Takedowns, your Power of Attorney document must:
 </AccordionGroup>
 
 <Tip>
-**How to upload:** Navigate to Organization Settings → Documents → Upload Power of Attorney
+**How to upload:** Go to **Settings → Legal Documents** and click **Upload**
 </Tip>
 
 ### Trademark Documentation
