@@ -1,7 +1,7 @@
 ---
 title: Social and messaging
 sidebarTitle: Social
-description: "ChainPatrol asset type enums for reporting scams on Twitter, Telegram, Discord, Facebook, Instagram, TikTok, YouTube, and other social platforms."
+description: "ChainPatrol asset type enums for reporting scams on Twitter, Telegram, Discord, Facebook, Instagram, TikTok, YouTube, Mastodon, and other social platforms."
 ---
 
 Labels below match [`POST /threats/list`](/external-api/threats-list) and [`POST /detection/list`](/external-api/detection-list). `TWITCH` is also listed by [`POST /organization/assets`](/external-api/organization-assets-add).
@@ -23,6 +23,7 @@ Labels below match [`POST /threats/list`](/external-api/threats-list) and [`POST
 | `MEDIUM` | Medium articles/profiles |
 | `FARCASTER` | Farcaster profiles |
 | `BLUESKY` | Bluesky profiles |
+| `MASTODON` | Mastodon profiles |
 | `SNAPCHAT` | Snapchat profiles |
 | `PINTEREST` | Pinterest profiles/pins |
 | `PATREON` | Patreon profiles |
@@ -31,3 +32,20 @@ Labels below match [`POST /threats/list`](/external-api/threats-list) and [`POST
 | `PRIMAL` | Primal profiles |
 | `DESO` | DeSo profiles |
 | `TWITCH` | Twitch channel identifiers |
+
+## Mastodon
+
+ChainPatrol parses profile and post URLs on `fosstodon.org` and `mastodon.social` as `MASTODON` assets instead of `URL` assets for the server domain. Supported URL forms:
+
+- `/@user` and `/@user@server`
+- `/@user/<statusId>` for posts
+- `/users/<name>` and `/users/<name>/statuses/<statusId>`
+
+ChainPatrol stores a post as the account that published it. Each account becomes one asset, no matter which server you view it from. Accounts hosted on other servers are stored as `mastodon.social/@user@server`.
+
+| URL | Stored asset |
+| --- | --- |
+| `https://fosstodon.org/@alice` | `fosstodon.org/@alice` |
+| `https://fosstodon.org/@alice/112233445566778899` | `fosstodon.org/@alice` |
+| `https://fosstodon.org/@nixCraft@mastodon.social` | `mastodon.social/@nixcraft` |
+| `https://fosstodon.org/@scammer@infosec.exchange` | `mastodon.social/@scammer@infosec.exchange` |
