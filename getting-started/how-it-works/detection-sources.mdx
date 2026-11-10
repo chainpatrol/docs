@@ -24,7 +24,7 @@ Detection sources operate on automated schedules, running searches across variou
 ## Available Detection Sources
 
 <Info>
-ChainPatrol supports **29 different detection sources** across multiple categories
+ChainPatrol supports **30 different detection sources** across multiple categories
 </Info>
 
 ### Search Engines
@@ -90,6 +90,24 @@ Additional monitoring capabilities for comprehensive protection:
 - **URLScan** - Leverages URLScan.io's database to find threats
 - **DNS Twist** - Detects typosquatting domains using homoglyph analysis
 - **Certstream** - Monitors certificate transparency logs for newly issued TLS/SSL certificates
+- **CT Log Search** - Searches a 30-day Certificate Transparency index for lookalike domains and reports them as suspected threats. Unlike Certstream, which streams certificates as they are issued, CT Log Search queries certificates issued over a lookback window. It is disabled by default. Once you enable it, it runs on your organization's priority schedule.
+
+<Accordion title="CT Log Search configuration">
+
+| Setting | Default | Description |
+| --- | --- | --- |
+| Search type | `keyword` | How the query matches domains: `keyword` (anywhere in the domain), `prefix` or `suffix` (start or end of the full domain), `regex` (RE2 pattern), or `fuzzy` (any single label within the max distance of the query) |
+| Query | Your website's label | Defaults to the label of your organization's website. For example, `binance.com` becomes `binance`. Default keywords shorter than 5 characters only match a whole domain label |
+| Lookback hours | `26` | How far back to search, up to `720` (30 days) |
+| Max distance | `2` | Fuzzy search only. Maximum edits between a domain label and the query, from `1` to `3` |
+| Max results | `1000` | Maximum domains to return, newest first, up to `10000` |
+
+CT Log Search skips your organization's own website, your URL assets, and their subdomains. It still reports subdomains of shared hosting platforms such as `vercel.app` and `github.io`.
+
+Long lookbacks combined with `fuzzy` or `suffix` searches can time out. If that happens, shorten the lookback or narrow the search.
+
+</Accordion>
+
 - **Guestbook** - Monitors community guestbook submissions
 - **Blocked IP Scan** - Scans for assets hosted on known malicious IPs
 - **Asset Check** - Re-checks existing assets for status changes
