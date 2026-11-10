@@ -12,3 +12,8 @@ To create a new config for a source that is disabled by default, use
 durably disable a source that is enabled by default, set `status` to `DISABLED`
 here rather than calling [Delete Detection Config](/external-api/detection-configs-delete),
 since automation may re-create a default config for such sources.
+
+<Note>
+  This endpoint requires an organization API key, or an organization owner or admin
+  (signed in, or using their own user API key). A member-role credential gets `403 Forbidden`.
+</Note>

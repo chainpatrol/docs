@@ -7,3 +7,8 @@ openapi: "POST /detection/configs/run"
 
 Run one or many organization detection configs on demand and return the run status for
 each config.
+
+<Note>
+  This endpoint requires an organization API key, or an organization owner or admin
+  (signed in, or using their own user API key). A member-role credential gets `403 Forbidden`.
+</Note>
