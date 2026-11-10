@@ -1,6 +1,6 @@
 ---
 title: Page
-description: Use the PAGE asset type to report specific scam URLs on shared hosting platforms like linktr.ee, telegram.me, or wordpress.com without blocking the domain.
+description: Use the PAGE asset type to report specific scam URLs on shared hosting platforms like linktr.ee, bit.ly, or beacons.ai without blocking the domain.
 ---
 
 The `PAGE` asset type is used to report webpages on a domain. Unlike `URL` asset type, the `PAGE` asset type will NOT normalize the URL string before submitting to **Chainpatrol**.
@@ -8,28 +8,23 @@ The `PAGE` asset type is used to report webpages on a domain. Unlike `URL` asset
 This allows you to report webpages on sites where the scam or malicious content is hosted on a subpath of the domain, rather than the entire domain being malicious.
 
 <Info>
-Use the `PAGE` asset type for hosting platforms like *.wordpress.com, where individual pages may be malicious but blocking the entire domain would affect legitimate content. For these platforms, report the specific page URL rather than the domain.
+Use the `PAGE` asset type for link-in-bio pages and link shorteners like linktr.ee or bit.ly, where individual pages may be malicious but blocking the entire domain would affect legitimate content. For these platforms, report the specific page URL rather than the domain.
 </Info>
 
-When you submit a report, if you submit a URL that matches one of the domains below, a `PAGE` asset will be created instead of a `URL` asset.
-
-#### Available page domains
+When you submit a report with a URL on one of ChainPatrol's page domains, a `PAGE` asset is created instead of a `URL` asset. The list has more than 500 domains. Some examples:
 
 ```
+beacons.ai
 bit.ly
 blur.io
 goo.gl
 link3.to
 linktr.ee
-opensea.io
 t.co
-t.me
-telegram.me
 tinyurl.com
-twitter.com
-beacons.ai
-wordpress.com
 ```
+
+Some well-known platforms get their own asset type instead of `PAGE`. For example, `opensea.io` links become `OPENSEA` assets, `t.me` and `telegram.me` links become `TELEGRAM` assets, and `twitter.com` links become `TWITTER` assets. See [Social](/glossary/asset-types/social) and [Other](/glossary/asset-types/other).
 
 <Note>
   If you would like to see a domain added to this list, please reach out to us
