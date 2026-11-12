@@ -5,7 +5,14 @@ description: "Search dark web leak data against a brand's tracked email domains,
 
 ## Overview
 
-**Dark Web Monitoring** lives under **Employee Protection → Dark Web**. It supports searching dark web leak data against each brand's tracked assets. Three search targets are available:
+**Dark Web Monitoring** lives under **Employee Protection → Dark Web**. The page has two tabs:
+
+- **Leaked credentials**: search dark web leak data against each brand's tracked assets.
+- **[Brand presence](#brand-presence)**: scan dark web forums and chat channels for fraud chatter about a brand.
+
+Organization owners, admins, and members can use both tabs once dark web monitoring is enabled for the organization. Only brands that ChainPatrol has enabled for dark web monitoring can be searched or scanned.
+
+The **Leaked credentials** tab supports three search targets:
 
 - **Email domains**: find leaked credentials for any address under a tracked domain.
 - **Email addresses**: find leaked credentials for a specific tracked address.
@@ -83,3 +90,27 @@ Press **J** to move to the next record and **K** to move to the previous one. Th
 ## Slack alerts
 
 When leaks increase for a monitored domain, ChainPatrol sends an alert to your configured Slack channel with a link back to the page.
+
+## Brand presence
+
+The **Brand presence** tab looks for a brand being discussed by fraud actors, such as account takeover, payment fraud, insider recruitment, and impersonation. Pick a brand and click **Scan**. ChainPatrol runs a set of checks against dark web forums and chat channels and lists every mention it finds.
+
+Scans look for the brand's name, website domain, Twitter handle, and included terms. A brand's tickers only count when they appear as a cashtag, such as `$LINK`, never as the plain word.
+
+### Scan quota
+
+Each brand can be scanned 20 times per calendar month. The counter next to the **Scan** button shows how many scans are left. The quota resets at 00:00 UTC on the first day of each month.
+
+### Scan results
+
+Each result shows its **Severity**, **What matched**, **Source**, when it was **Seen**, and its **Status** (**Open** or **Acknowledged**). Click a severity tile above the table, or use **Filter results**, to narrow the list. Mentions with no fraud terms nearby are hidden by default. To include them, click **Show _N_ mentions with no fraud terms**.
+
+If some checks could not be completed, the toolbar shows how many failed. If a scan finds nothing, the page says no fraud chatter surfaced across the checks that ran.
+
+Click a row to open the result drawer. It shows:
+
+- Why the result got its severity.
+- Whether the brand appears next to a fraud term, in leaked records, is only mentioned, or is likely a different brand.
+- The checks that matched the result.
+- The source address, with a copy button. Addresses aren't links. `.onion` addresses open only in Tor Browser, and dark web pages can carry malware or illegal content.
+- Quoted passages where the brand appears, with matched words highlighted. Email addresses, credentials, cards, and phone numbers are removed from the passages.
