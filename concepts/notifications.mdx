@@ -1,0 +1,67 @@
+---
+title: "Email notifications"
+description: "Choose which ChainPatrol emails your team gets, who receives each one, and how to send them to a shared inbox such as security@ with external addresses."
+---
+
+## Overview
+
+ChainPatrol emails your team about threats waiting for review, escalations, expiring allowlist entries, and account activity. Manage these emails on **Settings → Notifications**, in the **Email** tab. Organization Owners and Admins can open this page.
+
+The page also has a **Slack & Discord** tab for alerts posted to your channels. See [Slack alerts](/integration/slack#alerts) for that tab.
+
+## Default recipients
+
+**Default recipients** sets who an email goes to when its **Who gets it** menu is set to **Default**. Choose **Owners and Admins** or **Owners only**.
+
+## Emails you can turn on or off
+
+Each of these emails has its own switch. Click the eye icon next to an email's name to preview it with sample data.
+
+| Email | What it sends |
+| --- | --- |
+| **Daily review reminder** | Threats waiting for your team's review, once a day |
+| **Escalated threats** | A threat ChainPatrol hands to your team to decide on |
+| **Allowlist expiry** | Allowlisted assets that expire soon or are removed, once a day |
+| **Activity summary** | New threats and takedowns. Set it to **Off**, **Weekly** (Mondays) or **Monthly** (the 1st). It sends at 6:00 PM ET |
+
+When an email is on, its **Who gets it** menu offers:
+
+- **Default**: the default recipients above
+- **Owners and Admins**
+- **Owners only**
+- **Chosen people and addresses**: pick individual Owners, Admins and confirmed [external addresses](#external-addresses). At least one person or address has to stay on the list.
+
+The card shows who the email goes to right now. If none of the chosen people or addresses can receive it (for example, they left the organization or haven't confirmed yet), the email goes to the default recipients instead.
+
+<Note>
+  ChainPatrol can keep the **Daily review reminder** on for your organization. The card then shows a **Kept on by ChainPatrol** badge and its switch can't be turned off. Contact ChainPatrol to change it.
+</Note>
+
+## Always sent
+
+Some emails are about your account itself. They go to Owners and can't be turned off:
+
+- **API key expiring**: sent to the Owners and the key's creator, so a key never stops working without warning
+- **Service requests**: someone asked to turn on a service for your organization
+- **Service turned off**: a service was turned off for your organization
+
+## External addresses
+
+External addresses let you send notifications to a shared inbox outside your team, such as `security@yourcompany.com`, instead of each person's own inbox.
+
+1. In the **External addresses** section, enter the address and click **Add address**.
+2. ChainPatrol emails a confirmation link to that address. The address shows **Waiting for confirmation** until someone at that inbox confirms it. The link expires after 7 days. Click **Resend** to send a new one.
+3. Once the address shows **Confirmed**, choose it in an email's **Who gets it → Chosen people and addresses** list.
+
+External addresses get a limited version of each email: what happened and how many, with a sign-in link but no threat details. The **Activity summary** is the exception: it only contains counts, so external addresses get the same summary as your team.
+
+Keep these rules in mind:
+
+- Only Owners can add, resend or remove external addresses. Admins can see the list.
+- You can't add the address of someone already in your organization. Choose an Owner or Admin by name instead, so they get the full email. A Member can't receive notifications until they are made an Admin.
+- An organization can have at most 5 addresses waiting for confirmation at once.
+- Self-serve organizations can add external addresses only after ChainPatrol has reviewed them.
+
+## Managing emails from your inbox
+
+Notification emails to your team end with a line explaining why you got the email, followed by a **Manage notifications** link to this page.
