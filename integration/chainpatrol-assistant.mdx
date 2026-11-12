@@ -54,7 +54,7 @@ When you turn the assistant on, ChainPatrol creates an API key just for it. That
 
 Tag `@ChainPatrol` with your question. The assistant first replies "Looking into it…" in a thread, then replaces that message with its answer.
 
-- **Follow-ups:** reply in the same thread and tag `@ChainPatrol` again. It reads the earlier messages in the thread, including its own answers, so you don't need to repeat yourself.
+- **Follow-ups:** reply in the same thread. For an hour after its last answer, the assistant answers your replies without a new tag, as long as your reply doesn't tag anyone. It only does this for the person it last answered, and stops once someone else writes in the thread. After that, tag `@ChainPatrol` again. It reads the earlier messages in the thread, including its own answers, so you don't need to repeat yourself.
 - **Screenshots:** you can attach a screenshot of a suspicious site or message. The assistant reads the links, accounts, wallet addresses and other details shown in the four most recent images in the thread.
 - **Report links:** paste a link to a ChainPatrol report and it tells you, for each asset, how it was reviewed, whether it is blocked, whether it is still live, and how its takedown is going.
 
@@ -95,7 +95,7 @@ The assistant can take three actions:
 | **Review a proposal** | Approves (blocks), rejects, or rejects and watchlists a proposal waiting for your review. A review can't be undone. |
 | **Dispute** | Disputes a ChainPatrol decision about a link, account or address. Replies to the dispute go to the admin who turned the assistant on. |
 
-Ask in plain words, for example "@ChainPatrol please report this link". The assistant never acts on its own. It posts a card in the thread that shows exactly what will be sent, with **Confirm** and **Cancel** buttons.
+Ask in plain words, for example "@ChainPatrol please report this link". Asking it to take down a link counts as a report request. The assistant proposes the report straight away, without first asking for a brand or threat type. The assistant never acts on its own. It posts a card in the thread that shows exactly what will be sent, with **Confirm** and **Cancel** buttons.
 
 - Nothing happens until someone in the channel clicks **Confirm**.
 - The card expires after **15 minutes**. After that, ask again.
