@@ -14,11 +14,13 @@ as `brandColors`, `includedTerms`, `excludedTerms`, `tickers`, `avatarUrl`,
 ## Notes
 
 - Each brand reports `useOrganizationDocs` — when true, the brand inherits its Letter of
-  Authorization and Power of Attorney from the organization.
-- `legalDocuments` carries the brand-level Letter of Authorization and Power of Attorney
-  attachments, and `trademarkRegistrations` lists every brand-level trademark on file with
+  Authorization from the organization.
+- `legalDocuments` carries the brand-level Letter of Authorization attachment, and `trademarkRegistrations` lists every brand-level trademark on file with
   its issuing office, registration number, and a link to the certificate PDF when one has
   been uploaded.
+- `legalDocuments.powerOfAttorney` is deprecated. The Letter of Authorization is the only
+  legal document now; the field returns a Power of Attorney uploaded before that change and
+  will be removed in a future version.
 - Soft-deleted brands are excluded.
 - Brand counts per organization are typically under 500, so the endpoint returns the full
   set in one response — there is no pagination.

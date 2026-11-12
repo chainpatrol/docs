@@ -9,7 +9,7 @@ List the organizations accessible to the current user, along with each one's
 subscription status, which services are enabled (reporting, reviewing, protection,
 takedowns, detection, and dark web monitoring), integration connection status, whether
 obligatory organization admin approval is enabled, the org-level Letter of Authorization
-and Power of Attorney attachments, and every org-level trademark registration on file.
+attachment, and every org-level trademark registration on file.
 
 ## Notes
 
@@ -19,8 +19,10 @@ and Power of Attorney attachments, and every org-level trademark registration on
   `discord`, `vercel`, `intercom`, and `moderation` are booleans; `telegram` reports both a
   connected flag and a group count, since an organization can have multiple Telegram
   groups.
-- `legalDocuments` has `letterOfAuthorization` and `powerOfAttorney` entries, each
-  reporting whether the document is present along with its file name and URL.
+- `legalDocuments` has a `letterOfAuthorization` entry reporting whether the document is
+  present along with its file name and URL. Its `powerOfAttorney` entry is deprecated: the
+  Letter of Authorization is the only legal document now, and the field returns a Power of
+  Attorney uploaded before that change. It will be removed in a future version.
 - `trademarkRegistrations` is the full list of org-level trademarks with their issuing
   office, registration number, and a certificate PDF link when one has been uploaded — use
   it to identify which customers have or have not added trademarks.
