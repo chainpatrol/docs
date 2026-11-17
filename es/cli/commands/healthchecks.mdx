@@ -63,7 +63,7 @@ chainpatrol healthchecks run <id|--all> --org <slug>
 chainpatrol healthchecks run --all --org acme
 chainpatrol healthchecks run reviewing.backlog --org acme
 chainpatrol healthchecks run takedowns.stale-in-progress --org acme
-chainpatrol --json healthchecks run --all --org acme --output json
+chainpatrol healthchecks run --all --org acme --output json
 ```
 
 Cuando se supera un umbral, el comando termina con el [código `6`](/es/cli/output#códigos-de-salida): la verificación se ejecutó y

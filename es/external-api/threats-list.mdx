@@ -43,11 +43,11 @@ curl --request POST \
 | ----------- | ----------------- | ----------- | --------------------------------- | ------------------ | ------------------------------------------------------------ |
 | `query`     | `string`          | ❌ No       | -                                 | -                  | Consulta de búsqueda para filtrar amenazas por contenido     |
 | `startDate` | `string`          | ❌ No       | hace 1 día                        | Formato YYYY-MM-DD | Fecha de inicio para filtrar amenazas (inclusive)            |
-| `endDate`   | `string`          | ❌ No       | hoy                               | Formato YYYY-MM-DD | Fecha de fin para filtrar amenazas (inclusive)               |
+| `endDate`   | `string`          | ❌ No       | ahora                             | Formato YYYY-MM-DD | Fecha de fin para filtrar amenazas (inclusive)               |
 | `assetType` | `AssetType[]`     | ❌ No       | -                                 | -                  | Arreglo de tipos de **asset** (activo digital: URL, dirección, perfil, app, etc.) por los que filtrar |
 | `sorting`   | `SortingConfig[]` | ❌ No       | `[{key: "id", direction: "asc"}]` | -                  | Arreglo de configuraciones de ordenamiento                   |
 | `per_page`  | `number`          | ❌ No       | `10`                              | Mín.: 1, Máx.: 100 | Cantidad de amenazas que se devuelven por página             |
-| `next_page` | `string`          | ❌ No       | -                                 | Entero positivo    | Cursor para obtener la siguiente página de resultados        |
+| `next_page` | `string`          | ❌ No       | -                                 | Valor de `next_page` en la respuesta anterior | Cursor para obtener la siguiente página de resultados        |
 | `includePending` | `boolean`    | ❌ No       | `false`                           | -                  | Devuelve también los bloqueos pendientes (ver más abajo)     |
 
 <Warning>
@@ -161,19 +161,22 @@ Cada elemento del arreglo `threats` tiene la siguiente estructura:
       "id": 12345,
       "content": "https://fake-site.com",
       "type": "URL",
-      "blockedAt": "2024-01-15T10:30:00.000Z"
+      "blockedAt": "2024-01-15T10:30:00.000Z",
+      "pendingStatus": null
     },
     {
       "id": 12346,
       "content": "eip155:1:0x1234567890123456789012345678901234567890",
       "type": "ADDRESS",
-      "blockedAt": "2024-01-15T09:15:00.000Z"
+      "blockedAt": "2024-01-15T09:15:00.000Z",
+      "pendingStatus": null
     },
     {
       "id": 12347,
       "content": "twitter.com/fake_account",
       "type": "TWITTER",
-      "blockedAt": "2024-01-15T08:45:00.000Z"
+      "blockedAt": "2024-01-15T08:45:00.000Z",
+      "pendingStatus": null
     }
   ],
   "next_page": "12348"
@@ -314,7 +317,7 @@ async function getAllThreats(params: ThreatListParams) {
   return allThreats;
 }
 
-// Get all URL threats from the last week
+// Get all URL threats from the first week of January 2024
 getAllThreats({
   assetType: ["URL"],
   startDate: "2024-01-01",
@@ -322,7 +325,7 @@ getAllThreats({
   per_page: 100,
 })
   .then((threats) => {
-    console.log(`Found ${threats.length} URL threats in the last week`);
+    console.log(`Found ${threats.length} URL threats in the first week of January 2024`);
   })
   .catch((error) => console.error("Error fetching all threats:", error));
 ```

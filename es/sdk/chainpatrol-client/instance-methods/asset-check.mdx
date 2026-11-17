@@ -1,6 +1,6 @@
 ---
 title: "asset.check"
-description: Consulta en tiempo real el estado de amenaza de una URL, página, perfil social o dirección de blockchain con el método asset.check del SDK de JavaScript de ChainPatrol.
+description: Consulta en tiempo real el estado de amenaza de una URL, página o dirección de blockchain con el método asset.check del SDK de JavaScript de ChainPatrol.
 ---
 
 El método `asset.check` te permite consultar el estado de amenaza actual de un solo **asset** (activo digital: URL, dirección, perfil, app, etc.). Este método es ideal para la protección en tiempo real y la verificación de assets individuales.
@@ -46,9 +46,10 @@ Valores posibles: `UNKNOWN`, `ALLOWED`, `BLOCKED`.
 
 <ResponseField name="reason" type="string">
   El motivo por el que el asset fue permitido o bloqueado (si corresponde). ChainPatrol
-  combina datos de varias fuentes: - `eth-phishing-detect` - El asset está en la
-  **Blocklist** (lista de bloqueo) de MetaMask - `reported` - El asset fue reportado por usuarios y agregado a
-  la Blocklist de ChainPatrol
+  combina datos de varias fuentes:
+
+  - `eth-phishing-detect` - El asset está en la **Blocklist** (lista de bloqueo) de MetaMask
+  - `reported` - El asset fue reportado por usuarios y agregado a la Blocklist de ChainPatrol
 </ResponseField>
 
 ### Tipos de asset compatibles
@@ -98,17 +99,16 @@ Valores posibles: `UNKNOWN`, `ALLOWED`, `BLOCKED`.
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 
 const client = new ChainPatrolClient({
-apiKey: "cp_live_your_api_key_here",
+  apiKey: "cp_live_your_api_key_here",
 });
 
 const result = await client.asset.check({
-type: "URL",
-content: "https://suspicious-site.com",
+  type: "URL",
+  content: "https://suspicious-site.com",
 });
 
 console.log(result);
-
-````
+```
 
 ```typescript Address Check
 const result = await client.asset.check({
@@ -121,7 +121,7 @@ if (result.status === "BLOCKED") {
 } else {
   console.log("✅ Address appears safe");
 }
-````
+```
 
 ```json Example Response
 {
@@ -272,15 +272,19 @@ try {
 ### Límites de solicitudes y rendimiento
 
 <Note>
-  **Límites de solicitudes** - Solicitudes individuales: hasta 10 solicitudes por segundo -
-  Recomendado para la verificación en tiempo real - Para operaciones masivas, usa `asset.list`
-  en su lugar
+  **Límites de solicitudes**
+
+  - Solicitudes individuales: hasta 10 solicitudes por segundo
+  - Recomendado para la verificación en tiempo real
+  - Para operaciones masivas, usa `asset.list` en su lugar
 </Note>
 
 <Warning>
-  **Consideraciones de rendimiento** - Guarda los resultados en caché cuando sea posible para reducir las
-  llamadas a la API - Implementa backoff exponencial para las solicitudes fallidas - Considera usar
-  `asset.list` para escenarios de verificación masiva
+  **Consideraciones de rendimiento**
+
+  - Guarda los resultados en caché cuando sea posible para reducir las llamadas a la API
+  - Implementa backoff exponencial para las solicitudes fallidas
+  - Considera usar `asset.list` para escenarios de verificación masiva
 </Warning>
 
 ## Recursos relacionados
@@ -299,6 +303,6 @@ try {
 
 ### Documentación adicional
 
-- [Guía de tipos de asset](/es/glossary/asset-types/page)
-- [Buenas prácticas de manejo de errores](/es/general/api-key)
-- [Pautas sobre límites de solicitudes](/es/external-api/overview)
+- [Guía de tipos de asset](/es/glossary/overview)
+- [Claves de API](/es/general/api-key)
+- [Descripción general de la API externa](/es/external-api/overview)

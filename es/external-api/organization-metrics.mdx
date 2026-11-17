@@ -11,17 +11,17 @@ openapi: "POST /public/getOrganizationMetrics"
 
 ### Autenticación
 
-Incluye tu clave de API en el encabezado `Authorization`:
+Incluye tu clave de API en el encabezado `X-API-KEY`:
 
 ```bash
-Authorization: Bearer your_api_key
+X-API-KEY: your_api_key
 ```
 
 ### Solicitud de ejemplo
 
 ```bash
 curl -X POST 'https://app.chainpatrol.io/api/v2/public/getOrganizationMetrics' \
-  -H 'Authorization: Bearer your_api_key' \
+  -H 'X-API-KEY: your_api_key' \
   -H 'Content-Type: application/json' \
   -d '{
     "organizationSlug": "your-org",
@@ -59,7 +59,7 @@ async function fetchOrganizationMetrics(organizationSlug, startDate, endDate) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer YOUR_API_KEY_HERE",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
       },
       body: JSON.stringify({
         organizationSlug,
@@ -108,7 +108,7 @@ async function fetchOrganizationMetrics(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer YOUR_API_KEY_HERE",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
       },
       body: JSON.stringify({
         organizationSlug,
@@ -133,7 +133,6 @@ fetchOrganizationMetrics(
 ```python Python
 import requests
 from typing import Dict, Optional
-from datetime import datetime
 
 def fetch_organization_metrics(
     organization_slug: str,
@@ -144,7 +143,7 @@ def fetch_organization_metrics(
         "https://app.chainpatrol.io/api/v2/public/getOrganizationMetrics",
         headers={
             "Content-Type": "application/json",
-            "Authorization": "Bearer YOUR_API_KEY_HERE",
+            "X-API-KEY": "YOUR_API_KEY_HERE",
         },
         json={
             "organizationSlug": organization_slug,
@@ -175,8 +174,8 @@ except Exception as error:
 | Parámetro        | Tipo   | Obligatorio | Descripción                                                          |
 | ---------------- | ------ | ----------- | -------------------------------------------------------------------- |
 | organizationSlug | string | Sí          | Slug de la organización que se va a consultar                        |
-| startDate        | Date   | No          | Fecha de inicio de las métricas (por defecto: todo el historial)     |
-| endDate          | Date   | No          | Fecha de fin de las métricas (por defecto: la fecha actual)          |
+| startDate        | string | No          | Fecha de inicio de las métricas, ISO 8601 (por defecto: todo el historial) |
+| endDate          | string | No          | Fecha de fin de las métricas, ISO 8601 (por defecto: la fecha actual)      |
 
 ### Formato de la respuesta
 

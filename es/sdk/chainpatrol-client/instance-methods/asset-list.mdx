@@ -45,6 +45,14 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
       Slug opcional de la organización, para filtrar los assets de una organización específica.
     </ParamField>
 
+    <ParamField path="per_page" type="number">
+      Cantidad de assets que se devuelven por página. El valor predeterminado es `100`.
+    </ParamField>
+
+    <ParamField path="next_page" type="string">
+      Cursor de la siguiente página de resultados. Pasa el valor `next_page` de la respuesta anterior.
+    </ParamField>
+
   </Expandable>
 </ParamField>
 
@@ -77,6 +85,10 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
     </ResponseField>
 
   </Expandable>
+</ResponseField>
+
+<ResponseField name="next_page" type="string">
+  Cursor de la siguiente página de resultados. Es `null` o no aparece cuando no hay más resultados.
 </ResponseField>
 
 ### Opciones de filtrado
@@ -112,19 +124,18 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 
 const client = new ChainPatrolClient({
-apiKey: "cp_live_your_api_key_here",
+  apiKey: "cp_live_your_api_key_here",
 });
 
 const result = await client.asset.list({
-type: "URL",
-status: "BLOCKED",
-startDate: "2023-01-01",
-endDate: "2023-12-31",
+  type: "URL",
+  status: "BLOCKED",
+  startDate: "2023-01-01",
+  endDate: "2023-12-31",
 });
 
 console.log(`Found ${result.assets.length} blocked URLs`);
-
-````
+```
 
 ```typescript Organization-Specific Query
 const result = await client.asset.list({
@@ -139,7 +150,7 @@ result.assets.forEach(asset => {
   console.log(`Blocked address: ${asset.content}`);
   console.log(`Updated: ${asset.updatedAt}`);
 });
-````
+```
 
 ```json Example Response
 {
@@ -215,7 +226,9 @@ async function getAssetStats(dateRange: { start: string; end: string }) {
     ```typescript
     async function generateThreatReport(month: string) {
       const startDate = `${month}-01`;
-      const endDate = `${month}-31`;
+      const [year, monthNumber] = month.split("-").map(Number);
+      const lastDay = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
+      const endDate = `${month}-${String(lastDay).padStart(2, "0")}`;
       
       const threats = await client.asset.list({
         type: "URL",
@@ -361,9 +374,11 @@ async function exportThreats(outputFormat: "csv" | "json" = "json") {
 ### Requisitos de formato
 
 <Warning>
-  **Requisitos del formato de fecha** - Las fechas deben estar en formato `YYYY-MM-DD` -
-  `endDate` debe ser mayor o igual que `startDate` - El rango máximo de fechas
-  puede estar limitado según tu plan
+  **Requisitos del formato de fecha**
+
+  - Las fechas deben estar en formato `YYYY-MM-DD`
+  - `endDate` debe ser mayor o igual que `startDate`
+  - El rango máximo de fechas puede estar limitado según tu plan
 </Warning>
 
 ### Manejo de errores
@@ -390,15 +405,19 @@ try {
 ### Límites de solicitudes y rendimiento
 
 <Note>
-  **Límites de solicitudes** - Solicitudes paginadas: hasta 5 solicitudes por segundo - Los resultados
-  se paginan cuando los conjuntos de datos son grandes - Considera guardar en caché los resultados de los datos
-  que consultas con frecuencia
+  **Límites de solicitudes**
+
+  - Solicitudes paginadas: hasta 5 solicitudes por segundo
+  - Los resultados se paginan cuando los conjuntos de datos son grandes
+  - Considera guardar en caché los resultados de los datos que consultas con frecuencia
 </Note>
 
 <Warning>
-  **Consejos de rendimiento** - Usa rangos de fechas específicos para limitar el tamaño de la respuesta - Guarda
-  los resultados en caché cuando sea posible para reducir las llamadas a la API - Considera la paginación para conjuntos de datos
-  muy grandes
+  **Consejos de rendimiento**
+
+  - Usa rangos de fechas específicos para limitar el tamaño de la respuesta
+  - Guarda los resultados en caché cuando sea posible para reducir las llamadas a la API
+  - Usa `per_page` y `next_page` para conjuntos de datos muy grandes
 </Warning>
 
 ## Recursos relacionados
@@ -417,6 +436,6 @@ try {
 
 ### Documentación adicional
 
-- [Guía de tipos de asset](/es/glossary/asset-types/page)
-- [Gestión de organizaciones](/general/concepts)
+- [Guía de tipos de asset](/es/glossary/overview)
+- [Gestión de organizaciones](/es/concepts/organizations)
 - [Autenticación de la API](/es/external-api/authentication)

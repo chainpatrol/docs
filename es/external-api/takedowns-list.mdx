@@ -3,6 +3,10 @@ title: Listar takedowns
 openapi: "POST /takedowns/list"
 ---
 
+## Descripción general
+
+Lista los **takedowns** (solicitudes de baja de contenido fraudulento) de tu organización. Con una clave de API, ChainPatrol obtiene la organización a partir de la clave.
+
 <Warning>
   Esta API requiere una clave de API con los permisos adecuados. Consulta la
   [documentación de claves de API](/es/general/api-key) para más detalles.
@@ -21,7 +25,7 @@ Para usar la paginación, incluye los parámetros `per_page` y `next_page` en tu
 - `per_page <number>`: Cantidad de **takedowns** (solicitudes de baja de contenido fraudulento) que se devuelven por página (mín.: 1, máx.: 100)
 - `next_page <string>`: Cursor de la siguiente página de resultados
 
-### Ejemplo de implementación de la paginación:
+### Ejemplo de implementación de la paginación
 
 <CodeGroup>
 
