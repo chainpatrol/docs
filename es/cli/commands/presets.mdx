@@ -1,0 +1,56 @@
+---
+title: Comando presets — ejecuta flujos de trabajo guardados de la CLI
+sidebarTitle: presets
+icon: play
+description: "Ejecuta flujos de trabajo guardados de la CLI de ChainPatrol que agrupan varias llamadas en un solo comando, como el paquete CS Weekly Health para una reunión de seguimiento con un cliente."
+---
+
+```bash
+chainpatrol presets <list|run <id>>
+```
+
+Un preset agrupa varias llamadas de la CLI en un solo comando, de modo que una tarea recurrente es una única
+invocación en lugar de un script que tienes que mantener sincronizado.
+
+## presets list
+
+Lista los presets disponibles con sus IDs y descripciones.
+
+```bash
+chainpatrol presets list
+chainpatrol presets list --output json
+```
+
+| Preset | Qué hace |
+| --- | --- |
+| `cs-weekly-health` | Paquete semanal de salud del cliente: amenazas encontradas, métricas de resumen y validación de detecciones. |
+
+## presets run
+
+Ejecuta un preset sobre una organización.
+
+```bash
+chainpatrol presets run <preset-id> --org <slug>
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. Obligatorio. |
+
+```bash
+chainpatrol presets run cs-weekly-health --org acme
+chainpatrol presets run cs-weekly-health --org acme --output json
+chainpatrol presets run cs-weekly-health --org acme --explain --output markdown
+```
+
+Un ID de preset desconocido falla con el [código de salida `3`](/es/cli/output#códigos-de-salida); ejecuta `presets
+list` para ver los válidos.
+
+`--output markdown` es la opción más útil aquí: te da un informe que puedes pegar directamente
+en una reunión de seguimiento con un cliente.
+
+## Relacionado
+
+- [`metrics`](/es/cli/commands/metrics) y
+  [`detections`](/es/cli/commands/detections): los comandos subyacentes que un preset combina
+- [`healthchecks run --all`](/es/cli/commands/healthchecks) para una verificación de todo el pipeline

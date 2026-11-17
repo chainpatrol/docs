@@ -1,0 +1,58 @@
+---
+title: "Descripción general de la clase ThreatDetector"
+description: "La clase ThreatDetector envuelve las API de detección de phishing y estafas de ChainPatrol con caché, adaptadores de almacenamiento y verificaciones de URL para apps enfocadas en la seguridad."
+---
+
+Un [ThreatDetector](./constructor) te permite crear fácilmente funciones de seguridad para tu comunidad
+en tu wallet, dApp u otra app enfocada en la seguridad. Es un wrapper inteligente sobre las API de ChainPatrol que te permite
+verificar si un sitio web es una estafa o no. Incluye varios adaptadores de almacenamiento, para que puedas
+guardar en caché fácilmente los resultados de tus verificaciones y evitar llamadas innecesarias a la API.
+
+```js
+import { ThreatDetector, Storage } from "@chainpatrol/sdk";
+
+// Create a new detector instance
+const detector = new ThreatDetector({
+  mode: "cloud", // 'cloud' | 'local' (default: 'cloud')
+
+  // Optional: Specify a custom API key (only available for 'cloud' mode)
+  apiKey: "YOUR_API_KEY",
+
+  // Optional: Configure a proxy server (only available for 'cloud' mode)
+  proxyUrl: "https://proxy.acme.com",
+
+  // Optional: Specify a custom storage adapter
+  storage: Storage.extension(),
+  // storage: Storage.browser(),
+  // storage: Storage.memory(),
+
+  // Optional: Specify a custom redirect URL
+  redirectUrl: "https://app.chainpatrol.io/warning",
+});
+```
+
+## Constructor
+
+### `new ThreatDetector(options)`
+
+Crea una nueva instancia de la clase ThreatDetector.
+
+---
+
+## Métodos de instancia
+
+### [url()](./instance-methods/url)
+
+Verifica si una URL es una estafa o no.
+
+### [allow()](./instance-methods/allow)
+
+Agrega una URL a la **allowlist** (lista de permitidos) local.
+
+### [block()](./instance-methods/block)
+
+Agrega una URL a la **blocklist** (lista de bloqueo) local.
+
+### [ignore()](./instance-methods/ignore)
+
+Agrega una URL a la ignorelist (lista de ignorados) local.

@@ -1,0 +1,171 @@
+---
+title: Comando orgs — lista e inspecciona organizaciones
+sidebarTitle: orgs
+icon: building
+description: "Lista las organizaciones de ChainPatrol por estado de suscripción, servicios activados y aprobaciones pendientes, y luego inspecciona una organización, su Allowlist, su Watchlist y sus marcas."
+---
+
+```bash
+chainpatrol orgs <list|get <slug>|assets list|assets set-expiry|asset-groups list>
+```
+
+`orgs list` y `orgs get` operan sobre las organizaciones que tu credencial puede ver. Los
+subcomandos anidados (`assets` y `asset-groups`) operan sobre la organización vinculada a
+tu clave de API.
+
+## orgs list
+
+Lista las organizaciones con su estado de suscripción y el indicador de activo de cada servicio. Todos los filtros
+se combinan con AND.
+
+| Opción | Descripción |
+| --- | --- |
+| `--query <text>` | Coincidencia parcial por nombre (subcadena, sin distinguir mayúsculas de minúsculas). |
+| `--subscription-status <l>` | Lista separada por comas: `PROSPECT`, `POC`, `ACTIVE`, `INTEGRATION`, `PROTECTION`, `INACTIVE`. Por defecto incluye todos los estados excepto `INACTIVE`; pasa `INACTIVE` para listar las organizaciones que se dieron de baja. |
+| `--service-active <l>` | Lista separada por comas de servicios que deben estar activos. |
+| `--service-inactive <l>` | Lista separada por comas de servicios que deben estar inactivos. |
+| `--service-automated <l>` | Servicios cuya automatización debe estar **activada**. Solo se acepta `takedowns`. |
+| `--service-manual <l>` | Servicios cuya automatización debe estar **desactivada**. Solo se acepta `takedowns`. |
+| `--pending-approval-active` | Solo organizaciones con una aprobación de habilitación de servicio abierta, a la espera de visto bueno. |
+| `--pending-approval-inactive` | Solo organizaciones sin aprobaciones de habilitación de servicio pendientes. |
+| `--pending-approval-service <l>` | Solo organizaciones con una aprobación pendiente para `protection` (**Blocklisting**: inclusión en la lista de bloqueo) y/o `takedowns`. |
+| `--obligatory-approval-active` | Solo organizaciones que tienen activada la [Obligatory Organization Admin Approval](/es/concepts/organizations#obligatory-organization-admin-approval-aprobación-obligatoria-de-un-administrador-de-la-organización) (aprobación obligatoria de un administrador de la organización). |
+| `--obligatory-approval-inactive` | Solo organizaciones que la tienen desactivada. No se puede combinar con `--obligatory-approval-active` ni con `--obligatory-approval-asset-type`. |
+| `--obligatory-approval-asset-type <l>` | Lista separada por comas de tipos de **Asset** (activo digital: URL, dirección, perfil, app, etc.). Solo organizaciones en las que la aprobación está activada y cubre todos los tipos indicados. Una organización sin tipos seleccionados cuenta como si los cubriera todos. |
+
+Los servicios son `reporting`, `reviewing`, `protection`, `takedowns`, `detection` y
+`darkWebMonitoring`. `automated` solo se informa para los **Takedowns** (solicitudes de baja de contenido fraudulento): es el único servicio
+en el que la diferencia entre manual y automatizado cambia el comportamiento real de la plataforma.
+
+```bash
+chainpatrol orgs list --subscription-status ACTIVE
+chainpatrol orgs list --service-active takedowns --service-manual takedowns
+chainpatrol --json orgs list --subscription-status ACTIVE,POC --service-active detection
+chainpatrol --json orgs list --pending-approval-service protection,takedowns
+```
+
+## orgs get
+
+Obtiene una sola organización por su slug. Devuelve la misma estructura que una fila de `orgs list`.
+
+```bash
+chainpatrol orgs get <slug>
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Usa la organización predeterminada guardada en lugar de un argumento posicional. |
+
+Quien hace la llamada debe tener acceso: una clave de API con alcance de organización debe coincidir con el slug, y una
+sesión o clave de usuario necesita una membresía activa, salvo que el usuario sea staff.
+
+```bash
+chainpatrol orgs get acme
+chainpatrol --json orgs get acme
+chainpatrol orgs get acme --output markdown
+```
+
+## orgs assets list
+
+Lista los assets de la **Allowlist** (lista de permitidos) de tu organización. La organización se obtiene a partir de tu clave
+de API.
+
+| Opción | Descripción |
+| --- | --- |
+| `--asset-type <type>` | Filtra por tipo de asset (`URL`, `ADDRESS`, …). `--type` es un alias. |
+| `--group-id <n>` | Filtra por ID de grupo. Usa `-1` para ver solo los assets sin grupo. |
+| `--query <text>` | Busca en el contenido del asset (subcadena). |
+| `--per-page <n>` | Tamaño de página, 1–1000. El valor predeterminado es 100. También se acepta `--limit`. |
+| `--next-page <cursor>` | Cursor devuelto por una respuesta anterior. |
+
+```bash
+chainpatrol orgs assets list --asset-type URL
+chainpatrol orgs assets list --group-id 12 --per-page 250 --output csv
+```
+
+Cada asset con vencimiento muestra `expires=<date>`; la salida en CSV y JSON incluye `allowlistExpiresAt`
+y `allowlistExpiredAt`.
+
+## orgs assets set-expiry
+
+Define, renueva o quita la fecha en la que los assets salen de la Allowlist de tu organización. Una vez pasado el vencimiento,
+los assets permanecen en tu organización durante un período de gracia de 14 días y luego se quitan de ella; su estado
+no cambia. Consulta [Vencimiento](/es/concepts/allowlist#vencimiento).
+
+Pasa uno o más IDs de asset (obtenidos con `orgs assets list`) y exactamente una de estas opciones: `--expires`, `--in` o
+`--clear`. Requiere una clave de API de organización con acceso de escritura, o ser propietario o administrador de la organización.
+
+| Opción | Descripción |
+| --- | --- |
+| `--expires <date>` | Fecha de vencimiento. `YYYY-MM-DD` vence al final de ese día (UTC); una fecha y hora ISO se usa tal cual. |
+| `--in <duration>` | Vence después de una duración contada desde hoy: `30d`, `6m`, `1y`. Vence al final de ese día (UTC). |
+| `--clear` | Quita el vencimiento para que los assets permanezcan indefinidamente. |
+| `--id <n>` | ID del asset. Se puede repetir; también funcionan los IDs posicionales y separados por comas. |
+| `--org <slug>` | Slug de la organización. Omítelo si usas una clave de API con alcance de organización. |
+| `--dry-run` | Muestra qué cambiaría sin cambiarlo. |
+
+```bash
+chainpatrol orgs assets set-expiry 12345 12346 --in 6m
+chainpatrol orgs assets set-expiry 12345 --expires 2027-04-30
+chainpatrol orgs assets set-expiry 12345 --clear --org acme
+```
+
+## orgs watchlist list
+
+Lista los assets que ChainPatrol está vigilando para tu organización: los que reportaste y
+no se bloquearon (ya no están online, estacionados, sin evidencia suficiente, …) y que se vuelven a escanear para poder bloquearlos
+más adelante. Es el mismo conjunto que cuenta la métrica `threatsWatchlisted`. Pasa `--org <slug>`, u
+omítelo para usar la organización vinculada a tu clave de API.
+
+| Opción | Descripción |
+| --- | --- |
+| `--asset-type <type>` | Filtra por tipo de asset (`URL`, `TWITTER`, …). `--type` es un alias. |
+| `--query <text>` | Busca en el contenido del asset (subcadena). |
+| `--from <iso>` / `--to <iso>` | Solo los assets que tu organización reportó en esta ventana. |
+| `--include-total` | También muestra el número total de assets en la **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando). |
+| `--per-page <n>` | Tamaño de página, 1–1000. El valor predeterminado es 100. También se acepta `--limit`. |
+| `--next-page <cursor>` | Cursor devuelto por una respuesta anterior. |
+
+```bash
+chainpatrol orgs watchlist list --include-total
+chainpatrol orgs watchlist list --org acme --asset-type URL --output csv
+```
+
+Consulta [`GET /organization/watchlist`](/es/external-api/organization-watchlist-list) para ver todos
+los campos de la respuesta.
+
+## orgs asset-groups list
+
+Lista los grupos de assets de tu organización con la cantidad de assets por grupo.
+
+```bash
+chainpatrol orgs asset-groups list
+chainpatrol orgs asset-groups list --output csv
+```
+
+## brands list
+
+`brands` es un comando de nivel superior independiente que lista las marcas disponibles para ti.
+
+```bash
+chainpatrol brands list [--type ORGANIZATION|INDIVIDUAL|PRODUCT]
+```
+
+El valor de `--type` no distingue mayúsculas de minúsculas. Los IDs de marca de este listado son los que `--brand` y
+`--brand-id` aceptan en otros comandos: en [`reports list`](/es/cli/commands/reports#reports-list),
+[`detections list`](/es/cli/commands/detections#detections-list),
+[`takedowns list`](/es/cli/commands/takedowns), [`metrics`](/es/cli/commands/metrics) y
+[`proposals review`](/es/cli/commands/proposals).
+
+```bash
+chainpatrol brands list
+chainpatrol brands list --type ORGANIZATION
+chainpatrol --json brands list | jq '.brands[] | {id, name}'
+```
+
+## Relacionado
+
+- [`GET /organization/assets`](/es/external-api/organization-assets-list)
+- [`GET /organization/asset-groups`](/es/external-api/organization-asset-groups-list)
+- [`GET /organization/brands`](/es/external-api/organization-brands)
+- [Concepto de organizaciones](/es/concepts/organizations) y [Concepto de marcas](/es/concepts/brands)

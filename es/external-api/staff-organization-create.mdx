@@ -1,0 +1,151 @@
+---
+title: Crear organización (Staff)
+openapi: "POST /staff/organization/create"
+---
+
+<Warning>
+  Este endpoint solo está disponible para el personal (staff) de ChainPatrol. Las claves de API de clientes y
+  las cuentas de clientes reciben `403 Forbidden`.
+</Warning>
+
+## Descripción general
+
+Crea una nueva organización de cliente exactamente como lo hace el personal de ChainPatrol desde
+**Staff → Organizations → Create** en la app. En una sola llamada:
+
+- crea la organización con los servicios que habilites
+- agrega al propietario (reutilizando un usuario existente con ese email) como `OWNER`, y
+  al usuario staff que hace la llamada como `ADMIN`
+- crea los grupos de **Assets** (activos digitales: URL, dirección, perfil, app, etc.) predeterminados y las marcas iniciales, si las hay
+- crea el sitio web como un asset monitoreado y lo agrega a la **Allowlist** (lista de permitidos), junto con
+  los assets oficiales que indiques
+
+## Autenticación
+
+Autentícate con una **clave de API de usuario staff** en el encabezado `X-API-KEY`, o con un
+token de sesión de staff como `Authorization: Bearer <token>`. Las claves de API de organización,
+los usuarios de clientes y las cuentas de servicio de staff de solo lectura se rechazan.
+
+### Solicitud de ejemplo
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/staff/organization/create' \
+  -H 'X-API-KEY: YOUR_STAFF_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "organization": {
+      "name": "Acme",
+      "slug": "acme",
+      "websiteUrl": "https://acme.com",
+      "twitterHandle": "@acme",
+      "subscriptionStatus": "PROSPECT",
+      "accountExecName": "Jane Doe",
+      "accountExecEmail": "jane@chainpatrol.io",
+      "isReportingActive": true,
+      "isReviewingActive": true,
+      "isDetectionActive": true,
+      "requiresCustomerReview": true
+    },
+    "owner": {
+      "fullName": "John Smith",
+      "email": "john@acme.com"
+    },
+    "brands": [
+      {
+        "name": "Acme",
+        "slug": "acme",
+        "type": "ORGANIZATION",
+        "includedTerms": "*acme*",
+        "officialAssets": ["https://twitter.com/acme"]
+      }
+    ]
+  }'
+```
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/staff/organization/create",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_STAFF_API_KEY",
+    },
+    body: JSON.stringify({
+      organization: {
+        name: "Acme",
+        slug: "acme",
+        websiteUrl: "https://acme.com",
+        accountExecName: "Jane Doe",
+        accountExecEmail: "jane@chainpatrol.io",
+      },
+      owner: { fullName: "John Smith", email: "john@acme.com" },
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data.dashboardUrl);
+```
+
+</CodeGroup>
+
+## Respuesta
+
+```json
+{
+  "organization": {
+    "id": 1234,
+    "name": "Acme",
+    "slug": "acme",
+    "description": null,
+    "websiteUrl": "https://acme.com",
+    "subscriptionStatus": "PROSPECT",
+    "createdAt": "2026-10-15T12:00:00.000Z"
+  },
+  "owner": {
+    "id": 5678,
+    "email": "john@acme.com",
+    "fullName": "John Smith"
+  },
+  "brands": [{ "id": 91, "name": "Acme" }],
+  "brandAssetErrors": [],
+  "skippedAssets": [],
+  "dashboardUrl": "https://app.chainpatrol.io/admin/acme/dashboard"
+}
+```
+
+`skippedAssets` lista los assets que no se agregaron ni se incluyeron en la Allowlist porque
+están bloqueados actualmente; por ejemplo, un dominio de estafa conocido que se pasó como asset
+oficial. Revísalos antes de agregar algo a la Allowlist manualmente.
+
+`brandAssetErrors` lista las marcas cuyos assets oficiales no se pudieron agregar. La
+organización y sus marcas se crean de todos modos; vuelve a agregar esos assets desde la
+app o con el endpoint [Agregar assets de la organización](/es/external-api/organization-assets-add).
+
+## Errores
+
+| Estado | Cuándo                                                                                                            |
+| ------ | ----------------------------------------------------------------------------------------------------------------- |
+| `400`  | Falló la validación; p. ej., un handle de Twitter no válido, un asset no compatible o un conflicto de términos de marca. El mensaje indica el campo. |
+| `401`  | No se proporcionó ninguna clave de API ni sesión.                                                                  |
+| `403`  | Quien hace la llamada no es parte del personal de ChainPatrol, o la credencial es de solo lectura.                 |
+| `409`  | El slug de la organización o el slug de una marca ya está en uso, o el sitio web ya pertenece a otra organización. |
+
+## Notas
+
+- La solicitud se valida con las mismas reglas que el formulario de creación de la app, así que
+  todo lo que la app rechaza también se rechaza aquí.
+- Los ajustes omitidos toman los valores por defecto del formulario de la app: reportes, revisión y
+  detección activados, revisión del cliente desactivada y estado de suscripción `PROSPECT`.
+  Los demás servicios quedan desactivados a menos que los habilites.
+- Habilitar un servicio automatizado (por ejemplo, `isAutomatedReviewingActive`)
+  requiere su contraparte manual (`isReviewingActive`).
+- Los assets oficiales que ya pertenecen a otra organización se omiten en lugar
+  de reasignarse.
+- Los assets que están **bloqueados** actualmente nunca se agregan a la organización ni
+  a la Allowlist, ya sea que lleguen como el sitio web, en `officialAssets` o en los
+  `officialAssets` de una marca. En su lugar, se listan en `skippedAssets`, y la
+  organización se crea de todos modos.

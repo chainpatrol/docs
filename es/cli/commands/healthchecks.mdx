@@ -1,0 +1,88 @@
+---
+title: Comando healthchecks — lista y ejecuta healthchecks de la organización
+sidebarTitle: healthchecks
+icon: heart-pulse
+description: "Lista y ejecuta desde la CLI los healthchecks de organización de ChainPatrol, que abarcan detección, revisión, takedowns y liveness de los assets, con códigos de salida pensados para CI."
+---
+
+```bash
+chainpatrol healthchecks <list|run <id>|run --all>
+```
+
+Los healthchecks (verificaciones de estado) son la visión que tiene la propia plataforma sobre si el pipeline de una organización está funcionando:
+si las configuraciones de detección siguen devolviendo resultados, si la cola de revisión se está acumulando, si hay **Takedowns** (solicitudes de baja de contenido fraudulento)
+atascados. Cada uno devuelve una estructura uniforme (`id`, `severity`, `observed`, `threshold`,
+`findings`, `suggestedAction`), de modo que un script puede tratarlos a todos de la misma manera.
+
+## healthchecks list
+
+Lista todos los healthchecks que expone la plataforma, incluidos los que están definidos pero todavía no
+están implementados en el backend. Las entradas aún no implementadas incluyen un `notImplementedReason` que
+puedes mostrar a los usuarios.
+
+```bash
+chainpatrol healthchecks list
+chainpatrol --json healthchecks list | jq '.checks[] | select(.implemented) | .id'
+```
+
+Verificaciones implementadas al momento de escribir esta página:
+
+| ID | Qué detecta |
+| --- | --- |
+| `detections.silent-configs` | Configuraciones de detección que dejaron de producir resultados |
+| `reviewing.backlog` | Una acumulación de **Proposals** (propuestas para bloquear o permitir un asset) que necesitan revisión |
+| `reviewing.old-proposals` | Proposals que llevan demasiado tiempo esperando |
+| `takedowns.todo-volume` | Una acumulación de takedowns en `TODO` |
+| `takedowns.in-progress-volume` | Una acumulación de takedowns en `IN_PROGRESS` |
+| `takedowns.stale-in-progress` | Takedowns atascados en `IN_PROGRESS` |
+| `takedowns.cancelled-count` | Exceso de takedowns en `CANCELLED` en una ventana móvil |
+| `takedowns.automation-off` | Automatización de takedowns deshabilitada por demasiado tiempo |
+| `assets.dead-asset-spike` | Un pico de **Assets** (activos digitales: URL, dirección, perfil, app, etc.) que dejaron de estar online recientemente |
+| `organization.missing-contact-url` | Falta la URL de contacto principal o el canal de comunicación |
+
+Ejecuta `healthchecks list` para ver el conjunto vigente en lugar de confiar en esta tabla: ese comando es la
+fuente de referencia, y la lista crece.
+
+## healthchecks run
+
+Ejecuta una sola verificación por ID, o usa `--all` para ejecutar en paralelo todas las verificaciones implementadas y
+consolidar los resultados.
+
+```bash
+chainpatrol healthchecks run <id|--all> --org <slug>
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. Obligatorio. |
+| `--all` | Ejecuta en paralelo todos los healthchecks implementados. |
+| `--min-results <n>` | Se pasa a `detections.silent-configs`. |
+| `--lookback-hours <n>` | Se pasa a `detections.silent-configs`. |
+
+```bash
+chainpatrol healthchecks run --all --org acme
+chainpatrol healthchecks run reviewing.backlog --org acme
+chainpatrol healthchecks run takedowns.stale-in-progress --org acme
+chainpatrol --json healthchecks run --all --org acme --output json
+```
+
+Cuando se supera un umbral, el comando termina con el [código `6`](/es/cli/output#códigos-de-salida): la verificación se ejecutó y
+algo no está saludable. Es un control (gate) que falla, no un error que haya que reintentar:
+
+```bash
+chainpatrol --json healthchecks run --all --org acme > health.json || {
+  [ $? -eq 6 ] && jq '.checks[] | select(.severity != "ok")' health.json
+}
+```
+
+## healthchecks vs. detections healthcheck
+
+[`detections healthcheck`](/es/cli/commands/detections#detections-healthcheck) es
+específico de detección y puede ejecutar las configuraciones antes de validarlas. `healthchecks run`
+cubre todo el pipeline (también revisión, takedowns y assets) a través de la API pública
+de healthchecks.
+
+## Relacionado
+
+- [Endpoints de healthchecks](/es/external-api/healthchecks-list)
+- [`queues snapshot`](/es/cli/commands/queues) para ver los conteos sin procesar de las colas detrás de varias verificaciones

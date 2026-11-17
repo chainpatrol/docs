@@ -1,0 +1,87 @@
+---
+title: "report.create"
+description: "Crea un reporte de ChainPatrol con uno o más assets sospechosos, un título, una descripción y evidencia, usando el método report.create del SDK."
+---
+
+El método `report.create` crea un reporte para que ChainPatrol lo revise, igual que el endpoint de la API [Crear reporte](/es/external-api/report-create).
+
+## Firma del método
+
+```typescript
+client.report.create(request: ReportCreateInput): Promise<ReportCreateOutput>
+```
+
+## Ejemplo
+
+<CodeGroup>
+
+```typescript Code
+const report = await client.report.create({
+  organizationSlug: "your-org",
+  title: "Fake airdrop site",
+  description: "Shared in our Discord, asks users to connect their wallet.",
+  assets: [{ content: "https://fake-airdrop.example" }],
+});
+
+console.log(report);
+```
+
+```json Output
+{
+  "id": 12345,
+  "createdAt": "2026-11-07T00:00:00.000Z",
+  "organization": {
+    "id": 1,
+    "slug": "your-org",
+    "name": "Your Org"
+  }
+}
+```
+
+</CodeGroup>
+
+## Parámetros
+
+La solicitud acepta los mismos campos que el endpoint [Crear reporte](/es/external-api/report-create). Los más comunes:
+
+<ParamField path="request" type="ReportCreateInput" required>
+  <Expandable title="Propiedades de ReportCreateInput" defaultOpen>
+    <ParamField path="assets" type="object[]" required>
+      Los **assets** (activos digitales: URL, dirección, perfil, app, etc.) que quieres reportar. Cada uno tiene un `content` (una URL, un dominio, un perfil social, una dirección, un correo electrónico o un número de teléfono) y un `status` propuesto opcional, cuyo valor predeterminado es `BLOCKED`.
+
+      Los números de teléfono deben incluir el código de país, por ejemplo `+14155552671`. Si no lo incluyen, el SDK lanza un error de validación antes de enviar la solicitud.
+    </ParamField>
+
+    <ParamField path="organizationSlug" type="string">
+      La organización a la que corresponde el reporte.
+    </ParamField>
+
+    <ParamField path="title" type="string">
+      Un título para el reporte, de al menos 3 caracteres.
+    </ParamField>
+
+    <ParamField path="description" type="string">
+      Más detalles sobre el reporte. Admite Markdown.
+    </ParamField>
+
+    <ParamField path="attachmentUrls" type="string[]">
+      URL de los archivos que quieres adjuntar como evidencia. Sube un archivo con [Subir archivo adjunto](/es/external-api/attachment-upload) para obtener una URL.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+Consulta [Crear reporte](/es/external-api/report-create) para ver todos los campos.
+
+## Valor devuelto
+
+<ResponseField name="id" type="number" required>
+  El ID del nuevo reporte.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string" required>
+  Cuándo se creó el reporte.
+</ResponseField>
+
+<ResponseField name="organization" type="object | null" required>
+  La organización para la que se creó el reporte, con su `id`, `slug` y `name`. Es `null` cuando el reporte no está vinculado a una organización.
+</ResponseField>

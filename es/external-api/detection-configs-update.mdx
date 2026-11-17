@@ -1,0 +1,14 @@
+---
+title: Actualizar configuración de detección
+openapi: "POST /detection/configs/update"
+---
+
+## Descripción general
+
+Actualiza el estado, la programación y los campos de configuración de una configuración de detección de amenazas de la organización.
+
+Para crear una nueva configuración para una fuente que está desactivada de forma predeterminada, usa primero
+[Crear configuración de detección](/es/external-api/detection-configs-create). Para
+desactivar de forma duradera una fuente que está activada de forma predeterminada, establece `status` en `DISABLED`
+aquí en lugar de llamar a [Eliminar configuración de detección](/es/external-api/detection-configs-delete),
+ya que la automatización puede volver a crear una configuración predeterminada para esas fuentes.

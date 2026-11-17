@@ -1,0 +1,121 @@
+---
+title: "Marcas"
+description: "Cómo las marcas en ChainPatrol definen las identidades de la empresa o de sus ejecutivos que se protegen de la suplantación mediante términos de marca, imágenes y assets legítimos conocidos"
+---
+
+## Descripción general
+
+Una **marca** representa una identidad que ChainPatrol protege.
+
+<Info>
+Las marcas pertenecen a una **organización**, y una sola organización puede tener **múltiples marcas**.
+</Info>
+
+## Tipos de marcas
+
+ChainPatrol admite tres tipos de marcas. Eliges el tipo cuando creas una marca.
+
+### Marcas de organización
+
+Representan una entidad legal, un negocio o una fundación. Algunos ejemplos son tu marca principal (p. ej., "ChainPatrol"), las submarcas creadas para unidades de negocio específicas y las marcas regionales o específicas de un mercado.
+
+**Caso de uso:** Una empresa que protege el nombre de su marca principal y sus marcas regionales.
+
+### Marcas de producto
+
+Representan un producto o una oferta de servicio específicos, como una app de wallet, un exchange o un marketplace.
+
+**Caso de uso:** Una empresa que protege cada una de sus líneas de productos por separado de su marca principal.
+
+### Marcas individuales
+
+Representan a personas clave asociadas con la organización. Algunos ejemplos son el CEO, los ejecutivos, los empleados con exposición pública, los fundadores y los embajadores de marca.
+
+**Caso de uso:** Proteger a un CEO que con frecuencia es suplantado en Twitter/X y Telegram por estafadores que ofrecen falsas oportunidades de inversión.
+
+Los tres tipos pueden ser blanco de suplantación, estafas o fraude, y ChainPatrol los protege a todos.
+
+## ¿Qué información se guarda en una marca?
+
+Cada marca incluye varios componentes que ayudan a ChainPatrol a entender cómo se ve el contenido legítimo y a identificar posibles amenazas.
+
+### Términos de marca
+
+Palabras clave asociadas a una marca que describen cómo se suele hacer referencia a ella en línea. Incluyen los nombres oficiales de la marca, variaciones y abreviaturas, nombres de productos, apodos o nombres informales de uso extendido, y nombres de personas (para las marcas personales).
+
+Ejemplos para "ChainPatrol": ChainPatrol, Chain Patrol, CP, @chainpatrol, chainpatrol.io
+
+Al definir los términos de marca, ChainPatrol puede reconocer cuándo es probable que un contenido esté relacionado con una marca específica y evaluar si ese contenido puede ser legítimo o si podría estar suplantando a la marca.
+
+### Imágenes de marca
+
+Elementos visuales que representan a la marca, que incluyen logos (todas las variaciones), gráficos y elementos de diseño oficiales, fotos de perfil en el caso de personas, isotipos y símbolos de marca, y recursos de identidad visual.
+
+Estas imágenes se usan durante la detección para ayudar a identificar posibles suplantaciones, por ejemplo al comparar logos o fotos de perfil con contenido sospechoso que podría estar intentando imitar a la marca.
+
+### Brand Assets
+
+Los **Brand Assets** (tu Allowlist: los dominios, cuentas y direcciones oficiales de tu marca) son **assets** (activos digitales: URL, direcciones, perfiles, apps, etc.) conocidos y legítimos que pertenecen a la marca. Se usan para distinguir entre el contenido real y la suplantación potencialmente dañina.
+
+Un brand asset puede ser cualquier tipo de asset compatible con ChainPatrol: sitios web (sitios web y dominios oficiales), redes sociales (perfiles de Twitter, Discord, Telegram), publicaciones de apps (fichas en tiendas de aplicaciones y de extensiones), repositorios (GitHub y repositorios de código), canales (canales y grupos de Telegram) y otras propiedades (cualquier propiedad en línea verificada).
+
+Los brand assets funcionan como una lista de permitidos (whitelist) de lo que se considera auténtico.
+
+## Cómo se usa la información de la marca
+
+ChainPatrol combina los términos de marca, las imágenes de marca y los brand assets para entender la identidad de una marca y asignar con precisión las amenazas a la marca correcta.
+
+### El proceso de atribución
+
+1. **Detección de amenazas** - Se detecta contenido sospechoso en internet
+2. **Coincidencia con la marca** - ChainPatrol analiza el contenido en busca de términos de marca (nombre, palabras clave), imágenes de marca (logos, elementos visuales) y similitud con los brand assets (imitación de propiedades oficiales)
+3. **Atribución automática** - La amenaza se asocia automáticamente con la marca correspondiente
+4. **Evaluación y acción** - La amenaza se evalúa correctamente y se actúa sobre ella en el contexto de esa marca
+
+Este proceso de atribución ocurre de forma automática y a alto nivel, lo que permite categorizar las amenazas sin requerir intervención manual en la mayoría de los casos.
+
+### Ejemplos de atribución
+
+**Suplantación de dominio:** El dominio `chainpatr0l-airdrop.com` usa el logo de ChainPatrol e imita el diseño del sitio web oficial. Coincide con el término de marca "chainpatrol" (con un error tipográfico), coincide con la imagen de marca (se detectó el logo oficial) e imita un brand asset (la estructura del sitio web oficial). Resultado: se atribuye automáticamente a la marca "ChainPatrol".
+
+**Suplantación en redes sociales:** La cuenta de Twitter `@chainpatrol_support`, con una foto de perfil que usa el logo de ChainPatrol y una biografía que menciona "Official ChainPatrol Support". Coincide con el término de marca, coincide con la imagen de marca y suplanta un brand asset. Resultado: se atribuye automáticamente a la marca "ChainPatrol".
+
+**Suplantación de ejecutivos:** Una cuenta de Telegram afirma ser el CEO, con una foto de perfil que usa el retrato del CEO y mensajes que ofrecen oportunidades de inversión. Coincide con el término de marca (el nombre del CEO), coincide con la imagen de marca (la foto del CEO) y suplanta una marca individual. Resultado: se atribuye automáticamente a la marca individual del CEO.
+
+### Beneficios de una atribución precisa
+
+- **Visibilidad clara** - Las organizaciones tienen visibilidad clara de qué marcas están siendo suplantadas
+- **Seguimiento de la frecuencia** - Entiende con qué frecuencia cada marca es blanco de ataques
+- **Asociación de acciones** - Consulta qué **takedowns** (solicitudes de baja de contenido fraudulento) o acciones de mitigación están asociados a cada marca
+- **Análisis de tendencias** - Identifica patrones y amenazas emergentes por marca
+
+## Marcas y organizaciones
+
+Una sola organización puede ser responsable de gestionar y proteger múltiples marcas.
+
+### Escenarios comunes con múltiples marcas
+
+**Marcas corporativas + de producto** - Una empresa que resguarda tanto su identidad corporativa como varias líneas de productos. Ejemplo: la marca principal "Acme Protocol" más las marcas de producto "Acme Swap", "Acme Wallet" y "Acme DAO". Un banco que se protege de la misma manera podría integrar la **Blocklist** (lista de bloqueo) de ChainPatrol directamente en su firewall corporativo para proteger a los empleados de toda la empresa, mientras hace seguimiento individual de marcas de producto como "Acme Pay" y "Acme Cards".
+
+**Protección de ejecutivos** - Proteger a ejecutivos individuales u otros miembros del personal con exposición pública. Ejemplo: la marca principal "Acme Protocol" más las marcas individuales "Jane Smith (CEO)", "John Doe (CTO)" y "Sarah Johnson (CMO)".
+
+**Marcas regionales o de mercado** - Mantener marcas distintas que se usan en diferentes mercados, idiomas o regiones. Ejemplo: la marca principal "Acme Protocol" más las marcas regionales "Acme Asia", "Acme Europe" y "Acme LATAM".
+
+**Empresas adquiridas** - Gestionar las marcas de empresas adquiridas manteniendo sus identidades separadas. Ejemplo: la marca matriz "Acme Holdings" más las marcas adquiridas "Beta Protocol" y "Gamma Finance".
+
+ChainPatrol mantiene la información de las marcas estructurada y separada para garantizar que cada marca pueda protegerse de forma individual sin dejar de estar claramente asociada a la misma organización.
+
+### Beneficios para la organización
+
+**Control granular** - Configura los ajustes de protección por marca, haz seguimiento de las métricas de cada marca de forma independiente, asigna distintos miembros del equipo a distintas marcas y personaliza las reglas de detección por marca.
+
+**Vista unificada** - Consulta todas las marcas en un solo **Dashboard** (panel principal), compara los volúmenes de amenazas entre marcas, consolida métricas para los reportes y mantén políticas consistentes en todas las marcas.
+
+**Estructura flexible** - Agrega nuevas marcas a medida que creces, reorganiza las marcas según sea necesario, fusiona o divide marcas y conserva los datos históricos.
+
+## Puntos clave
+
+- La estructura de marcas permite un monitoreo dirigido: separar la marca de tu empresa de las marcas de producto o de las marcas de ejecutivos te permite configurar reglas de detección y umbrales diferentes para cada una
+- La atribución automática de amenazas aporta contexto: cuando una amenaza apunta a una marca específica, la asignación automática ayuda a priorizar la respuesta según qué identidad está siendo atacada
+- Los términos y las imágenes impulsan la precisión de la detección: las definiciones de marca completas, con errores ortográficos comunes y recursos visuales, mejoran la detección automatizada y reducen los falsos positivos
+- Tener múltiples marcas bajo una organización mantiene la supervisión central: los equipos de cada marca pueden gestionar su protección mientras los administradores de la organización conservan la visibilidad y el control sobre todas las marcas

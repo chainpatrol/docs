@@ -1,0 +1,85 @@
+---
+title: "Dark Web Monitoring"
+description: "Busca datos filtrados en la dark web a partir de los dominios de correo electrónico, las direcciones de correo electrónico y las direcciones de wallet que una marca tiene en seguimiento, con resultados enmascarados y alertas de Slack."
+---
+
+## Descripción general
+
+**Dark Web Monitoring** (monitoreo de la dark web) se encuentra en **Employee Protection → Dark Web** (protección de empleados → dark web). Permite buscar datos filtrados en la dark web a partir de los **assets** (activos digitales: URL, direcciones, perfiles, apps, etc.) que cada marca tiene en seguimiento. Hay tres objetivos de búsqueda disponibles:
+
+- **Dominios de correo electrónico**: encuentra credenciales filtradas de cualquier dirección que pertenezca a un dominio en seguimiento.
+- **Direcciones de correo electrónico**: encuentra credenciales filtradas de una dirección específica en seguimiento.
+- **Direcciones de wallets de criptomonedas**: encuentra menciones en la dark web de las direcciones de wallet que una marca tiene en seguimiento.
+
+## Objetivos de búsqueda
+
+El selector de objetivos solo muestra los assets que ya están en seguimiento en la marca seleccionada. Los dominios y las direcciones de correo electrónico provienen de los assets de correo electrónico de la marca. Las direcciones de wallet provienen de los assets de tipo dirección de la marca. Para buscar una wallet nueva, primero agrégala a la marca como asset de tipo dirección.
+
+## Cuota de búsquedas
+
+Un medidor **Monthly searches** (búsquedas mensuales), ubicado junto a los controles de búsqueda, muestra cuántas búsquedas usó la marca en el mes calendario actual. El medidor también muestra cuándo se reinicia la cuota: a las 00:00 UTC del primer día del mes siguiente. ChainPatrol no almacena los resultados de las búsquedas.
+
+## Resultados
+
+Las búsquedas por dominio, por correo electrónico y por wallet comparten un mismo diseño de tabla. Cada fila muestra:
+
+- **Severity** (severidad): el nivel de prioridad asignado al registro.
+- **Identity** (identidad): la dirección de correo electrónico filtrada, o la dirección de wallet buscada, abreviada para mostrarla. Si una identidad aparece en más de una filtración, la fila muestra **Seen in N leaks** (vista en N filtraciones).
+- **Credential** (credencial): si el registro contiene una contraseña en texto plano, un hash o ninguna contraseña.
+- **Exposed data** (datos expuestos): otros datos personales encontrados en el registro, como números de teléfono, direcciones IP o tarjetas de pago.
+- **Leak · source** (filtración · fuente): el conjunto de datos de la brecha o el sitio de la dark web del que proviene el registro.
+- **Breach date** (fecha de la brecha): cuándo se registró la filtración.
+- **Status** (estado): **Open** (abierto) o **Acknowledged** (revisado).
+
+Las filtraciones se muestran con los detalles sensibles enmascarados. Las exportaciones en CSV incluyen una columna **Email** o **Address**, según el objetivo de búsqueda que hayas ejecutado.
+
+### Severidad
+
+ChainPatrol asigna a cada resultado una severidad según los datos que expone:
+
+| Severidad | Criterios |
+| --- | --- |
+| **Critical** (crítica) | Contraseña en texto plano filtrada en los últimos 12 meses. Es posible que todavía se pueda usar la cuenta con ella. |
+| **High** (alta) | Contraseña en texto plano de una filtración más antigua, o datos de tarjetas de pago expuestos junto con el registro. |
+| **Medium** (media) | Contraseña con hash, o datos personales expuestos sin contraseña. |
+| **Low** (baja) | La identidad aparece en una filtración sin contraseña ni otros datos expuestos. |
+
+Los resultados se ordenan primero por severidad y luego por fecha de la brecha, con los más recientes primero. Puedes volver a ordenarlos con las columnas **Severity** y **Breach date**.
+
+### Tarjetas de resumen y filtros
+
+Las tarjetas de resumen que están sobre la tabla muestran la cantidad de identidades expuestas, de resultados **Critical** y **High**, de **Plaintext passwords** (contraseñas en texto plano) y de resultados **Open**. Haz clic en una tarjeta para filtrar la tabla y ver solo esos resultados. Haz clic otra vez para quitar el filtro.
+
+Para acotar aún más los resultados:
+
+- Usa el cuadro de búsqueda para buscar coincidencias en correos electrónicos, nombres de filtraciones y fuentes.
+- Usa los filtros **Severity**, **Password** (contraseña: **Plaintext**, **Hash** o **No password**) y **Status** (**Open** o **Acknowledged**).
+
+En las búsquedas por dominio, cambia de **Records** (registros) a **By identity** (por identidad) para agrupar las filas por dirección de correo electrónico. Cada grupo muestra cuántas filtraciones distintas incluyen esa identidad.
+
+Los conteos de filtraciones se basan en fuentes de filtración distintas, no en filas. Un mismo volcado de datos suele contener muchas filas de la misma identidad, y esas filas cuentan como una sola filtración.
+
+### Marcar resultados como revisados
+
+Puedes llevar un registro de las filtraciones que ya revisaste. Haz clic en el estado de una fila para alternarlo entre **Open** y **Acknowledged**.
+
+Para actuar sobre varios resultados a la vez, selecciona las filas con las casillas de verificación. Luego elige una de las acciones masivas:
+
+- **Acknowledge** (marcar como revisado): marca los resultados seleccionados como revisados.
+- **Mark open** (marcar como abierto): devuelve los resultados seleccionados a **Open**.
+- **Copy identities** (copiar identidades): copia al portapapeles las direcciones de correo electrónico o de wallet seleccionadas.
+
+### Detalles del registro
+
+Haz clic en una fila para abrir el panel lateral del registro. El panel muestra:
+
+- La severidad del registro y el motivo por el que ChainPatrol se la asignó.
+- Una cuadrícula de credenciales con la contraseña enmascarada, su formato y la fecha de la brecha.
+- Secciones desplegables con los datos expuestos, los próximos pasos recomendados, el contexto coincidente y los detalles de la filtración.
+- Otras filtraciones del mismo correo electrónico o de la misma wallet, con la severidad de cada una.
+
+Presiona **J** para pasar al registro siguiente y **K** para volver al anterior. El panel sigue el orden actual de la tabla.
+
+## Alertas de Slack
+
+Cuando aumentan las filtraciones de un dominio monitoreado, ChainPatrol envía una alerta a tu canal de Slack configurado, con un enlace para volver a la página.

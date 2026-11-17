@@ -1,0 +1,112 @@
+---
+title: Salida y códigos de salida
+sidebarTitle: Salida y códigos de salida
+icon: code
+description: "Flags globales de la CLI de ChainPatrol, formatos de salida JSON, markdown y CSV, y los códigos de salida deterministas según los cuales los scripts y jobs de CI deberían decidir qué hacer."
+---
+
+## Flags globales
+
+Funcionan en todos los comandos. Las opciones específicas de cada comando están documentadas
+en la página de cada comando y en `chainpatrol <command> --help`.
+
+| Flag | Descripción |
+| --- | --- |
+| `--json` | JSON legible por máquinas. Equivale a `--output json`. |
+| `--output <fmt>` | Formato de salida: `human`, `json`, `markdown` o `csv`. |
+| `--quiet`, `-q` | Suprime la salida no esencial. |
+| `--no-color` | Desactiva la salida con colores. `NO_COLOR` en el entorno hace lo mismo. |
+| `--no-input` | Desactiva los prompts interactivos. Úsalo en scripts y CI. |
+| `--dry-run` | Previsualiza una mutación sin enviar la escritura. Solo para comandos de mutación. |
+| `--explain` | Incluye el razonamiento y el contexto de recomendación detrás de un resultado. |
+| `--help`, `-h` | Muestra la ayuda del comando. |
+| `--version`, `-V` | Imprime la versión de la CLI. |
+
+<Note>
+  `--json` y `--output` no se pueden combinar a menos que coincidan. `--json --output csv`
+  falla con `Use either --json or --output, not both.`
+</Note>
+
+## Formatos de salida
+
+### human
+
+El formato predeterminado. Pensado para leerse en una terminal, con color cuando la terminal lo admite.
+
+```bash
+chainpatrol asset check https://phish.example
+```
+
+### json
+
+Todos los comandos admiten `--json`, y JSON es el formato sobre el cual construir: es el
+único que garantiza incluir el resultado completo y no un resumen.
+
+```bash
+chainpatrol --json asset check https://phish.example
+chainpatrol --json reports list --org acme --limit 5 | jq '.reports[].title'
+```
+
+Los errores también son JSON, así que un parser nunca tiene que lidiar con un flujo mixto:
+
+```json
+{
+  "error": "Organization required. Use --org <slug> to specify one.",
+  "exitCode": 1
+}
+```
+
+### markdown
+
+Una tabla que puedes pegar en un ticket, un mensaje de Slack o un documento.
+
+```bash
+chainpatrol detections drift --org acme --explain --output markdown
+```
+
+### csv
+
+Para hojas de cálculo y procesamiento posterior. Los comandos que no tienen una forma
+tabular con sentido recurren a JSON.
+
+```bash
+chainpatrol queues snapshot --all --output csv > queues.csv
+chainpatrol asset list --asset-type ADDRESS --per-page 500 --output csv
+```
+
+## Códigos de salida
+
+Los códigos de salida son estables y específicos, así que un script puede distinguir "no hay
+nada que hacer" de "las credenciales expiraron" sin analizar texto.
+
+| Código | Significado | Causa típica |
+| --- | --- | --- |
+| `0` | Éxito | — |
+| `1` | Error desconocido | Una falla sin clasificar |
+| `2` | Error de autenticación | No hay credenciales o la sesión expiró: ejecuta `chainpatrol login` |
+| `3` | Error de uso | Argumentos faltantes o inválidos, comando desconocido |
+| `4` | No encontrado | La organización, la configuración, la **Proposal** (propuesta para bloquear o permitir un asset) o el **Asset** (activo digital: URL, dirección, perfil, app, etc.) no existe |
+| `5` | Prohibido | La credencial no tiene permiso para este recurso |
+| `6` | Verificación fallida | Se superó un umbral de healthcheck (verificación de estado), de desviación (drift) o de cola |
+| `7` | Falla parcial de mutación | Una escritura tuvo éxito para algunos elementos y falló para otros |
+| `8` | Red o API no disponible | Conexión rechazada, tiempo de espera agotado, caída de un servicio externo (upstream) |
+
+<Tip>
+  El código `6` es un *resultado*, no una falla del programa: `detections healthcheck` y `healthchecks run`
+  lo devuelven cuando las verificaciones se ejecutaron bien pero algo no está sano. Trátalo
+  como un control de CI que no pasa, no como un error que haya que reintentar.
+</Tip>
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! chainpatrol --json detections healthcheck --org acme --run > health.json; then
+  case $? in
+    2) echo "Credentials expired"; exit 1 ;;
+    6) echo "Detections unhealthy"; jq '.failures' health.json; exit 1 ;;
+    8) echo "ChainPatrol unreachable, retrying later"; exit 0 ;;
+    *) echo "Unexpected failure"; exit 1 ;;
+  esac
+fi
+```

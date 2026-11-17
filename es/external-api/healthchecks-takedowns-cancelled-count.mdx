@@ -1,0 +1,13 @@
+---
+title: Cantidad de Takedowns cancelados
+openapi: "POST /healthchecks/takedowns/cancelled-count"
+---
+
+## Descripción general
+
+Cuenta las transiciones al estado `CANCELLED` en el registro de eventos de los
+**Takedowns** (solicitudes de baja de contenido fraudulento) dentro de la ventana de
+tiempo hacia atrás configurada. Las cancelaciones deberían ser poco frecuentes
+—normalmente de cero a dos por semana—, así que una cantidad mayor suele indicar un
+problema de calidad en el embudo de **Proposals** (propuestas para bloquear o permitir un
+asset) o un uso indebido del estado `CANCELLED`.

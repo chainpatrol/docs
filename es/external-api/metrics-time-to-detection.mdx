@@ -1,0 +1,56 @@
+---
+title: Obtener tiempo hasta la detección
+openapi: "POST /metrics/time-to-detection"
+---
+
+## Descripción general
+
+Obtén cuánto tiempo llevaban online las amenazas antes de que la automatización de ChainPatrol las detectara
+por primera vez, por tipo de **asset** (activo digital: URL, dirección, perfil, app, etc.). Abarca los assets distintos que tu organización bloqueó en un
+rango de fechas y que siguen bloqueados hoy.
+
+<Note>
+  Este endpoint está restringido por el feature flag `time-to-detection-chart`, que se
+  habilita por organización. Si el flag no está habilitado para tu organización, la API
+  devuelve un error 403 Forbidden. Contacta a ChainPatrol para habilitar el acceso.
+</Note>
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/time-to-detection \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "startDate": "2026-08-01",
+    "endDate": "2026-10-31"
+  }'
+```
+
+## Cuerpo de la solicitud
+
+| Campo          | Tipo       | Obligatorio | Descripción                                                                                                          |
+| -------------- | ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------- |
+| `slug`         | `string`   | ✅ Sí       | Slug de la organización.                                                                                             |
+| `startDate`    | `string`   | ❌ No       | Solo assets bloqueados en esta fecha o después. Un valor de solo fecha (`YYYY-MM-DD`) empieza a la medianoche UTC.   |
+| `endDate`      | `string`   | ❌ No       | Solo assets bloqueados en esta fecha o antes. Un valor de solo fecha abarca todo el día en UTC.                      |
+| `brandIds`     | `number[]` | ❌ No       | Solo assets que pertenecen a estas marcas.                                                                           |
+| `countryCodes` | `string[]` | ❌ No       | Solo assets escaneados desde estos países (códigos ISO 3166-1 alpha-2).                                              |
+
+## Cómo se mide
+
+El reloj corre desde la primera vez que alguien vio el asset online hasta su primera detección
+automatizada, para cualquier organización. Un reporte hecho por una persona no detiene el reloj, ni siquiera
+si es tuyo.
+
+`byAssetType` tiene una entrada por tipo de asset, ordenadas de mayor a menor cantidad de bloqueos:
+
+| Campo               | Descripción                                                                                                                              |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `blocked`           | Assets distintos de este tipo bloqueados en el rango y que siguen bloqueados hoy.                                                        |
+| `withEvidence`      | De esos, cuántos entran en la mediana: tienen una fecha aceptada en la que estaban online y una detección automatizada posterior a ella. |
+| `medianDaysAtLeast` | Mediana de días que el asset estuvo online antes de ser detectado. `null` cuando `withEvidence` es 0.                                    |
+
+La mediana siempre es un mínimo: la fecha en la que estaba online es la primera vez que alguien vio el asset,
+y puede que haya estado online antes de eso. Para URLs y páginas solo cuenta una fecha en la que se vio
+el sitio sirviendo contenido, así que la fecha de registro de un dominio nunca entra en el cálculo.

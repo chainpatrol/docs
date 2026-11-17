@@ -1,0 +1,129 @@
+---
+title: url()
+description: Verifica si una URL es un sitio de phishing o de estafa con ThreatDetector.url(), que devuelve un estado ALLOWED, BLOCKED, UNKNOWN o IGNORED, además de un redirectUrl opcional.
+---
+
+<Note>
+  Solo se verifica la parte del dominio de la URL. La ruta y la cadena de consulta (query string) se
+  eliminan antes de enviar la solicitud a la API de ChainPatrol, para preservar la privacidad
+  y evitar que se filtre información sensible.
+</Note>
+
+## Ejemplo
+
+<CodeGroup>
+
+```js Code
+const result = await detector.url("https://www.mountaintop-finance.com");
+
+console.log(result);
+```
+
+```js Output (Allowed)
+{
+    ok: true,
+    url: "mountaintop-finance.com",
+    status: "ALLOWED",
+}
+```
+
+```js Output (Blocked)
+{
+    ok: true,
+    url: "mountaintop-finance.com",
+    status: "BLOCKED",
+    redirectUrl: "https://app.chainpatrol.io/preview?target=https%3A%2F%2Fwww.mountaintop-finance.com&originUrl=https%3A%2F%2Fwww.mountaintop-finance.com"
+}
+```
+
+```js Output (Ignored)
+{
+    ok: true,
+    url: "https://www.mountaintop-finance.com",
+    status: "IGNORED",
+}
+```
+
+```js Output (Error)
+{
+    ok: false,
+    url: "abcdefgh",
+    error: "Unable to parse domain"
+}
+```
+
+</CodeGroup>
+
+## Parámetros
+
+<ParamField body="url" type="string" required>
+
+    La URL que se va a verificar. Puede ser una URL completa o un dominio. La URL se
+    analiza para extraer solo el dominio que se va a verificar.
+
+    P. ej., `https://google.com` o `google.com`
+
+</ParamField>
+
+## Valor de retorno
+
+El valor de retorno es una promesa que se resuelve con un objeto que contiene el
+resultado de la verificación.
+
+### Éxito
+
+Si la verificación se realizó correctamente, el objeto contendrá las siguientes propiedades:
+
+<ParamField body="result" type="object" required>
+  <Expandable title="propiedades" defaultOpen>
+
+    <ParamField body="ok" type="true" required>
+      Esta propiedad será `true` si la verificación se realizó correctamente.
+    </ParamField>
+
+    <ParamField body="url" type="string">
+      La propiedad `url` es la URL que se verificó.
+    </ParamField>
+
+    <ParamField body="status" type="'ALLOWED' | 'BLOCKED' | 'UNKNOWN' | 'IGNORED'" required>
+      La propiedad `status` indica si la URL está permitida o bloqueada.
+      Es `IGNORED` cuando el dominio se agregó con
+      [`ignore()`](/es/sdk/threat-detector/instance-methods/ignore), por ejemplo,
+      después de que un usuario eligió continuar bajo su propio riesgo.
+    </ParamField>
+
+    <ParamField body="redirectUrl" type="string">
+      La propiedad `redirectUrl` especifica a dónde redirigir al usuario cuando el
+      detector detecta una amenaza. Esta propiedad solo estará presente si la
+      propiedad `status` es `BLOCKED`.
+
+      De forma predeterminada, el detector devuelve la página de advertencia de ChainPatrol,
+      `https://app.chainpatrol.io/preview`, con la URL verificada en los parámetros de consulta `target`
+      y `originUrl`. Puedes reemplazarla pasando tu
+      propio `redirectUrl` al crear el `ThreatDetector`.
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+### Error
+
+En cambio, si la verificación no se pudo realizar, el objeto contendrá lo siguiente:
+
+<ParamField body="result" type="object" required>
+  <Expandable title="propiedades" defaultOpen>
+
+    <ParamField body="ok" type="false" required>
+        Esta propiedad será `false` si la verificación no se pudo realizar.
+    </ParamField>
+
+    <ParamField body="url" type="string">
+      La propiedad `url` es la URL que se verificó.
+    </ParamField>
+
+    <ParamField body="error" type="string">
+      La propiedad `error` contendrá un mensaje de error legible para las personas.
+    </ParamField>
+
+  </Expandable>
+</ParamField>

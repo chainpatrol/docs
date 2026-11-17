@@ -1,0 +1,129 @@
+---
+title: Usar la CLI con agentes
+sidebarTitle: Agentes de IA
+icon: robot
+description: "Instala la skill de ChainPatrol para Claude Code y usa --json, --dry-run, --explain y --no-input para manejar la CLI de forma segura desde scripts y agentes de IA."
+---
+
+La CLI está diseñada para que la maneje algo que no es una persona: JSON estable en stdout,
+[códigos de salida específicos](/es/cli/output#códigos-de-salida), un modo de vista previa para cada
+escritura y ningún prompt a menos que haya una terminal conectada.
+
+<Tip>
+  ¿Quieres que el agente llame a ChainPatrol directamente en lugar de invocar la CLI desde
+  el shell? Usa el [servidor MCP de ChainPatrol](/es/mcp-server), o ejecútalo localmente con
+  `chainpatrol mcp`.
+</Tip>
+
+## Instala la skill de Claude Code
+
+```bash
+chainpatrol setup
+```
+
+Esto escribe una skill `/chainpatrol` en `~/.claude/skills/chainpatrol/SKILL.md` e instala
+el autocompletado del shell. A partir de ahí, Claude Code conoce la superficie de comandos
+—cómo iniciar sesión, listar configuraciones de detección, encontrar reportes pendientes de
+revisión y ejecutar un healthcheck (verificación de estado) de la organización— sin que
+tengas que explicárselo cada vez.
+
+En un entorno de Claude Code en la nube o sin interfaz (headless), agrega `--cloud`:
+
+```bash
+chainpatrol setup --cloud
+```
+
+Eso también instala un hook `SessionStart` que muestra la URL de inicio de sesión por código
+de dispositivo cuando la sesión todavía no está autenticada, para que el agente pueda darte
+un enlace en lugar de quedarse detenido en un inicio de sesión que no puede completar.
+
+Volver a ejecutar `setup` después de actualizar la CLI actualiza la skill para que coincida.
+Para eliminar ambos:
+
+```bash
+chainpatrol uninstall
+```
+
+## Flags importantes para la automatización
+
+### `--json`
+
+Pide JSON en cada llamada automatizada. Tanto el éxito como la falla son JSON, así que un
+solo parser maneja todo el flujo.
+
+```bash
+chainpatrol --json detections healthcheck --org acme --run --min-results 1
+chainpatrol --json metrics found --org acme --this-week
+chainpatrol --json reports list --org acme --needs-customer-review
+```
+
+### `--dry-run`
+
+Imprime el payload exacto que enviaría una mutación, sin enviarlo. Compatible con los
+comandos que escriben:
+
+- [`reports create`](/es/cli/commands/reports#reports-create)
+- [`proposals review`](/es/cli/commands/proposals)
+- [`detections run`](/es/cli/commands/detections#detections-run) y `detections configs run`
+- [`detections configs update`](/es/cli/commands/detections#detections-configs-update)
+
+```bash
+chainpatrol proposals review 4321 --asset-id 987 --decision reject \
+  --reject-reason decayed --dry-run --output json
+```
+
+Pasar `--dry-run` a un comando de solo lectura es un error y no una operación sin efecto,
+así que una vista previa "segura" hecha por equivocación nunca se convierte en una lectura
+real y silenciosa de lo que no correspondía.
+
+### `--explain`
+
+Agrega el contexto de recomendación detrás de un resultado —por qué una configuración se
+marcó con desviación (drift), cuál es la acción sugerida— en lugar de solo los números.
+
+```bash
+chainpatrol detections drift --org acme --explain --output markdown
+```
+
+### `--no-input`
+
+Desactiva todos los prompts interactivos. Combínalo con `--yes` en los comandos que piden
+confirmación antes de escribir:
+
+```bash
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision approve --label "General Phishing" --yes --no-input
+```
+
+## Autenticación para ejecuciones desatendidas
+
+Configura `CHAINPATROL_API_KEY` en lugar de depender de un inicio de sesión guardado. Consulta
+[Autenticación](/es/cli/authentication#autenticación-con-clave-de-api).
+
+```bash
+export CHAINPATROL_API_KEY="your_api_key_here"
+chainpatrol whoami --json
+```
+
+## Entrega la documentación a un agente
+
+Los agentes pueden cargar esta documentación desde [llms.txt](https://chainpatrol.com/docs/llms.txt).
+
+## Límites que debes respetar
+
+<Warning>
+  Las escrituras son reales y algunas son irreversibles. Las [revisiones de
+  **Proposals**](/es/cli/commands/proposals) (propuestas para bloquear o permitir un asset) no
+  se pueden deshacer a través de la API, un `APPROVE` bloquea el **Asset** (activo digital:
+  URL, dirección, perfil, app, etc.) a nivel global, y cada organización tiene un límite de
+  10 revisiones por día sumando todas sus credenciales de API. Lee la Proposal y luego actúa
+  sobre ella: no inventes IDs ni reutilices un listado antiguo.
+</Warning>
+
+Dos hábitos mantienen a un agente por el buen camino:
+
+1. **Lee antes de escribir.** Cada revisión necesita un `assetId` de un listado que acabas
+   de obtener. Es intencional.
+2. **No reintentes un `403` ni un `409`.** Un `403` de una verificación de seguridad significa
+   que la decisión necesita a una persona; un `409` significa que el asset no coincide o que
+   la Proposal ya está resuelta. Vuelve a leer en lugar de reintentar con el mismo cuerpo.

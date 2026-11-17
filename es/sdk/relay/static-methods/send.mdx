@@ -1,0 +1,24 @@
+---
+title: send()
+description: Usa Relay.send() desde la página de advertencia de ChainPatrol para enviar un evento, como ContinueAtOwnRisk, a los listeners en segundo plano de tu extensión de navegador.
+---
+
+## Ejemplo
+
+```js
+import { Relay, Events } from "@chainpatrol/sdk";
+
+Relay.send(Events.ContinueAtOwnRisk, { domain: "example.com" });
+```
+
+## Parámetros
+
+El método `send()` acepta dos parámetros:
+
+<ParamField body="type" type="EventType" required>
+  La propiedad `type` especifica qué tipo de evento quieres enviar.
+</ParamField>
+
+<ParamField body="data" type="object" required>
+  La propiedad `data` es un objeto que contiene los datos del evento.
+</ParamField>
