@@ -1,0 +1,239 @@
+---
+title: Subir archivo adjunto
+sidebarTitle: Subir archivo adjunto
+openapi: "POST /attachment/upload"
+---
+
+## Descripción general
+
+Sube un archivo a ChainPatrol y recibe una URL a cambio. Pasa esa URL a
+[Crear reporte](/es/external-api/report-create) en `attachmentUrls` para adjuntar el archivo como
+evidencia.
+
+Es un flujo de dos pasos, y los dos pasos son solicitudes separadas:
+
+1. `POST /attachment/upload`: envías los bytes y recibes una URL.
+2. `POST /report/create`: incluyes esa URL en `attachmentUrls`.
+
+Consulta [Cómo crear reportes](/es/external-api/creating-reports) para ver el flujo completo con
+ejemplos prácticos.
+
+<Info>
+  **No estás obligado a usar este endpoint.** `attachmentUrls` acepta cualquier URL de
+  acceso público, así que si ya alojas tu evidencia en algún lugar al que podamos acceder, sigue
+  pasando esos enlaces. Este endpoint existe para que no *tengas* que alojarla tú.
+</Info>
+
+<Note>
+  **No es solo para imágenes.** Las capturas de pantalla son el adjunto más común, pero también
+  se admiten archivos de mensajes `.eml` y `.msg`, PDF, documentos de Word, CSV y texto plano;
+  consulta [Tipos de archivo admitidos](#tipos-de-archivo-admitidos). Las imágenes se muestran
+  directamente dentro del reporte en el **Dashboard** (panel principal); todo lo demás aparece
+  como un archivo descargable que nuestro equipo de **Takedown** (solicitudes de baja de
+  contenido fraudulento) puede reenviar a un registrador o a un proveedor de hosting.
+</Note>
+
+Las claves de API de solo lectura no pueden subir archivos: ese rol existe para lecturas entre
+organizaciones. Las subidas quedan registradas a nombre de la organización a la que pertenece la
+clave. Consulta [Autenticación de la External API](/es/external-api/authentication) para saber cómo enviar tu clave.
+
+## Dos formas de enviar un archivo
+
+El endpoint acepta cualquiera de los dos formatos. Elige el que te resulte más fácil con tu
+cliente HTTP.
+
+### Cuerpo sin procesar
+
+Envía los bytes del archivo como cuerpo de la solicitud y el nombre del archivo en el parámetro
+de consulta `fileName`. Un archivo por solicitud.
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/attachment/upload?fileName=evidence.eml' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  --data-binary '@evidence.eml'
+```
+
+```typescript TypeScript
+import { readFile } from "node:fs/promises";
+
+const bytes = await readFile("evidence.eml");
+
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/attachment/upload?fileName=evidence.eml",
+  {
+    method: "POST",
+    headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    body: bytes,
+  }
+);
+
+const { attachments } = await response.json();
+console.log(attachments[0].url);
+```
+
+```python Python
+import requests
+
+with open("evidence.eml", "rb") as file:
+    response = requests.post(
+        "https://app.chainpatrol.io/api/v2/attachment/upload",
+        params={"fileName": "evidence.eml"},
+        headers={"X-API-KEY": "YOUR_API_KEY_HERE"},
+        data=file,
+    )
+
+attachments = response.json()["attachments"]
+print(attachments[0]["url"])
+```
+
+</CodeGroup>
+
+<Warning>
+  `fileName` es obligatorio en las subidas con cuerpo sin procesar y debe aparecer exactamente
+  una vez. Si se repite (`?fileName=a.eml&fileName=b.eml`), la solicitud se rechaza con un `400`.
+</Warning>
+
+### Formulario multipart
+
+Envía `multipart/form-data` con una o más partes de archivo. Es lo que genera un formulario de
+navegador, el selector de archivos de Postman o `curl -F`.
+
+El nombre del archivo se toma del nombre de archivo de cada parte, así que aquí el parámetro de
+consulta `fileName` se ignora. Los campos del formulario que no son archivos se ignoran, y los
+nombres de las partes no importan: puedes enviarlas todas como `file` si quieres.
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/attachment/upload' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -F 'file=@evidence.eml' \
+  -F 'file=@screenshot.png'
+```
+
+```typescript TypeScript
+const form = new FormData();
+form.append("file", new File([emlBytes], "evidence.eml"));
+form.append("file", new File([pngBytes], "screenshot.png"));
+
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/attachment/upload",
+  {
+    method: "POST",
+    headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
+    body: form,
+  }
+);
+
+const { attachments } = await response.json();
+console.log(attachments.map((attachment) => attachment.url));
+```
+
+```python Python
+import requests
+
+with open("evidence.eml", "rb") as eml, open("screenshot.png", "rb") as png:
+    response = requests.post(
+        "https://app.chainpatrol.io/api/v2/attachment/upload",
+        headers={"X-API-KEY": "YOUR_API_KEY_HERE"},
+        files=[
+            ("file", ("evidence.eml", eml)),
+            ("file", ("screenshot.png", png)),
+        ],
+    )
+
+attachments = response.json()["attachments"]
+print([attachment["url"] for attachment in attachments])
+```
+
+</CodeGroup>
+
+## Manejo de los nombres de archivo
+
+- La extensión determina cómo almacenamos y servimos el archivo, así que tiene que estar
+  presente y ser una de las aceptadas. La comparación no distingue entre mayúsculas y minúsculas.
+- Los componentes de directorio se eliminan: `../../secrets/evidence.eml` se almacena como
+  `evidence.eml`.
+- Los nombres no deben contener caracteres de control y tienen una longitud máxima; el esquema
+  de arriba indica el límite.
+- Por lo demás, tu nombre se conserva tal cual. Eso importa porque es el nombre que se muestra
+  en el reporte, y el nombre que ve un registrador o un proveedor de hosting cuando nuestro
+  equipo de takedown reenvía el archivo; por eso `phishing-email.eml` vale más que
+  `attachment1.eml`.
+- No hay problema en subir dos archivos con el mismo nombre. Cada subida se almacena en su
+  propia ruta, así que nunca se sobrescribe nada y el nombre que enviaste es el que recibes de
+  vuelta.
+
+## Tipos de archivo admitidos
+
+Las extensiones aceptadas se enumeran en la descripción de la solicitud de arriba, y esa lista
+se genera a partir de las mismas constantes que aplica el endpoint, así que siempre está al día.
+
+El tipo de contenido con el que servimos el archivo se deriva de la extensión, **no** del
+encabezado `Content-Type` que envías, así que cualquier encabezado que defina tu cliente se
+ignora. `.svg` y `.html` están excluidos a propósito: se renderizan como contenido activo, y los
+archivos que servimos no deberían hacerlo.
+
+Si necesitas un formato que no se acepta, escribe a
+[support@chainpatrol.io](mailto:support@chainpatrol.io); una solución alternativa habitual es
+enviar el archivo dentro de un contenedor admitido (una exportación a PDF o el `.eml` sin
+procesar).
+
+## Límites
+
+El tamaño máximo del cuerpo de la solicitud y la cantidad de archivos por solicitud se indican
+en el esquema de arriba. Hay dos cosas que el esquema no te dice:
+
+- **El tamaño máximo se aplica a todo el cuerpo de la solicitud**, así que en una solicitud
+  multipart todas las partes comparten un mismo cupo. Para cualquier cosa más grande, divídela
+  en varias solicitudes y adjunta las URL resultantes al mismo reporte.
+- **Las subidas tienen un límite de solicitudes de 60 por minuto** por organización, o por
+  clave de API en el caso de las claves que no están vinculadas a una. Si lo superas, se
+  devuelve un `429`.
+
+## La URL devuelta
+
+<Warning>
+  Trata la `url` como un valor opaco. Guárdala y pásala tal cual: no la analices ni intentes
+  construir una por tu cuenta. La estructura de la ruta es un detalle de implementación y puede
+  cambiar.
+
+  La URL se sirve desde nuestra CDN y cualquiera que la tenga puede acceder a ella, que es lo
+  que nos permite reenviar la evidencia a registradores y proveedores de hosting. La ruta no se
+  puede adivinar, pero no subas nada que no quisieras que viera un tercero si el enlace se
+  compartiera.
+</Warning>
+
+## Respuestas de error
+
+Todos los errores devuelven un cuerpo JSON con una única cadena `error` que describe qué
+estuvo mal. Los códigos de estado se enumeran junto con las respuestas de arriba; hay dos cosas
+que vale la pena destacar:
+
+- **`405` no está en la lista**, porque no es una respuesta de `POST`. El endpoint solo admite
+  `POST`, y cualquier otro método devuelve `405 Method Not Allowed`.
+- **Reintenta ante un `429` o un `502`, no ante un `400`.** Un `4xx` distinto de `429` significa
+  que hay que corregir la solicitud en sí, y reintentarla sin cambios fallará de la misma manera.
+
+## Buenas prácticas
+
+- **Primero sube, después reporta.** Nada vincula el archivo con un reporte hasta que pasas la
+  URL a `report.create`. Un archivo subido al que nunca se hace referencia simplemente queda sin
+  usar.
+- **Adjunta cada archivo a un reporte.** Las subidas no son visibles en el dashboard por sí
+  solas; el reporte es lo que permite revisarlas.
+- **Usa nombres de archivo descriptivos.** El nombre acompaña al archivo en el dashboard y en
+  los correos de takedown que enviamos.
+- **Envía el `.eml` en lugar de una captura de pantalla de un correo** cuando lo tengas. El
+  mensaje sin procesar incluye los encabezados, que es sobre lo que actúan los registradores y
+  los proveedores de correo.
+
+## Notas
+
+- No hay ningún endpoint para listar, reemplazar ni eliminar una subida. Para corregir un
+  error, sube el archivo correcto y usa esa URL en su lugar; para quitar evidencia de un
+  reporte, escribe a [support@chainpatrol.io](mailto:support@chainpatrol.io).
+- Los archivos no se analizan en busca de malware. No des por hecho que un archivo subido es
+  seguro de abrir solo porque llegó a través de la API.

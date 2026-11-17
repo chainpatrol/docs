@@ -1,0 +1,35 @@
+---
+icon: gauge
+title: Uso de la API
+description: Consulta cuántas llamadas a la API de ChainPatrol hizo tu organización, qué endpoints y claves de API usaron y cuántas fallaron, en la página API Usage.
+---
+
+La página **API Usage** (uso de la API) muestra cómo tu integración usa la API de ChainPatrol: cuántas llamadas hizo, a qué endpoints llamó, qué clave de API usó cada llamada y cuántas llamadas fallaron.
+
+## Abre la página
+
+En el [**Dashboard** (panel principal) de ChainPatrol](https://app.chainpatrol.io/admin), abre **Developer › API Usage** en la barra lateral.
+
+Solo los **Owners** (propietarios) y **Admins** (administradores) de la organización pueden ver esta página.
+
+## Elige un rango de tiempo
+
+Elige un rango en la parte superior de la página: **Last 3 hours** (últimas 3 horas), **Last 24 hours** (últimas 24 horas; es el predeterminado), **Last 7 days** (últimos 7 días), **Last 30 days** (últimos 30 días) o **Last 90 days** (últimos 90 días). Se incluyen las llamadas de la hora en curso.
+
+## Qué muestra la página
+
+- **Total calls** (total de llamadas), **Successful** (exitosas) y **Errors** (errores) del rango. Una llamada es exitosa cuando la API respondió con un código de estado `2xx`. Cualquier otro estado cuenta como error.
+- **By endpoint** (por endpoint): llamadas, éxitos y errores de cada endpoint, como `POST /asset/check`. Haz clic en una fila para ver cuántas llamadas devolvieron cada código de estado, por ejemplo `401 Unauthorized` o `429 Too Many Requests`.
+- **By API key** (por clave de API): llamadas, éxitos y errores de cada clave de API, con el nombre de la clave, si es una clave de producción (live) o de prueba (test) y los primeros caracteres de la clave. Las claves que fueron revocadas desde entonces aparecen marcadas como **REVOKED** (revocada).
+
+Si no hubo llamadas en el rango, la página indica **No API calls in this period** (no hay llamadas a la API en este período).
+
+## Qué se cuenta
+
+Se cuentan las llamadas hechas con una clave de API que pertenece a tu organización. Las llamadas hechas sin una clave de API no se cuentan.
+
+Los endpoints se listan por su ruta, no por la URL exacta, así que las llamadas a `GET /organization/assets/{assetId}` para distintos **Assets** (activos digitales: URL, dirección, perfil, app, etc.) se agrupan.
+
+<Tip>
+  Un aumento en el conteo de **Errors** con `401 Unauthorized` suele indicar que una clave fue revocada o está mal escrita. Consulta [Obtén tu clave de API](/es/general/api-key) para crear una nueva.
+</Tip>

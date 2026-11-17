@@ -1,0 +1,138 @@
+---
+title: "Organizaciones"
+description: "Cómo las organizaciones en ChainPatrol agrupan marcas, assets, miembros del equipo y servicios como detección, revisión, takedowns e inclusión en la Blocklist en un solo espacio de trabajo"
+---
+
+## Descripción general
+
+Todo lo que ves y haces en ChainPatrol ocurre dentro de una **organización**. Piensa en ella como el espacio de trabajo dedicado de tu equipo, donde administras tus marcas, haces seguimiento de tus **assets** (activos digitales: URL, direcciones, perfiles, apps, etc.) y mides cómo ChainPatrol te protege de las amenazas.
+
+<Info>
+Una organización es el contenedor de nivel superior para todas tus operaciones de seguridad, los miembros de tu equipo y tus assets protegidos en ChainPatrol.
+</Info>
+
+## Cómo ChainPatrol gestiona la seguridad por ti
+
+ChainPatrol es un **producto de seguridad totalmente gestionado**. Esto significa que nuestro equipo se encarga del trabajo pesado:
+
+- **Búsqueda diaria de amenazas** - Escaneo continuo en distintas plataformas
+- **Revisión de actividad sospechosa** - Análisis experto de posibles amenazas
+- **Análisis de ataques** - Evaluación detallada de los patrones de amenaza
+- **Presentación de takedowns** (solicitudes de baja de contenido fraudulento) - Solicitudes profesionales a proveedores y plataformas
+
+No necesitas convertirte en experto en seguridad ni dedicar personal a monitorear amenazas las 24 horas. Nosotros hacemos ese trabajo por ti.
+
+### Tu nivel de participación
+
+Dicho esto, no quedas fuera del proceso. Si quieres que tu equipo participe de forma más directa, puedes:
+
+- **Invitar miembros** - Invita a miembros de tu equipo al **Dashboard** (panel principal) de tu organización con permisos y roles personalizados
+- **Reportar amenazas** - Tu equipo puede reportar las amenazas que descubra a través del dashboard o de las integraciones
+- **Aprobar o rechazar** - Revisa y aprueba takedowns específicos o decisiones de la **Blocklist** (lista de bloqueo) antes de que entren en vigor
+- **Conectar herramientas** - Integra Slack, Telegram, SSO y otras herramientas para incorporar ChainPatrol a tus flujos de trabajo existentes
+
+Tú decides cuánto quieres involucrarte: desde no intervenir en absoluto hasta una integración profunda con las operaciones de tu equipo.
+
+## Marcas y assets
+
+Cada organización tiene una o más **marcas** que ChainPatrol protege.
+
+### ¿Qué es una marca?
+
+Una marca puede ser el nombre de tu empresa, una línea de productos, tus ejecutivos o personal clave, o una identidad clave que los atacantes podrían intentar suplantar.
+
+Usamos las marcas para detectar ataques de **suplantación de marca**, que incluyen dominios parecidos, perfiles falsos en redes sociales, campañas de estafa que toman prestado el nombre de tu marca e imágenes o mensajes diseñados para engañar a las personas.
+
+### ¿Qué son los assets?
+
+Además de las marcas, tu organización también tiene **assets**: las propiedades digitales que realmente te pertenecen:
+
+- **Sitios web** - Dominios y aplicaciones web
+- **Cuentas en redes sociales** - Twitter, Discord, Telegram, etc.
+- **Publicaciones de apps** - Fichas en tiendas de aplicaciones y en marketplaces de extensiones
+- **Direcciones de correo electrónico** - Correos oficiales de la empresa y del equipo
+- **Direcciones de wallets** - Direcciones y contratos de blockchain
+- **Otras propiedades** - Repositorios de GitHub, foros, sitios de documentación
+
+Hacemos seguimiento de tus assets oficiales para poder detectar imitaciones y páginas de phishing en general que copian tus sitios o canales legítimos. Cuando encontramos algo sospechosamente parecido a tus assets pero que en realidad no es tuyo, lo marcamos para revisión.
+
+## Servicios que puedes habilitar
+
+Cada organización puede activar o desactivar servicios individuales según lo que necesite. Estos servicios controlan qué funciones de ChainPatrol están activas para tu organización:
+
+### Detection (detección)
+
+Habilita el escaneo automatizado de ChainPatrol en la web, las plataformas sociales, las tiendas de aplicaciones y otras fuentes. Cuando está activado, buscamos continuamente nuevas amenazas dirigidas a tus marcas. Este es el servicio base (requerido para todos los demás servicios).
+
+### Monitoring & Reporting (monitoreo y reportes)
+
+Activa los sistemas que recopilan y organizan los reportes y las amenazas sospechosas en una sola vista. Esto alimenta tus dashboards y garantiza que tengas visibilidad actualizada de lo que está ocurriendo. Recomendado para todas las organizaciones.
+
+### Reviewing (revisión)
+
+Activa los flujos de revisión de ChainPatrol, en los que nuestro equipo valida los assets sospechosos y decide si deben bloquearse, permitirse, agregarse a la **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando) o escalarse. Recomendado para la precisión y el control de calidad.
+
+### Obligatory Organization Admin Approval (aprobación obligatoria de un administrador de la organización)
+
+Agrega un paso final de aprobación para tipos específicos de assets. Cuando está habilitado, tú eliges qué categorías de assets (como dominios, redes sociales o plataformas de mensajería) requieren la confirmación explícita de un administrador de tu organización antes de que las decisiones de la blocklist de ChainPatrol entren en vigor. Si no seleccionas ningún tipo específico, todos los tipos de assets requerirán aprobación. Es opcional, para organizaciones que requieren supervisión interna.
+
+### Blocklisting (inclusión en la blocklist)
+
+Agrega las amenazas aprobadas a la blocklist global de ChainPatrol, que se distribuye a navegadores, proveedores de DNS, herramientas antivirus, wallets asociadas como Coinbase Wallet y MetaMask, y otras plataformas asociadas para proteger a los usuarios de assets maliciosos conocidos en tiempo real.
+
+### Takedowns
+
+Permite que ChainPatrol presente solicitudes de takedown ante proveedores de hosting, registradores y plataformas en tu nombre. Cuando este servicio está activado, no solo bloqueamos las amenazas, sino que trabajamos para que se eliminen por completo de internet. Requiere documentación legal (prueba de marca registrada, datos del representante autorizado). Recomendado para una protección integral.
+
+### Automated Takedowns (takedowns automatizados)
+
+Acelera el proceso de takedown en los casos claros. Una vez que hayas proporcionado los documentos legales requeridos (como una **Letter of Authorization** (carta de autorización)) y la URL de tu sitio web principal, ChainPatrol puede enviar automáticamente solicitudes de takedown para las amenazas aprobadas sin esperar el ida y vuelta manual en cada caso. Requiere una Letter of Authorization, la URL del sitio web principal y todos los demás servicios habilitados. Es una función avanzada para entornos con un alto volumen de amenazas.
+
+### Dark Web Monitoring (monitoreo de la dark web)
+
+Opcional. Permite a los propietarios y administradores buscar datos filtrados en la dark web para las marcas incluidas en la **Allowlist** (lista de permitidos), lo que abarca dominios de correo electrónico, direcciones de correo electrónico y direcciones de wallets de criptomonedas. Consulta [Dark Web Monitoring](/es/concepts/dark-web-monitoring).
+
+Obtén más información sobre cómo configurar estos servicios en nuestra [guía de configuración de servicios](/es/protect-your-brand/services-setup).
+
+## Miembros, roles y permisos
+
+Tú controlas quién puede acceder a tu organización y qué tiene permitido hacer.
+
+### Cómo funciona
+
+1. Invita a miembros de tu equipo al dashboard de tu organización
+2. Asígnales roles que determinen su nivel de acceso
+3. Configura permisos específicos para lo que pueden hacer
+4. Conserva el control final sobre las aprobaciones y las acciones sensibles
+
+### Qué controlan los permisos
+
+- **Reporte de amenazas** - Capacidad de reportar y enviar amenazas
+- **Aprobaciones de la blocklist** - Aprobar o rechazar cambios en la blocklist
+- **Gestión de la configuración** - Modificar los ajustes y la configuración de la organización
+- **Información sensible** - Ver datos y reportes confidenciales
+- **Control de servicios** - Habilitar o deshabilitar los servicios de la organización
+- **Gestión de miembros** - Invitar, eliminar o modificar miembros del equipo
+
+<Warning>
+Este sistema de permisos garantiza que las acciones potencialmente destructivas (como activar Blocklisting o Automated Takedowns) solo ocurran con el permiso explícito de tu organización.
+</Warning>
+
+El personal de ChainPatrol se encarga de las operaciones de seguridad del día a día, pero tú conservas el control final sobre las aprobaciones, la visibilidad y la forma en que la plataforma se integra con tu equipo.
+
+## Estructura de la organización
+
+### Jerarquía típica de una organización
+
+**Una sola marca** - La mayoría de las organizaciones tienen una sola marca con una única identidad de empresa, todos los assets bajo una marca y una gestión sencilla. Ejemplo: una startup que protege su producto principal.
+
+**Múltiples marcas** - Algunas organizaciones gestionan múltiples marcas, que incluyen empresa matriz + subsidiarias, múltiples líneas de productos, empresas adquiridas y marcas regionales. Ejemplo: un holding que protege a varias empresas de su portafolio.
+
+**Empresa grande** - Las grandes empresas pueden tener múltiples marcas, cientos o miles de assets, flujos de aprobación complejos y múltiples equipos con distintos permisos. Ejemplo: una empresa Fortune 500 con operaciones globales.
+
+## Puntos clave
+
+- Las organizaciones brindan visibilidad centralizada de todas las marcas: un solo dashboard muestra la actividad de amenazas de todas tus marcas, productos y ejecutivos en lugar de un monitoreo fragmentado
+- Los interruptores de servicios te permiten empezar de forma simple y ampliar: comienza con el monitoreo y el bloqueo manual, y luego habilita la detección automatizada, los takedowns y el acceso a la API a medida que crezcan tus necesidades
+- Los permisos basados en roles equilibran el acceso y la seguridad: los administradores pueden configurar los ajustes y aprobar bloqueos, mientras que los reportantes pueden enviar amenazas sin cambiar la configuración del sistema
+- Un servicio gestionado significa que no hay infraestructura que mantener: ChainPatrol se encarga de las fuentes de detección, los flujos de revisión y las relaciones con los proveedores para que te concentres en las decisiones, no en las operaciones

@@ -1,0 +1,192 @@
+---
+title: Obtener conexiones de assets
+openapi: "POST /asset/connections"
+---
+
+## Descripción general
+
+Conexiones de assets responde dos preguntas sobre un **Asset** (activo digital: URL, dirección,
+perfil, app, etc.): **qué llevó a él** y **a dónde lleva**. ChainPatrol registra un vínculo cada vez
+que un asset nombra a otro en un escaneo: la página de destino de un anuncio, la URL de una
+publicación, una redirección, los enlaces salientes de una página, el sitio web que un perfil declara
+como suyo, una wallet a la que una página les pide a las víctimas que paguen. Este endpoint sigue
+esos vínculos desde el asset que indicas, unos pocos saltos hacia cada lado, y devuelve dos
+grafos:
+
+- **upstream** - lo que lleva al asset: los anuncios y publicaciones que enlazan a él, las páginas
+  y cuentas que los publicaron, los perfiles que lo declaran como propio.
+- **downstream** - a dónde lleva el asset: a qué redirige, a qué enlaza, qué carga, a dónde envía
+  formularios, qué declara como propio o dónde pide que le paguen.
+
+Cada grafo es una lista de **assets** y una lista de **links** (vínculos) entre ellos. Un vínculo se lee
+como una oración, `fromAssetId` → `type` → `toAssetId`: `PUBLISHED`, `LINKS_TO`,
+`REDIRECTS_TO`, `CLAIMS`, `REPLIES_TO`, `REPOSTS`, `MENTIONS`, `DEPENDS_ON`,
+`MEMBER_OF`, `LOADS`, `SUBMITS_TO` o `USES_WALLET`. Los assets incluyen los mismos `id`,
+`type`, `content` y `status` que devuelve [Buscar assets](/es/external-api/asset-search).
+
+<Note>
+Conexiones de assets se está habilitando de forma gradual, una organización a la vez. Una clave de
+API de organización que no forma parte del despliegue recibe `403` con el mensaje "Asset
+connections are not available for this organization". Contacta a ChainPatrol para solicitar
+acceso.
+</Note>
+
+## Inicio rápido
+
+### Autenticación
+
+Incluye la clave de API de tu organización en el encabezado `X-API-KEY`:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+### Solicitud de ejemplo
+
+Indica el asset por su contenido (una URL, un dominio, una dirección, un perfil de red social, …) o por su
+`assetId` de ChainPatrol: exactamente uno de los dos. `depth` y `limit` son opcionales.
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/asset/connections' \
+  -H 'X-API-KEY: <api-key>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "content": "your-brand-login.example", "depth": 2 }'
+```
+
+```typescript TypeScript
+const response = await fetch("https://app.chainpatrol.io/api/v2/asset/connections", {
+  method: "POST",
+  headers: {
+    "X-API-KEY": "<api-key>",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ content: "your-brand-login.example", depth: 2 }),
+});
+
+const { asset, upstream, downstream } = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/asset/connections",
+    headers={"X-API-KEY": "<api-key>"},
+    json={"content": "your-brand-login.example", "depth": 2},
+)
+data = response.json()
+```
+
+</CodeGroup>
+
+## Cuerpo de la solicitud
+
+| Campo     | Tipo     | Obligatorio    | Descripción                                                                                                                                                                              |
+| --------- | -------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `assetId` | `number` | Uno de los dos | ID del asset en ChainPatrol, tal como lo devuelve Buscar assets o como aparece en `assets` de una respuesta anterior.                                                                    |
+| `content` | `string` | Uno de los dos | Contenido del asset: una URL, un dominio, una dirección de wallet, un perfil de red social, una ficha de app, etc. Se interpreta (parse) de la misma forma en que lo hace Buscar assets.        |
+| `depth`   | `number` | No             | Saltos que se siguen hacia cada lado, de `1` a `3`. Valor predeterminado: `2`. Un salto son los assets vinculados directamente al tuyo; con dos también se siguen los vínculos de esos assets. |
+| `limit`   | `number` | No             | Vínculos de cada tipo que se leen por asset en cada lado, de `1` a `100`. Valor predeterminado: `10`. Es por tipo, así que una redirección sigue apareciendo aunque haya cincuenta enlaces salientes. |
+
+## Respuesta
+
+Un sitio de phishing promocionado con un anuncio de Meta, que redirige a un drenador de wallets (wallet drainer) que enlaza
+al sitio real de la marca:
+
+```json
+{
+  "asset": {
+    "id": 4175269,
+    "type": "URL",
+    "content": "your-brand-login.example",
+    "status": "BLOCKED"
+  },
+  "upstream": {
+    "assets": [
+      { "id": 4175269, "type": "URL", "content": "your-brand-login.example", "status": "BLOCKED", "hops": 0, "expanded": true, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null },
+      { "id": 4175301, "type": "META_AD", "content": "facebook.com/ads/library/?id=1499561385379659", "status": "BLOCKED", "hops": 1, "expanded": true, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null },
+      { "id": 4175298, "type": "FACEBOOK", "content": "facebook.com/brand-support-desk", "status": "UNKNOWN", "hops": 2, "expanded": false, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null }
+    ],
+    "links": [
+      { "fromAssetId": 4175301, "type": "LINKS_TO", "toAssetId": 4175269, "firstSeenAt": "2026-11-02T09:14:51.000Z", "lastSeenAt": "2026-11-08T21:40:03.000Z" },
+      { "fromAssetId": 4175298, "type": "PUBLISHED", "toAssetId": 4175301, "firstSeenAt": "2026-11-02T09:14:51.000Z", "lastSeenAt": "2026-11-08T21:40:03.000Z" }
+    ]
+  },
+  "downstream": {
+    "assets": [
+      { "id": 4175269, "type": "URL", "content": "your-brand-login.example", "status": "BLOCKED", "hops": 0, "expanded": true, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null },
+      { "id": 4175310, "type": "URL", "content": "wallet-drainer.example", "status": "BLOCKED", "hops": 1, "expanded": true, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": null },
+      { "id": 102, "type": "URL", "content": "your-brand.example", "status": "ALLOWED", "hops": 2, "expanded": false, "hasMoreLinks": false, "truncatedLinkTypes": [], "stop": "allowed" }
+    ],
+    "links": [
+      { "fromAssetId": 4175269, "type": "REDIRECTS_TO", "toAssetId": 4175310, "firstSeenAt": "2026-11-02T09:15:07.000Z", "lastSeenAt": "2026-11-08T21:40:12.000Z" },
+      { "fromAssetId": 4175310, "type": "LINKS_TO", "toAssetId": 102, "firstSeenAt": "2026-11-02T09:15:07.000Z", "lastSeenAt": "2026-11-08T21:40:12.000Z" }
+    ]
+  }
+}
+```
+
+### Nivel superior
+
+| Campo        | Tipo     | Descripción                                                                 |
+| ------------ | -------- | --------------------------------------------------------------------------- |
+| `asset`      | `object` | El asset que indicaste: `id`, `type`, `content`, `status`.                  |
+| `upstream`   | `graph`  | Lo que lleva al asset. Su lista `assets` empieza con el propio asset.       |
+| `downstream` | `graph`  | A dónde lleva el asset. Su lista `assets` empieza con el propio asset.      |
+
+### Cada asset de un grafo
+
+| Campo                | Tipo               | Descripción                                                                                                                                                                                                                                    |
+| -------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                 | `number`           | ID del asset en ChainPatrol.                                                                                                                                                                                                                   |
+| `type`               | `string`           | Tipo de asset, p. ej. `URL`, `TWITTER`, `META_AD`, `FACEBOOK`, `ADDRESS`. Consulta [Tipos de asset](/es/glossary/asset-types/page).                                                                                                              |
+| `content`            | `string`           | Contenido del asset.                                                                                                                                                                                                                           |
+| `status`             | `string`           | `BLOCKED`, `ALLOWED` o `UNKNOWN`.                                                                                                                                                                                                              |
+| `hops`               | `number`           | Cantidad de vínculos entre este asset y el tuyo en la ruta por la que se llegó a él por primera vez. `0` para tu asset.                                                                                                                        |
+| `expanded`           | `boolean`          | Indica si se leyeron los vínculos propios de este asset en este lado. Es `false` más allá de `depth`, más allá del límite por salto o cuando `stop` tiene un valor.                                                                            |
+| `hasMoreLinks`       | `boolean`          | Indica si este asset tiene más vínculos en este lado de los que permitió `limit`.                                                                                                                                                              |
+| `truncatedLinkTypes` | `string[]`         | Los tipos de vínculo de los que tiene más de lo que permitió `limit`. Vuelve a consultar con el `id` de este asset como `assetId` para leerlos.                                                                                                |
+| `stop`               | `string \| null`   | Por qué no se siguieron los vínculos de este asset aunque estaba dentro de `depth`: `parking` (una página de parking o de dominio en venta), `furniture` (una página de plataforma a la que enlazan todos los sitios), `allowed` (un asset revisado y permitido), `allowed-site` (un subdominio de un sitio permitido). Cada uno de estos conecta assets que no tienen relación entre sí, así que el recorrido muestra el asset y se detiene. |
+
+### Cada vínculo de un grafo
+
+| Campo         | Tipo     | Descripción                                                                         |
+| ------------- | -------- | ----------------------------------------------------------------------------------- |
+| `fromAssetId` | `number` | El asset desde el que parte el vínculo.                                             |
+| `type`        | `string` | Cómo están vinculados los dos, leído como origen → tipo → destino. Consulta la lista de arriba. |
+| `toAssetId`   | `number` | El asset al que apunta el vínculo.                                                  |
+| `firstSeenAt` | `string` | Cuándo se observó el vínculo por primera vez (ISO 8601, UTC).                       |
+| `lastSeenAt`  | `string` | Cuándo se observó el vínculo por última vez (ISO 8601, UTC).                        |
+
+<Note>
+Los vínculos son relaciones observadas que se leen de los escaneos de ChainPatrol. Un asset escaneado
+antes de que se registraran los vínculos, o que nunca fue escaneado, no tiene ninguno. Los vínculos
+leídos de un escaneo del asset propio de otra organización (su dominio, cuenta o app incluidos en la
+**Allowlist**, la lista de permitidos) se omiten, de la misma forma en que [Buscar assets](/es/external-api/asset-search) y
+[Obtener resultado del escaneo](/es/external-api/scan-result) omiten los escaneos de esa organización.
+</Note>
+
+## Seguir recorriendo
+
+Una respuesta está acotada: `depth` saltos, `limit` vínculos de cada tipo por asset y, como
+máximo, 25 assets expandidos por salto. Dos campos indican dónde hay más. Un asset con
+`expanded: false` y sin `stop` quedó fuera de esos límites; un asset con `hasMoreLinks: true`
+tenía más vínculos de los tipos indicados en `truncatedLinkTypes` de los que permitió `limit`. En ambos casos,
+vuelve a llamar al endpoint con el `id` de ese asset como `assetId` para continuar desde él.
+
+## Errores
+
+| Estado | Cuándo                                                                                                    |
+| ------ | --------------------------------------------------------------------------------------------------------- |
+| `400`  | Se enviaron tanto `content` como `assetId` o ninguno de los dos, `depth` está fuera de `1`–`3`, o `limit` está fuera de `1`–`100`. |
+| `401`  | No se envió ninguna clave de API.                                                                         |
+| `403`  | La organización no forma parte del despliegue, o la clave es una clave de usuario en lugar de una clave de organización. |
+| `404`  | ChainPatrol no tiene ese asset.                                                                           |
+
+## Relacionado
+
+- [Buscar assets](/es/external-api/asset-search)
+- [Obtener resultado del escaneo](/es/external-api/scan-result)
+- [Tipos de asset](/es/glossary/asset-types/page)

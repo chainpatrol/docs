@@ -1,0 +1,31 @@
+---
+title: Eliminar configuración de detección
+openapi: "POST /detection/configs/delete"
+---
+
+## Descripción general
+
+Elimina de forma lógica (soft-delete) una configuración de detección de amenazas de tu
+organización mediante su `configId` para que deje de escanear. Las demás configuraciones
+que comparten la misma fuente siguen ejecutándose.
+
+Con este endpoint solo se pueden eliminar las configuraciones que pertenecen a tu organización;
+las configuraciones globales siguen reservadas al personal (staff).
+
+## Cuándo usarlo
+
+- Quitar una configuración que ya no necesitas.
+- Retirar una variante de una fuente con varias configuraciones sin tocar las demás.
+
+Eliminar la *última* configuración de una fuente que está activada de forma predeterminada para tu
+organización **no es permanente**: la automatización vuelve a crear una configuración predeterminada para
+esa fuente en su siguiente ejecución. Para detener una fuente así de forma duradera, llama a
+[Actualizar configuración de detección](/es/external-api/detection-configs-update) con
+`status` establecido en `DISABLED`; la automatización no sobrescribirá ese valor.
+
+## Cómo funciona
+
+- Busca el `configId` con [Listar configuraciones de detección](/es/external-api/detection-configs-list).
+- Se establecen los campos `deletedAt` y `updatedAt` de la configuración, y se escribe una fila de historial
+  con el estado sin cambios para que los trabajos de sincronización de valores predeterminados (default-sync)
+  no traten la eliminación como un cambio de estado.

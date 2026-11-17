@@ -1,0 +1,219 @@
+---
+title: Obtener métricas de la organización (obsoleto)
+openapi: "POST /public/getOrganizationMetrics"
+---
+
+<Warning>
+  **Este endpoint está obsoleto.** Usa en su lugar el nuevo endpoint RESTful [GET /organization/metrics](/es/external-api/organization-metrics-list). Este endpoint se eliminará en una versión futura.
+</Warning>
+
+## Inicio rápido
+
+### Autenticación
+
+Incluye tu clave de API en el encabezado `Authorization`:
+
+```bash
+Authorization: Bearer your_api_key
+```
+
+### Solicitud de ejemplo
+
+```bash
+curl -X POST 'https://app.chainpatrol.io/api/v2/public/getOrganizationMetrics' \
+  -H 'Authorization: Bearer your_api_key' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "organizationSlug": "your-org",
+    "startDate": "2024-01-01T00:00:00Z",
+    "endDate": "2024-03-01T00:00:00Z"
+  }'
+```
+
+## Control de acceso
+
+La API aplica un control de acceso estricto según el tipo de tu clave de API:
+
+1. **Claves de API de organización**:
+
+   - Solo pueden acceder a las métricas de su organización asociada
+   - Deben coincidir exactamente con el `organizationSlug`
+   - Ejemplo: una clave de API de "acme-org" solo puede consultar las métricas de "acme-org"
+
+2. **Claves de API de usuario**:
+   - Pueden acceder a las métricas de cualquier organización de la que el usuario sea miembro
+   - Requieren que el usuario sea un miembro activo de la organización consultada
+   - Ejemplo: un usuario que es miembro tanto de "acme-org" como de "beta-org" puede consultar las métricas de ambas organizaciones
+
+Si intentas consultar una organización sin los permisos adecuados, recibirás un error 403 Forbidden con el mensaje: "You do not have permission to access metrics for this organization"
+
+## Implementación de ejemplo
+
+<CodeGroup>
+
+```javascript JavaScript
+async function fetchOrganizationMetrics(organizationSlug, startDate, endDate) {
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/public/getOrganizationMetrics",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({
+        organizationSlug,
+        startDate,
+        endDate,
+      }),
+    }
+  );
+  return response.json();
+}
+
+// Example usage
+fetchOrganizationMetrics(
+  "your-org",
+  "2024-01-01T00:00:00Z",
+  "2024-03-01T00:00:00Z"
+)
+  .then((data) => console.log("Metrics:", data))
+  .catch((error) => console.error("Error fetching metrics:", error));
+```
+
+```typescript TypeScript
+interface OrganizationMetrics {
+  metrics: {
+    reportsCount: number;
+    threatsBlockedCount: number;
+    threatsBlockedByAssetType: Array<{
+      assetType: string;
+      count: number;
+    }>;
+    domainsBlockedCount: number;
+    totalTakedownsFiledCount: number;
+    totalTakedownsCompletedCount: number;
+    totalDetections: number;
+  };
+}
+
+async function fetchOrganizationMetrics(
+  organizationSlug: string,
+  startDate?: string,
+  endDate?: string
+): Promise<OrganizationMetrics> {
+  const response = await fetch(
+    "https://app.chainpatrol.io/api/v2/public/getOrganizationMetrics",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer YOUR_API_KEY_HERE",
+      },
+      body: JSON.stringify({
+        organizationSlug,
+        startDate,
+        endDate,
+      }),
+    }
+  );
+  return response.json();
+}
+
+// Example usage
+fetchOrganizationMetrics(
+  "your-org",
+  "2024-01-01T00:00:00Z",
+  "2024-03-01T00:00:00Z"
+)
+  .then((data) => console.log("Metrics:", data))
+  .catch((error) => console.error("Error fetching metrics:", error));
+```
+
+```python Python
+import requests
+from typing import Dict, Optional
+from datetime import datetime
+
+def fetch_organization_metrics(
+    organization_slug: str,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None
+) -> Dict:
+    response = requests.post(
+        "https://app.chainpatrol.io/api/v2/public/getOrganizationMetrics",
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": "Bearer YOUR_API_KEY_HERE",
+        },
+        json={
+            "organizationSlug": organization_slug,
+            "startDate": start_date,
+            "endDate": end_date,
+        },
+    )
+    return response.json()
+
+# Example usage
+try:
+    metrics = fetch_organization_metrics(
+        "your-org",
+        "2024-01-01T00:00:00Z",
+        "2024-03-01T00:00:00Z"
+    )
+    print("Metrics:", metrics)
+except Exception as error:
+    print("Error fetching metrics:", str(error))
+```
+
+</CodeGroup>
+
+## Detalles de la API
+
+### Parámetros de la solicitud
+
+| Parámetro        | Tipo   | Obligatorio | Descripción                                                          |
+| ---------------- | ------ | ----------- | -------------------------------------------------------------------- |
+| organizationSlug | string | Sí          | Slug de la organización que se va a consultar                        |
+| startDate        | Date   | No          | Fecha de inicio de las métricas (por defecto: todo el historial)     |
+| endDate          | Date   | No          | Fecha de fin de las métricas (por defecto: la fecha actual)          |
+
+### Formato de la respuesta
+
+```typescript
+{
+  metrics: {
+    reportsCount: number; // Total number of reports
+    threatsBlockedCount: number; // Total number of threats blocked
+    threatsBlockedByAssetType: Array<{
+      // Threats blocked grouped by asset type
+      assetType: string;
+      count: number;
+    }>;
+    domainsBlockedCount: number; // Number of domains blocked
+    totalTakedownsFiledCount: number; // Total number of takedowns filed
+    totalTakedownsCompletedCount: number; // Total number of completed takedowns
+    totalDetections: number; // Total number of threat detections
+  }
+}
+```
+
+`totalDetections` cuenta las amenazas sospechosas: todos los resultados de detección dentro del rango de fechas
+que no se hayan eliminado, sin importar si después se confirmaron o no. Las amenazas confirmadas
+se cuentan en `threatsBlockedCount`.
+
+## Manejo de errores
+
+| Código de estado          | Descripción                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| 401 Unauthorized          | Clave de API no válida o faltante                                                  |
+| 403 Forbidden             | La clave de API no tiene permiso para consultar la organización solicitada         |
+| 500 Internal Server Error | Ocurrió un error del servidor al procesar la solicitud                             |
+
+## Notas
+
+- Si no se indica un rango de fechas, se devolverán las métricas de todo el historial
+- La API solo devuelve las métricas de una única organización por solicitud
+- Las claves de API de organización solo pueden acceder a las métricas de su organización asociada
+- Las claves de API de usuario pueden acceder a las métricas de cualquier organización de la que el usuario sea miembro
+- Para consultar varias organizaciones, debes usar una clave de API de usuario y asegurarte de que el usuario sea miembro de todas las organizaciones que quieras consultar

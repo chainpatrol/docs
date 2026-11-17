@@ -1,0 +1,174 @@
+---
+title: "Cómo funciona la Blocklist"
+description: "Base de datos actualizada continuamente de sitios de phishing confirmados y assets maliciosos, distribuida en tiempo real a navegadores, wallets y plataformas de seguridad."
+---
+
+## Descripción general
+
+La **Blocklist** (lista de bloqueo) de ChainPatrol es una base de datos en tiempo real, impulsada por la comunidad, de sitios de phishing confirmados, estafas y **assets** maliciosos (activos digitales: URLs, direcciones, perfiles, apps, etc.) que protege a los usuarios de marcas de fintech, banca, cripto, iGaming, capital de riesgo (VC) y más.
+
+La Blocklist de ChainPatrol es una lista actualizada continuamente de cientos de miles de sitios web maliciosos, cuentas de redes sociales, direcciones cripto y otros assets digitales que se verificaron como amenazas. Esta base de datos integral se alimenta de múltiples fuentes:
+
+- **Reportes de la comunidad**: Envíos de usuarios y reportes de nuestras organizaciones aliadas
+- **Detección automatizada**: Sistemas de monitoreo impulsados por IA que escanean internet en busca de nuevas amenazas
+- **Alianzas de inteligencia de amenazas**: Intercambio bidireccional con organizaciones como Crypto-ISAC (Cryptocurrency Information Sharing and Analysis Center) y otras redes de intercambio de información de la industria para mejorar la protección en todos los sectores
+- **Revisión manual**: Análisis y verificación por parte de expertos de los assets reportados
+
+<Note>Nuestra alianza con Crypto-ISAC es una de varias alianzas de inteligencia de amenazas que permiten compartir en tiempo real dominios maliciosos y otros indicadores, lo que ayuda a proteger a los usuarios en múltiples plataformas e industrias, incluido el ecosistema cripto.</Note>
+
+### Características principales
+
+- **Cobertura global** - Combina inteligencia de amenazas de organizaciones de todo el ecosistema
+- **Respuesta rápida** - Los assets se agregan a la Blocklist y se distribuyen en cuestión de minutos tras la confirmación
+- **Libre acceso** - Disponible mediante una API pública para maximizar la distribución y la protección
+- **Amplia integración** - Se distribuye automáticamente a wallets, navegadores y herramientas de seguridad
+
+<Info>
+Los procesos tradicionales de **takedown** (solicitud de baja de contenido fraudulento) tardan horas o días. ChainPatrol brinda protección en cuestión de minutos.
+</Info>
+
+## Cómo se agregan los assets a la Blocklist
+
+Los assets se agregan a la Blocklist mediante un proceso de revisión riguroso:
+
+1. **Detección** - Las posibles amenazas se identifican mediante detección automatizada, reportes de la comunidad o envíos de aliados
+2. **Análisis** - Nuestro motor de escaneo impulsado por IA analiza los assets con más de 50 reglas de detección
+3. **Revisión** - Se crea una **Proposal** (propuesta para bloquear o permitir un asset) de tipo `BLOCK` y nuestro equipo de seguridad la revisa
+4. **Aprobación** - Una vez aprobada la revisión, el estado del asset cambia a `BLOCKED`
+5. **Distribución** - El asset bloqueado se envía automáticamente a nuestros aliados de integración
+
+Solo los assets que pasan por este proceso de revisión y aprobación se agregan a la Blocklist.
+
+## Integraciones de la Blocklist
+
+La Blocklist de ChainPatrol está integrada con wallets, navegadores y plataformas de seguridad:
+
+### Seguridad del navegador
+
+- **Google Safe Browsing** - Protege a los usuarios de Chrome, Safari, Edge y Firefox
+- **Cloudflare Gateway** - Protección a nivel de red para empresas
+
+### Proveedores de wallets
+
+Para las marcas con presencia en cripto o en wallets, las principales integraciones incluyen:
+
+- **MetaMask** - Integración directa mediante Eth-Phishing-Detect
+- **Phantom** - Integración por API en tiempo real
+- **Coinbase Wallet** - Mediante múltiples fuentes de listas de bloqueo
+- **Rainbow Wallet** - Mediante WalletConnect y APIs directas
+- **Trust Wallet** - Mediante múltiples fuentes de listas de bloqueo
+- **Ledger Live** - Mediante APIs de listas de bloqueo
+- **WalletConnect** - API en tiempo real que protege las wallets conectadas
+
+Y otros proveedores de wallets de todo el ecosistema.
+
+### Inteligencia de amenazas
+
+- **SEAL-ISAC** - Red de intercambio de información de Security Alliance
+- **Crypto-ISAC** - Intercambio de amenazas de la industria de las criptomonedas
+- **Eth-Phishing-Detect** - Lista de bloqueo del ecosistema Ethereum (ChainPatrol es uno de sus principales contribuidores)
+- **Polkadot Phishing List** - Entre cadenas, con el ecosistema Polkadot
+
+### Aplicaciones y servicios
+
+- **Polymarket** - API de moderación de contenido
+- **Snapshot** - Protección de la plataforma de gobernanza
+- **Enterprise a medida** - Integraciones personalizadas para clientes empresariales
+
+## Cómo acceder a la Blocklist
+
+### Dashboard web
+
+La página de Blocklist de tu organización muestra todos los assets que tu equipo agregó a la Blocklist:
+
+1. Accede a la sección **Blocklist** en el **Dashboard** (panel principal) de tu organización
+2. Consulta los assets filtrados por tipo, fecha y estado
+3. Busca assets o dominios específicos
+4. Exporta los datos de la Blocklist como archivo CSV para generar informes
+
+### Acceso por API
+
+La Blocklist es de acceso público mediante nuestra API y nuestro SDK.
+
+- [Documentación de la API](/es/external-api/overview) - Aprende a acceder a la Blocklist mediante la API REST
+- [Documentación del SDK](/es/sdk/overview) - Usa nuestro SDK de JavaScript para una integración sencilla
+
+## Falsos positivos
+
+Nos tomamos muy en serio los falsos positivos. Si crees que un asset se agregó a la Blocklist por error:
+
+### Para dueños de assets
+
+Si tu sitio web o asset legítimo se agregó a la Blocklist:
+
+1. **Envía una disputa** - Visita [chainpatrol.com/dispute](https://chainpatrol.com/dispute) para enviar una disputa
+2. **Aporta evidencia** - Incluye documentación que demuestre que tu asset es legítimo (registro de la empresa, antigüedad e historial del dominio, cuentas de redes sociales verificadas, certificados SSL y otros indicadores de legitimidad)
+3. **Proceso de revisión** - Nuestro equipo revisará tu disputa en un plazo de 24 horas
+4. **Resolución** - Si se aprueba, tu asset se eliminará de la Blocklist y se marcará como `ALLOWED`
+
+### Para usuarios de ChainPatrol
+
+Si reportaste un asset que resulta ser legítimo:
+
+1. Busca el reporte del asset en tu dashboard
+2. Crea una Proposal de tipo `ALLOW` con tu justificación
+3. Nuestro equipo la revisará y actualizará el estado si corresponde
+
+Cuando un asset se elimina de la Blocklist, la actualización se distribuye a todos los aliados de integración con la misma rapidez.
+
+## Distribución de la Blocklist
+
+Cuando un asset se agrega a la Blocklist, se distribuye automáticamente a múltiples plataformas. Hoy, nuestra red de distribución se enfoca principalmente en **dominios y URLs**: estos son los tipos de asset que llegan a navegadores, wallets, proveedores de DNS y aliados de inteligencia de amenazas.
+
+- **Google Safe Browsing** - Dominios y URLs para la protección en navegadores
+- **SEAL-ISAC** - URLs alojadas en más de 50 proveedores de hosting (Vercel, Cloudflare, AWS, etc.)
+- **Crypto-ISAC** - Assets de tipo URL y dominio
+- **Eth-Phishing-Detect** - Sitios de phishing relacionados con Ethereum
+- **Polkadot Phishing** - Dominios de phishing entre redes
+- **Aliados directos** - Actualizaciones por API en tiempo real para proveedores de wallets
+
+Las cuentas de redes sociales, las direcciones de blockchain y otros tipos de asset se registran y se agregan a la Blocklist en nuestra base de datos, y están disponibles mediante nuestra API. La distribución automatizada de estos tipos de asset a plataformas externas se está ampliando con el tiempo.
+
+La distribución de dominios y URLs ocurre automáticamente a través de nuestros flujos de integración. No se requiere ningún paso manual.
+
+<Tip>
+En caso de un falso positivo, enviaremos solicitudes de retractación de los envíos de ChainPatrol a estos aliados.
+</Tip>
+
+## Por qué importa la distribución
+
+La ciberseguridad tradicional depende de los **takedowns**, es decir, de solicitar a los proveedores de hosting o a los registradores de dominios que eliminen el contenido malicioso.
+
+### Tiempos del takedown tradicional
+
+- **Proveedores de hosting** - De horas a días para el takedown
+- **Registradores de dominios** - Tiempos de respuesta a menudo más largos
+- **Sin respuesta** - Algunos proveedores nunca responden
+
+### El enfoque de la Blocklist de ChainPatrol
+
+ChainPatrol brinda protección inmediata mediante:
+
+- **Bloqueo en navegador, wallet y DNS** - Bloquea el acceso a nivel de navegador, wallet y DNS
+- **Protección siempre activa** - Protege a los usuarios incluso si el sitio sigue en línea
+- **Cobertura universal** - Funciona con todos los proveedores de hosting y en todas las jurisdicciones
+- **Respuesta rápida** - Usuarios protegidos en minutos, no en días
+
+Este enfoque de "primero Blocklist, después takedown" significa que los usuarios quedan protegidos en minutos, no en días.
+
+## Comparación entre Blocklist y takedown
+
+| Aspecto | Blocklist de ChainPatrol | Takedown tradicional |
+|--------|----------------------|---------------------|
+| **Tiempo de respuesta** | Minutos | De horas a días (o nunca) |
+| **Cobertura** | Múltiples integraciones | Un solo proveedor de hosting |
+| **Protección del usuario** | Inmediata | Demorada hasta la eliminación |
+| **Jurisdicción** | Global | Depende del proveedor |
+| **Tasa de éxito** | Distribución constante | Varía según el proveedor |
+
+## Puntos clave
+
+- La Blocklist brinda protección inmediata mientras se procesan los takedowns: los usuarios quedan protegidos en minutos mediante integraciones con navegadores, wallets y plataformas de seguridad, incluso mientras las solicitudes de takedown avanzan por los canales más lentos de los proveedores
+- La distribución multiplica el alcance de tu protección: un solo asset bloqueado protege automáticamente a los usuarios en navegadores, wallets y plataformas, sin envíos por separado
+- El manejo de falsos positivos es rápido y coordinado: las retractaciones se propagan por los mismos canales de distribución que los bloqueos, lo que garantiza que las correcciones lleguen a todas las plataformas integradas
+- La API pública permite una protección amplia: que la Blocklist sea de libre acceso significa que cualquier navegador, wallet o herramienta de seguridad puede integrarse y proteger a sus usuarios, sin importar la industria

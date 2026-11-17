@@ -1,0 +1,14 @@
+---
+title: Volumen de Takedowns en IN_PROGRESS
+openapi: "POST /healthchecks/takedowns/in-progress-volume"
+---
+
+## Descripción general
+
+Cuenta los **Takedowns** (solicitudes de baja de contenido fraudulento) que actualmente
+están en `IN_PROGRESS` para la organización, sin importar su antigüedad. Esto complementa
+la
+[verificación de estancamiento](/es/external-api/healthchecks-takedowns-stale-in-progress),
+que solo marca los elementos que superan un umbral de estancamiento: una acumulación
+general alta indica problemas con el formato de envío o del lado del proveedor, incluso
+cuando los elementos individuales todavía no están estancados.

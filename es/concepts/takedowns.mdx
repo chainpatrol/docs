@@ -1,0 +1,136 @@
+---
+title: "Takedowns"
+description: "Cómo ChainPatrol presenta solicitudes de takedown ante proveedores de hosting, registradores de dominios, plataformas sociales y tiendas de apps para eliminar de forma permanente el contenido de phishing"
+---
+
+## Descripción general
+
+Un **takedown** (solicitud de baja de contenido fraudulento) es una solicitud formal que le pide a una plataforma en línea que elimine contenido dañino, fraudulento o no autorizado.
+
+<Info>
+Esta solicitud se envía a la organización responsable de alojar o mostrar ese contenido, como un proveedor de hosting, un registrador de dominios, una plataforma de redes sociales, una tienda de apps o un registro de TLD.
+
+ChainPatrol mantiene contactos directos con los equipos de seguridad y de trust & safety de plataformas clave —incluida Vercel—, además de integraciones por API para takedowns acelerados, lo que permite eliminar más rápido las amenazas confirmadas.
+</Info>
+
+## Por qué importan los takedowns
+
+Los takedowns son una herramienta esencial para proteger a las marcas y a los usuarios en internet. Ayudan a eliminar contenido que:
+
+- Suplanta a organizaciones legítimas
+- Engaña o estafa a los usuarios
+- Abusa de las marcas registradas de una marca
+- Difunde información dañina
+- Distribuye aplicaciones fraudulentas o maliciosas
+- Aloja páginas de phishing o portales de inicio de sesión falsos
+
+## A dónde se envían los takedowns
+
+Como las amenazas digitales aparecen en muchas partes de internet, los takedowns se pueden enviar a una amplia variedad de plataformas:
+
+### Sitios web
+
+**Proveedores de hosting**: organizaciones que alojan el contenido de sitios web (AWS, Cloudflare, Vercel, empresas de hosting compartido, proveedores de VPS y de servidores dedicados).
+
+**Registradores de dominios**: empresas que registran y administran nombres de dominio (GoDaddy, Namecheap, Google Domains, registradores específicos de cada país, redes de revendedores).
+
+**Registros de TLD**: organizaciones que administran dominios de nivel superior (.com, .xyz, etc.), como Verisign (.com, .net), Public Interest Registry (.org) y los registros de códigos de país. El tiempo de respuesta varía mucho.
+
+### Redes sociales
+
+Twitter/X, Facebook, Instagram, YouTube, Telegram, Discord, Reddit, TikTok y más. Lo que se elimina incluye cuentas de suplantación, publicaciones y mensajes de estafa, canales de soporte falsos y sorteos fraudulentos.
+
+### Tiendas de apps
+
+Google Play, Apple App Store, Chrome Web Store, Firefox Add-ons, Microsoft Store. Lo que se elimina incluye aplicaciones de wallet falsas, extensiones de navegador maliciosas, apps de suplantación y utilidades fraudulentas.
+
+### Plataformas descentralizadas
+
+IPFS (InterPlanetary File System): el contenido dañino se puede almacenar de forma distribuida entre los nodos de IPFS. Los destinatarios de los takedowns incluyen operadores de gateways de IPFS, servicios de pinning y operadores de nodos que alojan contenido malicioso. El bloqueo a nivel de gateway es el enfoque más efectivo, ya que la naturaleza descentralizada dificulta la eliminación completa.
+
+## El propósito de los takedowns
+
+Sin importar la plataforma, el propósito de un takedown es el mismo: **eliminar contenido peligroso o no autorizado de forma rápida, segura y efectiva.**
+
+### Takedowns vs. blocklist
+
+Los **takedowns** logran la eliminación completa de internet. El contenido se elimina de forma permanente, los atacantes pierden su infraestructura, se evita que futuras víctimas accedan y queda demostrado que se actúa contra la amenaza. Sin embargo, los takedowns llevan tiempo (de horas a días), algunos proveedores no responden, los atacantes pueden crear sitios nuevos rápidamente y existen desafíos legales y de jurisdicción. Son ideales para la eliminación de amenazas a largo plazo, las campañas persistentes y la suplantación de alto perfil.
+
+La **blocklist** (lista de bloqueo) brinda protección inmediata en el punto de acceso. La protección es instantánea (15 a 30 minutos), funciona sin importar el proveedor de hosting, protege a los usuarios aunque el contenido siga online y ofrece cobertura universal en todas las plataformas. Sin embargo, el contenido sigue online, requiere integración con herramientas de seguridad y es posible que no impida todos los métodos de acceso. Es ideal para la mitigación inmediata de amenazas, los escenarios de respuesta rápida y la protección de los usuarios antes de que se complete el takedown.
+
+<Check>
+**El enfoque de ChainPatrol:** "primero la blocklist, después el takedown" brinda protección inmediata mientras se trabaja para lograr la eliminación permanente.
+</Check>
+
+## Ciclo de vida de un takedown
+
+### Estados de un takedown
+
+Los takedowns en ChainPatrol pasan por varios estados a lo largo de su ciclo de vida:
+
+- **`TODO`**: se creó el registro del takedown y está en cola para presentarse ante el host, el registrador o la plataforma correspondiente.
+- **`IN_PROGRESS`**: la solicitud de takedown se envió al proveedor y ChainPatrol está monitoreando activamente el **asset** (activo digital: URL, dirección, perfil, app, etc.) hasta que se elimine.
+- **`PENDING_INPUT`**: el takedown está en pausa porque necesitamos algo de tu parte. Puede ser: (1) falta la **Letter of Authorization** (LOA, carta de autorización) firmada o la autorización para pedir takedowns; (2) tu organización tiene activada la aprobación obligatoria y un administrador tiene que aprobarlo; (3) sospechamos que el asset podría ser tuyo (un sitio de staging, una submarca oficial) y necesitamos que confirmes si es legítimo antes de avanzar. En casos puntuales la espera es de un análisis interno del equipo. Esto también suele ocurrir cuando un proveedor afirma que un asset es legítimo o que no es una amenaza. La pausa evita acciones no deseadas entre los turnos de un equipo que trabaja 24/7 mientras se conversan los próximos pasos contigo por Slack, Telegram o notas dentro de la app.
+- **`COMPLETED`**: el proveedor o la plataforma eliminó el asset infractor y el takedown se resolvió con éxito.
+- **`CANCELLED`**: el takedown se canceló, por ejemplo, cuando se confirma que un asset es legítimo, está duplicado o se resolvió sin necesidad de actuar.
+
+### Resultados alternativos
+
+- **`PENDING_RETRACTION`**: el asset resultó ser legítimo (falso positivo) y se desbloqueó. Ya está en cola retirar los reportes enviados a los proveedores, pero todavía no se enviaron.
+- **`RETRACTION_SENT`**: ya enviamos la retractación a todos los proveedores contactados (hosting, registradores, redes sociales, VirusTotal, Google Safe Browsing) y estamos esperando que la procesen.
+- **`RETRACTED`**: estado final: los proveedores confirmaron la retractación, se cancelaron los reportes de abuso y el asset quedó restaurado en todas las plataformas.
+
+## Qué hace que los takedowns sean efectivos
+
+**Documentación legal**: los takedowns efectivos requieren una Letter of Authorization (LOA) que autorice la acción, documentos de **Trademark Registration** (registro de marca), evidencia clara de abuso o suplantación y los datos del representante autorizado. ChainPatrol se encarga de toda la documentación legal y de su presentación en tu nombre.
+
+**Relaciones con los proveedores**: mantenemos relaciones con proveedores de todo el ecosistema, con información de contacto de abuso conocida, procedimientos de reporte establecidos, un historial de takedowns exitosos y conocimiento de los requisitos de cada proveedor.
+
+**Seguimiento constante**: no nos limitamos a enviar la solicitud y olvidarnos. Hacemos verificaciones de estado periódicas, comunicaciones de seguimiento, escalamiento cuando hace falta y probamos enfoques alternativos si la solicitud inicial falla.
+
+**Recopilación de evidencia**: cada takedown incluye capturas de pantalla del contenido malicioso, metadatos técnicos (hosting, DNS, etc.), una línea de tiempo de la actividad, y reportes de usuarios y evidencia del impacto.
+
+## Sigue un asset para recibir correos cuando cambie su estado
+
+Puedes seguir un asset en particular para recibir un correo electrónico cuando cambie su estado. Úsalo cuando quieras enterarte apenas se bloquee o se libere un asset específico que te interesa.
+
+<Tip>
+También puedes seguir y dejar de seguir assets desde la API, y listar los assets que sigues. Consulta [Seguir asset](/es/external-api/asset-follow), [Dejar de seguir asset](/es/external-api/asset-unfollow) y [Listar assets seguidos](/es/external-api/asset-follows-list).
+</Tip>
+
+### Seguir o dejar de seguir un asset
+
+1. Abre un takedown para ver el panel lateral del takedown.
+2. Haz clic en **Follow** (seguir) en el encabezado del panel, junto al estado del takedown.
+3. El botón cambia a **Following** (siguiendo) y aparece un mensaje de confirmación.
+
+Para dejar de recibir notificaciones, haz clic en **Following** para dejar de seguir el asset. Los correos no incluyen un enlace para cancelar la suscripción, así que el botón **Follow** es la única forma de desactivarlos.
+
+### Qué dispara un correo
+
+ChainPatrol envía un correo a todas las personas que siguen un asset cuando el asset llega a un nuevo veredicto:
+
+- De `BLOCKED` (bloqueado) a `ALLOWED` (permitido), o de `ALLOWED` a `BLOCKED`
+- Un primer veredicto de `BLOCKED` o `ALLOWED` para un asset que antes estaba en `UNKNOWN` (desconocido)
+
+ChainPatrol no envía un correo cuando una revisión vuelve a confirmar el estado que el asset ya tenía, ni cuando un asset pasa a `UNKNOWN`.
+
+Cada correo incluye:
+
+- El asset, en formato defanged (neutralizado) para que no se pueda hacer clic en él
+- El estado anterior y el nuevo
+- Cuándo ocurrió el cambio, en UTC
+- Un enlace **View takedown** (ver takedown) que abre el takedown en la app de ChainPatrol
+
+ChainPatrol agrupa los cambios de estado que ocurren con menos de 60 segundos de diferencia en un solo correo por persona. ChainPatrol también vuelve a verificar que sigas teniendo acceso al asset antes de enviarlo.
+
+### Límite de assets seguidos
+
+Puedes seguir hasta 100 assets por organización. ChainPatrol muestra una advertencia cuando llegas a 90 assets seguidos. Una vez que llegas a 100, deja de seguir un asset antes de seguir otro. Dejar de seguir siempre funciona, incluso al llegar al límite.
+
+## Puntos clave
+
+- Los takedowns logran la eliminación permanente, mientras que las blocklists brindan protección inmediata: usa ambos en conjunto para proteger a los usuarios al instante con las blocklists mientras trabajas para eliminar por completo la amenaza con los takedowns
+- La retractación automática evita eliminaciones indebidas: cuando se identifican falsos positivos, las solicitudes de retractación llegan rápido a los proveedores para detener o revertir los takedowns antes de que se elimine contenido legítimo
+- El formato específico de cada proveedor aumenta la tasa de éxito: las distintas plataformas tienen distintos requisitos de envío, y usar el formato correcto para cada proveedor mejora los tiempos de respuesta y las tasas de eliminación
+- El seguimiento del ciclo de vida permite tomar decisiones basadas en datos: la visibilidad completa desde `TODO` hasta `COMPLETED` ayuda a identificar qué proveedores responden más rápido y qué amenazas son más difíciles de eliminar

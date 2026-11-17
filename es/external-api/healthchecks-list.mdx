@@ -1,0 +1,15 @@
+---
+title: Listar healthchecks
+openapi: "POST /healthchecks/list"
+---
+
+## Descripción general
+
+Devuelve el registro de los healthchecks (verificaciones de estado) que ChainPatrol expone actualmente, incluidas las verificaciones planificadas
+que todavía no están implementadas en el backend. Recorre esta lista y llama solo a los endpoints
+en los que `implemented` sea true.
+
+<Info>
+  Todos los healthchecks devuelven la misma estructura de resultado uniforme, así que puedes llamarlos en un bucle
+  y evaluar las respuestas con código compartido.
+</Info>

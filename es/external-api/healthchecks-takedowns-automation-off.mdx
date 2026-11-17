@@ -1,0 +1,12 @@
+---
+title: Takedowns automatizados desactivados
+openapi: "POST /healthchecks/takedowns/automation-off"
+---
+
+## Descripción general
+
+Marca las organizaciones en las que el servicio de **Takedowns** (solicitudes de baja de
+contenido fraudulento) está habilitado, pero los takedowns automatizados llevan
+desactivados más tiempo que el umbral de antigüedad configurado: de forma predeterminada, advertencia (warn) a los
+30 días y falla (fail) a los 60 días. Se excluyen las organizaciones que
+no tienen habilitado el servicio de takedowns en absoluto.

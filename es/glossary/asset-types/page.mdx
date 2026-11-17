@@ -1,0 +1,33 @@
+---
+title: Página
+description: Usa el tipo de asset PAGE para reportar URLs de estafa específicas en plataformas de hosting compartido como linktr.ee, bit.ly o beacons.ai sin bloquear el dominio.
+---
+
+El tipo de **asset** (activo digital: URL, dirección, perfil, app, etc.) `PAGE` se usa para reportar páginas web dentro de un dominio. A diferencia del tipo de asset `URL`, el tipo de asset `PAGE` NO normaliza la cadena de la URL antes de enviarla a **Chainpatrol**.
+
+Esto te permite reportar páginas web en sitios donde la estafa o el contenido malicioso está alojado en una subruta del dominio, en lugar de que todo el dominio sea malicioso.
+
+<Info>
+Usa el tipo de asset `PAGE` para las páginas de enlaces en la bio (link-in-bio) y los acortadores de enlaces como linktr.ee o bit.ly, donde algunas páginas individuales pueden ser maliciosas, pero bloquear todo el dominio afectaría contenido legítimo. En estas plataformas, reporta la URL de la página específica en lugar del dominio.
+</Info>
+
+Cuando envías un reporte con una URL que pertenece a uno de los dominios de página de ChainPatrol, se crea un asset `PAGE` en lugar de un asset `URL`. La lista tiene más de 500 dominios. Algunos ejemplos:
+
+```
+beacons.ai
+bit.ly
+blur.io
+goo.gl
+link3.to
+linktr.ee
+t.co
+tinyurl.com
+```
+
+Algunas plataformas muy conocidas tienen su propio tipo de asset en lugar de `PAGE`. Por ejemplo, los enlaces de `opensea.io` se convierten en assets `OPENSEA`, los enlaces de `t.me` y `telegram.me` se convierten en assets `TELEGRAM`, y los enlaces de `twitter.com` se convierten en assets `TWITTER`. Consulta [Redes sociales y mensajería](/es/glossary/asset-types/social) y [Otras plataformas](/es/glossary/asset-types/other).
+
+<Note>
+  Si quieres que se agregue un dominio a esta lista, escríbenos
+  a
+  [support@chainpatrol.io](mailto:support@chainpatrol.io?subject=Re:%20New%20domain%20for%20PAGE%20asset%20type&body=).
+</Note>

@@ -1,0 +1,34 @@
+---
+title: Obtener reportes de la organización (obsoleto)
+openapi: "POST /public/getOrganizationReports"
+---
+
+<Warning>
+  **Este endpoint está obsoleto.** Usa en su lugar el nuevo endpoint RESTful [GET /organization/reports](/es/external-api/organization-reports-list). Este endpoint se eliminará en una versión futura.
+</Warning>
+
+## Inicio rápido
+
+### Autenticación
+
+Incluye tu clave de API en el encabezado `X-API-KEY`:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+# Paginación
+
+Asegúrate de usar los parámetros `limit` y `cursor` para paginar los resultados.
+
+# Filtros
+
+## Fechas
+
+Al filtrar por fechas, debes indicar tanto el parámetro `startDate` como el parámetro `endDate`.
+
+## Solo rechazados
+
+Puedes filtrar para obtener solo los reportes que tienen **Proposals** (propuestas para bloquear o permitir un asset) rechazadas si estableces el parámetro `onlyRejected` en `true`.
+
+Los reportes devueltos incluirán Proposals, pero no todas estarán rechazadas, ya que un reporte puede contener varias Proposals y algunas pueden estar rechazadas mientras otras están aprobadas. Por eso, si solo quieres las Proposals rechazadas, tienes que revisar los datos.

@@ -1,0 +1,462 @@
+---
+title: Agregar assets a la organización
+openapi: "POST /organization/assets"
+---
+
+## Descripción general
+
+Agrega en lote varios assets (**Asset**: activo digital, como una URL, dirección, perfil, app, etc.) a la **Allowlist** (lista de permitidos) de tu organización. Cada asset se analiza automáticamente, se clasifica por tipo y se aprueba con el estado `ALLOWED`. Este endpoint permite agregar hasta 1,000 assets por solicitud, con metadatos opcionales como nombre, descripción y asignación a un grupo.
+
+## Inicio rápido
+
+### Autenticación
+
+Incluye tu clave de API en el encabezado `X-API-KEY`:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+### Solicitud de ejemplo
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assets: [
+        {
+          content: "https://example.com",
+          name: "Main Website",
+          description: "Our official website",
+          groupId: 1,
+        },
+        {
+          content: "0x1234567890abcdef1234567890abcdef12345678",
+          name: "Treasury Wallet",
+        },
+        {
+          content: "@ourcompany",
+        },
+      ],
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```javascript JavaScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assets: [
+        {
+          content: "https://example.com",
+          name: "Main Website",
+          description: "Our official website",
+          groupId: 1,
+        },
+        {
+          content: "0x1234567890abcdef1234567890abcdef12345678",
+          name: "Treasury Wallet",
+        },
+        {
+          content: "@ourcompany",
+        },
+      ],
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/organization/assets",
+    headers={
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    json={
+        "assets": [
+            {
+                "content": "https://example.com",
+                "name": "Main Website",
+                "description": "Our official website",
+                "groupId": 1,
+            },
+            {
+                "content": "0x1234567890abcdef1234567890abcdef12345678",
+                "name": "Treasury Wallet",
+            },
+            {
+                "content": "@ourcompany",
+            },
+        ]
+    },
+)
+
+data = response.json()
+print(data)
+```
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/organization/assets' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "assets": [
+      {
+        "content": "https://example.com",
+        "name": "Main Website",
+        "description": "Our official website",
+        "groupId": 1
+      },
+      {
+        "content": "0x1234567890abcdef1234567890abcdef12345678",
+        "name": "Treasury Wallet"
+      },
+      {
+        "content": "@ourcompany"
+      }
+    ]
+  }'
+```
+
+</CodeGroup>
+
+## Cuerpo de la solicitud
+
+| Campo                  | Tipo   | Obligatorio | Descripción                                                                                                   |
+| ---------------------- | ------ | ----------- | ------------------------------------------------------------------------------------------------------------- |
+| assets                 | array  | Sí          | Arreglo de assets para agregar (máximo 1,000 por solicitud)                                                   |
+| assets[].content       | string | Sí          | Contenido del asset: URL, dirección de blockchain, handle (nombre de usuario) de redes sociales, correo electrónico, dominio, etc. |
+| assets[].name          | string | No          | Nombre visible del asset. Útil para identificar los assets en tu **Dashboard** (panel principal).             |
+| assets[].description   | string | No          | Descripción que da contexto sobre el propósito o el uso del asset.                                            |
+| assets[].groupId       | number | No          | ID del grupo al que se asignará el asset. Debe ser un grupo válido que pertenezca a tu organización.          |
+| assets[].expiresAt     | string | No          | Vencimiento en la allowlist para este asset, como fecha y hora ISO 8601 en el futuro. Tiene prioridad sobre el `expiresAt` de la solicitud. |
+| expiresAt              | string | No          | Vencimiento en la allowlist para todos los assets de la solicitud, como fecha y hora ISO 8601 en el futuro. Consulta [Definir un vencimiento al agregar](#definir-un-vencimiento-al-agregar). |
+
+### Definir un vencimiento al agregar
+
+A los assets que solo deben permanecer por un tiempo, como el sitio de un socio, se les puede asignar un [vencimiento en la allowlist](/es/concepts/allowlist#vencimiento) en la misma solicitud. Define `expiresAt` en la solicitud para aplicar una misma fecha a todos los assets, o en un asset para darle su propia fecha. La fecha propia de un asset tiene prioridad sobre la de la solicitud.
+
+```json
+{
+  "expiresAt": "2027-04-30T23:59:59Z",
+  "assets": [
+    { "content": "https://partner-one.example" },
+    { "content": "https://partner-two.example", "expiresAt": "2026-12-31T23:59:59Z" }
+  ]
+}
+```
+
+- El vencimiento solo se define en los assets que se agregaron. Los assets que no se pudieron agregar no reciben ninguno.
+- Cada fecha debe estar en el futuro. Si alguna no lo está, la solicitud devuelve `400` y no se agrega nada.
+- Para cambiar un vencimiento más adelante, usa [Definir vencimiento de assets de la organización](/es/external-api/organization-assets-expiry).
+
+### Tipos de asset admitidos
+
+El endpoint detecta y clasifica automáticamente los siguientes tipos de asset:
+
+- **URL** - URL completas con protocolo (p. ej., `https://example.com`)
+- **ADDRESS** - Direcciones de blockchain (p. ej., direcciones de Ethereum o Bitcoin)
+- **PAGE** - Identificadores de páginas web
+- **DISCORD** - Identificadores de servidores o canales de Discord
+- **TELEGRAM** - Identificadores de canales o grupos de Telegram
+- **TWITTER** - Handles de Twitter/X (p. ej., `@username`)
+- **INSTAGRAM** - Handles de Instagram
+- **MEDIUM** - Identificadores de publicaciones o usuarios de Medium
+- **GITHUB** - Identificadores de repositorios o usuarios de GitHub
+- **YOUTUBE** - Identificadores de canales de YouTube
+- **LINKEDIN** - Identificadores de perfiles de LinkedIn
+- **TWITCH** - Identificadores de canales de Twitch
+- **TIKTOK** - Identificadores de handles de TikTok
+- **EMAIL** - Direcciones de correo electrónico
+
+## Respuesta
+
+### Respuesta exitosa
+
+```json
+{
+  "results": [
+    {
+      "content": "https://example.com",
+      "success": true,
+      "id": 12345
+    },
+    {
+      "content": "0x1234567890abcdef1234567890abcdef12345678",
+      "success": true,
+      "id": 12346
+    },
+    {
+      "content": "@ourcompany",
+      "success": true,
+      "id": 12347
+    }
+  ],
+  "successCount": 3,
+  "errorCount": 0
+}
+```
+
+### Respuesta con éxito parcial
+
+Cuando algunos assets se agregan correctamente y otros fallan:
+
+```json
+{
+  "results": [
+    {
+      "content": "https://example.com",
+      "success": true,
+      "id": 12345
+    },
+    {
+      "content": "invalid-content",
+      "success": false,
+      "error": "Invalid asset format"
+    },
+    {
+      "content": "https://existing.com",
+      "success": false,
+      "error": "Asset already exists in organization"
+    }
+  ],
+  "successCount": 1,
+  "errorCount": 2
+}
+```
+
+### Campos de la respuesta
+
+| Campo        | Tipo   | Descripción                                                             |
+| ------------ | ------ | ----------------------------------------------------------------------- |
+| results      | array  | Arreglo de objetos de resultado, uno por cada asset enviado             |
+| results[].content | string | El contenido del asset que se envió                               |
+| results[].success | boolean | Indica si el asset se agregó correctamente                       |
+| results[].id | number | ID del asset (solo está presente cuando success es true)                |
+| results[].error | string | Mensaje de error (solo está presente cuando success es false)        |
+| results[].expiresAt | string \| null | El vencimiento en la allowlist guardado para el asset, o `null` cuando no se definió ninguno (solo está presente cuando success es true) |
+| successCount | number | Cantidad total de assets agregados correctamente                        |
+| errorCount   | number | Cantidad total de assets que no se pudieron agregar                     |
+
+## Respuestas de error
+
+### 400 Bad Request
+
+Se devuelve cuando la solicitud está mal formada o supera los límites:
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Maximum 1000 assets allowed per request"
+  }
+}
+```
+
+### 401 Unauthorized
+
+Se devuelve cuando falta la clave de API, no es válida o no tiene acceso a la organización:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "API key with organization access required"
+  }
+}
+```
+
+### 404 Not Found
+
+Se devuelve cuando un ID de grupo especificado no existe:
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Group with ID 999 not found"
+  }
+}
+```
+
+## Mensajes de error comunes
+
+| Mensaje de error                            | Causa                                                    | Solución                                                              |
+| ------------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------- |
+| Invalid asset format                        | No se reconoce el formato del contenido del asset        | Verifica que el formato del asset coincida con un tipo admitido       |
+| Asset already exists in organization        | Asset duplicado en tu organización                       | El asset ya está en tu allowlist; no necesitas hacer nada             |
+| Maximum 1000 assets allowed per request     | La solicitud contiene más de 1,000 assets                | Divídela en varias solicitudes                                        |
+| Group with ID {id} not found                | ID de grupo no válido                                    | Usa un ID de grupo válido de tu organización                          |
+| Content is required                         | Falta el campo `content`                                 | Proporciona el campo `content` para cada asset                        |
+| Invalid group ID                            | El formato del ID de grupo no es válido                  | Proporciona un ID de grupo numérico válido                            |
+
+## Buenas prácticas
+
+### Operaciones en lote
+
+- **Maximiza el rendimiento**: usa el límite completo de 1,000 assets por solicitud cuando hagas importaciones masivas
+- **Maneja los fallos parciales**: revisa siempre tanto `successCount` como `errorCount` en las respuestas
+- **Reintenta los assets fallidos**: extrae de los resultados los assets que fallaron y reinténtalos con los datos corregidos
+
+### Formato de los assets
+
+- **URL**: incluye el protocolo (`https://` o `http://`)
+  - ✅ `https://example.com`
+  - ❌ `example.com` (se interpretará como dominio, no como URL)
+- **Direcciones de blockchain**: usa el formato de dirección completo
+  - ✅ `0x1234567890abcdef1234567890abcdef12345678`
+- **Handles de redes sociales**: incluye el símbolo `@` para Twitter y otras plataformas sociales
+  - ✅ `@username`
+  - ✅ `username` (también funciona)
+
+### Metadatos
+
+- **Nombres**: usa nombres descriptivos para identificarlos más fácilmente en tu dashboard
+- **Descripciones**: agrega contexto sobre el propósito del asset, sobre todo en el caso de direcciones y URL
+- **Grupos**: organiza los assets por tipo, proyecto o propósito mediante grupos
+
+### Manejo de errores
+
+- Revisa el arreglo `results` para conocer el estado de éxito o fallo de cada asset
+- Usa `successCount` y `errorCount` para los informes agregados
+- Registra los assets fallidos con sus mensajes de error para depurar
+- Implementa una lógica de reintento para los assets fallidos después de corregir los problemas
+
+## Casos de uso
+
+### Importar desde una hoja de cálculo
+
+```typescript
+import * as fs from "fs";
+import * as csv from "csv-parse/sync";
+
+async function importFromCSV(filePath: string) {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const records = csv.parse(fileContent, {
+    columns: true,
+    skip_empty_lines: true,
+  });
+
+  // Process in batches of 1000
+  for (let i = 0; i < records.length; i += 1000) {
+    const batch = records.slice(i, i + 1000);
+    const assets = batch.map((row) => ({
+      content: row.content,
+      name: row.name,
+      description: row.description,
+      groupId: row.groupId ? parseInt(row.groupId) : undefined,
+    }));
+
+    const response = await fetch(
+      "https://app.chainpatrol.io/api/v2/organization/assets",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": process.env.API_KEY,
+        },
+        body: JSON.stringify({ assets }),
+      }
+    );
+
+    const result = await response.json();
+    console.log(
+      `Batch ${i / 1000 + 1}: ${result.successCount} succeeded, ${
+        result.errorCount
+      } failed`
+    );
+
+    // Log failures
+    result.results
+      .filter((r) => !r.success)
+      .forEach((r) => console.error(`Failed: ${r.content} - ${r.error}`));
+  }
+}
+```
+
+### Agregar varios tipos de asset
+
+```typescript
+const assets = [
+  // URLs
+  {
+    content: "https://our-website.com",
+    name: "Main Website",
+    groupId: 1,
+  },
+  {
+    content: "https://docs.our-website.com",
+    name: "Documentation",
+    groupId: 1,
+  },
+  // Blockchain addresses
+  {
+    content: "0x1234567890abcdef1234567890abcdef12345678",
+    name: "Treasury Wallet",
+    groupId: 2,
+  },
+  {
+    content: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+    name: "Staking Contract",
+    groupId: 2,
+  },
+  // Social media
+  {
+    content: "@ourcompany",
+    name: "Official Twitter",
+    groupId: 3,
+  },
+  {
+    content: "ourcompany",
+    name: "Discord Server",
+    description: "Official Discord community",
+    groupId: 3,
+  },
+];
+
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({ assets }),
+  }
+);
+```
+
+## Notas
+
+- Los assets se analizan y se clasifican por tipo automáticamente
+- Todos los assets agregados correctamente reciben el estado `ALLOWED`
+- Los assets duplicados (que ya están en tu organización) fallarán con el error correspondiente
+- El endpoint devuelve un éxito parcial: algunos assets pueden agregarse correctamente mientras otros fallan
+- La organización se determina automáticamente a partir de tu clave de API
+- Los ID de grupo deben pertenecer a tu organización
+- La validación de los assets ocurre durante el procesamiento; los formatos no válidos se informarán en los resultados

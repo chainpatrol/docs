@@ -1,0 +1,117 @@
+---
+title: ChainPatrol CLI
+sidebarTitle: Descripción general
+icon: terminal
+description: "Instala y usa la CLI de ChainPatrol para verificar assets, crear reportes, revisar Proposals y consultar datos de detección y de takedowns desde tu terminal o un script."
+---
+
+La CLI de ChainPatrol es una interfaz de terminal para la misma plataforma que exponen el
+**Dashboard** (panel principal) y la [External API](/es/external-api/overview). Está pensada
+para dos públicos a la vez: un operador que quiere una respuesta rápida sin abrir la app, y
+un script o agente de IA que necesita una salida legible por máquinas y códigos de salida
+predecibles.
+
+```bash
+npm install -g @chainpatrol/cli
+chainpatrol login
+chainpatrol asset check https://phish.example
+```
+
+## Qué puedes hacer con ella
+
+<CardGroup cols={2}>
+  <Card title="Verifica y busca assets" icon="shield-check" href="/es/cli/commands/asset">
+    Consulta URLs y direcciones en la **Blocklist** (lista de bloqueo), de forma masiva si
+    lo necesitas.
+  </Card>
+
+  <Card title="Crea y encuentra reportes" icon="flag" href="/es/cli/commands/reports">
+    Crea reportes, explora la cola de una organización y revisa si hay duplicados.
+  </Card>
+
+  <Card title="Despeja tu cola de revisión" icon="gavel" href="/es/cli/commands/proposals">
+    Aprueba, rechaza o envía a la **Watchlist** (lista de seguimiento de assets sospechosos
+    que se siguen monitoreando) las **Proposals** (propuestas para bloquear o permitir un
+    asset) que esperan la decisión de tu organización.
+  </Card>
+
+  <Card title="Ajusta la detección" icon="radar" href="/es/cli/commands/detections">
+    Ejecuta configuraciones bajo demanda, valida que sigan devolviendo resultados y detecta
+    desviaciones (drift).
+  </Card>
+
+  <Card title="Obtén métricas" icon="chart-line" href="/es/cli/commands/metrics">
+    Conteos de resumen, desgloses por día/tipo/marca y consolidados de varias organizaciones.
+  </Card>
+
+  <Card title="Da seguimiento a los takedowns" icon="list-check" href="/es/cli/commands/takedowns">
+    Lista los registros de **Takedowns** (solicitudes de baja de contenido fraudulento) con
+    los mismos filtros que la vista Takedowns de la app.
+  </Card>
+</CardGroup>
+
+## Índice de comandos
+
+| Comando | Qué hace |
+| --- | --- |
+| [`login`](/es/cli/authentication) | Te autentica en ChainPatrol mediante el flujo de código de dispositivo (device-code) |
+| [`logout`](/es/cli/authentication) | Borra las credenciales guardadas en este equipo |
+| [`whoami`](/es/cli/authentication) | Muestra la identidad autenticada actual |
+| [`asset`](/es/cli/commands/asset) | Verifica, busca o lista **Assets** (activos digitales: URL, dirección, perfil, app, etc.), o lista los tipos de asset compatibles |
+| [`reports`](/es/cli/commands/reports) | Crea, lista y busca reportes |
+| [`proposals`](/es/cli/commands/proposals) | Revisa las Proposals que esperan la decisión de tu organización |
+| [`detections`](/es/cli/commands/detections) | Valida, ejecuta y actualiza configuraciones de detección, y lista las **Suspected Threats** (amenazas sospechosas detectadas automáticamente, todavía sin confirmar) |
+| [`configs`](/es/cli/commands/detections#configs-list) | Atajo de `detections configs list` |
+| [`metrics`](/es/cli/commands/metrics) | Consulta métricas y desgloses de la organización |
+| [`threats`](/es/cli/commands/threats) | Lista las amenazas confirmadas que ChainPatrol bloqueó |
+| [`takedowns`](/es/cli/commands/takedowns) | Lista registros individuales de takedowns |
+| [`orgs`](/es/cli/commands/orgs) | Lista organizaciones, assets de la organización y grupos de assets |
+| [`brands`](/es/cli/commands/orgs#brands-list) | Lista marcas |
+| [`healthchecks`](/es/cli/commands/healthchecks) | Lista y ejecuta healthchecks (verificaciones de estado) de la organización |
+| [`queues`](/es/cli/commands/queues) | Genera una instantánea de las colas de revisión y de takedowns |
+| [`presets`](/es/cli/commands/presets) | Ejecuta flujos de trabajo guardados para tareas comunes |
+| [`setup`](/es/cli/agents) | Instala la skill de Claude Code y el autocompletado del shell |
+| [`uninstall`](/es/cli/agents) | Elimina la skill de Claude Code y el autocompletado del shell |
+| [`completions`](/es/cli/installation#autocompletado-del-shell) | Genera un script de autocompletado del shell |
+
+## Ayuda integrada
+
+Cada comando se documenta a sí mismo. `chainpatrol --help` muestra la lista de comandos, y
+`--help` en cualquier comando o subcomando muestra su conjunto completo de opciones:
+
+```bash
+chainpatrol --help
+chainpatrol reports list --help
+chainpatrol help proposals review
+```
+
+El texto de ayuda viene incluido en el binario, así que siempre coincide con la versión que
+tienes instalada. Esta documentación describe la CLI `1.6.x`.
+
+## Próximos pasos
+
+<CardGroup cols={2}>
+  <Card title="Instalación" icon="download" href="/es/cli/installation">
+    Instala la CLI, apúntala a un entorno y activa el autocompletado del shell.
+  </Card>
+
+  <Card title="Autenticación" icon="key" href="/es/cli/authentication">
+    Inicia sesión de forma interactiva, o usa una clave de API para CI y ejecuciones sin
+    interfaz (headless).
+  </Card>
+
+  <Card title="Salida y códigos de salida" icon="code" href="/es/cli/output">
+    Salida en JSON, markdown y CSV, además de los códigos de salida según los cuales los
+    scripts deberían decidir qué hacer.
+  </Card>
+
+  <Card title="Usar la CLI con agentes" icon="robot" href="/es/cli/agents">
+    La skill de Claude Code, `--dry-run`, `--explain` y el modo no interactivo.
+  </Card>
+</CardGroup>
+
+## Soporte
+
+Reporta errores y solicita funciones en
+[github.com/chainpatrol/chainpatrol-cli/issues](https://github.com/chainpatrol/chainpatrol-cli/issues),
+o escribe a [support@chainpatrol.io](mailto:support@chainpatrol.io).

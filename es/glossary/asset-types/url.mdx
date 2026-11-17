@@ -1,0 +1,41 @@
+---
+title: URL
+description: Reporta un dominio o subdominio como un asset de tipo URL en ChainPatrol, normalizado a punycode en minúsculas para que bloquear un dominio también cubra todos sus subdominios.
+---
+
+Las **URLs** son el tipo de **asset** (activo digital: URL, dirección, perfil, app, etc.) más común. Una URL es una cadena de texto que se usa para identificar un recurso en Internet.
+
+Cuando envías un reporte, si seleccionas `URL` como tipo de asset, la cadena de la URL se normaliza y su dominio se envía a **Chainpatrol**.
+
+<Warning>
+  Para los sitios que alojan contenido generado por usuarios (como *.wordpress.com), usa el tipo de asset `PAGE` en lugar de `URL` para evitar bloquear toda la plataforma de hosting. El tipo de asset `URL` se debe usar cuando todo el dominio o subdominio es malicioso. Algunos ejemplos son los blogs, los foros, las plataformas de redes sociales (p. ej. Twitter) o los servicios de acortamiento de enlaces (p. ej. Bitly), donde bloquear el dominio bloquearía todo el contenido generado por usuarios. En estos casos, debes reportar usando el tipo de asset [PAGE](./page).
+</Warning>
+
+## Normalización
+
+La normalización es el proceso de eliminar todos los caracteres innecesarios de la cadena de la URL. Se hace para que la cadena de la URL sea más legible y para eliminar cualquier ambigüedad.
+
+ChainPatrol realiza los siguientes pasos de normalización:
+
+- Eliminar el esquema (http, https, ftp, etc.)
+- Convertir el dominio a minúsculas
+- Convertir los caracteres unicode a [punycode](https://en.wikipedia.org/wiki/Punycode)
+- Eliminar el nombre de usuario, la contraseña, el puerto, la consulta (query) y el fragmento
+- Eliminar la barra final
+
+#### Reporte
+
+```
+BLOCK https://www.chainpatrol.xyz/home
+```
+
+#### Resultado
+
+Cuando se bloquea un dominio, también se bloquean todos los subdominios de ese dominio:
+
+```
+BLOCK chainpatrol.xyz
+BLOCK *.chainpatrol.xyz
+BLOCK *.*.chainpatrol.xyz
+...
+```

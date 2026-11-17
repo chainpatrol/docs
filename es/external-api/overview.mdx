@@ -1,0 +1,387 @@
+---
+title: External API de ChainPatrol para bloquear URLs y direcciones de estafas
+sidebarTitle: Descripción general
+description: "Índice de todos los endpoints de la External API de ChainPatrol para quienes integran la Blocklist: verificación de assets, reportes, takedowns, métricas y datos de la organización."
+---
+
+Trabajamos con los principales navegadores, antivirus, apps de seguridad, marketplaces y wallets para
+bloquear enlaces de estafa, direcciones de contratos y direcciones de wallets antes de que un usuario
+interactúe con la estafa. La API también permite a los clientes llevar todos los datos de amenazas de
+ChainPatrol —**Suspected Threats** (amenazas sospechosas detectadas automáticamente, todavía sin
+confirmar), reportes, **Takedowns** (solicitudes de baja de contenido fraudulento) y cambios en la
+**Blocklist** (lista de bloqueo)— directamente a su propio SOC para un monitoreo centralizado.
+Las API de ChainPatrol se ofrecen como un servicio gratuito para navegadores, antivirus, apps de
+seguridad, marketplaces y wallets.
+
+Todos los endpoints que aparecen a continuación se sirven desde `https://app.chainpatrol.io/api/v2`.
+La mayoría necesita una clave de API; consulta [Autenticación de la External API](/es/external-api/authentication) para ver
+cómo enviarla. Algunas consultas públicas, como [Verificar asset](/es/external-api/asset-check) y
+[Listar assets](/es/external-api/asset-list), también responden sin ella.
+Consulta la [Política de obsolescencia de la API](/es/external-api/deprecation-policy) para saber cómo versionamos
+la API y cómo te avisamos de los cambios incompatibles (breaking changes).
+
+Los agentes pueden cargar esta documentación desde [llms.txt](https://chainpatrol.com/docs/llms.txt).
+
+## Empieza aquí
+
+<CardGroup cols={2}>
+  <Card title="Crear reporte" icon="flag" href="/es/external-api/report-create">
+    Presenta un reporte contra una estafa.
+  </Card>
+
+  <Card title="Cómo crear reportes" icon="book-open" href="/es/external-api/creating-reports">
+    Guía de todo el flujo de reporte, incluida la carga de archivos de evidencia.
+  </Card>
+
+  <Card title="Verificar asset" icon="shield-check" href="/es/external-api/asset-check">
+    Comprueba si un **Asset** (activo digital: URL, dirección, perfil, app, etc.) está permitido o
+    bloqueado.
+  </Card>
+
+  <Card title="Listar assets" icon="list-check" href="/es/external-api/asset-list">
+    Obtén nuestra **Allowlist** (lista de permitidos) y nuestra Blocklist completas para usarlas en
+    tu propia aplicación.
+  </Card>
+
+  <Card title="Obtener historial de cambios de assets" icon="book" href="/es/external-api/asset-changelog">
+    Obtén los cambios más recientes de nuestra Allowlist/Blocklist.
+  </Card>
+
+  <Card title="Crear disputa" icon="comment-dots" href="/es/external-api/dispute-create">
+    Crea una disputa por un asset que fue marcado incorrectamente.
+  </Card>
+
+  <Card title="Configurar webhook" icon="bell" href="/es/external-api/webhook-config">
+    Recibe notificaciones en tiempo real en lugar de consultar periódicamente (polling).
+  </Card>
+</CardGroup>
+
+## Assets
+
+Consulta, envía, escanea, desbloquea y sigue assets individuales.
+
+<CardGroup cols={2}>
+  <Card title="Verificar asset" icon="shield-check" href="/es/external-api/asset-check">
+    Comprueba si un asset está permitido o bloqueado.
+  </Card>
+
+  <Card title="Listar assets" icon="list-check" href="/es/external-api/asset-list">
+    Obtén la Allowlist/Blocklist completa.
+  </Card>
+
+  <Card title="Obtener historial de cambios de assets" icon="book" href="/es/external-api/asset-changelog">
+    Obtén los cambios recientes de la Allowlist/Blocklist.
+  </Card>
+
+  <Card title="Buscar assets" icon="magnifying-glass" href="/es/external-api/asset-search">
+    Busca entre los assets.
+  </Card>
+
+  <Card title="Obtener conexiones de assets" icon="diagram-project" href="/es/external-api/asset-connections">
+    Qué llevó a un asset y a dónde lleva, como assets vinculados.
+  </Card>
+
+  <Card title="Enviar asset" icon="paper-plane" href="/es/external-api/asset-submit">
+    Envía un asset para revisión.
+  </Card>
+
+  <Card title="Desbloquear asset" icon="unlock" href="/es/external-api/asset-unblock">
+    Desbloquea uno de tus assets o abre una disputa.
+  </Card>
+
+  <Card title="Analizar asset" icon="scissors" href="/es/external-api/asset-parse">
+    Convierte contenido sin procesar en tipos de asset de ChainPatrol.
+  </Card>
+
+  <Card title="Iniciar Asset Scan" icon="radar" href="/es/external-api/asset-scan">
+    Inicia un **Asset Scan** (escaneo de un asset), opcionalmente con una URL de callback.
+  </Card>
+
+  <Card title="Obtener resultado del escaneo" icon="file-magnifying-glass" href="/es/external-api/scan-result">
+    Recupera los enriquecimientos, las comprobaciones y las etiquetas de un escaneo.
+  </Card>
+
+  <Card title="Obtener detalles del asset" icon="circle-info" href="/es/external-api/asset-details">
+    Obsoleto: usa Verificar asset o Buscar assets.
+  </Card>
+
+  <Card title="Seguir asset" icon="bell" href="/es/external-api/asset-follow">
+    Recibe un correo cuando cambie el estado de un asset o se complete su takedown.
+  </Card>
+
+  <Card title="Dejar de seguir asset" icon="bell-slash" href="/es/external-api/asset-unfollow">
+    Deja de recibir los correos sobre un asset.
+  </Card>
+
+  <Card title="Listar assets seguidos" icon="list" href="/es/external-api/asset-follows-list">
+    Consulta todos los assets que sigues, con su estado y su takedown.
+  </Card>
+</CardGroup>
+
+## Reportes
+
+<CardGroup cols={2}>
+  <Card title="Cómo crear reportes" icon="book-open" href="/es/external-api/creating-reports">
+    Guía paso a paso para presentar un reporte, con archivos de evidencia adjuntos.
+  </Card>
+
+  <Card title="Crear reporte" icon="flag" href="/es/external-api/report-create">
+    Presenta un reporte contra una estafa.
+  </Card>
+
+  <Card title="Subir archivo adjunto" icon="paperclip" href="/es/external-api/attachment-upload">
+    Sube archivos de evidencia (`.eml`, capturas de pantalla, PDF) y obtén una URL para adjuntarla a un reporte.
+  </Card>
+
+  <Card title="Buscar reportes" icon="magnifying-glass" href="/es/external-api/reports-search">
+    Comprueba si ya existe un reporte antes de crear uno nuevo.
+  </Card>
+</CardGroup>
+
+## Disputas
+
+<CardGroup cols={2}>
+  <Card title="Crear disputa" icon="comment-dots" href="/es/external-api/dispute-create">
+    Disputa un asset que fue marcado incorrectamente.
+  </Card>
+</CardGroup>
+
+## Webhooks
+
+<CardGroup cols={2}>
+  <Card title="Configurar webhook" icon="bell" href="/es/external-api/webhook-config">
+    Recibe notificaciones en tiempo real sobre actualizaciones de estado de assets y nuevas Suspected Threats.
+  </Card>
+</CardGroup>
+
+## Marcas de la organización
+
+<CardGroup cols={2}>
+  <Card title="Listar marcas de la organización" icon="tags" href="/es/external-api/organization-brands">
+    Lista todas las marcas de tu organización, con términos, tickers, documentos legales y
+    **Trademark Registrations** (registros de marca).
+  </Card>
+</CardGroup>
+
+## Assets de la organización
+
+Administra los assets y los grupos de assets que pertenecen a tu organización.
+
+<CardGroup cols={2}>
+  <Card title="Listar assets de la organización" icon="list" href="/es/external-api/organization-assets-list">
+    Lista los assets de tu organización.
+  </Card>
+
+  <Card title="Agregar assets a la organización" icon="plus" href="/es/external-api/organization-assets-add">
+    Agrega un asset a tu organización.
+  </Card>
+
+  <Card title="Actualizar asset de la organización" icon="pen" href="/es/external-api/organization-assets-update">
+    Actualiza un asset de la organización.
+  </Card>
+
+  <Card title="Quitar asset de la organización" icon="trash" href="/es/external-api/organization-assets-remove">
+    Quita un asset de la organización.
+  </Card>
+
+  <Card title="Listar grupos de assets de la organización" icon="folder" href="/es/external-api/organization-asset-groups-list">
+    Lista los grupos de assets de tu organización.
+  </Card>
+
+  <Card title="Crear grupo de assets de la organización" icon="folder-plus" href="/es/external-api/organization-asset-groups-create">
+    Crea un grupo de assets.
+  </Card>
+
+  <Card title="Actualizar grupo de assets de la organización" icon="folder-gear" href="/es/external-api/organization-asset-groups-update">
+    Actualiza un grupo de assets.
+  </Card>
+
+  <Card title="Eliminar grupo de assets de la organización" icon="folder-minus" href="/es/external-api/organization-asset-groups-delete">
+    Elimina un grupo de assets.
+  </Card>
+</CardGroup>
+
+## Reportes de la organización
+
+<CardGroup cols={2}>
+  <Card title="Listar reportes de la organización" icon="list" href="/es/external-api/organization-reports-list">
+    Obtén los reportes de tu organización (`GET /organization/reports`).
+  </Card>
+
+  <Card title="Obtener reportes de la organización (obsoleto)" icon="clock-rotate-left" href="/es/external-api/organization-reports">
+    Obsoleto: usa Listar reportes de la organización.
+  </Card>
+</CardGroup>
+
+## Detección de amenazas
+
+Lista las Suspected Threats, inspecciona sus fuentes y administra las configuraciones de detección que las encuentran.
+
+<CardGroup cols={2}>
+  <Card title="Listar suspected threats" icon="list" href="/es/external-api/detection-list">
+    Lista los resultados sin confirmar de la detección automática.
+  </Card>
+
+  <Card title="Listar fuentes de detección" icon="book-open" href="/es/external-api/detection-sources-list">
+    Descubre las fuentes que puedes configurar y los esquemas de sus configuraciones.
+  </Card>
+
+  <Card title="Listar configuraciones de detección" icon="sliders" href="/es/external-api/detection-configs-list">
+    Lista las fuentes de detección y sus configuraciones.
+  </Card>
+
+  <Card title="Crear configuración de detección" icon="plus" href="/es/external-api/detection-configs-create">
+    Crea una nueva configuración para una fuente.
+  </Card>
+
+  <Card title="Actualizar configuración de detección" icon="pen" href="/es/external-api/detection-configs-update">
+    Cambia el estado, la programación o los campos de una configuración.
+  </Card>
+
+  <Card title="Eliminar configuración de detección" icon="trash" href="/es/external-api/detection-configs-delete">
+    Elimina una configuración con alcance de organización para que deje de escanear.
+  </Card>
+
+  <Card title="Ejecutar configuraciones de detección" icon="play" href="/es/external-api/detection-configs-run">
+    Ejecuta una o varias configuraciones bajo demanda.
+  </Card>
+
+  <Card title="Validar configuraciones de detección" icon="circle-check" href="/es/external-api/detection-configs-validate">
+    Comprueba las configuraciones contra sus resultados recientes.
+  </Card>
+
+  <Card title="Obtener señales de desviación de detección" icon="chart-line-down" href="/es/external-api/detection-drift">
+    Saca a la luz las configuraciones sin resultados, ruidosas y desactualizadas.
+  </Card>
+
+  <Card title="Listar amenazas" icon="triangle-exclamation" href="/es/external-api/threats-list">
+    Lista las amenazas de tu organización.
+  </Card>
+</CardGroup>
+
+## Dark Web
+
+Busca credenciales filtradas de los objetivos que una marca ya tiene en seguimiento.
+
+<CardGroup cols={2}>
+  <Card title="Listar objetivos de credenciales en la dark web" icon="list" href="/es/external-api/dark-web-credentials-targets">
+    Encuentra los dominios de correo, las direcciones de correo y las direcciones de wallet disponibles para buscar.
+  </Card>
+
+  <Card title="Buscar credenciales en la dark web" icon="user-secret" href="/es/external-api/dark-web-credentials-search">
+    Busca credenciales filtradas vinculadas a un objetivo en seguimiento.
+  </Card>
+</CardGroup>
+
+## Takedowns
+
+<CardGroup cols={2}>
+  <Card title="Listar takedowns" icon="gavel" href="/es/external-api/takedowns-list">
+    Lista los takedowns de tu organización.
+  </Card>
+</CardGroup>
+
+## Métricas
+
+<CardGroup cols={2}>
+  <Card title="Obtener resumen de métricas" icon="chart-simple" href="/es/external-api/metrics-summary">
+    Métricas orientadas al cliente y desgloses de amenazas bloqueadas para un rango de fechas.
+  </Card>
+
+  <Card title="Obtener desglose de métricas" icon="chart-column" href="/es/external-api/metrics-breakdown">
+    Cantidad de amenazas bloqueadas, agrupadas por día, tipo de asset o marca.
+  </Card>
+
+  <Card title="Obtener conteo de amenazas encontradas" icon="magnifying-glass-chart" href="/es/external-api/metrics-found">
+    La métrica `found` predeterminada: amenazas nuevas orientadas al cliente.
+  </Card>
+
+  <Card title="Obtener amenazas bloqueadas por origen del primer reporte" icon="user-magnifying-glass" href="/es/external-api/metrics-found-by-source">
+    Cantidad de amenazas bloqueadas, separadas según quién las reportó primero: tú o ChainPatrol.
+  </Card>
+
+  <Card title="Obtener métricas de la organización" icon="list" href="/es/external-api/organization-metrics-list">
+    Obtén las métricas de tu organización (`GET /organization/metrics`).
+  </Card>
+
+  <Card title="Obtener métricas de la organización (obsoleto)" icon="clock-rotate-left" href="/es/external-api/organization-metrics">
+    Obsoleto: usa Obtener métricas de la organización.
+  </Card>
+</CardGroup>
+
+## Cuenta y acceso
+
+<CardGroup cols={2}>
+  <Card title="Validar clave de API" icon="key" href="/es/external-api/validate">
+    Comprueba si una clave de API es válida.
+  </Card>
+
+  <Card title="Obtener el usuario actual" icon="user" href="/es/external-api/user-me">
+    Detalles del usuario autenticado.
+  </Card>
+
+  <Card title="Actualizar el usuario actual" icon="user-pen" href="/es/external-api/user-me-update">
+    Actualiza el perfil y la configuración del usuario autenticado.
+  </Card>
+
+  <Card title="Listar organizaciones del usuario" icon="building" href="/es/external-api/user-orgs">
+    Organizaciones a las que puede acceder quien hace la llamada, con servicios e integraciones.
+  </Card>
+
+  <Card title="Obtener una organización del usuario" icon="building-circle-check" href="/es/external-api/user-orgs-get">
+    Obtén una sola organización por su slug.
+  </Card>
+</CardGroup>
+
+## Operaciones
+
+<CardGroup cols={2}>
+  <Card title="Obtener instantánea de las colas de operaciones" icon="layer-group" href="/es/external-api/operations-queues-snapshot">
+    Estado de las colas pendientes de revisión y de takedowns, con segmentos por SLA y antigüedad.
+  </Card>
+</CardGroup>
+
+## Healthchecks
+
+Los healthchecks (verificaciones de estado) evalúan una sola señal operativa y todos devuelven la
+misma estructura de resultado, así que puedes llamarlos en un bucle y procesar las respuestas con
+código compartido. Empieza por el registro:
+
+<CardGroup cols={2}>
+  <Card title="Listar healthchecks" icon="clipboard-list" href="/es/external-api/healthchecks-list">
+    El registro de healthchecks disponibles: llama solo a aquellos en los que `implemented` sea
+    true.
+  </Card>
+</CardGroup>
+
+Las verificaciones individuales:
+
+- [Configuraciones de detección silenciosas](/es/external-api/healthchecks-detections-silent-configs) —
+  configuraciones habilitadas que producen muy pocos resultados recientes
+- [Backlog de revisión](/es/external-api/healthchecks-reviewing-backlog) — acumulación de
+  **Proposals** (propuestas para bloquear o permitir un asset) sin revisar
+- [Proposals antiguas en revisión](/es/external-api/healthchecks-reviewing-old-proposals) —
+  Proposals que llevan esperando más allá de los umbrales de antigüedad
+- [Volumen de Takedowns en TODO](/es/external-api/healthchecks-takedowns-todo-volume) — acumulación de
+  takedowns en `TODO`
+- [Volumen de Takedowns en IN_PROGRESS](/es/external-api/healthchecks-takedowns-in-progress-volume) —
+  acumulación de takedowns en `IN_PROGRESS`
+- [Takedowns estancados en IN_PROGRESS](/es/external-api/healthchecks-takedowns-stale-in-progress) —
+  takedowns detenidos más allá del umbral de estancamiento
+- [Cantidad de Takedowns cancelados](/es/external-api/healthchecks-takedowns-cancelled-count) — exceso
+  de cancelaciones en una ventana móvil
+- [Takedowns automatizados desactivados](/es/external-api/healthchecks-takedowns-automation-off) —
+  automatización apagada durante demasiado tiempo
+- [Pico de assets inactivos](/es/external-api/healthchecks-assets-dead-asset-spike) — pico de assets
+  detectados como inactivos (`DEAD`)
+- [URL de contacto faltante](/es/external-api/healthchecks-organization-missing-contact-url) — no hay
+  un canal principal de comunicación configurado
+
+<Note>
+  Dos endpoints `POST` están obsoletos y se mantienen solo por compatibilidad con versiones anteriores:
+  [`/public/getOrganizationReports`](/es/external-api/organization-reports) —usa
+  [`GET /organization/reports`](/es/external-api/organization-reports-list)— y
+  [`/public/getOrganizationMetrics`](/es/external-api/organization-metrics) —usa
+  [`GET /organization/metrics`](/es/external-api/organization-metrics-list)—.
+  [`POST /asset/details`](/es/external-api/asset-details) está marcado como obsoleto en la propia especificación.
+</Note>

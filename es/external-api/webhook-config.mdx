@@ -1,0 +1,18 @@
+---
+title: Configurar webhook
+openapi: "POST /webhook/config"
+---
+
+## Descripción general
+
+Crea y configura un webhook (**Webhooks**: notificaciones automáticas que la plataforma envía a
+otro sistema) para que una organización reciba notificaciones en tiempo real sobre las
+actualizaciones de estado de los assets (**Asset**: activo digital, como una URL, dirección,
+perfil, app, etc.) y sobre nuevas **Suspected Threats** (amenazas sospechosas detectadas
+automáticamente, todavía sin confirmar). Requiere una clave de API con acceso a la organización
+especificada.
+
+<Info>
+  Consulta la [guía de integración de Webhooks](/es/integration/webhooks) para conocer la
+  estructura de los payloads y el comportamiento de las entregas.
+</Info>

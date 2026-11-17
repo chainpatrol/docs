@@ -1,0 +1,54 @@
+---
+title: Comando threats — lista las amenazas confirmadas y bloqueadas
+sidebarTitle: threats
+icon: skull
+description: "Lista desde la CLI las amenazas confirmadas que ChainPatrol bloqueó, filtradas por contenido, rango de fechas y tipo de asset, y ordenadas con paginación por cursor."
+---
+
+```bash
+chainpatrol threats list [filters]
+```
+
+## threats list
+
+Lista las amenazas que ChainPatrol bloqueó. La organización se obtiene a partir de tu clave de API,
+así que no hay una opción `--org`. Por defecto abarca el último día; amplía el rango con `--from` y `--to`.
+
+| Opción | Descripción |
+| --- | --- |
+| `--query <text>` | Busca en el contenido de la amenaza (coincidencia de subcadena). |
+| `--from <iso>` | Fecha de inicio (`YYYY-MM-DD`). |
+| `--to <iso>` | Fecha de fin (`YYYY-MM-DD`). |
+| `--asset-type <list>` | Lista separada por comas: `URL`, `TWITTER`, `TELEGRAM`, … |
+| `--sort-by <key>` | Clave de ordenamiento; por ejemplo, `blockedAt`. |
+| `--sort-direction <dir>` | `asc` o `desc`. |
+| `--per-page <n>` | Tamaño de página, 1–100. El valor predeterminado es 10. |
+| `--next-page <cursor>` | Cursor devuelto por una respuesta anterior. |
+| `--include-pending` | También lista las amenazas confirmadas mientras la protección no está activa (`PENDING_BLOCKED`). |
+
+```bash
+chainpatrol threats list
+chainpatrol threats list --from 2026-05-01 --asset-type URL
+chainpatrol threats list --query "acme-" --sort-by blockedAt --sort-direction desc
+CHAINPATROL_API_KEY=... chainpatrol threats list --json
+chainpatrol threats list --from 2020-01-01 --include-pending
+```
+
+<Note>
+El rango de fechas filtra según cuándo se bloqueó cada amenaza y, sin `--from`,
+abarca solo el último día. Pasa un `--from` antiguo para listar todas las amenazas confirmadas.
+</Note>
+
+Para paginar, pasa el cursor de una respuesta a la siguiente llamada:
+
+```bash
+cursor=$(chainpatrol --json threats list --per-page 100 | jq -r '.nextPage')
+chainpatrol --json threats list --per-page 100 --next-page "$cursor"
+```
+
+Ejecuta `chainpatrol asset types` para ver todos los valores que acepta `--asset-type`.
+
+## Relacionado
+
+- [`POST /threats/list`](/es/external-api/threats-list)
+- [`takedowns list`](/es/cli/commands/takedowns) para ver el registro del **Takedown** (solicitud de baja de contenido fraudulento) asociado a una amenaza

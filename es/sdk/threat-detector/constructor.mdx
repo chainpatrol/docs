@@ -1,0 +1,105 @@
+---
+title: "Constructor de ThreatDetector"
+description: Crea una nueva instancia de ThreatDetector con modo local o cloud, una clave de API, un adaptador de almacenamiento, una URL de proxy y una URL de redirección personalizada para detectar URL de estafa.
+---
+
+## Modos
+
+El Threat Detector tiene dos modos de funcionamiento:
+
+- `local`: Este modo usa una base de datos local de URL de estafa. Úsalo para detectar amenazas sin conexión y para hacer pruebas.
+- `cloud`: Este modo usa el servicio en la nube de ChainPatrol para detectar estafas.
+
+### Modo local
+
+Para usar el modo local, tienes que crear una instancia de la clase `ThreatDetector` con la opción `mode` configurada en `local`.
+
+```js
+const detector = new ThreatDetector({
+  mode: "local",
+});
+```
+
+### Modo cloud
+
+Para usar el modo cloud, tienes que crear una instancia de la clase `ThreatDetector` con la opción `mode` configurada en `cloud` y proporcionar tu clave de API.
+
+```js
+const detector = new ThreatDetector({
+  mode: "cloud",
+  apiKey: "YOUR_API_KEY",
+});
+```
+
+## Parámetros
+
+<ParamField body="options" type="object" required>
+  <Expandable title="propiedades" defaultOpen>
+    <ParamField body="mode" type="'local' | 'cloud'" required>
+      La propiedad `mode` controla el modo de funcionamiento del Threat Detector.
+
+      El valor de esta propiedad puede ser `local` o `cloud`.
+    </ParamField>
+
+    <ParamField body="apiKey" type="string">
+      La propiedad `apiKey` es la clave de API para acceder a las API de ChainPatrol. Te
+      recomendamos usar una variable de entorno para guardar tu clave de API.
+
+      Esta propiedad es obligatoria cuando la propiedad `mode` está configurada en `cloud`,
+      incluso si se define `proxyUrl`. Si la omites, se lanza un error `Missing API key`.
+      La clave se envía en el encabezado `X-API-KEY`, así que, si tu proxy agrega
+      la clave real en el servidor, pasa aquí cualquier valor de relleno que no esté vacío.
+    </ParamField>
+
+    <ParamField body="proxyUrl" type="string">
+      La propiedad `proxyUrl` es una propiedad opcional que se puede usar para
+      especificar una URL de proxy para acceder a las API de ChainPatrol.
+
+      Esta propiedad es útil cuando estás detrás de un firewall o necesitas usar un
+      proxy para acceder a internet.
+
+      Este valor solo se usa cuando la propiedad `mode` está configurada en `cloud`.
+    </ParamField>
+
+    <ParamField body="redirectUrl" type="string | (url: string) => string">
+      La propiedad `redirectUrl` es una propiedad opcional que se puede usar para
+      especificar una URL de redirección para cuando el detector detecta una estafa.
+
+      De forma predeterminada, el detector devuelve la URL de la página de advertencia de ChainPatrol,
+      pero puedes reemplazarla especificando tu propia URL.
+
+      Si especificas un **string**, ese string se usará como URL de redirección,
+      con la URL de la estafa agregada como el parámetro de consulta `originUrl`:
+
+      ```js
+      const detector = new ThreatDetector({
+        redirectUrl: "https://your-warning-page.com/",
+      });
+      ```
+
+      Si especificas una **función**, se llamará a esa función con la URL de la estafa
+      como primer argumento:
+
+      ```js
+      const detector = new ThreatDetector({
+        redirectUrl: (url) => {
+          return `https://your-warning-page.com/?url=${encodeURIComponent(url)}`;
+        },
+      });
+      ```
+    </ParamField>
+
+    <ParamField body="storage" type="Storage">
+      La propiedad `storage` es una propiedad opcional que se puede usar para
+      especificar un adaptador de almacenamiento personalizado para que el detector guarde en caché las consultas de URL.
+
+      De forma predeterminada, el detector usa el adaptador `Storage.memory()`, que
+      guarda la base de datos de la caché en memoria. Esto significa que la base de datos se
+      borra cuando el proceso termina. Si quieres conservar la base de datos,
+      puedes usar el adaptador `Storage.browser()`, que la guarda en el
+      almacenamiento local (local storage), o el adaptador `Storage.extension()`, que la guarda
+      en el almacenamiento de extensiones del navegador.
+    </ParamField>
+
+  </Expandable>
+</ParamField>

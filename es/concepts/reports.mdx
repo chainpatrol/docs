@@ -1,0 +1,126 @@
+---
+title: "Reportes"
+description: "Cómo los assets sospechosos o seguros se envían a ChainPatrol con capturas de pantalla y contexto a través del dashboard, la API o el Security Portal público para su revisión"
+---
+
+## Descripción general
+
+Un **reporte** es la forma en que la actividad sospechosa o segura se envía a ChainPatrol para su revisión. Cada reporte agrupa uno o más **assets** (activos digitales), como sitios web, perfiles sociales, apps o direcciones de blockchain, junto con la evidencia necesaria para evaluarlos.
+
+<Info>
+Cuando creas un reporte, estás proponiendo que assets específicos sean **bloqueados** (porque son maliciosos) o **permitidos** (porque son seguros).
+</Info>
+
+### Qué contiene un reporte
+
+- **Assets** - Una o más URL, perfiles o direcciones
+- **Contexto** - Título y descripción que explican la amenaza
+- **Evidencia** - Capturas de pantalla y materiales de respaldo
+
+## Cuándo se crean los reportes
+
+Los reportes llegan a ChainPatrol desde múltiples fuentes:
+
+### Envío manual
+
+Tu equipo o el personal de ChainPatrol pueden crear reportes directamente en el **Dashboard** (panel principal) cada vez que detecten algo sospechoso. Los miembros de la organización, el personal de ChainPatrol y los miembros del equipo de seguridad pueden crear reportes sobre amenazas descubiertas, problemas reportados por la comunidad y monitoreo proactivo.
+
+### Portal público
+
+Cuando tu organización tiene habilitado un **Security Portal** (portal de seguridad) público, cualquier persona puede enviar un reporte a través del formulario público de envío. Los reportes se marcan automáticamente como reportes de clientes, sin necesidad de iniciar sesión. Esto permite la detección impulsada por la comunidad, el descubrimiento temprano de amenazas y la participación de los usuarios.
+
+### Integración con la API
+
+A través de la API, las integraciones o los socios pueden enviar amenazas de forma programática para herramientas de monitoreo automatizado, integraciones de socios, flujos de trabajo personalizados y envíos masivos. Consulta [Cómo crear reportes](/es/external-api/creating-reports) para ver el flujo completo, incluido cómo [subir archivos de evidencia](/es/external-api/attachment-upload), como mensajes `.eml` y capturas de pantalla.
+
+### Detección automatizada
+
+Los sistemas de ChainPatrol escanean continuamente la web, las plataformas sociales y otras fuentes en busca de amenazas mediante monitoreo continuo, creación automática de reportes, evidencia preanalizada y envío instantáneo. Monitoreamos más de 50 plataformas las 24 horas, los 7 días de la semana, con detección en tiempo real.
+
+## Cómo se revisan los reportes
+
+Cada reporte que llega a tu organización es revisado por el equipo de ChainPatrol.
+
+1. **Revisión de la evidencia** - Los revisores examinan la evidencia, las capturas de pantalla y el contexto proporcionados
+2. **Verificaciones de seguridad** - Se ejecutan escaneos y análisis de seguridad automatizados sobre los assets reportados
+3. **Decisión** - Se decide si cada asset debe ser bloqueado (confirmado como malicioso), permitido (confirmado como legítimo), agregado a la **Watchlist** (lista de seguimiento: se monitorea para detectar cambios) o escalado (requiere investigación adicional)
+4. **Acción** - Se aplica la decisión y se actualiza el estado del asset
+
+### Revisión automática
+
+En algunos casos, la revisión ocurre de forma automática:
+
+**Detección de alta confianza** - Cuando nuestros sistemas tienen una confianza extremadamente alta de que un asset es malicioso (se detectó un script conocido de wallet drainer, es una copia exacta de un sitio de phishing conocido, coincide con múltiples reglas de alta confianza), se aprueba de inmediato sin validación manual.
+
+**Reportante de confianza** - Cuando el reporte proviene de alguien a quien hemos marcado como reportante de confianza (investigadores de seguridad verificados, organizaciones asociadas de confianza, personal de ChainPatrol), se le da prioridad para su aprobación.
+
+### Aprobación de un administrador de la organización
+
+<Warning>
+Si habilitaste **Obligatory Organization Admin Approval** (aprobación obligatoria de un administrador de la organización) para ciertos tipos de assets, hay un paso adicional.
+</Warning>
+
+Incluso después de que el equipo de ChainPatrol aprueba un reporte, los cambios no se aplicarán a tu **Blocklist** (lista de bloqueo) hasta que alguien de tu organización con permisos de administrador los confirme:
+
+1. ChainPatrol revisa y aprueba el reporte
+2. El reporte espera la confirmación de un administrador de la organización
+3. Tu administrador lo revisa y lo aprueba o lo rechaza
+4. El estado del asset se actualiza según la decisión final
+
+## Estado del reporte
+
+Los reportes pasan por tres etapas a medida que se procesan:
+
+- `TODO` - El reporte está esperando en la cola para ser revisado
+- `IN_PROGRESS` - El personal de ChainPatrol o los sistemas automatizados lo están revisando activamente
+- `CLOSED` - Se tomaron decisiones sobre todas las **Proposals** (propuestas para bloquear o permitir un asset) del reporte. El dashboard muestra este estado como **Reviewed** (revisado) para aclarar que las Proposals fueron revisadas, no que los **takedowns** (solicitudes de baja de contenido fraudulento) hayan terminado.
+
+## Cómo encontrar tus reportes
+
+La página **Reports** (reportes de posibles amenazas) de tu dashboard muestra todos los reportes de tu organización, organizados en cuatro pestañas:
+
+- **ChainPatrol Review** (revisión de ChainPatrol) - Reportes en `TODO` que esperan que el equipo de ChainPatrol haga el triaje
+- **Customer Confirmation** (confirmación del cliente) - Reportes en `TODO` escalados a tu organización para su aprobación. Es la misma cola que muestra tu página **Review** (revisión de propuestas pendientes de aprobación), y son los mismos reportes que devuelve el [filtro `needsCustomerReview`](/es/external-api/organization-reports-list) en la API y la CLI.
+- **In Progress** (en curso) - Reportes que se están revisando activamente
+- **Reviewed** (revisados) - Reportes en los que cada Proposal tiene una decisión
+
+Puedes filtrar y buscar por creador, fecha, asset y estado para seguir el estado de algo que reportaste o dar seguimiento a las amenazas señaladas por tu comunidad. La exportación de reportes a CSV respeta la pestaña que esté activa en ese momento.
+
+## Cómo enviar un reporte
+
+Crear un reporte en ChainPatrol es sencillo:
+
+1. **Haz clic en Create Report** - Empieza haciendo clic en **Create Report** (crear reporte) en el dashboard
+
+2. **Agrega los assets** - Pega los assets que quieres reportar, uno por línea: URL (p. ej., `https://fake-support-login.com`), perfiles de redes sociales (p. ej., `@fake_support`), direcciones de blockchain (p. ej., `0x123...`) o cualquier otro tipo de asset que ChainPatrol monitoree. El sistema determina automáticamente qué tipo de asset es cada uno.
+
+3. **Agrega contexto** - Proporciona un título que resuma lo que estás reportando y una descripción que explique por qué estos assets son sospechosos, cómo los encontraste y cualquier detalle relevante.
+
+4. **Sube evidencia** - Sube capturas de pantalla del contenido malicioso, reportes o mensajes de usuarios, publicaciones en redes sociales o cualquier documentación de respaldo. La evidencia visual ayuda a los revisores a entender rápidamente lo que está pasando y acelera el proceso de revisión.
+
+5. **Envía** - Presiona **Submit** (enviar) y tu reporte pasa a la cola de revisión
+
+### Qué pasa después
+
+**De inmediato** - El reporte entra en estado `TODO`, recibes una confirmación, el reporte aparece en tu dashboard y se notifica al equipo de ChainPatrol.
+
+**Durante la revisión** - El estado cambia a `IN_PROGRESS`, los assets se escanean y analizan, la evidencia se evalúa y se toman las decisiones.
+
+**Después de la revisión** - El estado cambia a `CLOSED` (se muestra como **Reviewed** en el dashboard), los estados de los assets se actualizan, se te notifica el resultado y se toman las acciones correspondientes (bloquear, permitir, etc.).
+
+## Buenas prácticas para los reportes
+
+**Proporciona un contexto claro** - Incluye cómo descubriste la amenaza, por qué crees que es maliciosa, cualquier reporte o queja de usuarios y la cronología de cuándo apareció.
+
+**Incluye evidencia visual** - Captura la página o el perfil completos, los elementos maliciosos específicos, el contenido visible para los usuarios y capturas de pantalla antes de que el contenido sea dado de baja.
+
+**Reporta cuanto antes** - Cuanto antes reportes una amenaza, antes se podrá bloquear, lo que brinda una protección más rápida a los usuarios y menos tiempo para que los estafadores operen.
+
+**Agrupa los assets relacionados** - Si varios assets forman parte de la misma campaña, repórtalos juntos para que los revisores vean el panorama completo, con una revisión más eficiente y una respuesta coordinada.
+
+## Puntos clave
+
+- Los reportes con múltiples assets capturan el alcance de la campaña: agrupar las amenazas relacionadas en un solo reporte ayuda a los revisores a entender los patrones de ataque y hace más eficiente el bloqueo de campañas completas
+- El contexto acelera las decisiones de revisión: los reportes con capturas de pantalla, explicaciones y evidencia del daño avanzan por la revisión más rápido que las URL sueltas sin contexto
+- Tres métodos de envío responden a necesidades distintas: reportes manuales para hallazgos puntuales, reportes por API para sistemas de detección automatizada y reportes por el portal para los envíos de la comunidad
+- El estado del reporte permite seguir el avance sin microgestión: los estados `TODO`, `IN_PROGRESS` y `CLOSED` (Reviewed) brindan visibilidad y permiten que el equipo de seguridad trabaje sin actualizaciones constantes

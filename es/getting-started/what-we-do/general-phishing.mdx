@@ -1,0 +1,99 @@
+---
+title: "Phishing en general"
+description: "Vectores de ataque de phishing más comunes contra las marcas, incluidos el robo de credenciales, los wallet drainers, la ingeniería social, el malware y el compromiso de claves de desarrollador."
+---
+
+## Descripción general
+
+El phishing es un ataque malicioso en el que alguien se hace pasar por un actor legítimo. El phishing se presenta de muchas formas, pero el objetivo final es ganarse la confianza del usuario final y robar su información.
+
+Esto incluye contraseñas, números de tarjetas de crédito, credenciales de cuentas y códigos de autenticación de dos factores. En el caso específico de las plataformas cripto, los vectores de ataque más comunes también buscan robar la frase semilla del usuario o todo el contenido de su wallet.
+
+## Tipos de vectores de ataque de phishing
+
+### Wallet drainers
+
+Los wallet drainers son una herramienta que los estafadores usan para robar rápidamente todos los fondos de la wallet de un usuario sin que este se dé cuenta.
+
+**Cómo funciona:**
+
+1. Un estafador crea un sitio falso que se ve muy parecido a uno legítimo, como la página de inicio de una wallet, o un airdrop falso que parece promocionar un token legítimo
+2. Se le pide al usuario que conecte su wallet al sitio web
+3. Una vez conectada, se le pide al usuario que firme una transacción que se describe en términos vagos o que miente sobre sus intenciones
+4. Al aceptar, el usuario firma un contrato inteligente amplio que le da al estafador permiso para retirar tokens sin límite de la wallet de la víctima
+5. El estafador escanea la wallet del usuario para encontrar tokens, NFT u otros activos de valor, y los transfiere a su propia wallet
+6. Los activos robados se dispersan en varias wallets para dificultar su rastreo
+
+### Robo de la frase semilla de recuperación
+
+El robo de la frase semilla de recuperación ocurre cuando un estafador intenta obtener la frase semilla de recuperación de un usuario fingiendo que la necesita para un fin legítimo. El mismo patrón también aparece fuera del mundo cripto, por ejemplo cuando los estafadores piden códigos de un solo uso, PIN de cuentas o credenciales bancarias con la excusa de "verificar" una cuenta.
+
+**Importante:** Los usuarios nunca deben compartir su frase semilla de recuperación con nadie, ya que le dará acceso total a su wallet y a todos sus tokens a cualquier actor que la tenga.
+
+**Tácticas comunes:**
+
+- Airdrops falsos que prometen grandes recompensas
+- Estafas de "duplicación" que afirman multiplicar la cantidad de un token específico
+- Solicitudes para que escribas la frase semilla de recuperación completa para reclamar recompensas
+
+Una vez que el usuario escribe su frase semilla de recuperación, el atacante la usará para dejar a la víctima sin acceso a sus activos y dispersarlos en varias otras wallets para dificultar el rastreo de los activos robados.
+
+### Ingeniería social
+
+La ingeniería social consiste en ganarse la confianza de un usuario para que entregue voluntariamente datos confidenciales a un atacante. Esta táctica aparece en todas las industrias que ChainPatrol protege, desde cripto hasta fintech, banca e iGaming.
+
+**Patrón común:**
+
+La ingeniería social puede incluir un falso soporte técnico que responde al pedido de ayuda de un usuario, por ejemplo, cuando no puede acceder a sus fondos o iniciar sesión en una cuenta. Los atacantes se ganan la confianza aparentando legitimidad en conversaciones por correo electrónico, teléfono o chat. Una vez que se generó suficiente confianza, pedirán credenciales, códigos de un solo uso o frases semilla o, en contextos cripto, le pedirán al usuario que conecte su wallet a un wallet drainer.
+
+**Señales de alerta:**
+
+- Contacto no solicitado de representantes de "soporte"
+- Solicitudes de información sensible, como frases semilla
+- Presión para actuar rápido o con urgencia
+- Comunicación por canales no oficiales
+
+### Distribución de malware
+
+La distribución de malware implica que un usuario descargue u obtenga de alguna otra forma un programa malicioso en su sistema.
+
+**Disfraces comunes:**
+
+Estos programas suelen hacerse pasar por software legítimo. Por ejemplo:
+- Una extensión de navegador que parece una extensión oficial de una wallet o de un banco
+- Aplicaciones falsas de wallets, de banca o de trading
+- Actualizaciones de software comprometidas
+
+Una vez instalado, el malware usará alguna de las técnicas mencionadas anteriormente para robar la información del usuario, incluidas credenciales de inicio de sesión, frases semilla, claves privadas o acceso directo a cuentas y wallets.
+
+### Compromiso de claves de desarrollador
+
+El compromiso de claves de desarrollador ocurre cuando los atacantes obtienen las claves privadas que un desarrollador usa para acceder a información sensible.
+
+**El peligro:**
+
+Esto le permite al atacante:
+- Suplantar al desarrollador
+- Acceder a los sistemas en los que trabaja el desarrollador
+- Inyectar código malicioso en programas legítimos
+
+Esto es especialmente peligroso porque permite a los atacantes infiltrarse en servicios legítimos y tener un impacto generalizado en toda una base de usuarios. Los usuarios confían en la aplicación legítima, lo que los hace más vulnerables a los ataques que se originan en cuentas de desarrollador comprometidas.
+
+## Cómo protegerte del phishing
+
+<Tip>
+**Principio clave:** Las organizaciones legítimas nunca te pedirán tu contraseña, tu frase semilla, tus claves privadas ni códigos de un solo uso, ni te solicitarán que firmes transacciones sospechosas.
+</Tip>
+
+Verifica siempre:
+- Las URL de los sitios web con cuidado antes de ingresar credenciales o conectar tu wallet
+- La autenticidad de los representantes de soporte
+- Las extensiones de navegador y las aplicaciones antes de instalarlas
+- Los detalles de la transacción antes de firmar cualquier cosa
+
+## Puntos clave
+
+- Los wallet drainers se aprovechan de los flujos de aprobación de transacciones: a diferencia del phishing tradicional que roba contraseñas, los wallet drainers engañan a los usuarios para que firmen transacciones de apariencia legítima que otorgan permisos de retiro ilimitados
+- Las frases semilla son la llave maestra: una frase semilla comprometida les da a los atacantes un control total y permanente, y por eso los proyectos legítimos nunca las piden bajo ninguna circunstancia
+- La ingeniería social elude las protecciones técnicas: incluso con herramientas de seguridad implementadas, los atacantes que generan confianza mediante falsas interacciones de soporte pueden convencer a los usuarios de desactivar voluntariamente las protecciones
+- El compromiso de claves de desarrollador tiene un impacto en cascada: cuando un atacante obtiene acceso a las claves de un desarrollador, puede inyectar código malicioso en aplicaciones de confianza que afectan a miles de usuarios al mismo tiempo
