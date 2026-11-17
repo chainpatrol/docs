@@ -78,7 +78,7 @@ Every asset is automatically added to the watchlist when a takedown is initiated
 
 Assets on the watchlist are scanned at different frequencies based on how long they've been monitored and their current status:
 
-**UNKNOWN/ALLOWED Assets** (more frequent monitoring for uncertain assets):
+**UNKNOWN Assets** (more frequent monitoring for uncertain assets):
 
 | Time on Watchlist | Scan Frequency |
 |-------------------|----------------|
@@ -114,7 +114,8 @@ Assets are automatically removed from the watchlist when:
 
 - **Status Changes to ALLOWED** - Asset confirmed as legitimate
 - **Asset Comes Online** - Previously dead asset becomes accessible (pushed to review queue)
-- **30 Days in UNKNOWN** - Decay factor removes long-term uncertain assets
+- **2 Weeks in UNKNOWN** - Decay factor removes long-term uncertain assets
+- **3 Months Offline After Takedown** - A blocked asset with a completed or cancelled takedown that stays offline for 3 months
 - **Takedown Success** - Asset goes offline during takedown
 - **Provider Suspension** - Hosting provider suspends the asset
 - **Manual Removal** - Analyst decides monitoring is no longer needed
@@ -124,4 +125,4 @@ Assets are automatically removed from the watchlist when:
 - Watchlist solves the gray area problem: When you suspect an asset might be malicious but lack evidence to block, watchlisting lets you monitor for changes without premature action
 - Automatic takedown monitoring saves manual work: Every takedown automatically adds the asset to watchlist, eliminating the need to manually check if content has been removed
 - Adaptive frequency optimizes resources: Recent additions scan frequently to catch rapid changes, while stable assets scan less often to avoid wasting resources on unlikely updates
-- 30-day decay prevents bloat: Assets that stay UNKNOWN for a month without becoming malicious are automatically removed, keeping monitoring focused on active threats
+- Decay prevents bloat: Assets that stay UNKNOWN for 2 weeks without becoming malicious are automatically removed, keeping monitoring focused on active threats

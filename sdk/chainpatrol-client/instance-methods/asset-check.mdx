@@ -1,6 +1,6 @@
 ---
 title: "asset.check"
-description: Check the real-time threat status of a single URL, page, social profile, or blockchain address with the ChainPatrol JavaScript SDK's asset.check API method.
+description: Check the real-time threat status of a single URL, page, or blockchain address with the ChainPatrol JavaScript SDK's asset.check API method.
 ---
 
 The `asset.check` method allows you to check the current threat status of a single asset. This method is ideal for real-time protection and individual asset verification.
@@ -46,9 +46,10 @@ Possible values: `UNKNOWN`, `ALLOWED`, `BLOCKED`.
 
 <ResponseField name="reason" type="string">
   The reason why the asset was allowed or blocked (if applicable). ChainPatrol
-  aggregates data from multiple sources: - `eth-phishing-detect` - Asset is on
-  MetaMask's blocklist - `reported` - Asset was reported by users and added to
-  ChainPatrol's blocklist
+  aggregates data from multiple sources:
+
+  - `eth-phishing-detect` - Asset is on MetaMask's blocklist
+  - `reported` - Asset was reported by users and added to ChainPatrol's blocklist
 </ResponseField>
 
 ### Supported Asset Types
@@ -98,17 +99,16 @@ Possible values: `UNKNOWN`, `ALLOWED`, `BLOCKED`.
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 
 const client = new ChainPatrolClient({
-apiKey: "cp_live_your_api_key_here",
+  apiKey: "cp_live_your_api_key_here",
 });
 
 const result = await client.asset.check({
-type: "URL",
-content: "https://suspicious-site.com",
+  type: "URL",
+  content: "https://suspicious-site.com",
 });
 
 console.log(result);
-
-````
+```
 
 ```typescript Address Check
 const result = await client.asset.check({
@@ -121,7 +121,7 @@ if (result.status === "BLOCKED") {
 } else {
   console.log("✅ Address appears safe");
 }
-````
+```
 
 ```json Example Response
 {
@@ -272,15 +272,19 @@ try {
 ### Rate Limits & Performance
 
 <Note>
-  **Rate Limits** - Individual requests: Up to 10 requests per second -
-  Recommended for real-time checking - For bulk operations, use `asset.list`
-  instead
+  **Rate Limits**
+
+  - Individual requests: Up to 10 requests per second
+  - Recommended for real-time checking
+  - For bulk operations, use `asset.list` instead
 </Note>
 
 <Warning>
-  **Performance Considerations** - Cache results when possible to reduce API
-  calls - Implement exponential backoff for failed requests - Consider using
-  `asset.list` for bulk checking scenarios
+  **Performance Considerations**
+
+  - Cache results when possible to reduce API calls
+  - Implement exponential backoff for failed requests
+  - Consider using `asset.list` for bulk checking scenarios
 </Warning>
 
 ## Related Resources
@@ -299,6 +303,6 @@ try {
 
 ### Additional Documentation
 
-- [Asset Types Guide](/glossary/asset-types/page)
-- [Error Handling Best Practices](/general/api-key)
-- [Rate Limiting Guidelines](/external-api/overview)
+- [Asset Types Guide](/glossary/overview)
+- [API Keys](/general/api-key)
+- [External API Overview](/external-api/overview)

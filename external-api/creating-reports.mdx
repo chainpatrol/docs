@@ -25,7 +25,7 @@ flowchart LR
 ```
 
 <Info>
-  **Attachments are optional.** If you have no files to send, skip step 2 entirely and call
+  **Attachments are optional.** If you have no files to send, skip the upload step entirely and call
   `report.create` on its own. And if you already host your evidence somewhere publicly
   reachable, put those URLs straight into `attachmentUrls` — the upload endpoint exists so
   that you do not have to host them.
@@ -269,6 +269,7 @@ curl -X POST 'https://app.chainpatrol.io/api/v2/report/create' \
     "organizationSlug": "acme",
     "title": "Acme airdrop phishing email",
     "description": "Customer forwarded a phishing email impersonating Acme support.",
+    "contactInfo": "security@acme.example",
     "attachmentUrls": [
       "https://upcdn.io/ACCOUNT/raw/uploads/.../phishing-email.eml",
       "https://upcdn.io/ACCOUNT/raw/uploads/.../screenshot.png"

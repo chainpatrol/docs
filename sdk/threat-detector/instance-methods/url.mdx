@@ -87,6 +87,7 @@ If the check was successful, the object will contain the following properties:
 
     <ParamField body="status" type="'ALLOWED' | 'BLOCKED' | 'UNKNOWN' | 'IGNORED'" required>
       The `status` property indicates whether the URL is allowed or blocked.
+      It is `UNKNOWN` when the domain is on neither list.
       It is `IGNORED` when the domain was added with
       [`ignore()`](/sdk/threat-detector/instance-methods/ignore), for example
       after a user chose to continue at their own risk.

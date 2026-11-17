@@ -5,7 +5,7 @@ openapi: "POST /report/create"
 
 ## Overview
 
-The Report Create endpoint allows you to submit assets (URLs, domains, blockchain addresses, etc.) for review by the ChainPatrol team. This endpoint handles bulk submissions and provides detailed error reporting for validation failures.
+The Create Report endpoint allows you to submit assets (URLs, domains, blockchain addresses, etc.) for review by the ChainPatrol team. This endpoint handles bulk submissions and provides detailed error reporting for validation failures.
 
 New to this endpoint? Start with [Creating Reports](/external-api/creating-reports) — a
 step-by-step walkthrough of the whole flow, with worked examples.
@@ -48,8 +48,8 @@ Returned when the request is syntactically valid but contains validation errors 
 | `INVALID_FORMAT`         | Asset format is invalid                               | Use valid URLs, domains, or blockchain addresses     |
 | `ASSET_NOT_FOUND`        | Asset could not be located or created                 | Verify asset format and accessibility                |
 | `ASSET_ALREADY_CORRECT`  | Asset already has the requested status                | No action needed - asset is already in desired state |
-| `ALREADY_PENDING_REVIEW` | Asset has a pending proposal for the requested status | Wait for existing proposal to be processed           |
-| `REPORT_ALREADY_EXISTS`  | A pending report/proposal for this asset exists       | Check existing reports or wait for processing        |
+| `ALREADY_PENDING_REVIEW` | Your organization already set a pending `BLOCKED` status on this asset | Wait for existing proposal to be processed           |
+| `REPORT_ALREADY_EXISTS`  | The asset already has a pending proposal in another of your organization's reports | Check existing reports or wait for processing        |
 | `PROCESSING_FAILED`      | Technical error occurred during asset processing      | Retry the request or contact support                 |
 | `DOMAIN_NOT_ALLOWED`     | Asset's domain is on the ignore list                  | Domain is excluded from reports per content policy   |
 | `VALIDATION_ERROR`       | Generic validation error                              | Check asset format and requirements                  |
@@ -124,29 +124,22 @@ Returned for unexpected server conditions, including database errors and other t
 
 ### Asset Validation
 
-**URLs**: Include the full protocol (`https://` or `http://`)
-
-**Domains**: Use clean domain names without protocols or paths
-
-**Blockchain Addresses**: Use EIP-155 format for Ethereum addresses
-
-**Avoid Duplicates**: Each asset should appear only once per report
+- **URLs**: Include the full protocol (`https://` or `http://`)
+- **Domains**: Use clean domain names without protocols or paths
+- **Blockchain Addresses**: Use EIP-155 format for Ethereum addresses
+- **Avoid Duplicates**: Each asset should appear only once per report
 
 ### Error Handling
 
-Always check the `data.errors` array in 422 responses for per-asset details
-
-Use the `suggestion` field in error responses to guide users
-
-Implement retry logic for 500 errors with exponential backoff
+- Always check the `data.errors` array in 422 responses for per-asset details
+- Use the `suggestion` field in error responses to guide users
+- Implement retry logic for 500 errors with exponential backoff
 
 ### Performance Tips
 
-Batch multiple assets in a single request when possible
-
-Validate asset formats client-side before submission
-
-Handle rate limiting appropriately
+- Batch multiple assets in a single request when possible
+- Validate asset formats client-side before submission
+- Handle rate limiting appropriately
 
 ## Troubleshooting
 
@@ -154,54 +147,41 @@ Handle rate limiting appropriately
 
 **"INVALID_FORMAT" errors:**
 
-Ensure URLs include protocol (`https://` or `http://`)
-
-Verify domain names don't include protocols or paths
-
-Check blockchain address format matches EIP-155 standard
+- Ensure URLs include protocol (`https://` or `http://`)
+- Verify domain names don't include protocols or paths
+- Check blockchain address format matches EIP-155 standard
 
 **"DUPLICATE_ASSETS" errors:**
 
-Remove duplicate entries from the assets array
-
-Check for case sensitivity differences
-
-Verify URL normalization (trailing slashes, etc.)
+- Remove duplicate entries from the assets array
+- Check for case sensitivity differences
+- Verify URL normalization (trailing slashes, etc.)
 
 **"DOMAIN_NOT_ALLOWED" errors:**
 
-The domain is on ChainPatrol's ignore list
-
-Contact disputes@chainpatrol.io to dispute this decision
-
-Consider reporting specific URLs instead of the entire domain
+- The domain is on ChainPatrol's ignore list
+- Contact disputes@chainpatrol.io to dispute this decision
+- Consider reporting specific URLs instead of the entire domain
 
 **"ASSET_ALREADY_CORRECT" errors:**
 
-The asset already has the status you're requesting
-
-Check the current asset status before reporting
-
-No action needed - the asset is already in the desired state
+- The asset already has the status you're requesting
+- Check the current asset status before reporting
+- No action needed - the asset is already in the desired state
 
 ### Rate Limiting
 
 The endpoint implements rate limiting to prevent abuse. If you encounter rate limit errors:
 
-Implement exponential backoff in your retry logic
-
-Consider batching requests to reduce API calls
-
-Contact support for higher rate limits if needed
+- Implement exponential backoff in your retry logic
+- Consider batching requests to reduce API calls
+- Contact support for higher rate limits if needed
 
 ## Notes
 
-Error payload shape is stable across 422 errors; check `data.errors` for per-asset details
-
-Provide the `organizationSlug` and valid `assets` to minimize 500s caused by invalid state
-
-All assets must be valid for the report to be created
-
-A report can only be created once per email address for a specific asset
+- Error payload shape is stable across 422 errors; check `data.errors` for per-asset details
+- Provide the `organizationSlug` and valid `assets` to minimize 500s caused by invalid state
+- All assets must be valid for the report to be created
+- A report can't include an asset that already has a pending proposal in another of your organization's reports
 
 For technical issues or questions about error responses, contact support@chainpatrol.io and include the full error response in your request.
