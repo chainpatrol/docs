@@ -19,13 +19,13 @@ ChainPatrol staff create and manage protection windows for your organization. Ea
 - **A start and an end**, at most 14 days apart
 - **Asset types** to watch more closely, such as domains or social media profiles
 
-An organization can't have two windows that overlap. You can't create or edit windows yourself. Tell your ChainPatrol team about upcoming launches and announcements so they can open a window for them.
+An organization has at most one active or upcoming window at a time, so ChainPatrol opens the next window only after the current one ends. You can't create or edit windows yourself. Tell your ChainPatrol team about upcoming launches and announcements so they can open a window for them.
 
 ## What changes during a window
 
 While a window is active, ChainPatrol does the following for the asset types and detection sources the window focuses on:
 
-- **Faster detection**: [detection sources](/getting-started/how-it-works/detection-sources) chosen for the window run on ChainPatrol's most frequent schedule. ChainPatrol can also turn on extra detection that runs only for the window.
+- **Faster detection**: [detection sources](/getting-started/how-it-works/detection-sources) chosen for the window run on ChainPatrol's most frequent schedule. Not every source can be sped up this way: X (Twitter) sources and sources that don't run on that schedule keep their usual timing. After the window is created, ChainPatrol can also turn on extra detection that runs only for the window. Your regular detection keeps running as usual.
 - **Sooner liveness checks**: [watchlisted](/concepts/watchlist) assets of the focused types are prioritized for re-checks, so ChainPatrol notices sooner when a threat comes back online.
 - **Faster takedown follow-up**: a [takedown](/concepts/takedowns) with no activity is flagged as stale after 1 day instead of 3, and takedowns are refiled every 2 days instead of every 5.
 
@@ -33,7 +33,7 @@ When the window ends, everything returns to its usual schedule and detection tha
 
 ## Viewing your windows
 
-Go to **Settings → Protection Windows** in your dashboard. Any member of your organization can view this page.
+Go to **Settings → Protection Windows** in your dashboard. When protection windows are enabled for your organization, any member of your organization can view this page. Otherwise the page shows **Protection windows are not available**; contact your ChainPatrol team to ask about turning them on.
 
 The page lists your current windows first, followed by **Past windows**. Each window shows its status (**Upcoming**, **Active** or **Ended**), its dates, and the asset types it watched more closely.
 
