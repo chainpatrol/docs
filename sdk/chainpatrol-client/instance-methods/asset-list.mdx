@@ -45,6 +45,14 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
       Optional organization slug to filter assets for a specific organization.
     </ParamField>
 
+    <ParamField path="per_page" type="number">
+      Number of assets to return per page. Defaults to `100`.
+    </ParamField>
+
+    <ParamField path="next_page" type="string">
+      Cursor for the next page of results. Pass the `next_page` value from the previous response.
+    </ParamField>
+
   </Expandable>
 </ParamField>
 
@@ -77,6 +85,10 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
     </ResponseField>
 
   </Expandable>
+</ResponseField>
+
+<ResponseField name="next_page" type="string">
+  Cursor for the next page of results. It is `null` or missing when there are no more results.
 </ResponseField>
 
 ### Filtering Options
@@ -112,19 +124,18 @@ client.asset.list(request: AssetListInput): Promise<AssetListOutput>
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 
 const client = new ChainPatrolClient({
-apiKey: "cp_live_your_api_key_here",
+  apiKey: "cp_live_your_api_key_here",
 });
 
 const result = await client.asset.list({
-type: "URL",
-status: "BLOCKED",
-startDate: "2023-01-01",
-endDate: "2023-12-31",
+  type: "URL",
+  status: "BLOCKED",
+  startDate: "2023-01-01",
+  endDate: "2023-12-31",
 });
 
 console.log(`Found ${result.assets.length} blocked URLs`);
-
-````
+```
 
 ```typescript Organization-Specific Query
 const result = await client.asset.list({
@@ -139,7 +150,7 @@ result.assets.forEach(asset => {
   console.log(`Blocked address: ${asset.content}`);
   console.log(`Updated: ${asset.updatedAt}`);
 });
-````
+```
 
 ```json Example Response
 {
@@ -215,7 +226,9 @@ async function getAssetStats(dateRange: { start: string; end: string }) {
     ```typescript
     async function generateThreatReport(month: string) {
       const startDate = `${month}-01`;
-      const endDate = `${month}-31`;
+      const [year, monthNumber] = month.split("-").map(Number);
+      const lastDay = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
+      const endDate = `${month}-${String(lastDay).padStart(2, "0")}`;
       
       const threats = await client.asset.list({
         type: "URL",
@@ -361,9 +374,11 @@ async function exportThreats(outputFormat: "csv" | "json" = "json") {
 ### Format Requirements
 
 <Warning>
-  **Date Format Requirements** - Dates must be in `YYYY-MM-DD` format -
-  `endDate` must be greater than or equal to `startDate` - Maximum date range
-  may be limited depending on your plan
+  **Date Format Requirements**
+
+  - Dates must be in `YYYY-MM-DD` format
+  - `endDate` must be greater than or equal to `startDate`
+  - Maximum date range may be limited depending on your plan
 </Warning>
 
 ### Error Handling
@@ -390,15 +405,19 @@ try {
 ### Rate Limits & Performance
 
 <Note>
-  **Rate Limits** - Paginated requests: Up to 5 requests per second - Results
-  are paginated for large datasets - Consider caching results for frequently
-  accessed data
+  **Rate Limits**
+
+  - Paginated requests: Up to 5 requests per second
+  - Results are paginated for large datasets
+  - Consider caching results for frequently accessed data
 </Note>
 
 <Warning>
-  **Performance Tips** - Use specific date ranges to limit response size - Cache
-  results when possible to reduce API calls - Consider pagination for very large
-  datasets
+  **Performance Tips**
+
+  - Use specific date ranges to limit response size
+  - Cache results when possible to reduce API calls
+  - Use `per_page` and `next_page` for very large datasets
 </Warning>
 
 ## Related Resources
@@ -417,6 +436,6 @@ try {
 
 ### Additional Documentation
 
-- [Asset Types Guide](/glossary/asset-types/page)
-- [Organization Management](/general/concepts)
+- [Asset Types Guide](/glossary/overview)
+- [Organization Management](/concepts/organizations)
 - [API Authentication](/external-api/authentication)

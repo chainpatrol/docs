@@ -56,7 +56,7 @@ Regardless of the platform, the purpose of a takedown is the same: **to remove d
 
 **Takedowns** provide complete removal from the internet. Content is permanently removed, attackers lose their infrastructure, future victims are prevented from accessing, and enforcement action is demonstrated. However, takedowns take time (hours to days), some providers don't respond, attackers can quickly create new sites, and there are jurisdiction and legal challenges. Best for long-term threat elimination, persistent campaigns, and high-profile impersonation.
 
-**Blocklisting** provides immediate protection at point of access. Protection is instant (15-30 minutes), works regardless of hosting provider, protects users even if content stays online, and offers universal coverage across platforms. However, content remains online, requires integration with security tools, and may not prevent all access methods. Best for immediate threat mitigation, rapid response scenarios, and protecting users before takedown completes.
+**Blocklisting** provides immediate protection at point of access. Protection is fast (within minutes for wallets and direct integrations, 1–2 hours for Google Safe Browsing), works regardless of hosting provider, protects users even if content stays online, and offers universal coverage across platforms. However, content remains online, requires integration with security tools, and may not prevent all access methods. Best for immediate threat mitigation, rapid response scenarios, and protecting users before takedown completes.
 
 <Check>
 **ChainPatrol's approach:** "Blocklist-first, takedown-second" provides immediate protection while working toward permanent removal.
@@ -70,14 +70,15 @@ Takedowns in ChainPatrol progress through several statuses across their lifecycl
 
 - **TODO**: The takedown record has been created and is queued to be filed with the relevant host, registrar, or platform.
 - **IN_PROGRESS**: The takedown request has been submitted to the provider, and ChainPatrol is actively monitoring the asset for removal.
-- **PENDING_INPUT**: Action on the takedown is paused while awaiting direction from the customer. This commonly occurs when a provider claims an asset is legitimate / not a threat, or when internal analysts suspect it might be legitimate. Pausing prevents unintended action across shifts in a 24/7 team environment while next steps are discussed with the customer via Slack, Telegram, or in-app notes.
+- **PENDING_INPUT**: Action on the takedown is paused while awaiting direction from the customer. This commonly occurs when a provider claims an asset is legitimate / not a threat, or when internal analysts suspect it might be legitimate. Pausing prevents unintended action across shifts in a 24/7 team environment while next steps are discussed with the customer via Slack, Telegram, or in-app notes. ChainPatrol also holds a takedown in this status when the organization has not yet provided a signed Letter of Authorization (LOA) or other takedown authorization, and when the organization turns on **Obligatory Organization Admin Approval**.
+- **PENDING_EVIDENCE**: Action on the takedown is paused while the ChainPatrol team collects more evidence before it files the takedown, for example for some email or phone number reports.
 - **COMPLETED**: The provider or platform has removed the offending asset, and the takedown is successfully resolved.
 - **CANCELLED**: The takedown was cancelled, such as when an asset is confirmed to be legitimate, duplicate, or resolved without action.
 
 ### Alternative Outcomes
 
-- **PENDING RETRACTION** - Identified as false positive, marked for retraction
-- **RETRACTION SENT** - Formal retraction request submitted to provider
+- **PENDING_RETRACTION** - Identified as false positive, marked for retraction
+- **RETRACTION_SENT** - Formal retraction request submitted to provider
 - **RETRACTED** - Provider confirmed retraction, takedown reversed
 
 ## What Makes Takedowns Effective

@@ -24,7 +24,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
     Expert threat validation
   </Card>
   
-  <Card title="Admin Approval" icon="user-shield" color="#f59e0b">
+  <Card title="Obligatory Organization Admin Approval" icon="user-shield" color="#f59e0b">
     Internal approval workflow
   </Card>
   
@@ -392,7 +392,7 @@ ChainPatrol offers multiple security services that can be configured based on yo
 | Reviewing | None | - |
 | Obligatory Organization Admin Approval | None | - |
 | Blocklisting | None (but verification required) | - |
-| Takedowns | Trademark proof, Authorized representative details | Before enabling |
+| Takedowns | Trademark proof, Organization contact information, Authorized representative details | Before enabling |
 | Automated Takedowns | Letter of Authorization, Trademark registration, Main website URL | Before enabling |
 | Dark Web Monitoring | None | - |
 
@@ -456,9 +456,9 @@ For both Takedowns and Automated Takedowns:
 flowchart TD
     Detection[Detection] --> Monitoring[Monitoring & Reporting]
     Monitoring --> Reviewing[Reviewing]
-    Reviewing --> AdminApproval[Admin Approval<br/>Optional]
+    Reviewing --> AdminApproval[Obligatory Organization Admin Approval<br/>Optional]
     Reviewing --> Blocklisting[Blocklisting]
-    Reviewing --> Takedowns[Takedowns]
+    Blocklisting --> Takedowns[Takedowns]
     Takedowns --> AutoTakedowns[Automated Takedowns]
     
     style Detection fill:#3b82f6
