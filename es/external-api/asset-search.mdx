@@ -9,7 +9,7 @@ El endpoint Buscar assets devuelve un único resultado con cuatro partes princip
 
 - **asset** - El **Asset** (activo digital: URL, dirección, perfil, app, etc.) coincidente: su `id`, `content`, `type`, `status`, `watchStatus` y marcas de tiempo (`createdAt`, `updatedAt`).
 - **reports** - Lista de reportes vinculados al asset, cada uno con `id`, `title`, `status` y `createdAt`.
-- **takedown** - Metadatos del **Takedown** (solicitud de baja de contenido fraudulento): `id`, `status` y marcas de tiempo, más un arreglo **tasks**. Cada tarea tiene `type`, `status`, `retractionStatus`, el nombre del `takedownProvider` asociado, marcas de tiempo de envío y de retractación, y un `externalId` opcional con el ID de seguimiento del proveedor. [Más información sobre las tareas de takedown](../general/concepts#takedown-tasks).
+- **takedown** - Metadatos del **Takedown** (solicitud de baja de contenido fraudulento): `id`, `status` y marcas de tiempo, más un arreglo **tasks**. Cada tarea tiene `type`, `status`, `retractionStatus`, el nombre del `takedownProvider` asociado, marcas de tiempo de envío y de retractación, y un `externalId` opcional con el ID de seguimiento del proveedor. [Más información sobre las tareas de takedown](/es/concepts/takedowns#ciclo-de-vida-de-un-takedown).
 - **blockedBy** - Lista de plataformas que actualmente consumen (bloquean) el asset. Cada entrada tiene un slug `consumer` (p. ej. `metamask`, `google-safe-browsing`, `quad9`), el `name` visible de la plataforma y una marca de tiempo `consumedAt` que indica cuándo la plataforma empezó a bloquear el asset.
 
 ## Inicio rápido

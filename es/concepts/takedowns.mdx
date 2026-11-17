@@ -70,19 +70,19 @@ Los takedowns en ChainPatrol pasan por varios estados a lo largo de su ciclo de 
 
 - **`TODO`**: se creó el registro del takedown y está en cola para presentarse ante el host, el registrador o la plataforma correspondiente.
 - **`IN_PROGRESS`**: la solicitud de takedown se envió al proveedor y ChainPatrol está monitoreando activamente el **asset** (activo digital: URL, dirección, perfil, app, etc.) hasta que se elimine.
-- **`PENDING_INPUT`**: el takedown está en pausa porque necesitamos algo de tu parte. Puede ser: (1) falta la **Letter of Authorization** (LOA, carta de autorización) firmada o la autorización para pedir takedowns; (2) tu organización tiene activada la aprobación obligatoria y un administrador tiene que aprobarlo; (3) sospechamos que el asset podría ser tuyo (un sitio de staging, una submarca oficial) y necesitamos que confirmes si es legítimo antes de avanzar. En casos puntuales la espera es de un análisis interno del equipo. Esto también suele ocurrir cuando un proveedor afirma que un asset es legítimo o que no es una amenaza. La pausa evita acciones no deseadas entre los turnos de un equipo que trabaja 24/7 mientras se conversan los próximos pasos contigo por Slack, Telegram o notas dentro de la app.
+- **`PENDING_INPUT`**: la acción sobre el takedown está en pausa mientras se esperan indicaciones del cliente. Esto suele ocurrir cuando un proveedor afirma que un asset es legítimo o que no es una amenaza, o cuando los analistas internos sospechan que podría ser legítimo. La pausa evita acciones no deseadas entre los turnos de un equipo que trabaja 24/7 mientras se conversan los próximos pasos con el cliente por Slack, Telegram o notas dentro de la app.
 - **`COMPLETED`**: el proveedor o la plataforma eliminó el asset infractor y el takedown se resolvió con éxito.
 - **`CANCELLED`**: el takedown se canceló, por ejemplo, cuando se confirma que un asset es legítimo, está duplicado o se resolvió sin necesidad de actuar.
 
 ### Resultados alternativos
 
-- **`PENDING_RETRACTION`**: el asset resultó ser legítimo (falso positivo) y se desbloqueó. Ya está en cola retirar los reportes enviados a los proveedores, pero todavía no se enviaron.
-- **`RETRACTION_SENT`**: ya enviamos la retractación a todos los proveedores contactados (hosting, registradores, redes sociales, VirusTotal, Google Safe Browsing) y estamos esperando que la procesen.
-- **`RETRACTED`**: estado final: los proveedores confirmaron la retractación, se cancelaron los reportes de abuso y el asset quedó restaurado en todas las plataformas.
+- **`PENDING_RETRACTION`**: se identificó como falso positivo y se marcó para retractación
+- **`RETRACTION_SENT`**: se envió al proveedor una solicitud formal de retractación
+- **`RETRACTED`**: el proveedor confirmó la retractación y el takedown se revirtió
 
 ## Qué hace que los takedowns sean efectivos
 
-**Documentación legal**: los takedowns efectivos requieren una Letter of Authorization (LOA) que autorice la acción, documentos de **Trademark Registration** (registro de marca), evidencia clara de abuso o suplantación y los datos del representante autorizado. ChainPatrol se encarga de toda la documentación legal y de su presentación en tu nombre.
+**Documentación legal**: los takedowns efectivos requieren una **Letter of Authorization** (LOA, carta de autorización) que autorice la acción, documentos de **Trademark Registration** (registro de marca), evidencia clara de abuso o suplantación y los datos del representante autorizado. ChainPatrol se encarga de toda la documentación legal y de su presentación en tu nombre.
 
 **Relaciones con los proveedores**: mantenemos relaciones con proveedores de todo el ecosistema, con información de contacto de abuso conocida, procedimientos de reporte establecidos, un historial de takedowns exitosos y conocimiento de los requisitos de cada proveedor.
 

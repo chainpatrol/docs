@@ -42,15 +42,15 @@ Un takedown pasa por etapas definidas desde el envío hasta la resolución:
 
 1. **En cola (`TODO`)** — Una vez que se aprueba una **Proposal** (propuesta para bloquear o permitir un asset) de bloqueo, se crea una solicitud de takedown y se pone en cola para enviarla a los proveedores responsables (servicios de hosting, registradores, redes sociales o tiendas de aplicaciones).
 2. **En curso (`IN_PROGRESS`)** — ChainPatrol envía reportes de abuso y evidencia a las plataformas responsables y comienza un monitoreo activo para detectar cuándo el asset queda fuera de línea.
-3. **Pendiente de tu respuesta (`PENDING_INPUT`)** — El takedown está en pausa porque necesitamos algo de tu parte. Puede ser: (1) falta la **Letter of Authorization** (LOA, carta de autorización) firmada o la autorización para pedir takedowns; (2) tu organización tiene activada la aprobación obligatoria y un administrador tiene que aprobarlo; (3) sospechamos que el asset podría ser tuyo (un sitio de staging, una submarca oficial) y necesitamos que confirmes si es legítimo antes de avanzar. En casos puntuales la espera es de un análisis interno del equipo. Lo más habitual es que ocurra cuando un proveedor de hosting afirma que el asset es legítimo o cuando nuestro equipo interno sospecha que podría no ser una amenaza. La pausa evita acciones no deseadas entre los turnos 24/7 mientras el equipo coordina contigo por Slack, Telegram o notas dentro de la aplicación.
+3. **Pendiente de tu respuesta (`PENDING_INPUT`)** — La acción se pausa temporalmente cuando ChainPatrol necesita una confirmación o indicaciones de tu equipo. Esto ocurre con más frecuencia cuando un proveedor de hosting afirma que el asset es legítimo o cuando el personal interno sospecha que podría no ser una amenaza. La pausa evita acciones no deseadas entre los turnos 24/7 mientras los miembros del equipo coordinan contigo por Slack, Telegram o notas dentro de la aplicación.
 4. **Completado (`COMPLETED`)** — El proveedor cumple con la solicitud y elimina el asset o el contenido malicioso.
 5. **Cancelado (`CANCELLED`)** — El takedown se detiene, por ejemplo cuando se confirma que el asset es legítimo, cuando se retracta o cuando ya no es accionable.
 
 ### Resultados alternativos
 
-- **`PENDING_RETRACTION`** - El asset resultó ser legítimo (falso positivo) y se desbloqueó. Ya está en cola retirar los reportes enviados a los proveedores, pero todavía no se enviaron
-- **`RETRACTION_SENT`** - Ya enviamos la retractación a todos los proveedores contactados (hosting, registradores, redes sociales, VirusTotal, Google Safe Browsing) y estamos esperando que la procesen
-- **`RETRACTED`** - Estado final: los proveedores confirmaron la retractación, se cancelaron los reportes de abuso y el asset quedó restaurado en todas las plataformas
+- **`PENDING_RETRACTION`** - Se identificó como falso positivo y se marcó para retractación, pero todavía no se envió al proveedor
+- **`RETRACTION_SENT`** - Se envió al proveedor una solicitud formal de retractación para detener o revertir el takedown
+- **`RETRACTED`** - El proveedor confirmó la retractación; el takedown se detuvo o se revirtió por completo
 
 ## Cómo procesa ChainPatrol un takedown
 
@@ -193,10 +193,10 @@ Los tiempos de respuesta varían según la plataforma. Algunas actúan rápido, 
 Si un contenido eliminado anteriormente reaparece, el takedown existente se **reactiva** y vuelve al estado `TODO`. ChainPatrol actuará de nuevo sobre él y volverá a presentar solicitudes hasta que el contenido se dé de baja por completo.
 
 **¿ChainPatrol puede garantizar la eliminación?**
-Ningún proveedor garantiza la eliminación en todos los casos, pero ChainPatrol trabaja para maximizar el éxito mediante envíos consistentes y precisos y un monitoreo continuo. Nuestras tasas de éxito varían según el proveedor, pero suelen ser muy altas para las amenazas legítimas.
+Ningún proveedor garantiza la eliminación en todos los casos, pero ChainPatrol trabaja para maximizar el éxito mediante envíos consistentes y precisos y un monitoreo continuo. Nuestras tasas de éxito varían según el proveedor, pero suelen ser muy altas para las amenazas reales.
 
 **¿Qué documentación tengo que aportar?**
-La mayoría de los takedowns requiere documentos legales como la Letter of Authorization, el **Trademark Registration** (registro de marca) y los documentos de registro de la empresa. Los requisitos varían según el proveedor y se comunicarán durante el onboarding.
+La mayoría de los takedowns requiere documentos legales como la **Letter of Authorization** (carta de autorización), el **Trademark Registration** (registro de marca) y los documentos de registro de la empresa. Los requisitos varían según el proveedor y se comunicarán durante el onboarding.
 
 ## Puntos clave
 

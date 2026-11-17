@@ -120,7 +120,7 @@ chainpatrol detections list --org <slug> [filters]
 | `--country-code <list>` | Lista separada por comas de códigos de país ISO de 2 letras. |
 | `--only-deleted` | Devuelve solo las amenazas sospechosas con eliminación lógica (soft-deleted). Sin esta opción, se devuelven tanto las eliminadas como las no eliminadas. |
 | `--exclude-deleted` | Deja fuera las amenazas sospechosas con eliminación lógica (soft-deleted), para que los totales coincidan con los de la app. No se puede combinar con `--only-deleted`. |
-| `--block-status <list>` | Lista separada por comas: `blocked`, `pending`. Las dos juntas seleccionan todas las amenazas confirmadas, incluidas las `PENDING_BLOCKED` de organizaciones sin protección activa. |
+| `--block-status <list>` | Lista separada por comas: `blocked`, `pending`. Las dos juntas seleccionan todas las amenazas confirmadas, incluidas las **Pending Blocked** (bloqueo pendiente) de organizaciones sin protección activa. |
 | `--min-score <n>` | Solo amenazas sospechosas con un puntaje sin procesar de al menos `n` (0–1). Usa esta opción en lugar de `--confidence` para un punto de corte fijo, como `0.8`. |
 | `--max-score <n>` | Solo amenazas sospechosas con un puntaje sin procesar de como máximo `n` (0–1). |
 | `--include-total` | También muestra cuántas amenazas sospechosas coinciden en todas las páginas. |

@@ -41,7 +41,7 @@ ChainPatrol opera una arquitectura SaaS multiinquilino (multi-tenant), alojada e
 - Las cargas de trabajo se ejecutan en contenedores dentro de redes privadas aisladas.
 - La infraestructura se administra como código mediante **Terraform**, con cambios que se revisan y se registran antes del despliegue.
 - Los roles de IAM aplican el acceso de mínimo privilegio a la infraestructura de producción; no se usan credenciales compartidas para la actividad administrativa estándar.
-- Los entornos de producción y de desarrollo/staging están segregados lógicamente. Los datos de producción de los clientes no se usan en desarrollo ni en pruebas sin una aprobación explícita y sin depurar los campos sensibles.
+- Los entornos de producción y de desarrollo/staging están segregados lógicamente. Los datos de producción de los clientes no se usan en desarrollo ni en pruebas sin una aprobación explícita y la depuración previa de los campos sensibles.
 - Los datos principales de la aplicación se almacenan en bases de datos relacionales administradas, y los archivos se almacenan en almacenamiento de objetos administrado.
 - El tráfico de red está protegido por controles en capas, que incluyen mitigación de DDoS, protecciones de firewall de aplicaciones web, grupos de seguridad y aislamiento de red.
 
