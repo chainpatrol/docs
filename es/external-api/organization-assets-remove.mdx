@@ -179,10 +179,11 @@ Se devuelve cuando el asset no existe o ya se había quitado de tu organización
 Verifica siempre el asset antes de quitarlo para evitar operaciones accidentales:
 
 ```typescript
-async function safeRemoveAsset(assetId: number) {
-  // First, fetch the asset to verify it exists and belongs to your org
+async function safeRemoveAsset(assetId: number, content: string) {
+  // First, fetch the asset to verify it exists and belongs to your org.
+  // `query` matches content, name, and description, not the asset ID.
   const getResponse = await fetch(
-    `https://app.chainpatrol.io/api/v2/organization/assets?query=${assetId}`,
+    `https://app.chainpatrol.io/api/v2/organization/assets?query=${encodeURIComponent(content)}`,
     {
       headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
     }

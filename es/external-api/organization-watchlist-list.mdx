@@ -68,14 +68,14 @@ data = response.json()
 
 | Parámetro       | Tipo      | Obligatorio | Valor predeterminado | Descripción                                                                                                                                  |
 | --------------- | --------- | ----------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `slug`          | `string`  | No          | -                    | Slug de la organización. Solo es obligatorio cuando tus credenciales tienen acceso a más de una organización.                                |
-| `assetType`     | `string`  | No          | -                    | Filtra por tipo de asset, por ejemplo `URL` o `TWITTER`.                                                                                     |
-| `query`         | `string`  | No          | -                    | Solo los assets cuyo contenido contiene este texto (sin distinguir mayúsculas de minúsculas).                                                |
-| `reportedSince` | `string`  | No          | -                    | ISO 8601. Solo los assets que tu organización reportó en ese momento o después.                                                              |
-| `reportedUntil` | `string`  | No          | -                    | ISO 8601. Solo los assets que tu organización reportó en ese momento o antes.                                                                |
-| `includeTotal`  | `boolean` | No          | `false`              | Devuelve también `total`: cuántos assets de la Watchlist coinciden entre todas las páginas. Pídelo solo en la primera página.                |
-| `per_page`      | `number`  | No          | `100`                | Tamaño de página, de 1 a 1000.                                                                                                               |
-| `next_page`     | `string`  | No          | -                    | Cursor de la respuesta anterior.                                                                                                             |
+| `slug`          | `string`  | ❌ No       | -                    | Slug de la organización. Solo es obligatorio cuando tus credenciales tienen acceso a más de una organización.                                |
+| `assetType`     | `string`  | ❌ No       | -                    | Filtra por tipo de asset, por ejemplo `URL` o `TWITTER`.                                                                                     |
+| `query`         | `string`  | ❌ No       | -                    | Solo los assets cuyo contenido contiene este texto (sin distinguir mayúsculas de minúsculas).                                                |
+| `reportedSince` | `string`  | ❌ No       | -                    | ISO 8601. Solo los assets que tu organización reportó en ese momento o después.                                                              |
+| `reportedUntil` | `string`  | ❌ No       | -                    | ISO 8601. Solo los assets que tu organización reportó en ese momento o antes.                                                                |
+| `includeTotal`  | `boolean` | ❌ No       | `false`              | Devuelve también `total`: cuántos assets de la Watchlist coinciden entre todas las páginas. Pídelo solo en la primera página.                |
+| `per_page`      | `number`  | ❌ No       | `100`                | Tamaño de página, de 1 a 1000.                                                                                                               |
+| `next_page`     | `string`  | ❌ No       | -                    | Cursor de la respuesta anterior.                                                                                                             |
 
 <Note>
 `reportedSince` y `reportedUntil` filtran por el momento en que **tu organización reportó**

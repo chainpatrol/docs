@@ -95,7 +95,7 @@ data = response.json()
 | `follows[].followedAt`      | `string`         | Cuándo empezaste a seguir el asset.                                                                      |
 | `follows[].takedown`        | `object \| null` | El takedown de tu organización para el asset (su `id` y `status`), o `null` si no hay ninguno.           |
 | `followCount`               | `number`         | Cuántos assets sigues en esta organización.                                                              |
-| `limit`, `warnThreshold`, `canFollowMore`, `warning` | | Tu límite de seguimientos, igual que en [Seguir asset](/es/external-api/asset-follow#respuesta).   |
+| `limit`, `warnThreshold`, `canFollowMore`, `warning` | `number`, `number`, `boolean`, `string \| null` | Tu límite de seguimientos, igual que en [Seguir asset](/es/external-api/asset-follow#respuesta).   |
 
 ## Relacionado
 

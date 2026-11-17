@@ -6,7 +6,7 @@ description: Agrega una URL o un dominio a la blocklist local de ThreatDetector 
 <Warning>
 
 Te recomendamos usar este método solo en modo `local` para cargar nuevas entradas
-en la **allowlist** (lista de permitidos). En modo `cloud`, la allowlist se completa automáticamente.
+en la **Blocklist** (lista de bloqueo). En modo `cloud`, la blocklist se completa automáticamente.
 
 </Warning>
 
@@ -25,7 +25,7 @@ console.log(await detector.url("https://google.com"));
     ok: true,
     url: "google.com",
     status: "BLOCKED",
-    redirectUrl: "https://app.chainpatrol.io/warning?originUrl=https://google.com"
+    redirectUrl: "https://app.chainpatrol.io/preview?target=https%3A%2F%2Fgoogle.com&originUrl=https%3A%2F%2Fgoogle.com"
 }
 ```
 

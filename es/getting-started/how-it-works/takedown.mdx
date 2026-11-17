@@ -42,9 +42,10 @@ Un takedown pasa por etapas definidas desde el envío hasta la resolución:
 
 1. **En cola (`TODO`)** — Una vez que se aprueba una **Proposal** (propuesta para bloquear o permitir un asset) de bloqueo, se crea una solicitud de takedown y se pone en cola para enviarla a los proveedores responsables (servicios de hosting, registradores, redes sociales o tiendas de aplicaciones).
 2. **En curso (`IN_PROGRESS`)** — ChainPatrol envía reportes de abuso y evidencia a las plataformas responsables y comienza un monitoreo activo para detectar cuándo el asset queda fuera de línea.
-3. **Pendiente de tu respuesta (`PENDING_INPUT`)** — La acción se pausa temporalmente cuando ChainPatrol necesita una confirmación o indicaciones de tu equipo. Esto ocurre con más frecuencia cuando un proveedor de hosting afirma que el asset es legítimo o cuando el personal interno sospecha que podría no ser una amenaza. La pausa evita acciones no deseadas entre los turnos 24/7 mientras los miembros del equipo coordinan contigo por Slack, Telegram o notas dentro de la aplicación.
-4. **Completado (`COMPLETED`)** — El proveedor cumple con la solicitud y elimina el asset o el contenido malicioso.
-5. **Cancelado (`CANCELLED`)** — El takedown se detiene, por ejemplo cuando se confirma que el asset es legítimo, cuando se retracta o cuando ya no es accionable.
+3. **Pendiente de tu respuesta (`PENDING_INPUT`)** — La acción se pausa temporalmente cuando ChainPatrol necesita una confirmación o indicaciones de tu equipo. Esto ocurre con más frecuencia cuando un proveedor de hosting afirma que el asset es legítimo o cuando el personal interno sospecha que podría no ser una amenaza. La pausa evita acciones no deseadas entre los turnos 24/7 mientras los miembros del equipo coordinan contigo por Slack, Telegram o notas dentro de la aplicación. ChainPatrol también mantiene un takedown en este estado cuando tu organización todavía no entregó una Letter of Authorization (LOA) firmada u otra autorización de takedown, y cuando tu organización activa **Obligatory Organization Admin Approval**.
+4. **Pendiente de evidencia (`PENDING_EVIDENCE`)** — La acción se pausa temporalmente mientras el equipo de ChainPatrol reúne más evidencia antes de presentar el takedown, por ejemplo, en algunos reportes de correos electrónicos o números de teléfono.
+5. **Completado (`COMPLETED`)** — El proveedor cumple con la solicitud y elimina el asset o el contenido malicioso.
+6. **Cancelado (`CANCELLED`)** — El takedown se detiene, por ejemplo cuando se confirma que el asset es legítimo, cuando se retracta o cuando ya no es accionable.
 
 ### Resultados alternativos
 
@@ -165,7 +166,7 @@ ChainPatrol admite múltiples categorías de takedown, cada una con un resultado
 
 Dentro de ChainPatrol, los clientes tienen una visibilidad clara de cada takedown:
 
-- **Estado actual** - Estado en tiempo real: `TODO`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED` o los estados de retractación
+- **Estado actual** - Estado en tiempo real: `TODO`, `IN_PROGRESS`, `PENDING_INPUT`, `PENDING_EVIDENCE`, `COMPLETED`, `CANCELLED` o los estados de retractación
 - **Marcas de tiempo** - Línea de tiempo completa de todas las acciones principales y los cambios de estado
 - **Respuestas del proveedor** - Copias completas de los correos y las comunicaciones de los proveedores
 - **Evidencia de eliminación** - Confirmación cuando el contenido se eliminó con éxito

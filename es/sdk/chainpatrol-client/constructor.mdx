@@ -15,7 +15,7 @@ const chainpatrol = new ChainPatrolClient({ apiKey: "<API_KEY>" });
 
 <ParamField body="options" type="object" required>
   <Expandable title="propiedades" defaultOpen>
-    <ParamField body="apiKey" type="string">
+    <ParamField body="apiKey" type="string" required>
       La propiedad `apiKey` es la clave de API para acceder a las API de ChainPatrol. Te
       recomendamos usar una variable de entorno para guardar tu clave de API.
     </ParamField>
@@ -26,6 +26,11 @@ const chainpatrol = new ChainPatrolClient({ apiKey: "<API_KEY>" });
 
       El valor predeterminado es `https://app.chainpatrol.io/api/`. El cliente agrega `v2/...` a
       esta dirección por su cuenta, así que no incluyas `v2` en el valor que pases.
+    </ParamField>
+
+    <ParamField body="fetchOptions" type="object">
+      Opciones opcionales que el cliente pasa a cada solicitud `fetch`. Claves
+      compatibles: `headers`, `signal`, `redirect`, `mode` y `credentials`.
     </ParamField>
 
   </Expandable>

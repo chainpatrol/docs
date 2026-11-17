@@ -24,7 +24,7 @@ ChainPatrol ofrece múltiples servicios de seguridad que se pueden configurar se
     Validación de amenazas por expertos
   </Card>
   
-  <Card title="Admin Approval" icon="user-shield" color="#f59e0b">
+  <Card title="Obligatory Organization Admin Approval" icon="user-shield" color="#f59e0b">
     Flujo de aprobación interno
   </Card>
   
@@ -392,7 +392,7 @@ ChainPatrol ofrece múltiples servicios de seguridad que se pueden configurar se
 | Reviewing | Ninguno | - |
 | Obligatory Organization Admin Approval | Ninguno | - |
 | Blocklisting | Ninguno (pero se requiere verificación) | - |
-| Takedowns | Prueba de marca registrada, datos del representante autorizado | Antes de habilitarlo |
+| Takedowns | Prueba de marca registrada, información de contacto de la organización, datos del representante autorizado | Antes de habilitarlo |
 | Automated Takedowns | Letter of Authorization, registro de marca, URL del sitio web principal | Antes de habilitarlo |
 | Dark Web Monitoring | Ninguno | - |
 
@@ -456,9 +456,9 @@ Tanto para Takedowns como para Automated Takedowns:
 flowchart TD
     Detection[Detection] --> Monitoring[Monitoring & Reporting]
     Monitoring --> Reviewing[Reviewing]
-    Reviewing --> AdminApproval[Admin Approval<br/>Opcional]
+    Reviewing --> AdminApproval[Obligatory Organization Admin Approval<br/>Opcional]
     Reviewing --> Blocklisting[Blocklisting]
-    Reviewing --> Takedowns[Takedowns]
+    Blocklisting --> Takedowns[Takedowns]
     Takedowns --> AutoTakedowns[Automated Takedowns]
     
     style Detection fill:#3b82f6
