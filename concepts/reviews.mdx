@@ -131,6 +131,12 @@ Reviews can be escalated in two directions:
 
 **Customer Escalations** - The proposal stays pending until customer admin reviews it. Customer approval or rejection finalizes the decision. Notifications are sent via Slack/Discord, and superusers can override if needed.
 
+If you confirm an escalated proposal to ChainPatrol over Slack, Telegram, email, or another channel instead of approving it in the dashboard, ChainPatrol support can approve it on your behalf. The approval appears in the proposal's reviews and the report timeline with a comment that starts with "Approved on behalf of the client, who confirmed via" and the channel you used. ChainPatrol managers and superusers can also approve an escalated proposal on their own judgment, without your confirmation.
+
+### Approving Assets That Look Legitimate
+
+When high-confidence legitimacy signals indicate that an asset looks legitimate, approving its proposal requires an acknowledgement. Anyone who can approve the proposal can give it, including customer admins. When you review a single proposal, the **Approval Not Allowed** panel lists each legitimacy signal with an **Acknowledge** action. When you bulk approve, proposals held back only by a legitimacy warning open a dialog titled "N assets look legitimate" that lists the signals, and **Acknowledge and approve N** approves them while the other selected proposals approve normally. Some legitimacy rules can't be acknowledged; for those, contact ChainPatrol.
+
 **Team Escalations** - Routes to senior ChainPatrol analysts. In-depth investigation is performed. Expert decision is made and customer is notified of outcome.
 
 ## Why Human Review vs. Automation?
