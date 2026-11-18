@@ -105,13 +105,34 @@ Expiry removes the asset from your organization; it does not change the asset's 
 
 ### Setting an expiry
 
-- **When adding assets** - In the **Add Assets** dialog, choose an expiry: in 6 months, in 1 year, or on a date. Through the API, pass `expiresAt` to [Add Organization Assets](/external-api/organization-assets-add#setting-an-expiry-when-adding).
+- **When adding assets** - In the **Add Assets** dialog, give each asset its own date in the paste (see [Pasting assets with their own dates](#pasting-assets-with-their-own-dates)), or choose one expiry for the rest: in 6 months, in 1 year, or on a date. Through the API, pass `expiresAt` to [Add Organization Assets](/external-api/organization-assets-add#setting-an-expiry-when-adding).
 - **On the Allowlist page** - Use **Set expiry** on an asset, or select several and set one date for all of them. Filter the list by **Expiring soon** or **Expired** to see what needs attention.
 - **From the API, CLI or MCP** - Use the [Set Asset Expiry](/external-api/organization-assets-expiry) endpoint, the `chainpatrol orgs assets set-expiry` [CLI command](/cli/commands/orgs), or the `organization_assets_set_expiry` tool in the [MCP server](/mcp-server).
 
 An expiry date runs to the end of that day in UTC. Setting a new date on an expired asset renews it and ends its grace period. Clearing the expiry keeps the asset indefinitely.
 
 Organization owners and admins can set, renew and clear expiry dates.
+
+### Pasting assets with their own dates
+
+When each asset ends on a different date, such as a list of partner sites exported from a spreadsheet, paste them into the **Add Assets** dialog with the date on the same line. Put one asset per line, followed by its date as `YYYY-MM-DD` after a comma or a tab:
+
+```text
+partner-one.com, 2027-03-31
+"Partner Two", partner-two.com, 2027-06-30
+https://twitter.com/partnerthree
+```
+
+- Two columns copied from a spreadsheet paste as asset and date. The date can be in any column, and other cells on the line, such as a partner's name, are ignored.
+- Each dated asset expires at the end of that day in UTC and shows its own expiry in the list. Lines without a date use **Allowlist expiry for assets without a date**.
+- Only `YYYY-MM-DD` dates are accepted. A date in another format (such as `3/31/2027` or `31-Mar-2027`), a date that has passed, two dates or two assets on one line, or a date with no asset is listed by line number under **Fix these lines before adding**. You can't add assets until you fix those lines.
+- Lines with neither an asset nor a date, such as a header row, are skipped.
+
+You can paste thousands of assets at once. The dialog previews the first 100 rows with a **Show all** button and adds the rest the same way. ChainPatrol adds them in batches of 200, and the button shows the progress. If a batch fails, the message says how many assets were added and those lines are taken off the paste, so selecting **Add** again sends only the rest.
+
+### Putting added assets in a group
+
+Use **Group** in the **Add Assets** dialog to put the assets you add in an asset group, such as "Partners", to tell partner assets apart from your own. Choose **New group...** to create one in place. On the Allowlist page, filter the list by **Group** to see those assets. Through the API, pass `groupId` to [Add Organization Assets](/external-api/organization-assets-add).
 
 ## Granularity of Allowlists
 
