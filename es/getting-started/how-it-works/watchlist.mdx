@@ -1,0 +1,140 @@
+---
+title: "Cómo funciona la Watchlist"
+description: "Cómo ChainPatrol pone en la Watchlist los assets sospechosos o fuera de línea y los vuelve a escanear con una frecuencia adaptativa para detectar cuándo se vuelven maliciosos o confirmar el éxito de un takedown."
+---
+
+## Descripción general
+
+La **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando) es un conjunto de **assets** (activos digitales: URLs, direcciones, perfiles, apps, etc.) que no están bloqueados ni permitidos, pero que se **monitorean activamente**. Ponemos assets en la Watchlist por dos motivos principales:
+
+- **Proceso de revisión** - Monitorear assets para determinar si se vuelven maliciosos
+- **Proceso de takedown** (solicitud de baja de contenido fraudulento) - Monitorear assets para determinar si quedan fuera de línea
+
+### Cuándo salen los assets de la Watchlist
+
+Quitamos assets de la Watchlist por tres motivos:
+
+- **Asset permitido** - El estado del asset cambió a `ALLOWED`
+- **Vuelve a estar en línea** - Un asset que estaba inactivo vuelve a ser accesible
+- **Demasiado tiempo fuera de línea** - El asset estuvo fuera de línea durante más de 30 días
+
+<Info>
+Para más detalles sobre el concepto de Watchlist, consulta nuestra [documentación de Conceptos](/es/concepts/watchlist).
+</Info>
+
+## Cómo se ponen los assets en la Watchlist
+
+### Proceso de revisión
+
+Durante el flujo de revisión, un analista puede decidir poner un asset en la Watchlist. Por lo general, esto se hace en dos escenarios:
+
+**Página de parking** - El dominio está reservado, pero no tiene contenido activo. La URL indica una posible suplantación de marca, pero todavía no hay evidencia suficiente para realizar un takedown. Monitoreamos para ver si aparece contenido malicioso. Ejemplo: `metamask-airdrop.com` muestra una página de parking de dominio, pero el nombre sugiere un uso malicioso a futuro.
+
+**Asset inactivo** - El asset está actualmente fuera de línea o inaccesible. La estructura de la URL sugiere una suplantación de marca, pero no podemos analizar contenido que todavía no existe. Monitoreamos para detectar cuándo se pone en línea. Ejemplo: `uniswap-claim.xyz` devuelve un error 404, pero el nombre de dominio es sospechoso.
+
+### Proceso de takedown
+
+Cuando presentamos un takedown, ponemos automáticamente en la Watchlist el asset que se está dando de baja.
+
+1. **Takedown presentado** - La solicitud de takedown se envía al proveedor correspondiente
+2. **Asset en la Watchlist** - El asset se agrega automáticamente a la Watchlist para su monitoreo
+3. **Monitoreo automatizado** - Escaneos periódicos verifican si el asset queda fuera de línea
+4. **Finalización automática** - Si el asset queda fuera de línea, el takedown se marca como completado automáticamente
+
+Esta automatización nos permite confirmar los takedowns exitosos sin verificación manual, lo que acelera todo el proceso.
+
+### Elegibilidad para la Watchlist
+
+Solo ciertos tipos de asset pueden ponerse en la Watchlist, ya que son los que podemos monitorear de forma consistente y automatizada:
+
+- **URL** - Direcciones web y dominios
+- **Page** - Páginas web específicas
+- **Email** - Direcciones de correo electrónico
+- **Twitter** - Cuentas de Twitter/X
+- **Telegram** - Canales y usuarios de Telegram
+
+Los tipos de asset que no están en esta lista los monitorea nuestro equipo humano para confirmar los takedowns, en lugar del monitoreo automatizado de la Watchlist.
+
+## Qué pasa cuando los assets están en la Watchlist
+
+Cuando un asset está en la Watchlist, lo monitoreamos ejecutando periódicamente **Asset Scans** (escaneos del asset) para determinar si hay algún cambio en su comportamiento:
+
+- **Cambios de estado** - Monitoreo de los códigos de estado HTTP y de la accesibilidad
+- **Cambios de contenido** - Detección de modificaciones en el contenido de la página
+- **Cambios de infraestructura** - Seguimiento de cambios en los registros DNS y en el hosting
+
+También ejecutamos verificaciones para determinar si debemos mantener el asset en la Watchlist o quitarlo porque es poco probable que se vuelva malicioso.
+
+<Tip>
+**Frecuencia adaptativa:** Los assets agregados recientemente a la Watchlist se escanean con más frecuencia. A medida que pasa el tiempo sin cambios, la frecuencia de escaneo disminuye para optimizar los recursos.
+</Tip>
+
+## Frecuencia de escaneo
+
+Recorremos la Watchlist cada minuto y verificamos unos **150 assets a la vez**. La frecuencia de escaneo depende de cuánto tiempo lleva el asset en la Watchlist y de su estado actual.
+
+### Assets UNKNOWN / ALLOWED
+
+Los assets que todavía no están bloqueados se escanean con más frecuencia:
+
+| Tiempo en la Watchlist | Frecuencia de escaneo |
+|-------------------|----------------|
+| < 6 horas | Cada hora |
+| < 24 horas | Cada 2 horas |
+| < 2 días | Cada 4 horas |
+| < 7 días | Cada 6 horas |
+| < 2 semanas | Cada 12 horas |
+| < 1 mes | Diaria |
+| < 2 meses | Cada 2 días |
+| > 2 meses | Cada 4 días |
+
+### Assets BLOCKED
+
+Los assets bloqueados se escanean con menos frecuencia porque ya están protegidos:
+
+| Tiempo en la Watchlist | Frecuencia de escaneo |
+|-------------------|----------------|
+| < 6 horas | Cada 3 horas |
+| < 24 horas | Cada 6 horas |
+| < 2 días | Cada 12 horas |
+| < 7 días | Cada 18 horas |
+| < 2 semanas | Cada 36 horas |
+| < 1 mes | Cada 3 días |
+| < 2 meses | Cada 6 días |
+| > 2 meses | Cada 12 días |
+
+**¿Por qué la diferencia?** Los assets `UNKNOWN` y `ALLOWED` necesitan un monitoreo más cercano para detectar cuándo se vuelven maliciosos. Los assets `BLOCKED` ya están protegidos, así que los monitoreamos principalmente para confirmar el éxito del takedown.
+
+## Cómo se quitan los assets de la Watchlist
+
+Los assets se quitan automáticamente de la Watchlist en condiciones específicas:
+
+### El asset pasa a ALLOWED
+
+Si el estado de un asset cambia de `BLOCKED` o `UNKNOWN` a `ALLOWED`, lo quitamos de inmediato de la Watchlist. Los assets permitidos están verificados como legítimos y no requieren monitoreo.
+
+### El asset se pone en línea
+
+Si el estado de **Liveness** (si el asset sigue online o ya no) de un asset cambia de `DEAD` a `ALIVE` o `UNKNOWN`, lo quitamos de la Watchlist. El asset vuelve a la cola de revisión, donde un analista humano evaluará si es malicioso.
+
+### Factor de decaimiento
+
+**Assets UNKNOWN: límite de 30 días** - Si un asset está en estado `UNKNOWN`, lo quitamos de la Watchlist después de 30 días. Si un asset no se volvió malicioso después de un mes, es poco probable que represente una amenaza.
+
+**Takedown exitoso** - Si el asset se puso en la Watchlist durante el proceso de takedown y el takedown está en estado `IN_PROGRESS`, cuando el asset queda fuera de línea o el proveedor del takedown suspende el asset, se quita de la Watchlist porque el takedown tuvo éxito.
+
+**Eliminación manual** - Un analista puede quitar manualmente un asset de la Watchlist si determina que ya no es necesario monitorearlo.
+
+## Buenas prácticas
+
+- **Úsala para dominios sospechosos** - Pon en la Watchlist los dominios con nombres sospechosos que todavía no tienen contenido activo
+- **Monitorea los takedowns** - Deja que la Watchlist confirme automáticamente el éxito de los takedowns
+- **Revisa con regularidad** - Revisa periódicamente los elementos que llevan mucho tiempo en la Watchlist para asegurarte de que sigan siendo relevantes
+- **Confía en la automatización** - La frecuencia de escaneo adaptativa optimiza el monitoreo sin intervención manual
+
+## Puntos clave
+
+- La Watchlist es para la zona gris: úsala cuando sospeches que un asset podría ser malicioso, pero todavía no tengas evidencia suficiente para bloquearlo
+- El monitoreo automático de takedowns ahorra tiempo: cada takedown pone automáticamente el asset en la Watchlist para detectar cuándo queda fuera de línea, lo que elimina la verificación manual
+- La frecuencia adaptativa optimiza los recursos: los assets agregados recientemente se escanean cada hora, mientras que los estables se escanean con menos frecuencia, así detectas los cambios rápido sin desperdiciar escaneos
+- El decaimiento a los 30 días evita que la Watchlist se sature: los assets `UNKNOWN` que no se volvieron maliciosos después de un mes se quitan automáticamente, lo que mantiene tu monitoreo enfocado

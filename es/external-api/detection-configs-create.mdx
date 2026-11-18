@@ -1,0 +1,40 @@
+---
+title: Crear configuración de detección
+openapi: "POST /detection/configs/create"
+---
+
+## Descripción general
+
+Crea una nueva configuración de detección de amenazas para que una fuente empiece a
+escanear para tu organización. Las fuentes que están desactivadas de forma predeterminada
+no tienen una fila de configuración, así que no se pueden activar mediante
+[Actualizar configuración de detección](/es/external-api/detection-configs-update)
+hasta que crees una aquí.
+
+Una misma fuente puede tener varias configuraciones, cada una con su propia consulta,
+programación o marca. Usa `title` y `description` para distinguirlas.
+
+## Cuándo usarlo
+
+- Activar una fuente que está desactivada de forma predeterminada para tu organización.
+- Agregar otra configuración a una fuente que ya ejecutas (por ejemplo, una segunda
+  consulta o una variante limitada a una marca).
+- Aprovisionar de forma programática un payload `config` específico de la fuente.
+
+Para una configuración existente, usa en su lugar
+[Actualizar configuración de detección](/es/external-api/detection-configs-update).
+
+## Cómo funciona
+
+- `source` debe ser una clave devuelta por [Listar fuentes de detección](/es/external-api/detection-sources-list).
+  Se rechazan las fuentes que son solo globales y las fuentes sin implementación.
+- `cron` solo se acepta para fuentes programadas (basadas en pull). Omítelo para usar
+  la programación predeterminada de la fuente.
+- `config` se valida contra el `configSchema` de la fuente que devuelve
+  [Listar fuentes de detección](/es/external-api/detection-sources-list). Se permite un
+  objeto vacío `{}`; los valores predeterminados del esquema se aplican al momento del escaneo.
+- `brandId`, cuando se envía, debe pertenecer a tu organización. Omítelo para una
+  configuración que abarque toda la organización.
+- La configuración y una fila inicial de historial se escriben en una sola transacción
+  para que los trabajos de sincronización de valores predeterminados (default-sync) no
+  la desactiven.

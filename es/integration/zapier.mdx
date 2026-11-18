@@ -1,0 +1,87 @@
+---
+icon: bolt-lightning
+title: Zapier
+description: Usa la app de ChainPatrol para Zapier para automatizar los reportes de URL de estafa desde Discord, Slack o Google Forms y enviar los enlaces maliciosos directamente a la Blocklist.
+---
+
+# Guía de la app de ChainPatrol para Zapier
+
+Bloquea URL maliciosas al instante mediante automatizaciones de Zapier.
+
+## Primeros pasos
+
+1. **Obtén tu clave de API**
+
+   - Accede a tu clave de API de ChainPatrol desde la página de configuración de tu organización, en el [**Dashboard** (panel principal) de la organización](https://app.chainpatrol.io/admin)
+   - La clave de API debe empezar con `cp_`
+
+2. **Conéctate a Zapier**
+
+   - Usa este enlace de invitación para acceder a la app de ChainPatrol para Zapier: [https://zapier.com/developer/public-invite/218319/438734/23848bd6e68c1151aea214acd5f6136d/](https://zapier.com/developer/public-invite/218319/438734/23848bd6e68c1151aea214acd5f6136d/)
+
+3. **Encuentra el slug de tu organización**
+   - Es el identificador que aparece en tu URL de ChainPatrol
+   - Ejemplo: Si accedes a ChainPatrol en `app.chainpatrol.io/admin/companyname`, tu slug es `companyname`
+
+## Acciones disponibles
+
+### Create Report
+
+Crea un nuevo reporte con las URL que se deben bloquear.
+
+#### Campos de entrada:
+
+1. **URLs to Block** (obligatorio)
+
+   ```
+   # Option 1: One URL per line
+   scam1.com
+   scam2.com
+   scam3.com
+
+   # Option 2: Comma-separated
+   scam1.com, scam2.com, scam3.com
+   ```
+
+   - Admite URL con o sin 'https://'
+   - Puede incluir direcciones de correo electrónico y nombres de usuario de redes sociales
+   - Las URL no válidas se omitirán
+
+2. **Report Title** (obligatorio)
+
+   - Títulos de ejemplo:
+     - "URL de phishing del canal #security de Discord"
+     - "Sitios web de estafa dirigidos a nuestros usuarios"
+     - "Sitios falsos de minting - ene. 2024"
+
+3. **Additional Details** (opcional)
+
+   - Agrega contexto sobre las URL
+   - Detalles sugeridos:
+     - Dónde se encontraron las URL
+     - Cómo se descubrieron
+     - Tipo de estafa
+     - Evidencia adicional
+
+4. **Organization Slug** (obligatorio)
+   - El identificador de tu organización en ChainPatrol
+
+## Ejemplos comunes de Zaps
+
+1. **Discord → ChainPatrol**
+
+   - Disparador: Nuevo mensaje en el canal de seguridad
+   - Acción: Crear un reporte con las URL
+
+2. **Google Form → ChainPatrol**
+
+   - Disparador: Nuevo envío del formulario
+   - Acción: Crear un reporte con las URL enviadas
+
+3. **Slack → ChainPatrol**
+   - Disparador: Mensaje con una reacción de emoji específica
+   - Acción: Crear un reporte con las URL del mensaje
+
+## Soporte
+
+¿Necesitas ayuda? Escribe a support@chainpatrol.io

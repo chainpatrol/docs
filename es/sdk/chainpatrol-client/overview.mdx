@@ -1,0 +1,38 @@
+---
+title: "Descripción general de ChainPatrolClient"
+description: La clase ChainPatrolClient conecta tu app de JavaScript en Node.js o en el navegador con la API de ChainPatrol para verificar, listar y enviar assets.
+---
+
+Un [ChainPatrolClient](./constructor) te permite interactuar con la API de ChainPatrol desde una aplicación de Node.js o del navegador.
+
+```js
+import { ChainPatrolClient } from "@chainpatrol/sdk";
+
+const chainpatrol = new ChainPatrolClient({ apiKey: "<API_KEY>" });
+```
+
+## Constructor
+
+### `new ChainPatrolClient()`
+
+Crea una nueva instancia de ChainPatrolClient.
+
+---
+
+## Métodos de instancia
+
+### [asset.check()](./instance-methods/asset-check)
+
+Verifica el estado de un **asset** (activo digital: URL, dirección, perfil, app, etc.) para saber si es malicioso o no.
+
+### [asset.list()](./instance-methods/asset-list)
+
+Lista todos los assets (y sus estados) que ChainPatrol ya revisó.
+
+### [asset.submit()](./instance-methods/asset-submit)
+
+Envía hasta 100 assets a ChainPatrol para su clasificación automática.
+
+### [report.create()](./instance-methods/report-create)
+
+Crea un reporte con uno o más assets para que ChainPatrol lo revise.

@@ -1,0 +1,47 @@
+---
+title: Obtener tendencia del tiempo de takedown
+openapi: "POST /metrics/takedown-time/trend"
+---
+
+## Descripción general
+
+Obtén la mediana del tiempo de **takedown** (solicitud de baja de contenido fraudulento) para cada mes de una ventana de los últimos meses, junto con el cambio
+respecto al mes anterior. Los meses se agrupan según cuándo se completó el takedown.
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/takedown-time/trend \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "months": 6,
+    "assetTypes": ["URL", "TWITTER"]
+  }'
+```
+
+## Cuerpo de la solicitud
+
+| Campo          | Tipo          | Obligatorio | Valor predeterminado | Descripción                                                                                                          |
+| -------------- | ------------- | ----------- | -------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `slug`         | `string`      | ✅ Sí       | -                    | Slug de la organización.                                                                                             |
+| `months`       | `number`      | ❌ No       | `12`                 | Tamaño de la ventana en meses completos, de 2 a 36, contando el mes actual.                                          |
+| `assetTypes`   | `AssetType[]` | ❌ No       | -                    | Hasta 5 tipos de **asset** (activo digital: URL, dirección, perfil, app, etc.), con una serie para cada uno. Omítelo para obtener una sola serie que agrupa todos los tipos de asset. |
+| `brandIds`     | `number[]`    | ❌ No       | -                    | Solo assets que pertenecen a estas marcas.                                                                           |
+| `brandType`    | `string`      | ❌ No       | -                    | Solo marcas de este tipo: `INDIVIDUAL`, `ORGANIZATION` o `PRODUCT`.                                                  |
+| `blockLabel`   | `string`      | ❌ No       | -                    | Solo assets bloqueados con esta etiqueta de revisión, como `Brand Impersonation`.                                    |
+| `countryCodes` | `string[]`    | ❌ No       | -                    | Solo assets escaneados desde estos países (códigos ISO 3166-1 alpha-2).                                              |
+
+La serie agrupada deja fuera las direcciones cripto (`ADDRESS`), y `excludedAssetTypes`
+así lo indica. Envía `ADDRESS` en `assetTypes` para obtener su propia serie. Consulta
+[Obtener tiempo de takedown](/es/external-api/metrics-takedown-time) para saber por qué.
+
+## Cómo leer la respuesta
+
+- `periods` lista todos los meses de la ventana en formato `yyyy-MM`, del más antiguo al más reciente.
+- Cada serie tiene un punto por mes. Un mes sin takedowns completados tiene una
+  mediana `null` y un `count` de 0. La serie agrupada tiene `assetType: null`.
+- `change` compara el último mes que tuvo takedowns completados con el anterior,
+  omitiendo los meses vacíos. Un `percentChange` negativo significa que los takedowns fueron más rápidos,
+  y `direction` lo interpreta por ti como `improved`, `worsened` o `unchanged`. Ambos son
+  `null` cuando no hay un mes anterior con el cual comparar.

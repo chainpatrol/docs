@@ -1,0 +1,24 @@
+---
+title: Browser
+description: "El adaptador Storage.browser() guarda en caché las consultas de URL de ThreatDetector en el localStorage del navegador, ideal para apps web que se ejecutan en el contexto de una página estándar."
+---
+
+El adaptador `Storage.browser()` usa la API `localStorage` del navegador para guardar datos.
+Este adaptador es el indicado para dApps y otras apps web que se ejecutan en el navegador. Para extensiones de navegador,
+usa el adaptador [Storage.extension()](./extension).
+
+## Ejemplo
+
+```js
+import { Storage } from "@chainpatrol/sdk";
+
+const storage = Storage.browser({
+  quota: 1024 * 1024 * 2, // 2MB
+});
+```
+
+## Limitaciones
+
+La API `localStorage` limita a 5 MB la cantidad de datos que se pueden guardar. Te recomendamos
+usar la opción `quota` para limitar la cantidad de datos guardados y así evitar llegar a
+ese límite, sobre todo si también guardas otros datos en `localStorage`.

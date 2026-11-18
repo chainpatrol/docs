@@ -154,7 +154,7 @@ print([attachment["url"] for attachment in attachments])
   accepted. Matching is case-insensitive.
 - Directory components are stripped: `../../secrets/evidence.eml` is stored as
   `evidence.eml`.
-- Names must contain no control characters, and are length-capped — the schema above gives
+- Names must contain no control characters, and are length-capped — the request schema on this page gives
   the limit.
 - Your name is otherwise preserved as-is. That matters because it is the name shown on the
   report, and the name a registrar or hosting provider sees when our takedown team forwards
@@ -164,7 +164,7 @@ print([attachment["url"] for attachment in attachments])
 
 ## Supported file types
 
-The accepted extensions are enumerated in the request description above, and that list is
+The accepted extensions are enumerated in the request description on this page, and that list is
 generated from the same constants the endpoint enforces — so it is always current.
 
 The content type we serve the file with is derived from the extension, **not** from the
@@ -178,7 +178,7 @@ the file inside a supported container (a PDF export, or the raw `.eml`).
 
 ## Limits
 
-The request body size cap and the per-request file count are stated in the schema above.
+The request body size cap and the per-request file count are stated in the request schema on this page.
 Two things it does not tell you:
 
 - **The size cap applies to the whole request body**, so in a multipart request all parts
@@ -201,7 +201,7 @@ Two things it does not tell you:
 ## Error responses
 
 Every error returns a JSON body with a single `error` string describing what was wrong.
-The statuses are listed with the responses above; two things worth calling out:
+The statuses are listed in the response reference on this page; two things worth calling out:
 
 - **`405` is not in the list**, because it is not a response of `POST`. The endpoint is
   `POST` only, and any other method returns `405 Method Not Allowed`.

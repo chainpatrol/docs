@@ -1,0 +1,21 @@
+---
+title: Obtener una organización del usuario
+openapi: "GET /user/orgs/{slug}"
+---
+
+## Descripción general
+
+Obtén una única organización por su slug. La respuesta usa la misma estructura por organización
+que [Listar organizaciones del usuario](/es/external-api/user-orgs): id, nombre, slug, URL del avatar,
+estado de suscripción, indicadores de servicios, estado de conexión de las integraciones, aprobación obligatoria de un
+administrador, documentos legales y registros de marca.
+
+## Acceso
+
+Quien hace la llamada debe tener permiso sobre la organización:
+
+- Las claves de API con alcance de organización deben coincidir con el slug solicitado.
+- Las sesiones de usuario y las claves de API con alcance de usuario necesitan una membresía activa en la organización, salvo que
+  quien hace la llamada sea parte del personal (staff) de ChainPatrol.
+
+Las organizaciones eliminadas de forma lógica (soft delete) se excluyen.

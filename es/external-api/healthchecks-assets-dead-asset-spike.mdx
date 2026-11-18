@@ -1,0 +1,19 @@
+---
+title: Pico de assets inactivos
+openapi: "POST /healthchecks/assets/dead-asset-spike"
+---
+
+## Descripción general
+
+Compara la cantidad de **Assets** (activos digitales: URL, direcciones, perfiles, apps,
+etc.) detectados como inactivos (`DEAD`) en la ventana actual con la tasa de referencia de
+los `baselineDays` anteriores. La severidad se activa solo cuando la cantidad actual
+supera `minSpikeCount` y excede el multiplicador configurado, lo que suprime el ruido en
+las organizaciones con una actividad de referencia cercana a cero.
+
+## Cuándo se activa
+
+Un pico es útil para detectar regresiones en el verificador de **Liveness** (si el asset
+sigue online o ya no) después de cambios en las plataformas —por ejemplo, despliegues de
+captcha o actualizaciones anti-bot—, que pueden marcar erróneamente como inactivos
+assets que siguen online.

@@ -1,0 +1,119 @@
+---
+title: "Security Portal"
+description: "Cómo el Security Portal le da a tu comunidad una página pública con tu marca para reportar amenazas de phishing, suplantación y estafas sin necesidad de tener una cuenta de ChainPatrol"
+---
+
+## Descripción general
+
+El **Security Portal** (portal de seguridad) es la página pública de tu organización, donde las personas ajenas a tu equipo pueden reportar actividad sospechosa directamente a ChainPatrol.
+
+<Info>
+Es una landing page con tu marca que muestra el nombre de tu organización y le da a cualquier persona que tenga el enlace una forma fácil de enviar las amenazas que encontró, ya sea un sitio de phishing, un perfil social falso o una app maliciosa que se hace pasar por la tuya.
+</Info>
+
+Cuando el Security Portal está habilitado, también puede mostrar:
+
+- **Public Reports** (reportes públicos): muestra qué amenazas se reportaron y qué acción se tomó
+- **Public Metrics** (métricas públicas): muestra estadísticas de alto nivel sobre las amenazas detectadas y atendidas
+
+Esto les da a tu comunidad y a tus partes interesadas transparencia sobre qué tan activamente se detectan y se atienden las amenazas para tu organización.
+
+## ¿Quién lo usa?
+
+El Security Portal está diseñado para **tu comunidad**:
+
+### Usuarios externos
+
+**Usuarios y clientes**: personas que usan tus productos o servicios y se encuentran con contenido sospechoso. Reportan sitios de phishing, cuentas falsas en redes sociales, mensajes de estafa que dicen venir de tu marca y apps o extensiones sospechosas.
+
+**Miembros de la comunidad**: moderadores de Discord, administradores de Telegram y participantes activos de la comunidad que reportan suplantaciones en los canales de la comunidad, publicaciones de estafa dirigidas a tu comunidad, cuentas de soporte falsas y campañas de ataque coordinadas.
+
+**Socios**: socios comerciales, afiliados y participantes del ecosistema que reportan amenazas que afectan a usuarios compartidos, suplantación entre marcas, amenazas a la cadena de suministro y campañas que afectan a toda la industria.
+
+**Investigadores de seguridad**: investigadores independientes y hackers éticos (white hat) que reportan amenazas recién descubiertas, patrones de ataque sofisticados, campañas de phishing de día cero y vulnerabilidades técnicas.
+
+En lugar de exigirles que tengan una cuenta o que pasen por canales complicados, pueden simplemente visitar tu Security Portal y enviar un reporte en unos pocos clics.
+
+### Equipo interno
+
+También puedes usarlo internamente para darle a tu equipo una forma rápida y siempre disponible de reportar amenazas sin iniciar sesión en el **Dashboard** (panel principal) completo de ChainPatrol. Entre los beneficios están: no requiere inicio de sesión, envío más rápido para reportes breves, una interfaz adaptada a dispositivos móviles y una URL que puedes guardar en favoritos y compartir con integrantes no técnicos del equipo.
+
+## ¿Dónde lo encuentras?
+
+Tu Security Portal está en una URL única basada en el slug de tu organización.
+
+**Ejemplo:** si tu organización es `acme`, tu Security Portal estaría en `chainpatrol.io/acme`
+
+Para ubicar la URL de tu portal:
+
+1. Ve a **Settings → Security Portal** (**Settings** es la configuración) en tu dashboard
+2. Busca la tarjeta "Security Portal URL" (URL del portal de seguridad)
+3. Haz clic en el enlace para copiar tu URL única y compartirla con tu comunidad
+
+Agrega la URL de tu Security Portal al pie de página de tu sitio web, a tu documentación y a los recursos de tu comunidad para que los usuarios sepan dónde reportar amenazas.
+
+## ¿Dónde lo configuras?
+
+El Security Portal se configura en **Settings → Security Portal**, dentro del dashboard de tu organización.
+
+### Visibility (visibilidad)
+
+Controla quién puede acceder al portal:
+
+- **Disabled** (deshabilitado): nadie puede acceder al portal. El portal devuelve un error 404 y nadie puede enviar reportes a través de él.
+- **Private** (privado): solo los miembros de tu organización pueden verlo. Requiere iniciar sesión en ChainPatrol y es útil para pruebas internas.
+- **Public** (público): cualquier persona que tenga el enlace puede acceder. No requiere autenticación, para lograr la máxima participación de la comunidad.
+
+### Public Reports
+
+Un interruptor que determina si los usuarios no autenticados pueden ver los reportes enviados a tu organización.
+
+Cuando está habilitado, las personas que visitan tu Security Portal pueden ver qué se reportó y qué acción se tomó, y esto demuestra un monitoreo activo de amenazas a la vez que genera confianza en la comunidad.
+
+Lo que se muestra incluye el título y la descripción del reporte, los **assets** reportados (activos digitales como URL, cuentas, etc.), el estado (pendiente, en curso, cerrado), la fecha de envío y la acción tomada. Los comentarios internos, la identidad de los revisores y los detalles sensibles de la investigación NO se muestran.
+
+<Warning>
+Considera tus objetivos de transparencia y tus requisitos de privacidad antes de habilitar los reportes públicos.
+</Warning>
+
+### Public Metrics
+
+Un interruptor que muestra estadísticas de alto nivel sobre amenazas en tu Security Portal.
+
+Las métricas que se muestran incluyen las amenazas bloqueadas, los **takedowns** (solicitudes de baja de contenido fraudulento) presentados, los takedowns completados, los reportes recibidos, las amenazas por tipo de asset y las tendencias de actividad reciente. Esto demuestra que tu organización se toma la seguridad en serio sin exponer detalles sensibles.
+
+## ¿Por qué existe?
+
+El Security Portal cumple dos propósitos principales:
+
+### Protección impulsada por la comunidad
+
+Cuando los usuarios se encuentran con un sitio de phishing o con un perfil falso que te suplanta, muchas veces quieren reportarlo pero no saben cómo. Entre las barreras más comunes están: no hay un canal de reporte claro, el proceso de envío es complicado, se exige crear una cuenta y no queda claro si se actúa a partir de los reportes.
+
+El Security Portal les da un lugar simple y confiable para enviar esa información directamente a ChainPatrol, con un envío fácil (sin necesidad de cuenta), un proceso claro, un canal confiable con tu marca y un impacto visible que muestra que los reportes se traducen en acciones.
+
+### Transparencia y confianza
+
+Al habilitar los reportes y las métricas públicas, puedes demostrar un monitoreo de seguridad activo a tus partes interesadas, a los reguladores y a tu base de usuarios. Los miembros de la junta directiva ven un monitoreo activo de amenazas, los inversionistas entienden la inversión en seguridad, los socios verifican las medidas de protección y los auditores revisan los procesos de seguridad. Esto genera confianza y demuestra que tu organización se toma la seguridad en serio.
+
+## ¿A dónde van los reportes de la comunidad?
+
+Cuando alguien envía un reporte a través de tu Security Portal, este llega a la página **Reports** (reportes de posibles amenazas) de tu organización en el dashboard de ChainPatrol, igual que cualquier otro reporte.
+
+El flujo de procesamiento del reporte funciona así:
+
+1. El usuario envía el reporte a través del Security Portal
+2. El reporte aparece en la página Reports de tu organización
+3. El equipo de ChainPatrol evalúa la evidencia y ejecuta verificaciones de seguridad
+4. Se determina si los assets reportados deben bloquearse, permitirse o escalarse
+5. Si "Obligatory Organization Admin Approval" (aprobación obligatoria de un administrador de la organización) está habilitado, tu equipo confirma la acción
+6. El estado del asset se actualiza y se distribuye a la **blocklist** (lista de bloqueo)
+
+A partir de ahí, el reporte pasa por el mismo proceso de revisión que cualquier otro envío.
+
+## Puntos clave
+
+- Los reportes de la comunidad funcionan como un sistema de alerta temprana: los usuarios suelen encontrarse con las amenazas antes que tu equipo interno, así que un portal de seguridad público capta inteligencia desde la primera línea
+- El envío sin cuenta reduce las barreras: exigir un registro reduce drásticamente el volumen de reportes, así que los portales públicos aceptan envíos sin inicio de sesión para maximizar el descubrimiento de amenazas
+- La transparencia genera confianza en tu comunidad: publicar métricas y mostrar cómo respondes a los reportes demuestra una protección activa y alienta a seguir reportando
+- Los reportes del portal pasan por la misma revisión rigurosa: los envíos públicos reciben el mismo análisis experto que las amenazas sospechosas de la detección automatizada, lo que garantiza la calidad sin perder velocidad

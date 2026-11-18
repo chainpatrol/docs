@@ -1,0 +1,97 @@
+---
+title: "Suspected Threats"
+description: "Cómo ChainPatrol marca las amenazas sospechosas sin confirmar (Suspected Threats), puntúa su nivel de confianza de none a high, agrupa las amenazas relacionadas de una misma campaña y elimina los hallazgos duplicados."
+---
+
+## Descripción general
+
+Una **suspected threat** (amenaza sospechosa detectada automáticamente, todavía sin confirmar) es una posible amenaza de seguridad que el sistema de monitoreo de ChainPatrol identificó automáticamente pero que **no ha sido confirmada**. Cuando una fuente de detección descubre contenido sospechoso que podría estar suplantando tu marca o intentando defraudar a los usuarios, crea una suspected threat para que tu equipo de seguridad la revise. Se convierte en una amenaza confirmada solo después de ser revisada y bloqueada, y solo las amenazas confirmadas se cuentan como **threats blocked** (amenazas bloqueadas).
+
+Las suspected threats representan hallazgos automatizados del monitoreo continuo de ChainPatrol en internet. En la app de ChainPatrol aparecen en la página **Suspected Threats**. La API las devuelve como resultados de detección desde [`POST /detection/list`](/es/external-api/detection-list).
+
+### Componentes de una suspected threat
+
+Cada suspected threat contiene:
+
+- **Asset** (activo digital) - La URL, la cuenta de redes sociales o el contenido específico identificado
+- **Fuente** - Qué fuente de detección la descubrió
+- **Puntaje** - Nivel de confianza (0-1) que indica la probabilidad de que sea maliciosa
+- **Motivo** - Por qué se marcó y qué reglas se activaron
+- **Organización** - Tu organización, que es el blanco de la amenaza
+- **Fecha y hora** - Cuándo se detectó el asset por primera vez
+- **Estado** - Estado actual (reportada, en revisión, en espera de acción)
+
+## Ciclo de vida de una suspected threat
+
+1. **Descubrimiento** - Una fuente de detección encuentra contenido que coincide con tus palabras clave o patrones de monitoreo. Por ejemplo, Google Search detecta un sitio web que contiene el nombre de tu marca junto con términos como "airdrop" o "claim tokens".
+
+2. **Procesamiento del asset** - El asset descubierto se envía automáticamente al pipeline de análisis de ChainPatrol, donde se crea o se recupera el registro del asset, se valida que el asset no haya sido marcado ya como legítimo (permitido) y se verifica si hay suspected threats duplicadas.
+
+3. **Escaneo y enriquecimiento** - El asset pasa por un escaneo exhaustivo para recopilar inteligencia, que incluye análisis de contenido (capturas de pantalla de la página web, contenido HTML, extracción de metadatos, análisis de texto e imágenes), datos de red (registros DNS, direcciones IP, información de hosting, CDN e infraestructura), registro del dominio (datos de WHOIS, fecha de registro, información del registrador, registros históricos), datos de la plataforma (perfiles de redes sociales, información de tiendas de aplicaciones, metadatos de la plataforma, detalles de la cuenta), análisis visual (detección de logos, coincidencia por similitud, identificación de elementos de marca, huella visual) y datos de blockchain (análisis de contratos inteligentes, información de tokens, patrones de transacciones, conexiones de wallets).
+
+4. **Evaluación de reglas** - El sistema ejecuta decenas de reglas de detección sobre los datos enriquecidos del asset. Cada regla evalúa indicadores de amenaza específicos, como la antigüedad del dominio (dominios recién registrados, con menos de 30 días), la similitud visual (un logo o diseño que imita tu marca), la similitud de texto (URL o nombres muy parecidos a los tuyos), la inteligencia de amenazas (infraestructura o patrones maliciosos conocidos) y los indicadores de comportamiento (código de wallet drainer, formularios de phishing).
+
+5. **Puntuación** - Según los resultados de las reglas, el sistema calcula un puntaje de amenaza (0-1) que representa la confianza de que el asset es malicioso. Las reglas se agrupan por categoría (similitud visual, inteligencia de amenazas, antigüedad del dominio, coincidencia de texto, análisis de comportamiento), cada regla tiene un nivel de confianza (de muy bajo a muy alto) y los puntajes ponderados de todas las reglas activadas se combinan, aplicando los ajustes específicos de la organización.
+
+6. **Creación de la suspected threat** - Se registra una suspected threat con toda la inteligencia recopilada. Permanece sin confirmar hasta que se revisa.
+
+7. **Reporte automático (opcional)** - Si tu organización tiene habilitado el reporte automático y el puntaje de la suspected threat supera tu umbral medio, el sistema puede crear automáticamente un reporte con el asset detectado, marcar el asset como bloqueado, enviar solicitudes de **takedown** (solicitud de baja de contenido fraudulento), si está configurado, y enviar notificaciones a tu equipo.
+
+<Warning>
+**Requisitos del reporte automático:** El puntaje debe alcanzar o superar tu umbral medio, la fuente de detección debe estar habilitada, el asset no debe estar ya bloqueado y el asset no debe haber sido rechazado varias veces anteriormente.
+</Warning>
+
+## Niveles de confianza
+
+Las suspected threats se clasifican en niveles de confianza según los umbrales de tu organización:
+
+### None (puntaje de 0 al umbral bajo)
+
+Suspected threats de baja confianza. Pueden ser falsos positivos o estar relacionadas de forma tangencial con tu marca. Son útiles para monitorear tendencias, pero rara vez requieren acción. Algunos ejemplos son una mención genérica de tu marca en un contexto no relacionado, coincidencias débiles de palabras clave e indicadores mínimos de similitud.
+
+### Low (del umbral bajo al umbral medio)
+
+Algunos indicadores sugieren una posible amenaza, pero la evidencia es limitada. Requiere revisión manual para confirmarla. Los escenarios comunes incluyen un dominio que contiene el nombre de tu marca pero tiene un propósito comercial legítimo, redes sociales que mencionan tu marca en un contexto neutral y una similitud visual o textual débil.
+
+### Medium (del umbral medio al umbral alto)
+
+Indicadores sólidos de intención maliciosa. Se activaron múltiples reglas de detección con una confianza razonable. Los escenarios comunes incluyen un dominio nuevo con el nombre de la marca y palabras clave sospechosas, una cuenta de redes sociales que suplanta tu marca con un logo robado y un contrato de token con un nombre similar en la blockchain. Este es el umbral típico para el reporte y el bloqueo automáticos.
+
+### High (umbral alto o superior)
+
+Evidencia muy sólida de actividad maliciosa. Se activaron múltiples reglas de alta confianza. Los escenarios comunes incluyen una réplica visual perfecta de tu sitio web, un dominio casi idéntico al tuyo (typosquatting), infraestructura de phishing conocida y la presencia de código de wallet drainer. Las suspected threats de alta confianza requieren atención inmediata y una respuesta rápida.
+
+## Cómo entender los grupos de suspected threats
+
+Las suspected threats pueden agruparse mediante un **Group ID** (ID de grupo) para representar amenazas relacionadas descubiertas a partir de una misma fuente.
+
+### Extracción de relaciones
+
+Al analizar un asset, el sistema puede descubrir amenazas relacionadas adicionales:
+
+- **URL enlazadas** - Una página de phishing que enlaza a varios otros dominios de estafa
+- **Redirecciones** - Una URL que redirige a través de varios dominios maliciosos
+- **Cuentas relacionadas** - Publicaciones en redes sociales que mencionan múltiples sitios web de estafa
+
+Todas las suspected threats relacionadas comparten el mismo ID de grupo, lo que facilita identificar y reportar campañas de phishing completas de una sola vez.
+
+### Seguimiento de campañas
+
+Los ID de grupo te ayudan a identificar campañas (reconocer campañas de phishing coordinadas), rastrear infraestructura (mapear las relaciones entre amenazas), reportar redes (reportar redes de ataque completas de forma simultánea) y entender tácticas (analizar las tácticas y los patrones de los atacantes).
+
+## Deduplicación
+
+El sistema gestiona automáticamente las suspected threats duplicadas para evitar la fatiga de alertas:
+
+**Mismo asset, misma organización** - Si el mismo asset es detectado varias veces por la misma fuente para tu organización, solo se conserva una suspected threat para evitar la fatiga de alertas por descubrimientos repetidos.
+
+**Mismo asset, fuentes distintas** - Si múltiples fuentes de detección encuentran la misma amenaza de forma independiente, se registra una suspected threat separada por cada fuente. Esto ayuda a validar la confianza en la amenaza (varias fuentes coinciden), entender qué fuentes son más efectivas y hacer seguimiento de cómo se propagan las amenazas entre plataformas.
+
+**Assets distintos, misma campaña** - Los assets relacionados de una misma campaña de ataque se vinculan mediante ID de grupo, pero se mantienen como suspected threats separadas. Esto te permite reportar cada asset de forma individual, hacer seguimiento del avance del takedown por asset y entender el alcance de la campaña.
+
+## Puntos clave
+
+- Una suspected threat es el punto de entrada, no la decisión: indica una posible amenaza, pero se requieren revisión y aprobación antes de bloquear para evitar falsos positivos
+- Los ID de grupo revelan el alcance de la campaña: cuando una suspected threat enlaza a múltiples assets relacionados, puedes identificar y reportar campañas de phishing completas en lugar de bloquear los sitios de uno en uno
+- La configuración de umbrales equilibra la cobertura y el ruido: los umbrales más bajos detectan más amenazas pero requieren más revisión, mientras que los umbrales más altos dejan pasar casos límite pero reducen la carga de trabajo
+- La deduplicación entre fuentes aumenta la confianza: cuando múltiples fuentes de detección independientes marcan el mismo asset, se obtiene una evidencia más sólida de intención maliciosa

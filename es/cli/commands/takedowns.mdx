@@ -1,0 +1,66 @@
+---
+title: Comando takedowns — lista registros de takedown con filtros
+sidebarTitle: takedowns
+icon: list-check
+description: "Lista los registros de takedown de ChainPatrol desde la terminal con los mismos filtros que la vista Takedowns de la app: estado, liveness, marca, persona asignada y rangos de fechas."
+---
+
+```bash
+chainpatrol takedowns list [--org <slug>] [filters]
+```
+
+## takedowns list
+
+Lista los **Takedowns** (solicitudes de baja de contenido fraudulento) de una organización con el mismo nivel de filtrado que la vista Takedowns
+de la app. Por defecto, muestra los takedowns actualizados en los últimos 30 días.
+
+Funciona con los dos modos de autenticación: con una clave de API, la organización se obtiene de la clave,
+y con una sesión, pasas `--org`.
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. Omítelo cuando uses una clave de API con alcance de organización. |
+| `--query <text>` | Busca en el contenido del **Asset** (activo digital: URL, dirección, perfil, app, etc.), por coincidencia de subcadena. |
+| `--from <iso>` / `--to <iso>` | Filtra por `Takedown.updatedAt`. |
+| `--started-from <iso>` / `--started-to <iso>` | Filtra por "started at" (fecha de inicio): el evento `IN_PROGRESS` más antiguo. |
+| `--asset-type <list>` | Lista separada por comas: `URL`, `TWITTER`, `TELEGRAM`, … |
+| `--takedown-status <list>` | Lista separada por comas: `TODO`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`, `PENDING_INPUT`, … |
+| `--liveness-status <list>` | Lista separada por comas: `ALIVE`, `DEAD`, `UNKNOWN`. |
+| `--brand <ids>` | Lista separada por comas de IDs de marca. |
+| `--assignee <ids>` | Lista separada por comas de IDs de los usuarios asignados. |
+| `--hide-automated-takedowns` | Oculta los takedowns gestionados por la automatización de takedowns de la plataforma. |
+| `--hide-automated-liveness-checks` | Oculta los takedowns en los que el **Liveness** (si el asset sigue online o ya no) del asset se verifica automáticamente. |
+| `--sort-by <key>` | `updatedAt`, `createdAt`, `takedownStatus`, `takedownUpdatedAt`, `assigneeId` o `brandId`. |
+| `--sort-direction <dir>` | `asc` o `desc`. El valor predeterminado es `desc`. |
+| `--per-page <n>` | Tamaño de página, 1–100. El valor predeterminado es 10. También se acepta `--limit`. |
+| `--next-page <cursor>` | Cursor devuelto por una respuesta anterior. |
+
+```bash
+# the open queue
+chainpatrol takedowns list --org acme --takedown-status TODO,IN_PROGRESS --per-page 50
+
+# still-live URLs
+chainpatrol takedowns list --org acme --asset-type URL --liveness-status ALIVE
+
+# by brand and owner
+chainpatrol takedowns list --org acme --brand 12,34 --assignee 7
+
+# manual work started since April
+chainpatrol takedowns list --org acme --started-from 2026-04-01 --hide-automated-takedowns
+
+# a quarter's records as a spreadsheet
+chainpatrol takedowns list --org acme --from 2026-01-01 --to 2026-04-01 \
+  --per-page 100 --output csv > q1-takedowns.csv
+```
+
+<Tip>
+  `--from`/`--to` filtran según cuándo se *actualizó* el takedown por última vez, mientras que
+  `--started-from`/`--started-to` filtran según cuándo empezó realmente el trabajo. Para saber "cuánto
+  iniciamos este mes", usa estas últimas.
+</Tip>
+
+## Relacionado
+
+- [`GET /organization/takedowns`](/es/external-api/takedowns-list)
+- [Concepto de Takedowns](/es/concepts/takedowns)
+- [`queues snapshot`](/es/cli/commands/queues) para la vista agregada

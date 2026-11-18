@@ -1,0 +1,200 @@
+---
+title: Listar assets
+openapi: "POST /asset/list"
+---
+
+## Inicio rápido
+
+### Autenticación
+
+Incluye tu clave de API en el encabezado `X-API-KEY`:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+## Tipos de asset
+
+`type` es opcional. Omítelo para obtener **Assets** (activos digitales: URL, dirección, perfil,
+app, etc.) de **todos** los tipos de asset con un solo cursor de paginación:
+
+```json
+{ "status": "BLOCKED", "per_page": 1000 }
+```
+
+Esta es la forma más económica de replicar la **Blocklist** (lista de bloqueo) completa: un solo
+recorrido paginado en lugar de un recorrido por cada miembro del enum `AssetType`. Cada asset devuelto
+conserva su propio `type`, así que puedes agrupar los resultados del lado del cliente.
+
+Indica `type` para limitar el recorrido a un solo tipo de asset, exactamente como antes:
+
+```json
+{ "type": "URL", "status": "BLOCKED", "per_page": 1000 }
+```
+
+Omite el campo por completo para obtener el recorrido completo. Un `"type": null` explícito se
+rechaza con un 400, así que un cliente que arma el cuerpo a partir de un struct debe dejar
+la clave fuera en lugar de asignarle null.
+
+<Note>
+Una sola respuesta devuelve como máximo **1000** assets, sin importar lo que pida `per_page`.
+Se aceptan valores mayores, pero se recortan a ese máximo, así que sigue siempre `next_page`
+hasta que devuelva `null` en lugar de suponer que una página lo contiene todo.
+Las respuestas también tienen un límite de 4 MB.
+</Note>
+
+## Estrategia de sincronización y eliminaciones
+
+<Warning>
+Al usar filtros basados en tiempo (p. ej., obtener solo los últimos 5 minutos de datos de la Blocklist), es posible que no detectes los assets que se quitaron de la Blocklist. Para garantizar la consistencia completa de los datos, usa uno de estos enfoques:
+</Warning>
+
+### Enfoques recomendados
+
+1. **Monitorea la Allowlist (lista de permitidos) y la lista de assets `UNKNOWN` para detectar eliminaciones**: Consulta periódicamente los endpoints de la Allowlist y de la lista `UNKNOWN` para detectar los assets que se quitaron de la Blocklist.
+
+2. **Sincronización completa periódica**: Realiza una sincronización completa de toda la Blocklist a intervalos regulares (p. ej., cada hora o cada día) para detectar cualquier cambio que se haya pasado por alto.
+
+3. **Enfoque híbrido**: Usa filtros basados en tiempo para las actualizaciones frecuentes, combinados con sincronizaciones completas periódicas para lograr una cobertura integral.
+
+### Por qué es importante
+
+Los cambios de estado de los assets pueden moverlos entre distintas listas (Blocklist, Allowlist, `UNKNOWN`). Las consultas basadas en tiempo sobre un solo endpoint pueden no captar estas transiciones, lo que podría dejar tu caché local con información desactualizada sobre assets bloqueados que ya no deberían estarlo.
+
+### Assets con eliminación lógica (soft-deleted)
+
+Los assets que ChainPatrol eliminó de forma lógica (soft-delete) se excluyen de todas las respuestas,
+de modo que una réplica construida a partir de este endpoint coincide con la instantánea de la Blocklist del propio ChainPatrol.
+
+Esto es un cambio de comportamiento: antes el endpoint devolvía los assets con eliminación
+lógica. Una réplica construida antes del cambio puede conservar filas que nunca volverán a
+aparecer; una resincronización completa las elimina.
+
+## Paginación
+
+Para usar la paginación, incluye los parámetros `per_page` y `next_page` en tu solicitud:
+
+- `per_page <number>`: Elementos por página. Se aceptan valores de hasta 10000, pero una respuesta devuelve como máximo 1000; sigue siempre `next_page`.
+- `next_page <string>`: Cursor de la siguiente página de resultados
+
+### Ejemplo de implementación de la paginación:
+
+<CodeGroup>
+
+```javascript JavaScript
+// Pass `type` to sweep one asset type, or leave it out to sweep them all.
+async function fetchAllAssets(status, type) {
+  let allAssets = [];
+  let nextPage = null;
+  while (true) {
+    const response = await fetch(
+      "https://app.chainpatrol.io/api/v2/asset/list",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({
+          ...(type ? { type } : {}),
+          status,
+          per_page: 1000,
+          next_page: nextPage,
+        }),
+      }
+    );
+    const data = await response.json();
+    allAssets = allAssets.concat(data.assets);
+    nextPage = data.next_page;
+    if (!nextPage) {
+      break;
+    }
+  }
+  return allAssets;
+}
+// Every asset type in one sweep:
+fetchAllAssets("BLOCKED")
+  .then((assets) => console.log("All assets:", assets))
+  .catch((error) => console.error("Error fetching assets:", error));
+```
+
+```typescript TypeScript
+// `type` is optional — omit it to sweep every asset type on one cursor.
+async function fetchAllAssets(status: string, type?: string): Promise<any[]> {
+  let allAssets: any[] = [];
+  let nextPage: string | null = null;
+
+  while (true) {
+    const response = await fetch(
+      "https://app.chainpatrol.io/api/v2/asset/list",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "YOUR_API_KEY_HERE",
+        },
+        body: JSON.stringify({
+          ...(type ? { type } : {}),
+          status,
+          per_page: 1000,
+          next_page: nextPage,
+        }),
+      }
+    );
+    const data = await response.json();
+    allAssets = allAssets.concat(data.assets);
+    nextPage = data.next_page;
+
+    if (!nextPage) {
+      break;
+    }
+  }
+  return allAssets;
+}
+
+// Every asset type in one sweep:
+fetchAllAssets("BLOCKED")
+  .then((assets) => console.log("All assets:", assets))
+  .catch((error) => console.error("Error fetching assets:", error));
+```
+
+```python Python
+import requests
+
+# `type` is optional. Leave the key out of the body entirely to sweep every
+# asset type on one cursor.
+def fetch_all_assets(status: str, type: str | None = None) -> list:
+    all_assets = []
+    next_page = None
+    while True:
+        body = {
+            "status": status,
+            "per_page": 1000,
+            "next_page": next_page,
+        }
+        if type is not None:
+            body["type"] = type
+        response = requests.post(
+            "https://app.chainpatrol.io/api/v2/asset/list",
+            headers={
+                "Content-Type": "application/json",
+                "X-API-KEY": "YOUR_API_KEY_HERE",
+            },
+            json=body,
+        )
+        data = response.json()
+        all_assets.extend(data["assets"])
+        next_page = data.get("next_page")
+        if not next_page:
+            break
+    return all_assets
+
+try:
+    # Every asset type in one sweep:
+    assets = fetch_all_assets("BLOCKED")
+    print("All assets:", assets)
+except Exception as error:
+    print("Error fetching assets:", str(error))
+```
+
+</CodeGroup>

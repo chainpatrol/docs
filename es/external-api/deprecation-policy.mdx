@@ -1,0 +1,79 @@
+---
+title: "Política de obsolescencia de la API"
+sidebarTitle: "Política de obsolescencia"
+description: "Cómo versiona ChainPatrol su API, qué se considera un cambio incompatible (breaking change) y el aviso que recibirás antes de que cambie algo de lo que dependes."
+---
+
+ChainPatrol versiona su API por URL, con la versión codificada como un segmento de
+versión mayor en la ruta; la versión actual es `/api/v2`. Esta página explica cuánto
+tiempo se mantiene el soporte de una versión, qué da lugar a un aviso y cómo te llega
+ese aviso.
+
+## Versionado
+
+Todos los endpoints se sirven bajo una ruta versionada, p. ej.
+`https://app.chainpatrol.io/api/v2`. Solo se introduce una nueva versión mayor
+cuando necesitamos hacer cambios incompatibles (breaking changes); la versión mayor
+anterior sigue funcionando, sin cambios, durante todo su período de obsolescencia
+(deprecation window).
+
+## Cambios incompatibles vs. compatibles
+
+<CardGroup cols={2}>
+  <Card title="Compatibles" icon="circle-check">
+    Campos nuevos, endpoints nuevos y parámetros opcionales nuevos. Se publican
+    sin aviso previo: las integraciones existentes no se ven afectadas.
+  </Card>
+
+  <Card title="Incompatibles" icon="triangle-exclamation">
+    Eliminar o renombrar un campo o endpoint, cambiar el tipo o la
+    semántica de un campo, hacer más estricta la validación o convertir un parámetro
+    opcional en obligatorio. Estos cambios requieren un aviso de obsolescencia.
+  </Card>
+</CardGroup>
+
+## Período de obsolescencia
+
+Los cambios incompatibles requieren un **aviso previo de al menos 90 días**. La
+versión obsoleta sigue contando con soporte completo durante todo el período de aviso:
+no se elimina ni se degrada ninguna funcionalidad antes de que termine el período.
+
+<Note>
+  **Excepción de seguridad:** es posible que las correcciones críticas de seguridad
+  deban publicarse más rápido que el período estándar de 90 días. Cuando eso ocurre,
+  damos el mayor aviso previo que podamos ofrecer de manera responsable según la
+  gravedad del problema.
+</Note>
+
+## Cómo te avisaremos
+
+Te avisamos por todos los canales siguientes en cada cambio
+incompatible:
+
+<Steps>
+  <Step title="Correo electrónico">
+    Se envía al contacto técnico designado de tu organización.
+  </Step>
+  <Step title="Changelog público">
+    Se publica en el [changelog de ChainPatrol](https://chainpatrol.com/changelog).
+  </Step>
+  <Step title="Encabezados de respuesta HTTP">
+    Los endpoints afectados devuelven los encabezados `Deprecation` y `Sunset`, según el
+    [RFC 8594](https://www.rfc-editor.org/rfc/rfc8594), mientras dure
+    el período de obsolescencia.
+  </Step>
+</Steps>
+
+Asegúrate de que el contacto técnico de tu organización esté actualizado para que los
+correos de obsolescencia lleguen a la persona correcta; consulta
+[Actualizar el usuario actual](/es/external-api/user-me-update) o
+[Listar organizaciones del usuario](/es/external-api/user-orgs) para revisar tus datos
+de contacto.
+
+## Cómo anticiparte a los cambios incompatibles
+
+- Revisa el [changelog](https://chainpatrol.com/changelog) periódicamente.
+- Presta atención a los encabezados de respuesta `Deprecation` y `Sunset` en los endpoints que
+  llamas, y configura alertas para cuando aparezcan.
+- Mantén actualizado el contacto técnico de tu organización para no perderte el
+  aviso por correo.

@@ -1,0 +1,128 @@
+---
+title: Seguir asset
+openapi: "POST /asset/follow"
+---
+
+## Descripción general
+
+Sigue un **Asset** (activo digital: URL, dirección, perfil, app, etc.) para recibir correos
+sobre él. Una vez que sigues un asset, ChainPatrol te envía un correo cuando:
+
+- su estado cambia a `BLOCKED` (bloqueado) o `ALLOWED` (permitido), y
+- se completa su **Takedown** (solicitud de baja de contenido fraudulento).
+
+Es lo mismo que hacer clic en **Follow** (seguir) en un takedown dentro de la app de
+ChainPatrol. Los seguimientos hechos aquí y en la app son los mismos, así que puedes
+deshacerlos desde cualquiera de los dos lugares.
+
+Un seguimiento pertenece a una **persona**, porque esa persona es quien recibe el correo.
+Requiere una clave de API de usuario (user-scoped) o una sesión iniciada.
+Las claves de API de organización no tienen una persona a quien enviarle el correo y se
+rechazan con `403`.
+
+<Note>
+Para crear una clave de usuario, abre **API Keys** (claves de API) en la configuración de tu
+organización dentro de la app de ChainPatrol y elige el tipo de clave **User** ("for personal
+access", es decir, para acceso personal). Los correos se envían a la dirección de la persona
+a la que pertenece la clave.
+</Note>
+
+## Inicio rápido
+
+### Autenticación
+
+Incluye tu clave de API de usuario en el encabezado `X-API-KEY`:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+### Solicitud de ejemplo
+
+Indica el asset por su contenido (una URL, un dominio, una dirección, un perfil de red
+social, …) o por su `assetId` de ChainPatrol: exactamente uno de los dos.
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/asset/follow' \
+  -H 'X-API-KEY: <api-key>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "content": "your-brand-login.example" }'
+```
+
+```typescript TypeScript
+const response = await fetch("https://app.chainpatrol.io/api/v2/asset/follow", {
+  method: "POST",
+  headers: {
+    "X-API-KEY": "<api-key>",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ content: "your-brand-login.example" }),
+});
+
+const { following, followCount, warning } = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/asset/follow",
+    headers={"X-API-KEY": "<api-key>"},
+    json={"content": "your-brand-login.example"},
+)
+data = response.json()
+```
+
+</CodeGroup>
+
+## Cuerpo de la solicitud
+
+| Campo     | Tipo     | Obligatorio    | Descripción                                                                                       |
+| --------- | -------- | -------------- | ------------------------------------------------------------------------------------------------- |
+| `content` | `string` | Uno de los dos | Contenido del asset: una URL, un dominio, una dirección de wallet, un perfil de red social, etc.  |
+| `assetId` | `number` | Uno de los dos | ID del asset en ChainPatrol.                                                                      |
+| `slug`    | `string` | No             | Slug de la organización. Obligatorio solo cuando tus credenciales tienen acceso a más de una organización. |
+
+## Respuesta
+
+```json
+{
+  "assetId": 4175269,
+  "following": true,
+  "followCount": 12,
+  "limit": 100,
+  "warnThreshold": 90,
+  "canFollowMore": true,
+  "warning": null
+}
+```
+
+| Campo           | Tipo             | Descripción                                                                                  |
+| --------------- | ---------------- | -------------------------------------------------------------------------------------------- |
+| `assetId`       | `number`         | El asset que seguiste.                                                                       |
+| `following`     | `boolean`        | `true` una vez que el seguimiento queda registrado.                                          |
+| `followCount`   | `number`         | Cuántos assets sigues ahora en esta organización.                                            |
+| `limit`         | `number`         | La cantidad máxima de assets que una persona puede seguir por organización (100).            |
+| `warnThreshold` | `number`         | La cantidad a partir de la cual se define `warning` (90).                                    |
+| `canFollowMore` | `boolean`        | `false` una vez que alcanzas `limit`.                                                        |
+| `warning`       | `string \| null` | Se define a partir de `warnThreshold`, y te pide dejar de seguir los assets que ya no necesitas. |
+
+<Note>
+Seguir un asset que ya sigues no es un error: devuelve el estado actual y no consume nada
+de tu límite.
+</Note>
+
+## Errores
+
+| Estado | Cuándo                                                                                      |
+| ------ | ------------------------------------------------------------------------------------------- |
+| `400`  | Se enviaron `content` y `assetId` a la vez o ninguno de los dos, o ya sigues 100 assets.    |
+| `403`  | La clave es una clave de organización, o no eres miembro de la organización.                |
+| `404`  | ChainPatrol no tiene ese asset, o pertenece a otra organización.                            |
+
+## Relacionado
+
+- [Dejar de seguir asset](/es/external-api/asset-unfollow)
+- [Listar assets seguidos](/es/external-api/asset-follows-list)

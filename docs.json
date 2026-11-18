@@ -9,367 +9,389 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Documentation",
-        "groups": [
+        "language": "en",
+        "tabs": [
           {
-            "group": "Getting Started",
-            "pages": [
+            "tab": "Documentation",
+            "groups": [
               {
-                "group": "What do we do?",
+                "group": "Getting Started",
                 "pages": [
-                  "getting-started/what-we-do/introduction",
-                  "getting-started/what-we-do/brand-impersonation",
-                  "getting-started/what-we-do/general-phishing"
+                  {
+                    "group": "What do we do?",
+                    "pages": [
+                      "getting-started/what-we-do/introduction",
+                      "getting-started/what-we-do/brand-impersonation",
+                      "getting-started/what-we-do/general-phishing"
+                    ]
+                  },
+                  {
+                    "group": "How it works",
+                    "pages": [
+                      "getting-started/how-it-works/how-we-use-ai",
+                      "getting-started/how-it-works/detection-sources",
+                      "getting-started/how-it-works/asset-scans",
+                      "getting-started/how-it-works/review",
+                      "getting-started/how-it-works/blocklist",
+                      "getting-started/how-it-works/takedown",
+                      "getting-started/how-it-works/watchlist"
+                    ]
+                  },
+                  {
+                    "group": "How do I get started?",
+                    "pages": [
+                      "protect-your-brand/onboarding-requirements",
+                      "protect-your-brand/who-should-be-involved",
+                      "protect-your-brand/services-setup",
+                      "protect-your-brand/ongoing-communication"
+                    ]
+                  }
                 ]
               },
               {
-                "group": "How it works",
+                "group": "Concepts",
                 "pages": [
-                  "getting-started/how-it-works/how-we-use-ai",
-                  "getting-started/how-it-works/detection-sources",
-                  "getting-started/how-it-works/asset-scans",
-                  "getting-started/how-it-works/review",
-                  "getting-started/how-it-works/blocklist",
-                  "getting-started/how-it-works/takedown",
-                  "getting-started/how-it-works/watchlist"
+                  "concepts/organizations",
+                  "concepts/brands",
+                  "concepts/reports",
+                  "concepts/reviews",
+                  "concepts/detections",
+                  "concepts/asset-scans",
+                  "concepts/blocklist",
+                  "concepts/allowlist",
+                  "concepts/watchlist",
+                  "concepts/dark-web-monitoring",
+                  "concepts/takedowns",
+                  "concepts/legal-docs",
+                  "concepts/metrics",
+                  "concepts/notifications",
+                  "concepts/security-portal"
                 ]
               },
               {
-                "group": "How do I get started?",
+                "group": "Security & Privacy",
                 "pages": [
-                  "protect-your-brand/onboarding-requirements",
-                  "protect-your-brand/who-should-be-involved",
-                  "protect-your-brand/services-setup",
-                  "protect-your-brand/ongoing-communication"
+                  "security"
                 ]
               }
             ]
           },
           {
-            "group": "Concepts",
-            "pages": [
-              "concepts/organizations",
-              "concepts/brands",
-              "concepts/reports",
-              "concepts/reviews",
-              "concepts/detections",
-              "concepts/asset-scans",
-              "concepts/blocklist",
-              "concepts/allowlist",
-              "concepts/watchlist",
-              "concepts/dark-web-monitoring",
-              "concepts/takedowns",
-              "concepts/legal-docs",
-              "concepts/metrics",
-              "concepts/notifications",
-              "concepts/security-portal"
-            ]
-          },
-          {
-            "group": "Security & Privacy",
-            "pages": [
-              "security"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Integrations",
-        "groups": [
-          {
-            "group": "Integrations",
-            "pages": [
-              "integration/discord",
-              "integration/telegram",
-              "integration/slack",
-              "integration/chainpatrol-assistant",
-              "integration/vercel",
-              "integration/intercom",
-              "integration/github",
-              "integration/canary-tokens",
-              "integration/webhooks",
-              "integration/zapier",
-              "integration/opencti",
-              "integration/meta-brand-rights-protection"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "external-api/overview",
-              "external-api/authentication",
-              "general/api-key",
-              "general/api-usage",
-              "mcp-server",
-              "external-api/deprecation-policy"
-            ]
-          },
-          {
-            "group": "Assets",
-            "pages": [
-              "external-api/asset-check",
-              "external-api/asset-list",
-              "external-api/asset-changelog",
-              "external-api/asset-search",
-              "external-api/asset-connections",
-              "external-api/asset-submit",
-              "external-api/asset-unblock",
-              "external-api/asset-parse",
-              "external-api/asset-scan",
-              "external-api/scan-result",
-              "external-api/asset-details",
-              "external-api/asset-follow",
-              "external-api/asset-unfollow",
-              "external-api/asset-follows-list"
-            ]
-          },
-          {
-            "group": "Reports",
-            "pages": [
-              "external-api/creating-reports",
-              "external-api/report-create",
-              "external-api/attachment-upload",
-              "external-api/reports-search"
-            ]
-          },
-          {
-            "group": "Disputes",
-            "pages": [
-              "external-api/dispute-create"
-            ]
-          },
-          {
-            "group": "Webhooks",
-            "pages": [
-              "external-api/webhook-config"
-            ]
-          },
-          {
-            "group": "Organization Brands",
-            "pages": [
-              "external-api/organization-brands"
-            ]
-          },
-          {
-            "group": "Organization Assets",
-            "pages": [
-              "external-api/organization-assets-list",
-              "external-api/organization-assets-add",
-              "external-api/organization-assets-update",
-              "external-api/organization-assets-expiry",
-              "external-api/organization-assets-remove"
-            ]
-          },
-          {
-            "group": "Organization Asset Groups",
-            "pages": [
-              "external-api/organization-asset-groups-list",
-              "external-api/organization-asset-groups-create",
-              "external-api/organization-asset-groups-update",
-              "external-api/organization-asset-groups-delete"
-            ]
-          },
-          {
-            "group": "Organization Reports",
-            "pages": [
-              "external-api/organization-reports-list",
-              "external-api/organization-reports-get",
-              "external-api/organization-proposals-review",
-              "external-api/organization-reports"
-            ]
-          },
-          {
-            "group": "Threat Detection",
-            "pages": [
-              "external-api/evaluating-detections",
-              "external-api/detection-list",
-              "external-api/detection-sources-list",
-              "external-api/detection-configs-list",
-              "external-api/detection-configs-create",
-              "external-api/detection-configs-update",
-              "external-api/detection-configs-delete",
-              "external-api/detection-configs-run",
-              "external-api/detection-configs-validate",
-              "external-api/detection-drift",
-              "external-api/threats-list",
-              "external-api/organization-threats-list",
-              "external-api/organization-watchlist-list"
-            ]
-          },
-          {
-            "group": "Dark Web",
-            "pages": [
-              "external-api/dark-web-credentials-targets",
-              "external-api/dark-web-credentials-search"
-            ]
-          },
-          {
-            "group": "Takedowns",
-            "pages": [
-              "external-api/takedowns-list"
-            ]
-          },
-          {
-            "group": "Metrics",
-            "pages": [
-              "external-api/metrics-summary",
-              "external-api/metrics-breakdown",
-              "external-api/metrics-found",
-              "external-api/metrics-found-by-source",
-              "external-api/metrics-takedown-time",
-              "external-api/metrics-takedown-time-by-provider",
-              "external-api/metrics-takedown-time-trend",
-              "external-api/metrics-takedown-success-rate",
-              "external-api/metrics-false-positive-rate",
-              "external-api/metrics-time-to-detection",
-              "external-api/organization-metrics-list",
-              "external-api/organization-metrics"
-            ]
-          },
-          {
-            "group": "Account & Access",
-            "pages": [
-              "external-api/validate",
-              "external-api/user-me",
-              "external-api/user-me-update",
-              "external-api/user-orgs",
-              "external-api/user-orgs-get"
-            ]
-          },
-          {
-            "group": "Operations",
-            "pages": [
-              "external-api/operations-queues-snapshot"
-            ]
-          },
-          {
-            "group": "Staff",
-            "pages": [
-              "external-api/staff-organization-create"
-            ]
-          },
-          {
-            "group": "Healthchecks",
-            "pages": [
-              "external-api/healthchecks-list",
-              "external-api/healthchecks-detections-silent-configs",
-              "external-api/healthchecks-reviewing-backlog",
-              "external-api/healthchecks-reviewing-old-proposals",
-              "external-api/healthchecks-takedowns-todo-volume",
-              "external-api/healthchecks-takedowns-in-progress-volume",
-              "external-api/healthchecks-takedowns-stale-in-progress",
-              "external-api/healthchecks-takedowns-cancelled-count",
-              "external-api/healthchecks-takedowns-automation-off",
-              "external-api/healthchecks-assets-dead-asset-spike",
-              "external-api/healthchecks-organization-missing-contact-url"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "CLI",
-        "groups": [
-          {
-            "group": "ChainPatrol CLI",
-            "pages": [
-              "cli/overview",
-              "cli/installation",
-              "cli/authentication",
-              "cli/output",
-              "cli/agents"
-            ]
-          },
-          {
-            "group": "Command Reference",
-            "pages": [
-              "cli/commands/asset",
-              "cli/commands/reports",
-              "cli/commands/proposals",
-              "cli/commands/detections",
-              "cli/commands/metrics",
-              "cli/commands/threats",
-              "cli/commands/takedowns",
-              "cli/commands/orgs",
-              "cli/commands/healthchecks",
-              "cli/commands/queues",
-              "cli/commands/presets"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "JavaScript SDK",
-        "groups": [
-          {
-            "group": "@chainpatrol/sdk",
-            "pages": [
-              "sdk/overview",
-              "sdk/quickstart"
-            ]
-          },
-          {
-            "group": "API Reference",
-            "pages": [
+            "tab": "Integrations",
+            "groups": [
               {
-                "group": "ThreatDetector",
+                "group": "Integrations",
                 "pages": [
-                  "sdk/threat-detector/overview",
-                  "sdk/threat-detector/constructor",
-                  {
-                    "group": "Instance methods",
-                    "pages": [
-                      "sdk/threat-detector/instance-methods/url",
-                      "sdk/threat-detector/instance-methods/allow",
-                      "sdk/threat-detector/instance-methods/block",
-                      "sdk/threat-detector/instance-methods/ignore"
-                    ]
-                  }
+                  "integration/discord",
+                  "integration/telegram",
+                  "integration/slack",
+                  "integration/chainpatrol-assistant",
+                  "integration/vercel",
+                  "integration/intercom",
+                  "integration/github",
+                  "integration/canary-tokens",
+                  "integration/webhooks",
+                  "integration/zapier",
+                  "integration/opencti",
+                  "integration/meta-brand-rights-protection"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "external-api/overview",
+                  "external-api/authentication",
+                  "general/api-key",
+                  "general/api-usage",
+                  "mcp-server",
+                  "external-api/deprecation-policy"
                 ]
               },
               {
-                "group": "Storage",
+                "group": "Assets",
                 "pages": [
-                  "sdk/storage/overview",
-                  "sdk/storage/browser",
-                  "sdk/storage/extension",
-                  "sdk/storage/memory"
+                  "external-api/asset-check",
+                  "external-api/asset-list",
+                  "external-api/asset-changelog",
+                  "external-api/asset-search",
+                  "external-api/asset-connections",
+                  "external-api/asset-submit",
+                  "external-api/asset-unblock",
+                  "external-api/asset-parse",
+                  "external-api/asset-scan",
+                  "external-api/scan-result",
+                  "external-api/asset-details",
+                  "external-api/asset-follow",
+                  "external-api/asset-unfollow",
+                  "external-api/asset-follows-list"
                 ]
               },
               {
-                "group": "Relay",
+                "group": "Reports",
                 "pages": [
-                  "sdk/relay/overview",
-                  {
-                    "group": "Static methods",
-                    "pages": [
-                      "sdk/relay/static-methods/send",
-                      "sdk/relay/static-methods/run",
-                      "sdk/relay/static-methods/on"
-                    ]
-                  }
+                  "external-api/creating-reports",
+                  "external-api/report-create",
+                  "external-api/attachment-upload",
+                  "external-api/reports-search"
                 ]
               },
               {
-                "group": "ChainPatrolClient",
+                "group": "Disputes",
                 "pages": [
-                  "sdk/chainpatrol-client/overview",
-                  "sdk/chainpatrol-client/constructor",
+                  "external-api/dispute-create"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "external-api/webhook-config"
+                ]
+              },
+              {
+                "group": "Organization Brands",
+                "pages": [
+                  "external-api/organization-brands"
+                ]
+              },
+              {
+                "group": "Organization Assets",
+                "pages": [
+                  "external-api/organization-assets-list",
+                  "external-api/organization-assets-add",
+                  "external-api/organization-assets-update",
+                  "external-api/organization-assets-expiry",
+                  "external-api/organization-assets-remove"
+                ]
+              },
+              {
+                "group": "Organization Asset Groups",
+                "pages": [
+                  "external-api/organization-asset-groups-list",
+                  "external-api/organization-asset-groups-create",
+                  "external-api/organization-asset-groups-update",
+                  "external-api/organization-asset-groups-delete"
+                ]
+              },
+              {
+                "group": "Organization Reports",
+                "pages": [
+                  "external-api/organization-reports-list",
+                  "external-api/organization-reports-get",
+                  "external-api/organization-proposals-review",
+                  "external-api/organization-reports"
+                ]
+              },
+              {
+                "group": "Threat Detection",
+                "pages": [
+                  "external-api/evaluating-detections",
+                  "external-api/detection-list",
+                  "external-api/detection-sources-list",
+                  "external-api/detection-configs-list",
+                  "external-api/detection-configs-create",
+                  "external-api/detection-configs-update",
+                  "external-api/detection-configs-delete",
+                  "external-api/detection-configs-run",
+                  "external-api/detection-configs-validate",
+                  "external-api/detection-drift",
+                  "external-api/threats-list",
+                  "external-api/organization-threats-list",
+                  "external-api/organization-watchlist-list"
+                ]
+              },
+              {
+                "group": "Dark Web",
+                "pages": [
+                  "external-api/dark-web-credentials-targets",
+                  "external-api/dark-web-credentials-search"
+                ]
+              },
+              {
+                "group": "Takedowns",
+                "pages": [
+                  "external-api/takedowns-list"
+                ]
+              },
+              {
+                "group": "Metrics",
+                "pages": [
+                  "external-api/metrics-summary",
+                  "external-api/metrics-breakdown",
+                  "external-api/metrics-found",
+                  "external-api/metrics-found-by-source",
+                  "external-api/metrics-takedown-time",
+                  "external-api/metrics-takedown-time-by-provider",
+                  "external-api/metrics-takedown-time-trend",
+                  "external-api/metrics-takedown-success-rate",
+                  "external-api/metrics-false-positive-rate",
+                  "external-api/metrics-time-to-detection",
+                  "external-api/organization-metrics-list",
+                  "external-api/organization-metrics"
+                ]
+              },
+              {
+                "group": "Account & Access",
+                "pages": [
+                  "external-api/validate",
+                  "external-api/user-me",
+                  "external-api/user-me-update",
+                  "external-api/user-orgs",
+                  "external-api/user-orgs-get"
+                ]
+              },
+              {
+                "group": "Operations",
+                "pages": [
+                  "external-api/operations-queues-snapshot"
+                ]
+              },
+              {
+                "group": "Staff",
+                "pages": [
+                  "external-api/staff-organization-create"
+                ]
+              },
+              {
+                "group": "Healthchecks",
+                "pages": [
+                  "external-api/healthchecks-list",
+                  "external-api/healthchecks-detections-silent-configs",
+                  "external-api/healthchecks-reviewing-backlog",
+                  "external-api/healthchecks-reviewing-old-proposals",
+                  "external-api/healthchecks-takedowns-todo-volume",
+                  "external-api/healthchecks-takedowns-in-progress-volume",
+                  "external-api/healthchecks-takedowns-stale-in-progress",
+                  "external-api/healthchecks-takedowns-cancelled-count",
+                  "external-api/healthchecks-takedowns-automation-off",
+                  "external-api/healthchecks-assets-dead-asset-spike",
+                  "external-api/healthchecks-organization-missing-contact-url"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "CLI",
+            "groups": [
+              {
+                "group": "ChainPatrol CLI",
+                "pages": [
+                  "cli/overview",
+                  "cli/installation",
+                  "cli/authentication",
+                  "cli/output",
+                  "cli/agents"
+                ]
+              },
+              {
+                "group": "Command Reference",
+                "pages": [
+                  "cli/commands/asset",
+                  "cli/commands/reports",
+                  "cli/commands/proposals",
+                  "cli/commands/detections",
+                  "cli/commands/metrics",
+                  "cli/commands/threats",
+                  "cli/commands/takedowns",
+                  "cli/commands/orgs",
+                  "cli/commands/healthchecks",
+                  "cli/commands/queues",
+                  "cli/commands/presets"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "JavaScript SDK",
+            "groups": [
+              {
+                "group": "@chainpatrol/sdk",
+                "pages": [
+                  "sdk/overview",
+                  "sdk/quickstart"
+                ]
+              },
+              {
+                "group": "API Reference",
+                "pages": [
                   {
-                    "group": "Instance methods",
+                    "group": "ThreatDetector",
                     "pages": [
-                      "sdk/chainpatrol-client/instance-methods/asset-check",
-                      "sdk/chainpatrol-client/instance-methods/asset-list",
-                      "sdk/chainpatrol-client/instance-methods/asset-submit",
-                      "sdk/chainpatrol-client/instance-methods/report-create"
+                      "sdk/threat-detector/overview",
+                      "sdk/threat-detector/constructor",
+                      {
+                        "group": "Instance methods",
+                        "pages": [
+                          "sdk/threat-detector/instance-methods/url",
+                          "sdk/threat-detector/instance-methods/allow",
+                          "sdk/threat-detector/instance-methods/block",
+                          "sdk/threat-detector/instance-methods/ignore"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "Storage",
+                    "pages": [
+                      "sdk/storage/overview",
+                      "sdk/storage/browser",
+                      "sdk/storage/extension",
+                      "sdk/storage/memory"
+                    ]
+                  },
+                  {
+                    "group": "Relay",
+                    "pages": [
+                      "sdk/relay/overview",
+                      {
+                        "group": "Static methods",
+                        "pages": [
+                          "sdk/relay/static-methods/send",
+                          "sdk/relay/static-methods/run",
+                          "sdk/relay/static-methods/on"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "ChainPatrolClient",
+                    "pages": [
+                      "sdk/chainpatrol-client/overview",
+                      "sdk/chainpatrol-client/constructor",
+                      {
+                        "group": "Instance methods",
+                        "pages": [
+                          "sdk/chainpatrol-client/instance-methods/asset-check",
+                          "sdk/chainpatrol-client/instance-methods/asset-list",
+                          "sdk/chainpatrol-client/instance-methods/asset-submit",
+                          "sdk/chainpatrol-client/instance-methods/report-create"
+                        ]
+                      }
                     ]
                   }
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Glossary",
+            "groups": [
+              {
+                "group": "Asset Types",
+                "pages": [
+                  "glossary/overview",
+                  "glossary/asset-types/url",
+                  "glossary/asset-types/page",
+                  "glossary/asset-types/address",
+                  "glossary/asset-types/social",
+                  "glossary/asset-types/apps",
+                  "glossary/asset-types/other"
                 ]
               }
             ]
@@ -377,18 +399,388 @@
         ]
       },
       {
-        "tab": "Glossary",
-        "groups": [
+        "language": "es",
+        "tabs": [
           {
-            "group": "Asset Types",
-            "pages": [
-              "glossary/overview",
-              "glossary/asset-types/url",
-              "glossary/asset-types/page",
-              "glossary/asset-types/address",
-              "glossary/asset-types/social",
-              "glossary/asset-types/apps",
-              "glossary/asset-types/other"
+            "tab": "Documentación",
+            "groups": [
+              {
+                "group": "Primeros pasos",
+                "pages": [
+                  {
+                    "group": "¿Qué hacemos?",
+                    "pages": [
+                      "es/getting-started/what-we-do/introduction",
+                      "es/getting-started/what-we-do/brand-impersonation",
+                      "es/getting-started/what-we-do/general-phishing"
+                    ]
+                  },
+                  {
+                    "group": "Cómo funciona",
+                    "pages": [
+                      "es/getting-started/how-it-works/how-we-use-ai",
+                      "es/getting-started/how-it-works/detection-sources",
+                      "es/getting-started/how-it-works/asset-scans",
+                      "es/getting-started/how-it-works/review",
+                      "es/getting-started/how-it-works/blocklist",
+                      "es/getting-started/how-it-works/takedown",
+                      "es/getting-started/how-it-works/watchlist"
+                    ]
+                  },
+                  {
+                    "group": "¿Cómo empiezo?",
+                    "pages": [
+                      "es/protect-your-brand/onboarding-requirements",
+                      "es/protect-your-brand/who-should-be-involved",
+                      "es/protect-your-brand/services-setup",
+                      "es/protect-your-brand/ongoing-communication"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Conceptos",
+                "pages": [
+                  "es/concepts/organizations",
+                  "es/concepts/brands",
+                  "es/concepts/reports",
+                  "es/concepts/reviews",
+                  "es/concepts/detections",
+                  "es/concepts/asset-scans",
+                  "es/concepts/blocklist",
+                  "es/concepts/allowlist",
+                  "es/concepts/watchlist",
+                  "es/concepts/dark-web-monitoring",
+                  "es/concepts/takedowns",
+                  "es/concepts/legal-docs",
+                  "es/concepts/metrics",
+                  "es/concepts/security-portal"
+                ]
+              },
+              {
+                "group": "Seguridad y privacidad",
+                "pages": [
+                  "es/security"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Integraciones",
+            "groups": [
+              {
+                "group": "Integraciones",
+                "pages": [
+                  "es/integration/discord",
+                  "es/integration/telegram",
+                  "es/integration/slack",
+                  "es/integration/chainpatrol-assistant",
+                  "es/integration/vercel",
+                  "es/integration/intercom",
+                  "es/integration/github",
+                  "es/integration/canary-tokens",
+                  "es/integration/webhooks",
+                  "es/integration/zapier",
+                  "es/integration/opencti",
+                  "es/integration/meta-brand-rights-protection"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Referencia de la API",
+            "groups": [
+              {
+                "group": "Primeros pasos",
+                "pages": [
+                  "es/external-api/overview",
+                  "es/external-api/authentication",
+                  "es/general/api-key",
+                  "es/general/api-usage",
+                  "es/mcp-server",
+                  "es/external-api/deprecation-policy"
+                ]
+              },
+              {
+                "group": "Assets",
+                "pages": [
+                  "es/external-api/asset-check",
+                  "es/external-api/asset-list",
+                  "es/external-api/asset-changelog",
+                  "es/external-api/asset-search",
+                  "es/external-api/asset-connections",
+                  "es/external-api/asset-submit",
+                  "es/external-api/asset-unblock",
+                  "es/external-api/asset-parse",
+                  "es/external-api/asset-scan",
+                  "es/external-api/scan-result",
+                  "es/external-api/asset-details",
+                  "es/external-api/asset-follow",
+                  "es/external-api/asset-unfollow",
+                  "es/external-api/asset-follows-list"
+                ]
+              },
+              {
+                "group": "Reportes",
+                "pages": [
+                  "es/external-api/creating-reports",
+                  "es/external-api/report-create",
+                  "es/external-api/attachment-upload",
+                  "es/external-api/reports-search"
+                ]
+              },
+              {
+                "group": "Disputas",
+                "pages": [
+                  "es/external-api/dispute-create"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "es/external-api/webhook-config"
+                ]
+              },
+              {
+                "group": "Marcas de la organización",
+                "pages": [
+                  "es/external-api/organization-brands"
+                ]
+              },
+              {
+                "group": "Assets de la organización",
+                "pages": [
+                  "es/external-api/organization-assets-list",
+                  "es/external-api/organization-assets-add",
+                  "es/external-api/organization-assets-update",
+                  "es/external-api/organization-assets-expiry",
+                  "es/external-api/organization-assets-remove"
+                ]
+              },
+              {
+                "group": "Grupos de assets de la organización",
+                "pages": [
+                  "es/external-api/organization-asset-groups-list",
+                  "es/external-api/organization-asset-groups-create",
+                  "es/external-api/organization-asset-groups-update",
+                  "es/external-api/organization-asset-groups-delete"
+                ]
+              },
+              {
+                "group": "Reportes de la organización",
+                "pages": [
+                  "es/external-api/organization-reports-list",
+                  "es/external-api/organization-reports-get",
+                  "es/external-api/organization-proposals-review",
+                  "es/external-api/organization-reports"
+                ]
+              },
+              {
+                "group": "Detección de amenazas",
+                "pages": [
+                  "es/external-api/evaluating-detections",
+                  "es/external-api/detection-list",
+                  "es/external-api/detection-sources-list",
+                  "es/external-api/detection-configs-list",
+                  "es/external-api/detection-configs-create",
+                  "es/external-api/detection-configs-update",
+                  "es/external-api/detection-configs-delete",
+                  "es/external-api/detection-configs-run",
+                  "es/external-api/detection-configs-validate",
+                  "es/external-api/detection-drift",
+                  "es/external-api/threats-list",
+                  "es/external-api/organization-threats-list",
+                  "es/external-api/organization-watchlist-list"
+                ]
+              },
+              {
+                "group": "Dark web",
+                "pages": [
+                  "es/external-api/dark-web-credentials-targets",
+                  "es/external-api/dark-web-credentials-search"
+                ]
+              },
+              {
+                "group": "Takedowns",
+                "pages": [
+                  "es/external-api/takedowns-list"
+                ]
+              },
+              {
+                "group": "Métricas",
+                "pages": [
+                  "es/external-api/metrics-summary",
+                  "es/external-api/metrics-breakdown",
+                  "es/external-api/metrics-found",
+                  "es/external-api/metrics-found-by-source",
+                  "es/external-api/metrics-takedown-time",
+                  "es/external-api/metrics-takedown-time-by-provider",
+                  "es/external-api/metrics-takedown-time-trend",
+                  "es/external-api/metrics-takedown-success-rate",
+                  "es/external-api/metrics-false-positive-rate",
+                  "es/external-api/metrics-time-to-detection",
+                  "es/external-api/organization-metrics-list",
+                  "es/external-api/organization-metrics"
+                ]
+              },
+              {
+                "group": "Cuenta y acceso",
+                "pages": [
+                  "es/external-api/validate",
+                  "es/external-api/user-me",
+                  "es/external-api/user-me-update",
+                  "es/external-api/user-orgs",
+                  "es/external-api/user-orgs-get"
+                ]
+              },
+              {
+                "group": "Operaciones",
+                "pages": [
+                  "es/external-api/operations-queues-snapshot"
+                ]
+              },
+              {
+                "group": "Staff",
+                "pages": [
+                  "es/external-api/staff-organization-create"
+                ]
+              },
+              {
+                "group": "Healthchecks",
+                "pages": [
+                  "es/external-api/healthchecks-list",
+                  "es/external-api/healthchecks-detections-silent-configs",
+                  "es/external-api/healthchecks-reviewing-backlog",
+                  "es/external-api/healthchecks-reviewing-old-proposals",
+                  "es/external-api/healthchecks-takedowns-todo-volume",
+                  "es/external-api/healthchecks-takedowns-in-progress-volume",
+                  "es/external-api/healthchecks-takedowns-stale-in-progress",
+                  "es/external-api/healthchecks-takedowns-cancelled-count",
+                  "es/external-api/healthchecks-takedowns-automation-off",
+                  "es/external-api/healthchecks-assets-dead-asset-spike",
+                  "es/external-api/healthchecks-organization-missing-contact-url"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "CLI",
+            "groups": [
+              {
+                "group": "CLI de ChainPatrol",
+                "pages": [
+                  "es/cli/overview",
+                  "es/cli/installation",
+                  "es/cli/authentication",
+                  "es/cli/output",
+                  "es/cli/agents"
+                ]
+              },
+              {
+                "group": "Referencia de comandos",
+                "pages": [
+                  "es/cli/commands/asset",
+                  "es/cli/commands/reports",
+                  "es/cli/commands/proposals",
+                  "es/cli/commands/detections",
+                  "es/cli/commands/metrics",
+                  "es/cli/commands/threats",
+                  "es/cli/commands/takedowns",
+                  "es/cli/commands/orgs",
+                  "es/cli/commands/healthchecks",
+                  "es/cli/commands/queues",
+                  "es/cli/commands/presets"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "SDK de JavaScript",
+            "groups": [
+              {
+                "group": "@chainpatrol/sdk",
+                "pages": [
+                  "es/sdk/overview",
+                  "es/sdk/quickstart"
+                ]
+              },
+              {
+                "group": "Referencia de la API",
+                "pages": [
+                  {
+                    "group": "ThreatDetector",
+                    "pages": [
+                      "es/sdk/threat-detector/overview",
+                      "es/sdk/threat-detector/constructor",
+                      {
+                        "group": "Métodos de instancia",
+                        "pages": [
+                          "es/sdk/threat-detector/instance-methods/url",
+                          "es/sdk/threat-detector/instance-methods/allow",
+                          "es/sdk/threat-detector/instance-methods/block",
+                          "es/sdk/threat-detector/instance-methods/ignore"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "Almacenamiento",
+                    "pages": [
+                      "es/sdk/storage/overview",
+                      "es/sdk/storage/browser",
+                      "es/sdk/storage/extension",
+                      "es/sdk/storage/memory"
+                    ]
+                  },
+                  {
+                    "group": "Relay",
+                    "pages": [
+                      "es/sdk/relay/overview",
+                      {
+                        "group": "Métodos estáticos",
+                        "pages": [
+                          "es/sdk/relay/static-methods/send",
+                          "es/sdk/relay/static-methods/run",
+                          "es/sdk/relay/static-methods/on"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "ChainPatrolClient",
+                    "pages": [
+                      "es/sdk/chainpatrol-client/overview",
+                      "es/sdk/chainpatrol-client/constructor",
+                      {
+                        "group": "Métodos de instancia",
+                        "pages": [
+                          "es/sdk/chainpatrol-client/instance-methods/asset-check",
+                          "es/sdk/chainpatrol-client/instance-methods/asset-list",
+                          "es/sdk/chainpatrol-client/instance-methods/asset-submit",
+                          "es/sdk/chainpatrol-client/instance-methods/report-create"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Glosario",
+            "groups": [
+              {
+                "group": "Tipos de asset",
+                "pages": [
+                  "es/glossary/overview",
+                  "es/glossary/asset-types/url",
+                  "es/glossary/asset-types/page",
+                  "es/glossary/asset-types/address",
+                  "es/glossary/asset-types/social",
+                  "es/glossary/asset-types/apps",
+                  "es/glossary/asset-types/other"
+                ]
+              }
             ]
           }
         ]

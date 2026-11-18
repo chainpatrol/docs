@@ -1,0 +1,32 @@
+---
+title: "Constructor de ChainPatrolClient"
+description: Crea una nueva instancia de ChainPatrolClient con tu clave de API y un baseUrl opcional para conectar el SDK de JavaScript con la API de detección de amenazas de ChainPatrol.
+---
+
+## Ejemplo
+
+```ts
+import { ChainPatrolClient } from "@chainpatrol/sdk";
+
+const chainpatrol = new ChainPatrolClient({ apiKey: "<API_KEY>" });
+```
+
+## Parámetros
+
+<ParamField body="options" type="object" required>
+  <Expandable title="propiedades" defaultOpen>
+    <ParamField body="apiKey" type="string">
+      La propiedad `apiKey` es la clave de API para acceder a las API de ChainPatrol. Te
+      recomendamos usar una variable de entorno para guardar tu clave de API.
+    </ParamField>
+
+    <ParamField body="baseUrl" type="string">
+      La propiedad `baseUrl` es una propiedad opcional que especifica la URL de la API. Solo
+      necesitas especificarla si usas un servidor proxy.
+
+      El valor predeterminado es `https://app.chainpatrol.io/api/`. El cliente agrega `v2/...` a
+      esta dirección por su cuenta, así que no incluyas `v2` en el valor que pases.
+    </ParamField>
+
+  </Expandable>
+</ParamField>

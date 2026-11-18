@@ -1,0 +1,152 @@
+---
+title: Comando reports — crea, lista y busca reportes
+sidebarTitle: reports
+icon: flag
+description: "Crea reportes de ChainPatrol desde la terminal, explora la cola de reportes de una organización con filtrado completo y busca por contenido de asset para evitar duplicados."
+---
+
+```bash
+chainpatrol reports <create|list|search>
+```
+
+## reports create
+
+Crea un reporte con uno o más **Assets** (activos digitales: URL, dirección, perfil, app, etc.).
+
+```bash
+chainpatrol reports create [--org <slug>] [options]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. Por defecto usa la organización guardada o la del entorno. |
+| `--title <text>` | Título del reporte. |
+| `--description <text>` | Descripción del reporte. |
+| `--contact-info <text>` | Información de contacto de quien reporta. |
+| `--asset <c[:status]>` | Asset a incluir. Repetible. `status` es `BLOCKED`, `ALLOWED` o `UNKNOWN`. |
+| `--attachment-url <u>` | URL del adjunto. Repetible. Recibe una URL, no una ruta de archivo: consulta la nota más abajo. |
+| `--external-submission-link <u>` | Enlace de envío externo. |
+| `--payload-file <path>` | Archivo JSON que contiene el payload completo del reporte. |
+| `--dry-run` | Imprime el payload sin enviarlo. |
+
+```bash
+# a single asset
+chainpatrol reports create --org acme \
+  --title "New phishing campaign" \
+  --description "Detected from CLI" \
+  --asset "https://phish.example:BLOCKED"
+
+# several assets and an attachment
+chainpatrol reports create --org acme --title "Batch report" \
+  --asset "https://a.example:BLOCKED" \
+  --asset "https://b.example:ALLOWED" \
+  --attachment-url "https://cdn.example/screenshot1.png"
+
+# preview first, then submit
+chainpatrol reports create --org acme --title "Batch report" \
+  --asset "https://a.example:BLOCKED" --dry-run --output markdown
+```
+
+<Note>
+  `--attachment-url` recibe una URL que ya existe. Para adjuntar un archivo local (un mensaje `.eml`,
+  una captura de pantalla, un PDF), súbelo primero con
+  [`POST /attachment/upload`](/es/external-api/attachment-upload) y pasa la URL que devuelve:
+
+  ```bash
+  URL=$(curl -s -X POST \
+    "https://app.chainpatrol.io/api/v2/attachment/upload?fileName=evidence.eml" \
+    -H "X-API-KEY: $CHAINPATROL_API_KEY" \
+    --data-binary '@evidence.eml' | jq -r '.attachments[0].url')
+
+  chainpatrol reports create --org acme --title "Phishing email" \
+    --asset "https://phish.example:BLOCKED" --attachment-url "$URL"
+  ```
+</Note>
+
+Para los campos que los flags no cubren —`externalReporter`, enriquecimientos (enrichments), `rawAssetsInput`—
+pasa un archivo de payload:
+
+```bash
+chainpatrol reports create --payload-file ./report-payload.json --json
+```
+
+## reports list
+
+Lista los reportes recientes de una organización, con el mismo filtrado que la vista
+**Reports** (reportes de posibles amenazas) de la app.
+
+```bash
+chainpatrol reports list --org <slug> [filters]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--limit <n>` | Tamaño de página, 1–20. |
+| `--cursor <id>` | Cursor de paginación. |
+| `--status <s>` | Estado del reporte: `TODO`, `IN_PROGRESS` o `CLOSED`. |
+| `--search <q>` | Busca por título o descripción. |
+| `--reporter-query <q>` | Busca por nombre de quien reportó (heredado). |
+| `--reported-by-customer` | Solo reportes enviados por clientes. |
+| `--no-reported-by-customer` | Solo reportes que no fueron enviados por clientes. |
+| `--needs-customer-review` | Solo reportes que esperan la aprobación de tu propia organización. |
+| `--no-needs-customer-review` | Solo reportes que no esperan tu aprobación. |
+| `--reporter-kind <kind>` | Filtra por quien reportó: `human` o `automation`. |
+| `--reviewer-kind <kind>` | Filtra por quien aprobó: `human` o `automation`. |
+| `--exclude-automation` | Obsoleto: usa de preferencia `--reporter-kind human`. |
+| `--only-rejected` | Solo reportes cuya última decisión de revisión fue `REJECT`. |
+| `--review-status <list>` | Lista separada por comas: `APPROVE`, `REJECT`, `SKIP`, `ESCALATE`. |
+| `--asset-type <list>` | Lista separada por comas de tipos de asset (`URL`, `TWITTER`, …). |
+| `--brand <ids>` | Lista separada por comas de IDs de marca. |
+| `--country-code <list>` | Lista separada por comas de códigos de país ISO de 2 letras. |
+| `--reviewed-by-user-id <n>` | Solo reportes revisados por un ID de usuario específico. |
+| `--from <iso>` / `--to <iso>` | Filtra por `createdAt`. |
+| `--updated-from <iso>` / `--updated-to <iso>` | Filtra por `updatedAt`. |
+
+```bash
+chainpatrol reports list --org acme --limit 10
+chainpatrol reports list --org acme --status TODO --review-status REJECT
+chainpatrol reports list --org acme --reporter-kind human --reviewer-kind automation
+chainpatrol reports list --org acme --brand 12,34 --country-code US,GB
+chainpatrol reports list --org acme --needs-customer-review
+```
+
+<Tip>
+  Las respuestas incluyen `totalCount`: la cantidad de reportes que coinciden con tus filtros,
+  independiente de `--limit` y `--cursor`. Úsalo como denominador al tomar muestras ("se
+  muestrearon 200 de ~4,235") o para decidir si conviene paginar o acotar primero los filtros.
+</Tip>
+
+`--needs-customer-review` es la cola sobre la que actúa [`proposals review`](/es/cli/commands/proposals).
+Los IDs de la **Proposal** (propuesta para bloquear o permitir un asset) y del asset que ese
+comando necesita provienen de `proposals[].id` y `proposals[].asset.id` en este listado.
+
+## reports search
+
+Responde "¿ya existe un reporte para estos assets?" en una sola llamada. Es la forma rápida
+de evitar crear un duplicado; para explorar o filtrar los reportes de una organización, usa mejor `reports
+list`.
+
+```bash
+chainpatrol reports search <content> [<content> ...]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. Por defecto usa la organización guardada o la del entorno. |
+| `--asset <content>` | Contenido del asset. Repetible, y una alternativa a los argumentos posicionales. |
+| `--reported-by-customer` | Coincide solo con reportes enviados por clientes. |
+| `--no-reported-by-customer` | Coincide solo con reportes que no fueron enviados por clientes. |
+| `--limit <n>` | Máximo de reportes a devolver, del más nuevo al más antiguo. 1–100; el valor predeterminado es 50. |
+
+```bash
+chainpatrol reports search https://bad.site
+chainpatrol reports search https://a.site https://b.site --reported-by-customer
+chainpatrol reports search https://bad.site --limit 100
+```
+
+## Relacionado
+
+- [`POST /report/create`](/es/external-api/report-create)
+- [`GET /organization/reports`](/es/external-api/organization-reports-list)
+- [Concepto de reportes](/es/concepts/reports)

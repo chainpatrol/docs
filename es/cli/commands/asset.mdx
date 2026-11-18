@@ -1,0 +1,131 @@
+---
+title: Comando asset — verifica, lista y busca assets
+sidebarTitle: asset
+icon: shield-check
+description: "Verifica URLs y direcciones en la Blocklist de ChainPatrol, busca assets por contenido o ID, lista assets bloqueados de forma masiva y consulta todos los tipos de asset compatibles."
+---
+
+```bash
+chainpatrol asset <check|list|search|types>
+```
+
+## asset check
+
+Consulta uno o más **Assets** (activos digitales: URL, dirección, perfil, app, etc.), ya sea
+una URL, un dominio o una dirección cripto, en la **Blocklist** (lista de bloqueo) de
+ChainPatrol y en fuentes externas. Devuelve el estado consolidado más un desglose por fuente.
+
+```bash
+chainpatrol asset check <content> [<content> ...]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--asset <content>` | Contenido del asset. Repetible, y una alternativa a los argumentos posicionales. |
+
+Varios assets se verifican en paralelo con una concurrencia de 10:
+
+```bash
+# one asset
+chainpatrol asset check https://phish.example
+
+# many at once
+chainpatrol asset check a.example b.example c.example
+
+# repeated --asset is equivalent
+chainpatrol asset check --asset a.example --asset b.example
+
+# a file of one domain per line, in a single CLI call
+xargs -a domains.txt chainpatrol --json asset check
+```
+
+Una respuesta `--json` de un solo asset es un objeto plano. Una respuesta masiva es
+`{ results: [...], summary: { checked, blocked, allowed, unknown, errored } }`, así que un script
+puede informar los totales sin volver a contar:
+
+```bash
+chainpatrol --json asset check a.example b.example | jq '.summary'
+```
+
+Los resúmenes en Markdown y CSV también funcionan:
+
+```bash
+chainpatrol asset check phish.example --output markdown
+chainpatrol asset check a.example b.example --output csv
+```
+
+## asset search
+
+Busca assets por contenido o por ID numérico. Mientras que `asset check` consulta la
+agregación pública de la Blocklist, `asset search` consulta directamente la base de datos de
+assets y devuelve un contexto más completo: estado, reportes asociados, detalles del
+**Takedown** (solicitud de baja de contenido fraudulento) y qué plataformas ya consumieron
+el bloqueo.
+
+```bash
+chainpatrol asset search [<content> ...] [--id <id> ...]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--id <number>` | ID del asset. Repetible para consultas masivas. |
+| `--asset <content>` | Contenido del asset. Repetible, y una alternativa a los argumentos posicionales. |
+| `--include-enrichments` | También devuelve los enriquecimientos (enrichments) de los 10 escaneos más recientes de cada asset, incluido el `screenshotUrl` de la captura del navegador. |
+
+```bash
+chainpatrol asset search https://phish.example
+chainpatrol asset search --id 4175269
+chainpatrol --json asset search --id 4175269 --id 4144496 --id 4642520
+chainpatrol asset search --id 12345 --output markdown
+chainpatrol --json asset search --id 4175269 --include-enrichments
+```
+
+## asset list
+
+Lista los assets de la Blocklist global de ChainPatrol para un tipo de asset determinado. Por
+defecto muestra los assets `BLOCKED`, sin filtro de fecha; acota el período con `--from` y `--to`.
+Se excluyen los assets con borrado lógico (soft-deleted).
+
+```bash
+chainpatrol asset list --asset-type <type> [--from ISO --to ISO] [filters]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--asset-type <type>` | Tipo de asset: `URL`, `ADDRESS`, `TWITTER`, `TELEGRAM`, `DISCORD`, … |
+| `--type <type>` | Alias de `--asset-type`. |
+| `--asset-status <s>` | Filtro de estado: `BLOCKED`, `ALLOWED` o `UNKNOWN`. El valor predeterminado es `BLOCKED`. |
+| `--from <iso>` | Fecha de inicio (`YYYY-MM-DD`). |
+| `--to <iso>` | Fecha de fin (`YYYY-MM-DD`). |
+| `--per-page <n>` | Tamaño de página, 1–10000. El valor predeterminado es 100. Aun así, una respuesta devuelve como máximo 1000 assets, así que sigue avanzando con `--next-page`. También se acepta `--limit`. |
+| `--next-page <cursor>` | Cursor devuelto por una respuesta anterior. |
+
+```bash
+chainpatrol asset list --asset-type URL --from 2026-05-01 --to 2026-05-17
+chainpatrol asset list --asset-type ADDRESS --per-page 500 --output csv
+```
+
+## asset types
+
+Lista todos los tipos de asset que ChainPatrol admite y qué significa cada valor del enum; por
+ejemplo, `ARCHIVE_ORG` es una instantánea de Wayback de Archive.org y `PAGE` es una página web independiente.
+
+```bash
+chainpatrol asset types
+```
+
+Esto lee un mapa estático incluido en la CLI, así que no necesita red ni autenticación.
+Úsalo para elegir el valor correcto de `--asset-type` para `asset list`,
+[`threats list`](/es/cli/commands/threats) o [`takedowns list`](/es/cli/commands/takedowns).
+
+```bash
+chainpatrol asset types
+chainpatrol --json asset types
+chainpatrol asset types --output csv > asset-types.csv
+```
+
+## Relacionado
+
+- [`POST /asset/check`](/es/external-api/asset-check) — la API detrás de `asset check`
+- [`POST /asset/list`](/es/external-api/asset-list) — la API detrás de `asset list`
+- [Glosario de tipos de asset](/es/glossary/overview)

@@ -1,0 +1,202 @@
+---
+title: Comando metrics — consulta las métricas de la organización
+sidebarTitle: metrics
+icon: chart-line
+description: "Consulta las métricas de organización de ChainPatrol desde la CLI: conteos de resumen, amenazas recién encontradas, desgloses por día, tipo o marca, tiempo hasta el takedown, tiempo hasta la detección y consolidados de varias organizaciones."
+---
+
+```bash
+chainpatrol metrics <summary|found|breakdown|takedown-time|takedown-time-trend|time-to-detection|organization>
+```
+
+Todos los subcomandos, excepto `takedown-time-trend`, usan por defecto los últimos 3 meses cuando
+no indicas un rango de fechas. Pasa `--from` y `--to` para una ventana explícita, o `--this-week` para
+la semana ISO actual. Un `--to` que solo tiene fecha cubre el día completo.
+
+## metrics summary
+
+Métricas de resumen de una organización en un rango de fechas.
+
+```bash
+chainpatrol metrics summary --org <slug> [--from ISO --to ISO|--this-week]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--from <iso>` / `--to <iso>` | Rango de fechas (ISO 8601). |
+| `--this-week` | Usa la semana ISO actual. |
+| `--brand <ids>` | IDs de marca separados por comas. |
+
+```bash
+chainpatrol metrics summary --org acme --this-week
+chainpatrol metrics summary --org acme --from 2026-01-01 --to 2026-01-08
+```
+
+## metrics found
+
+Conteo de amenazas recién encontradas: el número de "amenazas nuevas" que ve el cliente. Tiene las mismas opciones que
+`metrics summary`.
+
+```bash
+chainpatrol metrics found --org acme --this-week
+chainpatrol --json metrics found --org acme --from 2026-01-01 --to 2026-02-01
+```
+
+## metrics breakdown
+
+Conteos de amenazas agrupados por un eje.
+
+```bash
+chainpatrol metrics breakdown --org <slug> --by <day|type|brand> [--from ISO --to ISO|--this-week]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--by <axis>` | `day`, `type` o `brand`. Obligatorio. |
+| `--from <iso>` / `--to <iso>` | Rango de fechas. |
+| `--this-week` | Usa la semana ISO actual. |
+| `--brand <ids>` | IDs de marca separados por comas. |
+
+```bash
+chainpatrol metrics breakdown --org acme --by day --this-week
+chainpatrol metrics breakdown --org acme --by type --from 2026-01-01 --to 2026-01-08
+chainpatrol metrics breakdown --org acme --by brand --output csv
+```
+
+## metrics takedown-time
+
+Mediana del tiempo desde el inicio hasta la finalización de un **Takedown** (solicitud de baja de contenido fraudulento): una mediana general para todos los takedowns
+dentro del alcance, más una por cada tipo de **Asset** (activo digital: URL, dirección, perfil, app, etc.).
+
+```bash
+chainpatrol metrics takedown-time --org <slug> [--from ISO --to ISO|--this-week] [--asset-type <types>] [--asset-group <groups>]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--from <iso>` / `--to <iso>` | Rango de fechas (ISO 8601). |
+| `--this-week` | Usa la semana ISO actual. |
+| `--brand <ids>` | IDs de marca separados por comas. |
+| `--asset-type <types>` | Tipos de asset a incluir, separados por comas; por ejemplo, `URL,TWITTER`. |
+| `--asset-group <groups>` | Grupos de tipos de asset a incluir, separados por comas: `DOMAINS`, `SOCIALS`, `APP_STORES`, `ADS`, `EXTENSIONS`, `CRYPTO`, `EMAIL`, `PACKAGES`, `OTHER`. Se combina con `--asset-type`. |
+
+Las direcciones cripto (`ADDRESS`) se dejan fuera a menos que las pidas con
+`--asset-type ADDRESS` o `--asset-group CRYPTO`. Una dirección se reporta en muchos sitios a la
+vez, así que su tiempo de takedown distorsionaría la mediana de dominios y redes sociales.
+
+```bash
+chainpatrol metrics takedown-time --org acme --from 2026-01-01 --to 2026-02-01
+chainpatrol metrics takedown-time --org acme --asset-group DOMAINS
+chainpatrol metrics takedown-time --org acme --asset-group SOCIALS --asset-type EMAIL
+```
+
+## metrics takedown-time-trend
+
+Mediana del tiempo desde el inicio hasta la finalización del takedown para cada mes de una ventana móvil hacia atrás, con
+el cambio respecto al mes anterior.
+
+```bash
+chainpatrol metrics takedown-time-trend --org <slug> [--months <n>] [--asset-type <types>]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--months <n>` | Tamaño de la ventana en meses completos, incluido el mes actual. De 2 a 36; el valor predeterminado es 12. |
+| `--asset-type <types>` | Tipos de asset separados por comas, hasta 5. Obtienes una serie por tipo; omite la opción para obtener una sola serie con todos los tipos. |
+| `--brand <ids>` | IDs de marca separados por comas. |
+
+Igual que con `takedown-time`, las direcciones cripto se dejan fuera a menos que pases `--asset-type ADDRESS`.
+
+```bash
+chainpatrol metrics takedown-time-trend --org acme
+chainpatrol metrics takedown-time-trend --org acme --months 6 --asset-type URL,TWITTER
+```
+
+## metrics time-to-detection
+
+Cuánto tiempo llevaban activas las amenazas antes de la primera detección automática de ChainPatrol, por tipo de
+asset. Abarca los assets que tu organización bloqueó en el rango de fechas y que siguen bloqueados.
+El reloj corre desde que el asset se vio activo por primera vez hasta su detección automática más temprana;
+un reporte hecho por una persona no lo detiene. Cada número es un mínimo e incluye la cantidad de
+assets bloqueados que mide.
+
+```bash
+chainpatrol metrics time-to-detection --org <slug> [--from ISO --to ISO|--this-week]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--from <iso>` / `--to <iso>` | Rango de fechas (ISO 8601). |
+| `--this-week` | Usa la semana ISO actual. |
+| `--brand <ids>` | IDs de marca separados por comas. |
+
+```bash
+chainpatrol metrics time-to-detection --org acme --from 2026-01-01 --to 2026-02-01
+```
+
+## metrics organization
+
+El endpoint documentado `GET /organization/metrics`, incluido su consolidado (rollup) de varias
+organizaciones. Funciona con claves de API con alcance de organización (una sola organización), claves de API de usuario (se permiten
+varias organizaciones, heredando los permisos del usuario) y autenticación por sesión.
+
+```bash
+chainpatrol metrics organization [--org <slug>|--slugs <list>|--all-my-orgs] [--from ISO --to ISO|--this-week] [--include <list>]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Una sola organización. Mutuamente excluyente con `--slugs` y `--all-my-orgs`. |
+| `--slugs <list>` | Lista separada por comas de slugs de organizaciones, con un máximo de 500. La respuesta es el consolidado de todas ellas. |
+| `--all-my-orgs` | Todas las organizaciones que puedes ver. Las claves de API con alcance de organización se rechazan. Máximo de 500. |
+| `--subscription-status <list>` | Con `--all-my-orgs`: cualquiera de `ACTIVE`, `POC`, `PROSPECT`, `INTEGRATION`, `PROTECTION`, `INACTIVE`. Por defecto incluye todos los estados excepto `INACTIVE`; pasa `INACTIVE` para incluir las organizaciones que se dieron de baja. |
+| `--service-active <list>` | Con `--all-my-orgs`: solo las organizaciones que tienen activos los servicios indicados: `reporting`, `reviewing`, `protection`, `takedowns`, `detection`, `darkWebMonitoring`. |
+| `--brand-slug <slug>` | Filtra por slug de marca. Solo para una única organización. |
+| `--from <iso>` / `--to <iso>` | Rango de fechas. |
+| `--this-week` | Usa la semana ISO actual. |
+| `--include <list>` | Campos a calcular. Omítela para calcular todos. |
+
+`--include` acepta `reports`, `newThreats`, `threatsWatchlisted`, `takedownsFiled`,
+`takedownsCompleted`, `domainThreats`, `twitterThreats`, `telegramThreats`, `otherThreats`,
+`blockedByType`, `blockedByDay`. Los campos que omites se devuelven como `null`, así que acotar
+`--include` es la forma más económica de acelerar una consulta amplia.
+
+Una respuesta de varias organizaciones incluye totales, promedios por día y por organización por día,
+y un desglose por organización.
+
+```bash
+# defaults to the last 3 months
+chainpatrol metrics organization --org acme
+
+# just the takedown numbers
+chainpatrol metrics organization --org acme --include takedownsFiled,takedownsCompleted
+
+# a rollup across three named orgs
+chainpatrol metrics organization --slugs acme,beta,gamma \
+  --include takedownsCompleted --from 2026-05-12 --to 2026-05-19
+
+# a cross-customer total in one call
+chainpatrol metrics organization --all-my-orgs \
+  --service-active takedowns --subscription-status ACTIVE \
+  --include takedownsCompleted --from 2026-05-12 --to 2026-05-19
+
+# with an API key
+CHAINPATROL_API_KEY=... chainpatrol metrics organization --json --include reports
+```
+
+<Note>
+  `metrics org` se acepta como alias de `metrics organization`.
+</Note>
+
+## Relacionado
+
+- [`GET /organization/metrics`](/es/external-api/organization-metrics)
+- [`POST /metrics/takedown-time`](/es/external-api/metrics-takedown-time)
+- [`POST /metrics/takedown-time/trend`](/es/external-api/metrics-takedown-time-trend)
+- [`POST /metrics/time-to-detection`](/es/external-api/metrics-time-to-detection)
+- [Concepto de **Metrics** (métricas)](/es/concepts/metrics)

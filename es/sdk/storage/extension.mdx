@@ -1,0 +1,35 @@
+---
+title: Extension
+description: "El adaptador Storage.extension() guarda en caché los resultados de ThreatDetector usando la API de almacenamiento de extensiones para extensiones de navegador de Chrome, Firefox y Edge."
+---
+
+El adaptador `Storage.extension()` usa la [API de almacenamiento de extensiones](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage) del navegador para guardar datos.
+Usa este adaptador si estás creando una extensión de navegador para Chrome, Firefox o Edge.
+
+## Requisitos previos
+
+Tienes que habilitar el permiso `storage` en el archivo `manifest.json` de tu extensión:
+
+```json
+{
+  "permissions": ["storage"]
+}
+```
+
+De manera opcional, también puedes habilitar el permiso `unlimitedStorage` para que tu extensión pueda usar más de 5 MB de almacenamiento.
+
+```json
+{
+  "permissions": ["storage", "unlimitedStorage"]
+}
+```
+
+## Ejemplo
+
+```js
+import { Storage } from "@chainpatrol/sdk";
+
+const storage = Storage.extension({
+  quota: 1024 * 1024 * 5, // 5MB
+});
+```

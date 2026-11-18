@@ -203,9 +203,9 @@ This event is sent when an action is recorded in your organization's Audit Log, 
 
 When creating a webhook, you'll need to provide:
 
-1. A HTTPS endpoint URL that will receive the webhook events
+1. An HTTPS endpoint URL that will receive the webhook events
 2. An optional description to help identify the webhook's purpose
-3. Select which events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, and `audit-log.created`)
+3. The events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, and `audit-log.created`)
 4. Optional HTTP headers for supported integrations (currently Google SecOps headers are available)
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.

@@ -108,11 +108,15 @@ curl -X GET 'https://app.chainpatrol.io/api/v2/organization/metrics?startDate=20
     },
     {
       "type": "ADDRESS",
-      "count": 85
+      "count": 60
     },
     {
       "type": "TWITTER",
       "count": 40
+    },
+    {
+      "type": "TELEGRAM",
+      "count": 25
     }
   ],
   "blockedByDay": [
@@ -245,9 +249,9 @@ async function compareMetrics(period1Start: string, period1End: string, period2S
   const period2 = await period2Response.json();
 
   const change = {
-    reportsCount: period2.metrics.reportsCount - period1.metrics.reportsCount,
-    threatsBlocked: period2.metrics.threatsBlockedCount - period1.metrics.threatsBlockedCount,
-    detections: period2.metrics.totalDetections - period1.metrics.totalDetections,
+    reports: period2.metrics.reports - period1.metrics.reports,
+    newThreats: period2.metrics.newThreats - period1.metrics.newThreats,
+    takedownsCompleted: period2.metrics.takedownsCompleted - period1.metrics.takedownsCompleted,
   };
 
   console.log("Period-over-period change:", change);
@@ -319,8 +323,6 @@ async function generateDashboard(days: number = 30) {
     }
   );
 
-  const { metrics } = await response.json();
-
   const { metrics, blockedByType } = await response.json();
 
   const dashboard = {
@@ -363,8 +365,6 @@ async function exportMetricsReport(startDate: string, endDate: string) {
       headers: { "X-API-KEY": "YOUR_API_KEY_HERE" },
     }
   );
-
-  const { metrics } = await response.json();
 
   const { metrics, blockedByType } = await response.json();
 

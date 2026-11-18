@@ -1,0 +1,26 @@
+---
+title: Listar marcas de la organización
+openapi: "GET /organization/brands"
+---
+
+## Descripción general
+
+Lista todas las marcas que pertenecen a la organización asociada a tu clave de API. Las marcas
+principales y de producto (`type: ORGANIZATION`) y las marcas individuales o de empleados
+(`type: INDIVIDUAL`) se devuelven en una sola llamada, incluidos campos de configuración
+como `brandColors`, `includedTerms`, `excludedTerms`, `tickers`, `avatarUrl`,
+`websiteUrl` y `twitterHandle`.
+
+## Notas
+
+- Cada marca informa `useOrganizationDocs`: cuando es true, la marca hereda su **Letter of
+  Authorization** (carta de autorización) de la organización.
+- `legalDocuments` contiene el archivo adjunto de la Letter of Authorization a nivel de marca, y `trademarkRegistrations` enumera cada **Trademark Registration** (registro de marca) a nivel de marca que consta en archivo, con
+  su oficina emisora, su número de registro y un enlace al PDF del certificado cuando se subió
+  uno.
+- `legalDocuments.powerOfAttorney` está obsoleto. Ahora la Letter of Authorization es el único
+  documento legal; el campo devuelve un **Power of Attorney** (poder legal) subido antes de ese
+  cambio y se eliminará en una versión futura.
+- Las marcas eliminadas de forma lógica (soft-deleted) se excluyen.
+- La cantidad de marcas por organización suele ser inferior a 500, así que el endpoint devuelve
+  el conjunto completo en una sola respuesta: no hay paginación.

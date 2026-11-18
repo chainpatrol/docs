@@ -1,0 +1,45 @@
+---
+title: Obtener tiempo de takedown por proveedor
+openapi: "POST /metrics/takedown-time/by-provider"
+---
+
+## Descripción general
+
+Obtén la mediana del tiempo que pasa desde que un **takedown** (solicitud de baja de contenido fraudulento) comienza hasta que se completa, por cada proveedor
+ante el que se presentó el takedown, para los takedowns completados en un rango de fechas. Úsalo para ver
+qué proveedores de hosting y registradores actúan rápido y cuáles son lentos.
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/takedown-time/by-provider \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "startDate": "2026-08-01",
+    "endDate": "2026-10-31",
+    "roles": ["HOSTING_PROVIDER", "DOMAIN_REGISTRAR"]
+  }'
+```
+
+## Cuerpo de la solicitud
+
+| Campo          | Tipo       | Obligatorio | Descripción                                                                                                              |
+| -------------- | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `slug`         | `string`   | ✅ Sí       | Slug de la organización.                                                                                                 |
+| `startDate`    | `string`   | ❌ No       | Solo takedowns completados en esta fecha o después. Un valor de solo fecha (`YYYY-MM-DD`) empieza a la medianoche UTC.   |
+| `endDate`      | `string`   | ❌ No       | Solo takedowns completados en esta fecha o antes. Un valor de solo fecha abarca todo el día en UTC.                      |
+| `roles`        | `string[]` | ❌ No       | Solo estos roles de proveedor: `HOSTING_PROVIDER`, `DOMAIN_REGISTRAR`, `TLD_REGISTRAR`. Omítelo para incluir todos los roles. |
+| `brandIds`     | `number[]` | ❌ No       | Solo **assets** (activos digitales: URL, dirección, perfil, app, etc.) que pertenecen a estas marcas.                    |
+| `brandType`    | `string`   | ❌ No       | Solo marcas de este tipo: `INDIVIDUAL`, `ORGANIZATION` o `PRODUCT`.                                                      |
+| `blockLabel`   | `string`   | ❌ No       | Solo assets bloqueados con esta etiqueta de revisión, como `Brand Impersonation`.                                        |
+| `countryCodes` | `string[]` | ❌ No       | Solo assets escaneados desde estos países (códigos ISO 3166-1 alpha-2).                                                  |
+
+## Cómo leer la respuesta
+
+- `byProvider` tiene una entrada por proveedor y rol, ordenadas de la mediana más rápida a la más lenta. Un takedown
+  presentado tanto ante un proveedor de hosting como ante un registrador cuenta una vez en cada uno.
+- `count` es la cantidad de takedowns completados que respaldan cada mediana.
+- Los takedowns de direcciones cripto (`ADDRESS`) siempre quedan fuera, y
+  `excludedAssetTypes` así lo indica. Consulta
+  [Obtener tiempo de takedown](/es/external-api/metrics-takedown-time) para saber por qué.

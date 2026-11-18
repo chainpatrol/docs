@@ -1,0 +1,161 @@
+---
+title: "Revisiones"
+description: "Cómo los revisores de ChainPatrol aprueban, rechazan, omiten o escalan las Proposals de amenazas usando reglas de detección, evidencia de escaneos y señales de reportantes de confianza"
+---
+
+## Descripción general
+
+Una **revisión** es una decisión tomada sobre una **Proposal** (propuesta) para bloquear o permitir un **asset** (activo digital: URL, dirección, perfil, app, etc.) reportado. Cuando alguien reporta un sitio web, una cuenta de redes sociales u otro activo digital potencialmente malicioso, ChainPatrol crea una Proposal que requiere revisión antes de tomar medidas.
+
+<Info>
+Piensa en una revisión como la aprobación o el rechazo de una recomendación para bloquear una amenaza.
+</Info>
+
+### Componentes de una revisión
+
+Cada revisión consta de:
+
+- **Decisión** - Aprobar, rechazar, omitir o escalar
+- **Etiqueta** - Tipo de amenaza (p. ej., phishing, suplantación de marca)
+- **Comentario** - Explicación opcional del razonamiento
+- **Revisor** - Quién tomó la decisión
+- **Fecha y hora** - Cuándo se hizo la revisión
+
+## ¿Quién puede revisar?
+
+### Personal de ChainPatrol
+
+Nuestros analistas de seguridad, que revisan los reportes de todos los clientes. Pueden revisar todos los reportes, crear, leer y eliminar revisiones, aplicar un análisis experto de amenazas y manejar casos complejos.
+
+### Reportantes de confianza
+
+Investigadores de seguridad y socios verificados que han demostrado experiencia en la identificación de amenazas. Pueden enviar reportes de alta confianza, recibir aprobación automática para los envíos de confianza, crear y leer revisiones, y agilizar el bloqueo de amenazas.
+
+### Administradores del cliente
+
+Administradores y propietarios de las organizaciones cliente, que pueden revisar los reportes de su propia marca. Pueden revisar los reportes de su organización, aprobar o rechazar Proposals, tener la última palabra en las decisiones de la **Blocklist** (lista de bloqueo) y anular escalamientos.
+
+### Sistema automatizado
+
+Nuestro sistema de automatización, que puede aprobar automáticamente ciertas amenazas de alta confianza. Ofrece revisión instantánea de las amenazas claras, cálculo del puntaje de amenaza, reconocimiento de patrones y operación las 24 horas, los 7 días de la semana.
+
+## Acciones de revisión
+
+Hay cuatro tipos de decisiones de revisión:
+
+### Approve (aprobar)
+
+Confirma que el asset reportado es malicioso y debe bloquearse. El asset se agrega a la blocklist de ChainPatrol, se distribuye a las plataformas integradas, se inicia el proceso de **takedown** (solicitud de baja de contenido fraudulento), si está habilitado, y se notifica a la organización. Úsala cuando hay evidencia clara de actividad maliciosa, alta confianza en la evaluación de la amenaza y el asset coincide con patrones de ataque conocidos.
+
+### Reject (rechazar)
+
+Indica que el asset reportado es legítimo y no debe bloquearse. Los motivos comunes incluyen que el asset en realidad es oficial (falso positivo), que la amenaza ya fue eliminada, que no hay evidencia suficiente de actividad maliciosa o que hubo una identificación errónea. La Proposal se cierra y el asset sigue sin bloquearse.
+
+### Skip (omitir)
+
+El revisor todavía no puede tomar una decisión definitiva. Esto mantiene la Proposal en estado pendiente para que otro revisor la examine. Los motivos comunes incluyen evidencia insuficiente para confirmar o descartar la amenaza, la necesidad de más contexto o investigación, la espera a que el asset cargue o esté accesible, o que se requiere experiencia más especializada.
+
+### Escalate (escalar)
+
+Pasa la decisión de revisión a otra parte para el dictamen final.
+
+**Escalar al cliente** - Solicita al dueño de la marca que revise y decida. Se usa cuando los revisores del personal tienen dudas, el tipo de asset requiere la aprobación del cliente o el contenido es ambiguo. El equipo del cliente recibe notificaciones (Slack/Discord) y la Proposal queda pendiente hasta que el cliente decida.
+
+**Escalar al equipo** - La pasa a los analistas sénior de ChainPatrol. Se usa cuando los administradores del cliente tienen dudas, los casos complejos requieren una revisión experta o hay múltiples señales contradictorias. Se deriva a analistas de seguridad sénior para un análisis a fondo y la decisión final.
+
+## Revisión automatizada
+
+El sistema de automatización de ChainPatrol revisa automáticamente las Proposals bajo condiciones específicas:
+
+### Criterios de aprobación automática
+
+Una Proposal se aprueba automáticamente cuando:
+
+1. **Envíos de reportantes de confianza** - Los reportes de reportantes de confianza se aprueban automáticamente si no activan advertencias de legitimidad
+2. **Puntaje de amenaza alto** - Los reportes con puntajes de amenaza suficientemente altos se aprueban automáticamente si ninguna verificación de legitimidad indica que el asset es legítimo, la organización no requiere la aprobación del cliente y no hay una disputa activa sobre el reporte
+
+### Criterios de omisión automática
+
+Una Proposal se omite automáticamente (se envía a revisión manual) cuando:
+
+- Las reglas de alta confianza indican que el asset parece legítimo
+- El puntaje de amenaza está por debajo del umbral de aprobación automática
+- La configuración de la organización requiere la aprobación manual de su equipo
+- Alguien disputó el reporte
+- Hubo demasiadas aprobaciones automáticas en un período corto
+
+### Puntaje de amenaza
+
+El sistema de automatización calcula un puntaje de amenaza analizando múltiples factores.
+
+Las señales de **suplantación de marca** incluyen similitud visual con marcas conocidas, coincidencia de logos, similitud de nombre y texto, typosquatting de dominios y suplantación de perfiles (rango de puntaje 0.0 - 1.0+).
+
+Los indicadores de **phishing general** incluyen formularios de robo de credenciales, patrones de URL sospechosos, enlaces maliciosos, tácticas de ingeniería social y estafas de conexión de wallets (rango de puntaje 0.0 - 1.0+).
+
+**Cálculo del puntaje** - El sistema combina los puntajes de distintas categorías de detección. Las reglas que se activan en múltiples categorías aumentan la confianza y, al mismo tiempo, se evita la inflación artificial del puntaje.
+
+## Evidencia revisada
+
+Al tomar una decisión de revisión, los revisores examinan múltiples tipos de evidencia:
+
+**Reglas de detección** - ChainPatrol ejecuta reglas de detección automatizadas que verifican la suplantación de marca (logos, nombres, similitud visual), los indicadores de phishing (formularios de credenciales, URL sospechosas), las señales de legitimidad (certificados oficiales, cuentas verificadas, hosting de confianza) y las amenazas de blockchain (conexiones de wallet falsas, estafas con transacciones).
+
+**Asset Scans** (escaneos de assets) - Capturas de pantalla e instantáneas de HTML que muestran la apariencia visual del sitio web o del perfil, el contenido y el texto de la página, los formularios y campos de entrada, los enlaces y recursos externos, y las solicitudes de red y el comportamiento.
+
+**Contexto del reporte** - Información de la persona que envió el reporte, que incluye la descripción de la amenaza, la identidad y el nivel de confianza del reportante, los adjuntos y la evidencia de respaldo, el origen del reporte (formulario, API, integración) y la cronología del descubrimiento.
+
+**Datos históricos** - Actividad pasada relacionada con el asset, que incluye reportes previos del mismo asset o de assets similares, el historial de takedowns, amenazas relacionadas de la misma infraestructura y el análisis de patrones entre campañas.
+
+## Cómo revertir una revisión
+
+Los revisores pueden revertir sus decisiones de revisión dentro de los **5 minutos** posteriores al envío. Esta ventana de seguridad te permite deshacer una aprobación o un rechazo hechos por error.
+
+1. Ve a la página del reporte que contiene tu revisión
+2. Busca la sección "Need to revert the change?" (¿necesitas revertir el cambio?)
+3. Haz clic en el botón de revertir mientras el temporizador siga activo
+4. La revisión se eliminará y la Proposal volverá al estado pendiente
+
+<Note>
+Los **superusuarios** pueden revertir revisiones en cualquier momento, pero los revisores estándar están limitados a la ventana de 5 minutos.
+</Note>
+
+## Cuándo se escalan las revisiones
+
+Las revisiones pueden escalarse en dos direcciones:
+
+Los **revisores del personal** pueden escalar al cliente cuando tienen dudas, escalar al equipo cuando el caso es complejo o tomar una decisión directa cuando está claro.
+
+Los **administradores del cliente** pueden escalar al equipo cuando tienen dudas o tomar una decisión directa cuando está claro.
+
+### Resolución de escalamientos
+
+**Escalamientos al cliente** - La Proposal queda pendiente hasta que el administrador del cliente la revise. La aprobación o el rechazo del cliente deja firme la decisión. Las notificaciones se envían por Slack/Discord, y los superusuarios pueden anularla si es necesario.
+
+**Escalamientos al equipo** - Se deriva a los analistas sénior de ChainPatrol. Se realiza una investigación a fondo. Se toma una decisión experta y se notifica el resultado al cliente.
+
+## ¿Por qué revisión humana frente a automatización?
+
+ChainPatrol usa un **enfoque híbrido** que combina la automatización con la experiencia humana:
+
+**Cuándo funciona mejor la automatización** - Phishing evidente con puntajes de amenaza altos y evidencia sólida, reportes de fuentes confiables (investigadores de seguridad verificados), patrones repetidos similares a amenazas confirmadas anteriormente y alta confianza cuando múltiples reglas de detección coinciden.
+
+**Cuándo se requiere revisión humana** - El asset muestra señales de ser oficial (señales de legitimidad), la evidencia es poco clara o contradictoria (baja confianza), hay patrones inusuales que no encajan en las reglas estándar (casos límite), organizaciones que requieren aprobación manual (preferencia del cliente) y cuando alguien afirma que el reporte es incorrecto (disputas).
+
+Este enfoque garantiza que bloqueemos las amenazas reales rápidamente, manteniendo la precisión y dando a las marcas el control sobre sus decisiones de seguridad.
+
+## Permisos de revisión
+
+| Rol | Crear revisiones | Leer revisiones | Eliminar revisiones | Capacidades especiales |
+|------|----------------|--------------|----------------|-------------------|
+| **Personal (no cliente)** | ✅ | ✅ | ✅ | Revisar todos los reportes |
+| **Reportantes de confianza** | ✅ | ✅ | ❌ | Elegibles para aprobación automática |
+| **Administradores del cliente** | ✅ | ✅ | ❌ | Revisar solo su propia organización |
+| **Superusuarios** | ✅ | ✅ | ✅ | Anular escalamientos, eludir los límites de tiempo |
+| **Reportantes/usuarios estándar** | ❌ | ✅ | ❌ | Solo lectura |
+
+## Puntos clave
+
+- Cuatro tipos de decisión evitan que el proceso se estanque: a diferencia de los sistemas binarios de aprobar/rechazar, Skip y Escalate garantizan que las amenazas poco claras reciban la atención adecuada sin forzar decisiones prematuras
+- Los reportantes de confianza permiten una respuesta rápida: los investigadores de seguridad verificados previamente pueden enviar reportes de alta confianza que eluden la revisión estándar, lo que acelera la protección frente a amenazas conocidas
+- La ventana de cinco minutos para revertir detecta errores: este margen de seguridad permite a los revisores deshacer decisiones accidentales antes de que los cambios se propaguen, equilibrando velocidad y precisión
+- Las rutas de escalamiento preservan la experiencia: los escalamientos al cliente aprovechan el contexto de la marca en los casos ambiguos, mientras que los escalamientos al equipo derivan las amenazas complejas a analistas sénior

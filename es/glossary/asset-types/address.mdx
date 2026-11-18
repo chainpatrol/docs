@@ -1,0 +1,21 @@
+---
+title: Dirección
+description: Reporta una dirección de wallet o de contrato inteligente como un asset de ChainPatrol, normalizada a minúsculas y detectada mediante el prefijo 0x y la longitud de 20 bytes.
+---
+
+El tipo de **asset** (activo digital: URL, dirección, perfil, app, etc.) `ADDRESS` es para organizaciones con presencia en blockchain o cripto; por ejemplo, un proyecto con un contrato inteligente o una dirección de wallet oficial que los estafadores podrían suplantar. Los demás tipos de asset ([URL](./url), [PAGE](./page), [Redes sociales y mensajería](./social), [Apps y extensiones](./apps)) cubren las superficies de web, redes sociales y tiendas de apps que aplican a todas las marcas, sin importar la industria.
+
+Las direcciones son los identificadores de los usuarios y los contratos inteligentes en la blockchain de Ethereum. Tienen 20 bytes de longitud y normalmente se representan en formato hexadecimal.
+
+Al enviar un reporte, puedes indicar la dirección de la wallet o del contrato inteligente que estás reportando, y detectaremos si es una dirección de Ethereum válida según el prefijo `0x` y la longitud de la dirección.
+
+## Normalización
+
+Normalizamos las direcciones convirtiendo los caracteres a minúsculas.
+
+#### Reporte
+
+```
+0xb3764761e297d6f121e79c32a65829cd1ddb4d32  // Wallet
+0x709ecbd07197e082dd830871fec0cc34537a6e23  // Smart contract
+```
