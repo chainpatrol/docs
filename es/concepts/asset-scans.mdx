@@ -1,0 +1,135 @@
+---
+title: "Asset Scans en ChainPatrol"
+description: "Cómo ChainPatrol captura instantáneas de un momento específico de URL, perfiles sociales y direcciones, con capturas de pantalla, datos de enriquecimiento, puntajes de riesgo y liveness"
+---
+
+## Descripción general
+
+<Info>
+Un **asset scan** (escaneo de un asset) es una verificación de seguridad individual que ChainPatrol realiza sobre un **asset** (un activo digital, como una URL, un perfil social, una ficha de app, una dirección cripto o un correo electrónico) en un momento específico.
+</Info>
+
+### Qué captura
+
+- **Lo que vimos** - Instantánea visual y de contenido
+- **Contexto adicional** - Datos de enriquecimiento recopilados
+- **Conclusión de riesgo** - Evaluación de riesgo y puntajes
+
+### Por qué importa
+
+Los asset scans son los componentes básicos que ChainPatrol usa para entender las amenazas a lo largo del tiempo, actualizar el estado de los assets, respaldar las revisiones y los **takedowns** (solicitudes de baja de contenido fraudulento), y alimentar los reportes y las analíticas.
+
+## Características clave
+
+### Vinculado a un asset específico
+
+Cada asset scan pertenece exactamente a un asset y, a través de ese asset, a una organización y, opcionalmente, a una marca.
+
+```
+Organization
+  └── Brand (optional)
+      └── Asset
+          └── Asset Scan
+```
+
+### Instantánea acotada en el tiempo
+
+Cada escaneo tiene una fecha y hora, y es independiente de los demás. Los escaneos posteriores pueden ver contenido, estado de **liveness** (si el asset sigue online o ya no), indicadores de riesgo e infraestructura diferentes. Esto le permite a ChainPatrol hacer seguimiento de cómo evolucionan las amenazas con el tiempo.
+
+### Seguimiento del estado
+
+Un escaneo tiene un estado simple que refleja en qué punto del proceso de verificación se encuentra:
+
+1. **Pending** (pendiente) - El escaneo está en cola, pero todavía no comenzó
+2. **In Progress** (en curso) - Está recopilando datos y ejecutando verificaciones activamente
+3. **Completed** (completado) - El escaneo terminó correctamente y tiene resultados
+4. **Failed** (fallido) - El escaneo encontró errores y no pudo completarse
+
+### Contenido
+
+**Entradas:** Lo que se nos pidió escanear (URL, dirección, perfil) y el contexto relacionado (organización, marca, fuente de detección).
+
+**Salidas:** Enriquecimientos (datos adicionales que obtuvimos), etiquetas (indicadores de riesgo), estado de liveness y puntaje de riesgo general para ese momento.
+
+## Qué hay dentro de un escaneo
+
+### Enriquecimientos (contexto adicional)
+
+Información estructurada recopilada durante el escaneo:
+
+**Contenido web y metadatos** - HTML y contenido de texto de la página, título, descripción, palabras clave, metaetiquetas y datos estructurados, capturas de pantalla y capturas visuales, campos de formulario y elementos de entrada.
+
+**Enlaces descubiertos** - Enlaces salientes de la página, cadenas de redirección, recursos externos cargados, infraestructura relacionada.
+
+**Detalles técnicos** - Registros y resolución DNS, información del certificado TLS/SSL, direcciones IP y hosting, encabezados y respuestas del servidor, infraestructura de red.
+
+**Detalles específicos de la plataforma** - Atributos del perfil social (seguidores, publicaciones, biografía), información de la ficha en la tienda de aplicaciones (calificaciones, reseñas, permisos), datos de blockchain (código del contrato, transacciones), resultados de la validación de correo electrónico.
+
+Cada enriquecimiento sabe de dónde provino (p. ej., "page content", "network" o un escáner externo) y si se obtuvo correctamente o falló.
+
+### Etiquetas (hallazgos)
+
+Etiquetas legibles para las personas, con puntajes, que categorizan el riesgo:
+
+- **Brand Impersonation** (suplantación de marca) - Imitación visual o textual de tu marca
+- **General Phishing** (phishing general) - Patrones de robo de credenciales o de estafa
+- **Provider Blocked** (bloqueado por el proveedor) - Suspendido o bloqueado por el proveedor de hosting
+- **Wallet Drainer** - Código malicioso de conexión de wallets
+- **Parked Domain** (dominio estacionado) - Dominio reservado pero que no está en uso
+- **Typosquatting** - Dominio muy parecido a uno legítimo
+
+Estas etiquetas se usan para agrupar el riesgo en categorías como phishing general, suplantación de marca o riesgo relacionado con wallets.
+
+### Puntajes y liveness
+
+Un escaneo registra dos métricas clave:
+
+**Puntaje de riesgo** - Un puntaje numérico (normalmente de 0 a 1) que representa el nivel de riesgo general en ese momento. Se calcula a partir de los puntajes de las etiquetas, las evaluaciones de reglas, los niveles de confianza y los patrones históricos.
+
+**Estado de liveness** - Indica si el asset está accesible actualmente:
+- `ALIVE` - El asset está accesible y activo
+- `DEAD` - El asset está inaccesible o fue eliminado
+- `UNKNOWN` - No se puede determinar el estado
+
+Los motivos que se registran incluyen fallo de DNS, detección de dominio estacionado, suspensión por parte del proveedor, error 404 (no encontrado) y tiempo de conexión agotado.
+
+## Cómo se relacionan los asset scans con otros conceptos
+
+**Asset** - El asset es la "cosa" (URL, perfil, ficha, dirección); los escaneos son el historial de lo que hemos visto sobre esa cosa. Un asset tiene muchos escaneos a lo largo del tiempo, y los escaneos construyen una línea de tiempo del comportamiento del asset. El escaneo más reciente suele usarse para el estado actual.
+
+**Amenazas / Suspected Threats** - Las **suspected threats** (amenazas sospechosas: resultados sin confirmar de la detección automatizada) usan las etiquetas y los puntajes de los escaneos como insumos clave para decidir si algo debe tratarse como una amenaza activa para tu organización.
+
+**Revisiones** - Cuando tu equipo revisa un asset reportado, ve los resultados de escaneo más relevantes, que incluyen capturas de pantalla, etiquetas y puntajes, datos de enriquecimiento y la línea de tiempo histórica de escaneos, para entender por qué se marcó y si debe permitirse, bloquearse o escalarse.
+
+**Blocklist** (lista de bloqueo), **Allowlist** (lista de permitidos), **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando) - Los resultados repetidos de los escaneos ayudan a decidir el estado: bloqueado (assets que de forma constante parecen maliciosos), permitido (assets que pueden tratarse como seguros) y en la watchlist (assets que son sensibles o cambian con frecuencia).
+
+**Takedowns** - Para los assets que deben darse de baja, los datos de los escaneos aportan evidencia, que incluye capturas de pantalla que muestran el contenido malicioso, metadatos y detalles técnicos, el historial de liveness y la línea de tiempo de la actividad, para respaldar las gestiones ante proveedores de hosting, registradores y plataformas.
+
+**Relaciones entre assets** - Cuando los escaneos encuentran enlaces y redirecciones, estos pueden conectarse entre sí para mostrar grupos de páginas o infraestructura relacionadas, lo que ayuda a identificar campañas más amplias, mapear la infraestructura de los atacantes, entender las redes de amenazas y coordinar takedowns.
+
+## Ejemplos
+
+### Ejemplo 1: Página de inicio de sesión sospechosa
+
+Se encuentra una nueva página de inicio de sesión en los resultados de búsqueda. ChainPatrol escanea la página, ve que imita de cerca tu marca, detecta solicitudes de conexión de wallet y asigna etiquetas fuertes de phishing y de suplantación de marca. El escaneo alimenta un registro de amenaza para tu organización y aparece en tu cola de triaje con una recomendación de revisión de alta prioridad. Los escaneos de alta confianza como este suelen activar el bloqueo automático.
+
+### Ejemplo 2: Sitio oficial que se mantiene en buen estado
+
+Tu sitio web oficial se agrega como asset y se monitorea. Los escaneos periódicos (diarios o semanales) muestran que el asset está activo y es consistente, no activa etiquetas de riesgo y mantiene un puntaje de riesgo estable cercano a cero. Sigue estando permitido y sirve como referencia de "sitio legítimo conocido" que se usa para comparar con los assets sospechosos.
+
+### Ejemplo 3: Perfil social que suplanta una identidad
+
+Se descubre un perfil social que afirma ser uno de tus empleados. Se escanean los atributos del perfil, el escaneo muestra elementos de marca coincidentes, detecta un comportamiento sospechoso de contacto con usuarios y aumenta los puntajes de suplantación. El escaneo respalda la toma de decisiones del equipo, aporta evidencia para el escalamiento y sirve de base para gestionar el takedown con pruebas documentadas de la suplantación.
+
+## Qué no son los asset scans
+
+- **No son un reporte humano** - Los asset scans son generados por el sistema. Los reportes son creados por usuarios o sistemas externos que plantean un problema.
+- **No son un caso** - Un escaneo puede estar limpio o ser sospechoso. Un registro de amenaza o de incidente se crea solo cuando el riesgo supera los umbrales o una persona lo escala.
+- **No son una configuración** - Los escaneos usan tus reglas, umbrales y ajustes de servicios, pero no son el lugar donde configuras el comportamiento. Son la evidencia que esos ajustes producen.
+
+## Puntos clave
+
+- Un asset con muchos escaneos crea una línea de tiempo: escanear la misma URL varias veces muestra cómo evolucionan las amenazas, cuándo se activan y cuándo los takedowns tienen éxito
+- El enriquecimiento selectivo equilibra velocidad y profundidad: los escaneos básicos son rápidos, pero cuando aparecen señales de riesgo se activa automáticamente un análisis más profundo para reunir evidencia decisiva
+- El seguimiento de liveness habilita flujos de trabajo automatizados: saber cuándo los assets pasan de `ALIVE` a `DEAD` permite que el monitoreo de la watchlist confirme el éxito de un takedown sin verificación manual
+- La extracción de relaciones revela campañas: los enlaces y las redirecciones descubiertos durante los escaneos ayudan a rastrear redes de amenazas completas en lugar de tratar cada sitio malicioso como un caso aislado

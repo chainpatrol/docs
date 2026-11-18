@@ -1,0 +1,114 @@
+---
+title: Comando proposals — revisa proposals desde la terminal
+sidebarTitle: proposals
+icon: gavel
+description: "Aprueba, rechaza o envía a la Watchlist las Proposals de ChainPatrol que esperan la revisión de tu organización desde la terminal, con confirmación y soporte de dry-run."
+---
+
+```bash
+chainpatrol proposals review <proposalId> --asset-id <id> --decision <approve|reject|watchlist> [options]
+```
+
+## proposals review
+
+Registra la decisión de tu organización sobre una **Proposal** (propuesta para bloquear o
+permitir un asset) que está esperando tu respuesta: es la misma cola que muestra la página
+**Review** (revisión de propuestas pendientes de aprobación) y que devuelve [`reports list
+--needs-customer-review`](/es/cli/commands/reports#reports-list).
+
+<Warning>
+  Una revisión no se puede deshacer a través de la API. `approve` bloquea el **Asset** (activo
+  digital: URL, dirección, perfil, app, etc.) y, como los assets son únicos por tipo y
+  contenido, ese estado es global y no se limita a tu organización. El comando pide
+  confirmación a menos que pases `--yes`, y cada organización tiene un límite de 10
+  revisiones por día sumando todas sus credenciales de API.
+</Warning>
+
+### Opciones
+
+| Opción | Descripción |
+| --- | --- |
+| `--proposal-id <id>` | Proposal a revisar. Una alternativa al argumento posicional. |
+| `--asset-id <id>` | Asset al que apunta la Proposal. Debe coincidir; de lo contrario, la API devuelve `409`. |
+| `--decision <d>` | `approve`, `reject` o `watchlist`. |
+| `--label <text>` | Etiqueta de bloqueo, obligatoria al aprobar. Ponla entre comillas: consulta [etiquetas](#etiquetas-de-bloqueo). |
+| `--brand-id <id>` | Marca que el asset suplanta. Obligatoria para Brand Impersonation y Employee Impersonation. |
+| `--reject-reason <r>` | Obligatorio al rechazar: `irrelevant`, `no_malicious_activity`, `insufficient_evidence`, `not_targeting_org`, `decayed`. |
+| `--watchlist-reason <r>` | Obligatorio al enviar a la **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando): `DEAD`, `PARKING`, `NOT_ENOUGH_EVIDENCE`, `OTHER`. |
+| `--note <text>` | Detalle en texto libre. Obligatorio cuando se usa `--watchlist-reason OTHER`. |
+| `--org <slug>` | Slug de la organización. Opcional para las claves de API con alcance de organización. |
+| `--yes` | Omite el prompt de confirmación. Obligatorio cuando no hay una terminal conectada. |
+| `--dry-run` | Imprime el payload sin enviarlo. |
+
+### Las tres decisiones
+
+| Decisión | Qué hace | También se requiere |
+| --- | --- | --- |
+| `approve` | Bloquea el asset | `--label`, más `--brand-id` para las etiquetas que nombran un objetivo específico |
+| `reject` | Rechaza la Proposal | `--reject-reason` |
+| `watchlist` | Rechaza la Proposal **y** deja el asset en seguimiento para que se vuelva a evaluar si vuelve a estar activo | `--watchlist-reason`, más `--note` cuando el motivo es `OTHER` |
+
+`watchlist` es una variante del rechazo y no un resultado aparte: se guarda como una revisión
+`REJECT` con el asset en la Watchlist, que es exactamente lo que hace la página Review.
+Por eso un envío exitoso a la Watchlist devuelve `review.decision: "REJECT"` y
+`watchlisted: true`.
+
+### Etiquetas de bloqueo
+
+`--label` es obligatorio al aprobar. Ponlo entre comillas, ya que todos los valores contienen un espacio:
+
+`"General Phishing"`, `"Brand Impersonation"`, `"Employee Impersonation"`,
+`"Fake Employee"`, `"Targeting Org Users"`, `"C2 Server"`, `"False Positive"`.
+
+Las etiquetas que nombran un objetivo específico (Brand Impersonation y Employee
+Impersonation) también necesitan `--brand-id`.
+
+## Encontrar una Proposal para revisar
+
+Ambos IDs provienen del listado de reportes. Pide las Proposals que esperan tu decisión y
+luego lee `proposals[].id` y `proposals[].asset.id`:
+
+```bash
+chainpatrol reports list --org acme --needs-customer-review --json
+```
+
+## Ejemplos
+
+```bash
+# block a phishing site
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision approve --label "General Phishing" --yes
+
+# block an impersonation, naming the brand
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision approve --label "Brand Impersonation" --brand-id 12 --yes
+
+# decline it
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision reject --reject-reason no_malicious_activity --yes
+
+# park an asset that went quiet
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision watchlist --watchlist-reason OTHER \
+  --note "Registrar suspended it" --yes
+
+# see the payload without sending it
+chainpatrol proposals review 4321 --asset-id 987 \
+  --decision reject --reject-reason decayed --dry-run
+```
+
+## Notas
+
+- Las revisiones deben atribuirse a un miembro de la organización con rol de cliente. Las
+  credenciales de staff se rechazan con el [código de salida `5`](/es/cli/output#códigos-de-salida).
+- Un `403` de una verificación de seguridad significa que la decisión necesita a una persona,
+  no que tu integración esté rota. Registra el ID de la Proposal y continúa en lugar de reintentar.
+- Un `409` significa que el asset no coincide con la Proposal o que la Proposal ya está
+  resuelta. Vuelve a leer la Proposal en lugar de reintentar con el mismo cuerpo.
+- No todos los tipos de asset se pueden enviar a la Watchlist. Los tipos que la Watchlist no
+  puede volver a verificar se rechazan en lugar de omitirse en silencio.
+
+## Relacionado
+
+- [`POST /organization/proposals/{proposalId}/review`](/es/external-api/organization-proposals-review)
+- [Concepto de revisiones](/es/concepts/reviews)

@@ -1,0 +1,159 @@
+---
+title: "Instala la CLI de ChainPatrol"
+icon: download
+description: "Instala la CLI de ChainPatrol desde npm, apúntala a un entorno de la API, define una organización predeterminada y activa el autocompletado del shell en zsh o bash."
+---
+
+## Requisitos
+
+- Node.js 20 o superior
+- Un gestor de paquetes compatible con npm
+
+## Instalación
+
+<CodeGroup>
+
+```bash npm
+npm install -g @chainpatrol/cli
+```
+
+```bash pnpm
+pnpm add -g @chainpatrol/cli
+```
+
+```bash yarn
+yarn global add @chainpatrol/cli
+```
+
+</CodeGroup>
+
+El paquete instala un único binario `chainpatrol`. Verifícalo:
+
+```bash
+chainpatrol --version
+chainpatrol --help
+```
+
+<Note>
+  El paquete de npm es `@chainpatrol/cli`. El paquete `chainpatrol` sin scope en npm es un
+  marcador de posición (placeholder) para el [SDK de JavaScript](/es/sdk/overview) y no
+  contiene la CLI.
+</Note>
+
+Para ejecutarla una vez sin instalarla de forma global:
+
+```bash
+npx @chainpatrol/cli asset check https://phish.example
+```
+
+## Actualización
+
+```bash
+npm install -g @chainpatrol/cli@latest
+```
+
+Mientras se ejecuta tu comando, la CLI consulta npm en segundo plano para ver si hay una
+versión más nueva y muestra un aviso de una línea cuando existe. La verificación se omite
+en los modos `--json` y `--quiet` para que nunca pueda corromper la salida legible por
+máquinas, y nunca retrasa tu comando más de medio segundo.
+
+## Configuración
+
+La configuración se guarda en `config.json`, dentro del directorio de configuración de la CLI:
+
+- `$XDG_CONFIG_HOME/chainpatrol/` (por defecto, `~/.config/chainpatrol/`)
+- `~/.chainpatrol/` se sigue usando si ya existe y el directorio XDG no
+- `$CHAINPATROL_CONFIG_DIR` tiene prioridad sobre ambos
+
+```json ~/.config/chainpatrol/config.json
+{
+  "apiUrl": "https://app.chainpatrol.io",
+  "defaultOrg": "acme"
+}
+```
+
+| Clave | Descripción |
+| --- | --- |
+| `apiUrl` | URL base de la API. El valor predeterminado es `https://app.chainpatrol.io`. |
+| `defaultOrg` | Slug de la organización que se usa cuando un comando necesita uno y se omite `--org`. |
+
+### Definir una organización predeterminada
+
+La mayoría de los comandos con alcance de organización aceptan `--org <slug>`. Al pasarlo,
+el slug se guarda como tu valor predeterminado, así que los comandos posteriores pueden
+omitirlo:
+
+```bash
+chainpatrol configs list --org acme   # saves "acme" as the default
+chainpatrol configs list              # reuses it
+```
+
+La organización se resuelve en este orden:
+
+<Steps>
+  <Step title="Flag --org">
+    Un `--org <slug>` explícito siempre gana, y se escribe de vuelta en `config.json`.
+  </Step>
+
+  <Step title="Valor predeterminado guardado">
+    `defaultOrg` de `config.json`.
+  </Step>
+
+  <Step title="Variable de entorno">
+    `CHAINPATROL_ORG`, útil en CI, donde no quieres escribir un archivo de configuración.
+  </Step>
+</Steps>
+
+Si ninguno de ellos se resuelve, el comando falla con
+`Organization required. Use --org <slug> to specify one.` y el [código de salida
+`3`](/es/cli/output#códigos-de-salida).
+
+<Tip>
+  Los comandos autenticados con una clave de API con alcance de organización resuelven la
+  organización del lado del servidor a partir de la clave, así que `--org` es opcional para
+  ellos.
+</Tip>
+
+### Variables de entorno
+
+| Variable | Propósito |
+| --- | --- |
+| `CHAINPATROL_API_KEY` | Clave de API con la que autenticarte en lugar de una sesión de inicio de sesión guardada. Consulta [Autenticación](/es/cli/authentication#autenticación-con-clave-de-api). |
+| `CHAINPATROL_API_URL` | Reemplaza la URL base predeterminada de la API. |
+| `CHAINPATROL_CONFIG_DIR` | Reemplaza el directorio de configuración. |
+| `CHAINPATROL_ORG` | Slug de organización de respaldo. |
+| `NO_COLOR` | Desactiva la salida con colores, igual que `--no-color`. |
+
+## Autocompletado del shell
+
+`chainpatrol setup` instala el autocompletado por ti. Para escribir el script tú mismo:
+
+<CodeGroup>
+
+```bash zsh
+chainpatrol completions zsh > "${fpath[1]}/_chainpatrol"
+```
+
+```bash bash
+chainpatrol completions bash > ~/.chainpatrol-completions.bash
+echo 'source ~/.chainpatrol-completions.bash' >> ~/.bashrc
+```
+
+</CodeGroup>
+
+Reinicia tu shell para que lo tome.
+
+## Desinstalación
+
+```bash
+chainpatrol uninstall        # remove the Claude Code skill and completions
+npm uninstall -g @chainpatrol/cli
+```
+
+Para eliminar también las credenciales y la configuración guardadas, borra el directorio de
+configuración:
+
+```bash
+chainpatrol logout
+rm -rf ~/.config/chainpatrol
+```

@@ -1,0 +1,75 @@
+---
+title: "Inicio rápido del SDK de ChainPatrol"
+description: "Instala el SDK de JavaScript de ChainPatrol y conecta ThreatDetector, Storage y Relay para agregar verificaciones de URL de phishing a tu app o extensión de navegador."
+---
+
+<Note>
+
+Para usar el SDK de ChainPatrol, necesitas una clave de API. Puedes obtener una
+escribiendo a [support@chainpatrol.io](mailto:support@chainpatrol.io?subject=Re:%20API%20Key%20for%20SDK&body=Company:%20%0AName:%20%0APurpose:%20).
+
+</Note>
+
+El caso de uso más común del SDK de ChainPatrol es ofrecer detección de
+estafas en una wallet basada en una extensión de navegador (p. ej., Metamask).
+
+El fragmento de código de abajo muestra cómo usar el SDK en el script en segundo plano (background script) de una
+extensión de navegador y demuestra 4 conceptos clave:
+
+- Crear una instancia de `ThreatDetector`
+- Escuchar eventos de navegación
+- Usar `ThreatDetector` para verificar una URL y redirigir al usuario si la URL es
+  una estafa
+- Manejar los eventos de la página de advertencia usando la clase Relay para reenviarlos
+
+<CodeGroup>
+
+```js background.js
+import { ThreatDetector, Relay, Events, Storage } from "@chainpatrol/sdk";
+
+// Instantiate the detector
+const detector = new ThreatDetector({
+  mode: "cloud",
+  apiKey: "YOUR_API_KEY",
+  storage: Storage.extension(),
+});
+
+// Listen for navigation events
+chrome.webNavigation.onBeforeNavigate.addListener(async ({ url, tabId }) => {
+  const result = await detector.url(url);
+  if (result.ok && result.status === "BLOCKED") {
+    // Redirect the user to the warning page
+    chrome.tabs.update(tabId, {
+      url: result.redirectUrl,
+    });
+  }
+});
+
+// Listen for events from the warning page
+Relay.on(Events.ContinueAtOwnRisk, async ({ domain }) => {
+  await detector.ignore(domain);
+});
+```
+
+```js content.js
+import { Relay, Events } from "@chainpatrol/sdk";
+
+Relay.run([Events.ContinueAtOwnRisk]);
+```
+
+```js warning.js
+import { Relay, Events } from "@chainpatrol/sdk";
+
+Relay.send(Events.ContinueAtOwnRisk, { domain: "example.com" });
+```
+
+</CodeGroup>
+
+Estos conceptos también se aplican, en general, a otros entornos. Por ejemplo,
+si usas el SDK en una aplicación web de mensajería, en lugar de escuchar los
+eventos de navegación con `chrome.webNavigation`, escucharías los eventos de
+navegación de los links en los que se hace clic dentro de la aplicación, o bien podrías esperar a que el
+usuario inicie una transacción y verificar la URL que la originó.
+
+Las siguientes secciones de la documentación explican con más detalle las
+distintas clases que exporta el SDK y cómo usarlas.

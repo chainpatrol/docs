@@ -1,0 +1,171 @@
+---
+title: "Fuentes de detección"
+description: "Monitores automatizados que escanean motores de búsqueda, redes sociales, tiendas de aplicaciones y feeds de blockchain para sacar a la luz amenazas de suplantación y phishing contra tu marca."
+---
+
+## Descripción general
+
+Las fuentes de detección son sistemas de monitoreo automatizados que escanean internet de forma continua en busca de posibles amenazas para tu marca. Cada fuente monitorea una plataforma o un flujo de datos específico, y busca **assets** (activos digitales: URL, direcciones, perfiles, apps, etc.) sospechosos que podrían estar suplantando a tu organización o intentando estafar a tus usuarios.
+
+## Cómo funcionan las fuentes de detección
+
+Las fuentes de detección operan con programaciones automatizadas y ejecutan búsquedas en distintas plataformas usando los **términos incluidos** de tu organización (nombres de marca, productos, palabras clave que quieres monitorear) y los **términos excluidos** (dominios legítimos que quieres filtrar). Cuando una fuente encuentra una posible amenaza, envía automáticamente el asset a análisis a través del pipeline de detección de amenazas de ChainPatrol.
+
+### El flujo de detección
+
+1. **Ejecución programada** - Cada fuente de detección se ejecuta según una programación predefinida (p. ej., cada 15 minutos, cada hora, cada día)
+2. **Escaneo de la plataforma** - La fuente busca en su plataforma (p. ej., Twitter, Google Ads, Reddit) usando las palabras clave y las reglas de monitoreo de tu organización
+3. **Descubrimiento de assets** - Los resultados que coinciden se recopilan como posibles amenazas
+4. **Procesamiento automático** - Los assets descubiertos se envían automáticamente al sistema de detección de amenazas
+5. **Enriquecimiento y análisis** - Los assets se escanean, se enriquecen con datos adicionales y son evaluados por el motor de reglas
+6. **Puntuación de amenaza** - Se calcula una puntuación de amenaza en función de múltiples reglas de detección
+7. **Acción tomada** - Si la puntuación supera los umbrales de detección de tu organización, la amenaza puede reportarse automáticamente o marcarse para revisión
+
+## Fuentes de detección disponibles
+
+<Info>
+ChainPatrol admite **29 fuentes de detección distintas** en múltiples categorías
+</Info>
+
+### Motores de búsqueda
+
+Monitorea los resultados de búsqueda para encontrar sitios de phishing y páginas de estafa:
+
+- **Google Search** - Escanea los resultados de búsqueda de Google
+- **Bing Search** - Monitorea los resultados de búsqueda de Bing
+- **Yahoo Search** - Da seguimiento a los resultados de búsqueda de Yahoo
+- **DuckDuckGo Search** - Monitorea los resultados de búsqueda de DuckDuckGo
+- **Google Ads Search** - Monitorea Google Ads en busca de contenido malicioso
+
+### Redes sociales
+
+Da seguimiento a las redes sociales para encontrar cuentas de suplantación y publicaciones fraudulentas:
+
+**Monitoreo de Twitter/X:**
+- **X (antes Twitter)** - Las capacidades de escaneo mejoradas que nos da nuestro acuerdo Enterprise permiten un monitoreo integral y tiempos de respuesta más rápidos ante amenazas de suplantación directa
+- Twitter Post Search - Busca amenazas en las publicaciones de Twitter
+- Twitter User Search - Monitorea los perfiles de usuario de Twitter
+- Twitter Profile Monitoring - Da seguimiento a las respuestas en las publicaciones de perfiles específicos de Twitter
+
+**Monitoreo de Reddit:**
+- Reddit Subreddit Search - Busca comunidades de Reddit por nombre
+
+**Monitoreo de YouTube:**
+- YouTube Search - Busca videos y canales de YouTube
+
+**Monitoreo de Medium:**
+- Medium Tag RSS - Monitorea artículos de Medium por etiquetas
+
+**Monitoreo de Telegram:**
+- Telegram Channels Search - Busca canales de Telegram
+- Telegram User Search - Busca cuentas de usuario de Telegram
+
+**Monitoreo de TikTok:**
+- TikTok Video Search - Busca videos de TikTok
+- TikTok User Search - Busca perfiles de usuario de TikTok
+
+<Info>
+Nuestra integración mejorada con la plataforma X permite una detección más exhaustiva de las amenazas en redes sociales y un procesamiento más rápido de los **Takedowns** (solicitudes de baja de contenido fraudulento).
+</Info>
+
+### Tiendas de aplicaciones
+
+Monitorea las tiendas de aplicaciones móviles y los marketplaces de extensiones de navegador:
+
+- **Google Play** - Monitorea las apps de Google Play Store
+- **Apple App Store** - Da seguimiento a las aplicaciones del App Store de iOS
+- **Mozilla Add-ons** - Monitorea las extensiones del navegador Firefox
+
+### Blockchain
+
+Una categoría entre varias: fuentes especializadas en amenazas de criptomonedas y blockchain, relevantes para las marcas con presencia en cripto o DeFi:
+
+- **DexScreener Search** - Monitorea protocolos y tokens DeFi en busca de suplantación
+
+### Fuentes especializadas
+
+Capacidades de monitoreo adicionales para una protección integral:
+
+- **Yandex Image Search** - Hace búsquedas inversas de las imágenes de marca de tu organización en Yandex Images para encontrar perfiles y tiendas suplantadores que reutilizan tus logotipos
+- **URLScan** - Aprovecha la base de datos de URLScan.io para encontrar amenazas
+- **DNS Twist** - Detecta dominios de typosquatting mediante análisis de homoglifos
+- **Certstream** - Monitorea los registros de transparencia de certificados en busca de certificados TLS/SSL recién emitidos
+- **Guestbook** - Monitorea los envíos al libro de visitas (guestbook) de la comunidad
+- **Blocked IP Scan** - Busca assets alojados en IP maliciosas conocidas
+- **Asset Check** - Vuelve a comprobar los assets existentes para detectar cambios de estado
+- **External** - Gestiona los envíos externos de amenazas mediante la API
+
+## Configuración de las fuentes
+
+Cada fuente de detección se puede personalizar con:
+
+- **Opciones de estado** - Habilita o deshabilita las fuentes
+- **Ajustes de alcance** - Nivel de organización o global
+- **Configuración de la programación** - Horarios y frecuencia personalizados
+
+### Opciones de estado
+
+- **Enabled** (habilitada) - La fuente se ejecuta automáticamente según su programación
+- **Disabled** (deshabilitada) - La fuente no se ejecuta
+
+### Ajustes de alcance
+
+Las fuentes de detección pueden operar en dos niveles:
+
+**Nivel de organización** - Usa tus palabras clave y tus ajustes de monitoreo específicos
+
+**Nivel global** - Ejecuta un monitoreo de todo el sistema para todas las organizaciones
+
+### Configuración de la programación
+
+Las fuentes se ejecutan con programaciones automatizadas que varían según:
+
+- **Prioridad de la organización** - Las organizaciones de mayor prioridad reciben escaneos más frecuentes
+- **Tipo de fuente** - Cada fuente tiene intervalos predeterminados distintos según la actualidad de sus datos y sus límites de solicitudes
+
+<Tip>
+**Programaciones personalizadas:** Puedes reemplazar las programaciones predeterminadas con expresiones cron personalizadas para controlar con precisión cuándo se ejecuta cada fuente.
+</Tip>
+
+## Buenas prácticas
+
+### Cómo configurar las fuentes de detección
+
+1. **Empieza por las fuentes principales** - Habilita primero las fuentes de motores de búsqueda y de redes sociales
+2. **Configura los términos incluidos** - Agrega todos tus nombres de marca, nombres de productos y los errores de escritura más comunes
+3. **Define los términos excluidos** - Agrega tus dominios legítimos para reducir los falsos positivos
+4. **Ajusta los umbrales** - Define umbrales de reporte automático adecuados según tu tolerancia al riesgo
+5. **Monitorea los resultados** - Revisa las primeras **Suspected Threats** (amenazas sospechosas detectadas automáticamente, todavía sin confirmar) para afinar tu configuración
+
+### Cómo optimizar la cobertura de detección
+
+- **Usa varias fuentes** - Cada fuente detecta distintos tipos de amenazas
+- **Monitorea las tiendas de aplicaciones** - Es esencial si tienes aplicaciones móviles
+- **Agrega assets oficiales** - Agrega los assets oficiales de Twitter para monitorear las respuestas
+- **Revisiones periódicas** - Revisa y ajusta tu configuración cada cierto tiempo
+
+### Cómo gestionar los falsos positivos
+
+- **Afina los términos excluidos** - Agrega las menciones legítimas a tu lista de términos excluidos para filtrar los falsos positivos
+- **Ajusta los umbrales de similitud** - Afina los umbrales de similitud de palabras clave para el monitoreo de tokens
+- **Usa el estado Evaluate** - Revisa los resultados manualmente antes de habilitar acciones automáticas
+- **Revisa el panel de reglas (Rules Dashboard)** - Identifica las reglas que generan falsos positivos y ajústalas según corresponda
+
+## Consideraciones de rendimiento
+
+### Límites de solicitudes
+
+Cada fuente de detección respeta los límites de solicitudes (rate limits) propios de cada plataforma. El sistema gestiona automáticamente estos límites ajustando los tiempos de las solicitudes, agrupando operaciones en lotes cuando es posible y registrando cuándo se alcanzan los límites. Esta limitación garantiza el cumplimiento de las API de las plataformas y, al mismo tiempo, mantiene una cobertura de monitoreo constante.
+
+### Uso de recursos
+
+Las fuentes de detección están optimizadas para ser eficientes. Los resultados se procesan en lotes para no sobrecargar el sistema, los assets duplicados se filtran automáticamente, las fuentes se ejecutan en paralelo cuando es posible y las ejecuciones fallidas de una fuente se registran, pero no bloquean a las demás fuentes.
+
+Nuestra infraestructura está diseñada para manejar un monitoreo de alto volumen sin afectar la velocidad ni la precisión de la detección.
+
+## Puntos clave
+
+- Empieza amplio y luego afina: habilita primero las fuentes principales (motores de búsqueda y redes sociales) y luego amplía a las fuentes especializadas según dónde aparezcan tus amenazas
+- Calidad antes que cantidad: tener términos incluidos y excluidos bien configurados en menos fuentes es mejor que un monitoreo mal configurado en todas las plataformas
+- Cada fuente detecta amenazas distintas: un dominio puede no aparecer en Google Search y sí en Certstream, así que combina capas de cobertura para lograr una protección integral
+- El reporte automático funciona mejor después de calibrar: revisa manualmente las primeras suspected threats para afinar tus umbrales antes de habilitar el bloqueo automático

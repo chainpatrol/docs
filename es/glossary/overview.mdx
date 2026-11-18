@@ -1,0 +1,33 @@
+---
+title: Tipos de asset
+sidebarTitle: Descripción general
+description: "Referencia de los enums de tipos de asset de ChainPatrol que se usan en reportes, verificaciones y listas: URL, PAGE, ADDRESS, además de redes sociales, mensajería, tiendas de apps y otras plataformas."
+---
+
+El **Glosario** es una referencia de los **tipos de asset** (activo digital: URL, dirección, perfil, app, etc.): los valores de enum que se usan cuando reportas, verificas, listas o filtras un asset.
+
+Las ideas del producto, como las organizaciones, las **Suspected Threats** (amenazas sospechosas detectadas automáticamente, todavía sin confirmar), los reportes y los **takedowns** (solicitudes de baja de contenido fraudulento), están en [Conceptos](/es/concepts/organizations).
+
+`URL`, `PAGE` y `ADDRESS` tienen páginas propias porque esas páginas ya documentan la normalización. Todos los demás tipos se listan con las mismas etiquetas que se usan en [`POST /threats/list`](/es/external-api/threats-list), [`POST /detection/list`](/es/external-api/detection-list) y [`chainpatrol asset types`](/es/cli/commands/asset#asset-types).
+
+## Tipos principales
+
+<CardGroup cols={3}>
+  <Card title="URL" href="/es/glossary/asset-types/url">
+    URLs de sitios web. Bloquear un dominio también cubre sus subdominios.
+  </Card>
+  <Card title="PAGE" href="/es/glossary/asset-types/page">
+    Páginas web, incluidas las rutas en hosts compartidos que están en la lista de dominios PAGE.
+  </Card>
+  <Card title="ADDRESS" href="/es/glossary/asset-types/address">
+    Direcciones de blockchain.
+  </Card>
+</CardGroup>
+
+## Otros tipos
+
+| Grupo | Tipos |
+| --- | --- |
+| [Redes sociales y mensajería](/es/glossary/asset-types/social) | Enums de redes sociales y mensajería de la API |
+| [Apps y extensiones](/es/glossary/asset-types/apps) | Enums de tiendas de apps y complementos de navegador de la API |
+| [Otras plataformas](/es/glossary/asset-types/other) | Los demás enums de la API y la CLI |

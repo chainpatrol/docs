@@ -1,0 +1,22 @@
+---
+title: Obtener resumen de métricas
+openapi: "POST /metrics/summary"
+---
+
+## Descripción general
+
+Obtén las métricas de la organización visibles para el cliente y los desgloses de amenazas bloqueadas para un rango de fechas.
+
+<Note>
+El rango de fechas solo se aplica cuando envías **ambos** campos, `startDate` y `endDate`.
+Si envías solo uno o ninguno, todas las métricas son históricas (sin límite de fechas). Cada métrica filtra según su propia
+marca de tiempo: los conteos de amenazas (`newThreats`, `domainThreats`, …) según cuándo se bloqueó la
+amenaza, y `threatsWatchlisted` según cuándo tu organización reportó el **asset** (activo digital: URL, dirección, perfil, app, etc.).
+</Note>
+
+`newThreats` cuenta todas las amenazas confirmadas, incluidos los **bloqueos pendientes** de las
+organizaciones cuya protección no está activa. Para listar las amenazas que lo componen, usa
+[`/detection/list`](/es/external-api/detection-list) con el filtro `blockStatus` o
+[`/threats/list`](/es/external-api/threats-list) con `includePending`. Para listar los
+assets que componen `threatsWatchlisted`, usa
+[`/organization/watchlist`](/es/external-api/organization-watchlist-list).

@@ -195,6 +195,10 @@ Manage the assets and asset groups your organization owns.
   <Card title="Delete Asset Group" icon="folder-minus" href="/external-api/organization-asset-groups-delete">
     Delete an asset group.
   </Card>
+
+  <Card title="Set Asset Expiry" icon="calendar-xmark" href="/external-api/organization-assets-expiry">
+    Set, renew, or clear expiry dates on organization assets.
+  </Card>
 </CardGroup>
 
 ## Organization reports
@@ -204,8 +208,16 @@ Manage the assets and asset groups your organization owns.
     Retrieve your organization's reports (`GET /organization/reports`).
   </Card>
 
-  <Card title="Get Organization Reports" icon="clock-rotate-left" href="/external-api/organization-reports">
+  <Card title="Get Organization Reports (Deprecated)" icon="clock-rotate-left" href="/external-api/organization-reports">
     Deprecated — use List Organization Reports.
+  </Card>
+
+  <Card title="Get Organization Report" icon="file-lines" href="/external-api/organization-reports-get">
+    Fetch one of your organization's reports by ID.
+  </Card>
+
+  <Card title="Review Organization Proposal" icon="clipboard-check" href="/external-api/organization-proposals-review">
+    Approve or reject a proposal waiting for your organization's review.
   </Card>
 </CardGroup>
 
@@ -253,6 +265,18 @@ List suspected threats, inspect their sources, and manage the detection configs 
   <Card title="List Threats" icon="triangle-exclamation" href="/external-api/threats-list">
     List threats for your organization.
   </Card>
+
+  <Card title="List Organization Threats" icon="shield-halved" href="/external-api/organization-threats-list">
+    List your organization's confirmed threats.
+  </Card>
+
+  <Card title="List Organization Watchlist" icon="eye" href="/external-api/organization-watchlist-list">
+    List the assets on your organization's watchlist.
+  </Card>
+
+  <Card title="Evaluating Suspected Threats" icon="magnifying-glass" href="/external-api/evaluating-detections">
+    Answer common evaluation questions with the detection and watchlist endpoints.
+  </Card>
 </CardGroup>
 
 ## Dark Web
@@ -296,12 +320,36 @@ Search leaked credentials for targets already tracked by a brand.
     Blocked threat counts split by who reported them first — you or ChainPatrol.
   </Card>
 
-  <Card title="List Organization Metrics" icon="list" href="/external-api/organization-metrics-list">
+  <Card title="Get Organization Metrics" icon="list" href="/external-api/organization-metrics-list">
     Retrieve your organization's metrics (`GET /organization/metrics`).
   </Card>
 
-  <Card title="Get Organization Metrics" icon="clock-rotate-left" href="/external-api/organization-metrics">
-    Deprecated — use List Organization Metrics.
+  <Card title="Get Organization Metrics (Deprecated)" icon="clock-rotate-left" href="/external-api/organization-metrics">
+    Deprecated — use Get Organization Metrics (`GET /organization/metrics`).
+  </Card>
+
+  <Card title="Get Time to Takedown" icon="stopwatch" href="/external-api/metrics-takedown-time">
+    Median time from takedown creation to completion.
+  </Card>
+
+  <Card title="Get Time to Takedown Trend" icon="chart-line" href="/external-api/metrics-takedown-time-trend">
+    Time to takedown over time.
+  </Card>
+
+  <Card title="Get Time to Takedown by Provider" icon="server" href="/external-api/metrics-takedown-time-by-provider">
+    Time to takedown for each provider.
+  </Card>
+
+  <Card title="Get Takedown Success Rate" icon="circle-check" href="/external-api/metrics-takedown-success-rate">
+    Share of takedowns that completed.
+  </Card>
+
+  <Card title="Get False Positive Rate" icon="scale-balanced" href="/external-api/metrics-false-positive-rate">
+    Share of blocks that were later reversed.
+  </Card>
+
+  <Card title="Get Time to Detection" icon="radar" href="/external-api/metrics-time-to-detection">
+    How long threats were live before ChainPatrol first detected them.
   </Card>
 </CardGroup>
 
@@ -326,6 +374,10 @@ Search leaked credentials for targets already tracked by a brand.
 
   <Card title="Get User Organization" icon="building-circle-check" href="/external-api/user-orgs-get">
     Fetch a single organization by slug.
+  </Card>
+
+  <Card title="Create Organization (Staff)" icon="user-shield" href="/external-api/staff-organization-create">
+    Staff only. Create a new organization.
   </Card>
 </CardGroup>
 

@@ -1,0 +1,277 @@
+---
+icon: webhook
+title: Webhooks
+description: Usa los webhooks de ChainPatrol para recibir en tiempo real las actualizaciones del estado de los assets y de la Blocklist, verificar firmas y mantener sincronizados tu wallet, tu app o tu pipeline de SecOps.
+---
+
+## ¿Qué es un webhook?
+
+ChainPatrol usa **Webhooks** (notificaciones automáticas que la plataforma envía a otro sistema) para avisarte sobre los cambios en nuestra **Blocklist** (lista de bloqueo) global.
+
+Esto te permite actualizar tu Blocklist en tiempo real, sin tener que esperar a que se ejecute un cron job programado.
+Es especialmente útil si optas por usar nuestro endpoint [Listar assets](/es/external-api/asset-list) para sincronizar nuestros datos, ya que puedes actualizar tu Blocklist apenas actualicemos la nuestra.
+
+## Administrar Webhooks
+
+Puedes administrar tus webhooks desde el [**Dashboard** (panel principal) de ChainPatrol](https://app.chainpatrol.io/admin), en **Developer › Webhooks** en la barra lateral. Desde ahí puedes:
+
+1. Crear nuevos webhooks
+2. Ver y monitorear las entregas de los webhooks
+3. Probar los webhooks con eventos de ejemplo
+4. Habilitar/deshabilitar webhooks
+5. Actualizar la configuración de los webhooks
+6. Eliminar webhooks
+
+Cada entrega de webhook queda registrada y se puede inspeccionar para depurar, incluidos los detalles completos de la solicitud y de la respuesta.
+
+## Tipos de eventos
+
+### `debug.test`
+
+Este evento se usa para probar el endpoint de tu webhook. Se envía cuando haces clic en el botón "Test" de un webhook en el dashboard.
+
+```json
+{
+  "type": "debug.test",
+  "created_at": "2023-08-31T00:00:00.000Z",
+  "data": {}
+}
+```
+
+### `asset.status-updated`
+
+Este evento se envía cuando cambia el estado de un **Asset** (activo digital: URL, dirección, perfil, app, etc.). El campo `status` puede ser `BLOCKED`, `ALLOWED` o `UNKNOWN`.
+
+```json
+{
+  "type": "asset.status-updated",
+  "created_at": "2023-08-31T00:00:00.000Z",
+  "data": {
+    "asset_id": 132,
+    "type": "URL",
+    "content": "https://example.com",
+    "status": "BLOCKED"
+  }
+}
+```
+
+### `asset.status-escalated`
+
+Este evento se envía cuando ChainPatrol escala una amenaza a tu organización para que la revise. Suscríbete a él para saber cuándo algo necesita una decisión de tu equipo, por ejemplo, para abrir un ticket o avisar a un canal de guardia.
+
+Se dispara cuando:
+
+- Un analista de ChainPatrol pasa una **Proposal** (propuesta para bloquear o permitir un asset) a tu organización para su revisión.
+- Tu organización tiene habilitada la opción **Obligatory Admin Approval** (aprobación obligatoria de un administrador) y un analista aprueba una Proposal. Luego, la Proposal queda a la espera de la aprobación final de tu organización.
+
+**No** se envía cuando una Proposal se escala internamente dentro del equipo de ChainPatrol. Tampoco se envía para los elementos que se mueven en bloque a tu cola de revisión cuando se activa Obligatory Admin Approval por primera vez.
+
+```json
+{
+  "type": "asset.status-escalated",
+  "created_at": "2025-01-15T10:30:00.000Z",
+  "data": {
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "status": "UNKNOWN",
+    "proposal_id": 67890,
+    "organization_id": 100,
+    "comment": "Staff confirmed this as: Phishing",
+    "review_url": "https://app.chainpatrol.io/admin/your-org/review?proposalId=67890"
+  }
+}
+```
+
+| Campo             | Descripción                                                                                                                                   |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `asset_id`        | ID del asset escalado.                                                                                                                        |
+| `content`         | El asset en sí, como una URL, un dominio o un perfil de redes sociales.                                                                       |
+| `type`            | El tipo de asset, como `URL`.                                                                                                                 |
+| `status`          | El estado actual del asset (`BLOCKED`, `ALLOWED` o `UNKNOWN`). El escalamiento no lo cambia, por lo que suele ser `UNKNOWN` mientras la Proposal espera tu decisión. |
+| `proposal_id`     | ID de la Proposal que espera tu revisión.                                                                                                     |
+| `organization_id` | ID de tu organización.                                                                                                                        |
+| `comment`         | La nota que dejó el analista que escaló la Proposal. Puede ser `null`.                                                                        |
+| `review_url`      | Enlace a la Proposal en la página de revisión de tu organización en el dashboard de ChainPatrol.                                              |
+
+<Note>
+  Si una Proposal se escala a tu organización más de una vez, recibes un evento cada vez. Usa `proposal_id` para eliminar duplicados.
+</Note>
+
+### `asset.escalation-resolved`
+
+Este evento es la contraparte de `asset.status-escalated`. Se envía una sola vez cuando una amenaza que se había escalado a tu organización ya no necesita tu revisión, para que puedas cerrar lo que hayas abierto cuando llegó el escalamiento.
+
+Se dispara cuando:
+
+- Alguien de tu organización aprueba o rechaza la Proposal, la agrega a la **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando) o la devuelve al equipo de ChainPatrol.
+- ChainPatrol resuelve el escalamiento en tu nombre, por ejemplo, cuando un analista da curso a la Proposal mientras todavía está esperando tu respuesta.
+
+**No** se envía para las revisiones que dejan la Proposal a la espera de tu organización.
+
+```json
+{
+  "type": "asset.escalation-resolved",
+  "created_at": "2025-01-16T09:12:00.000Z",
+  "data": {
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "proposal_id": 67890,
+    "organization_id": 100,
+    "resolution": "APPROVED",
+    "resolved_by": "CUSTOMER",
+    "comment": "Confirmed, please block"
+  }
+}
+```
+
+| Campo             | Descripción                                                                                                                                                |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `asset_id`        | ID del asset.                                                                                                                                              |
+| `content`         | El asset en sí, como una URL, un dominio o un perfil de redes sociales.                                                                                    |
+| `type`            | El tipo de asset, como `URL`.                                                                                                                              |
+| `proposal_id`     | ID de la Proposal que se escaló. Coincide con el `proposal_id` de `asset.status-escalated`.                                                                |
+| `organization_id` | ID de tu organización.                                                                                                                                     |
+| `resolution`      | Cómo se resolvió el escalamiento: `APPROVED`, `REJECTED`, `WATCHLISTED` o `RETURNED_TO_CHAINPATROL` (se devolvió al equipo de ChainPatrol para que decida). |
+| `resolved_by`     | `CUSTOMER` si lo resolvió alguien de tu organización, o `CHAINPATROL` si lo hizo el equipo de ChainPatrol.                                                 |
+| `comment`         | La nota que se dejó junto con la decisión. Puede ser `null`.                                                                                               |
+
+<Note>
+  El payload no incluye el estado del asset. Aprobar una Proposal bloquea el asset poco después, no de inmediato, así que suscríbete a `asset.status-updated` si necesitas el estado final.
+</Note>
+
+### `organization.threat-detection-added`
+
+Este evento se envía cuando se agrega una nueva amenaza sospechosa a la página **Suspected Threats** (amenazas sospechosas detectadas automáticamente, todavía sin confirmar) de tu organización. Una amenaza sospechosa no está confirmada hasta que se revisa. El nombre del evento y la clave `threat_detection_result_id` conservan la nomenclatura de detección de la API.
+
+```json
+{
+  "type": "organization.threat-detection-added",
+  "created_at": "2025-08-20T14:35:39.062Z",
+  "data": {
+    "organization_id": 12,
+    "threat_detection_result_id": 16525556
+  }
+}
+```
+
+### `audit-log.created`
+
+Este evento se envía cuando se registra una acción en el **Audit Log** (registro de auditoría) de tu organización, por ejemplo, cuando se edita una marca, se agrega o se elimina un miembro, o se crea una clave de API. Contiene lo mismo que ven tus administradores en la página Audit Log. Úsalo para transmitir esos cambios a un SIEM.
+
+```json
+{
+  "type": "audit-log.created",
+  "created_at": "2026-11-03T15:04:05.000Z",
+  "data": {
+    "id": 98765,
+    "event_type": "member.added",
+    "occurred_at": "2026-11-03T15:04:04.000Z",
+    "organization": { "id": 100, "slug": "your-org" },
+    "actor": { "type": "user", "id": 42, "name": "Jane Admin", "email": "jane@example.com" },
+    "target": { "type": "user", "id": 77, "name": "New Analyst", "email": "analyst@example.com" },
+    "changes": {
+      "before": null,
+      "after": {
+        "organizationId": 100,
+        "userId": 77,
+        "email": "analyst@example.com",
+        "fullName": "New Analyst",
+        "role": "MEMBER"
+      }
+    },
+    "ip_address": "203.0.113.10",
+    "user_agent": "Mozilla/5.0"
+  }
+}
+```
+
+| Campo          | Descripción                                                                                                                                                                 |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`           | ID de la entrada del Audit Log. Úsalo para eliminar duplicados.                                                                                                             |
+| `event_type`   | Qué ocurrió, como `brand.updated`, `member.added`, `member.removed`, `service.setting.updated` o `api_key.created`.                                                          |
+| `occurred_at`  | Cuándo se registró la acción.                                                                                                                                               |
+| `organization` | El `id` y el `slug` de tu organización.                                                                                                                                     |
+| `actor`        | Quién lo hizo. `type` es `user` para alguien de tu organización, `staff` para el equipo de ChainPatrol o `system` para un cambio automático. Las acciones del staff muestran `name` como `ChainPatrol Team` con un `email` vacío. |
+| `target`       | Qué se modificó, según `type` (como `brand`, `organization`, `user` o `api_key`) e `id`. Cuando el objetivo es un usuario, se incluyen `name` y `email`.                     |
+| `changes`      | Los valores `before` y `after` (antes y después) de la acción, cuando la acción los registra. Cualquiera de los dos puede ser `null`.                                       |
+| `ip_address`   | Dirección IP desde la que se realizó la acción. `null` para las acciones del staff y cuando no se registró ninguna.                                                         |
+| `user_agent`   | Navegador o cliente que hizo la solicitud. `null` para las acciones del staff y cuando no se registró ninguno.                                                              |
+
+## Configuración del webhook
+
+Al crear un webhook, tendrás que proporcionar:
+
+1. Una URL de endpoint HTTPS que recibirá los eventos del webhook
+2. Una descripción opcional que ayude a identificar el propósito del webhook
+3. Los eventos que quieres recibir (los eventos disponibles incluyen `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added` y `audit-log.created`)
+4. Encabezados HTTP opcionales para las integraciones compatibles (actualmente están disponibles los encabezados de Google SecOps)
+
+El secreto del webhook se genera automáticamente y se te muestra una sola vez al crear el webhook. Asegúrate de copiarlo, porque no se volverá a mostrar.
+
+### Encabezados HTTP personalizados
+
+ChainPatrol admite encabezados HTTP específicos y predefinidos (hardcoded) que se pueden configurar para las solicitudes de webhook. Actualmente, los siguientes encabezados están disponibles para la integración con Google SecOps:
+
+- `X-goog-api-key`: Tu clave de API de Google
+- `X-Webhook-Access-Key`: Tu clave de acceso del webhook
+
+Al configurar un webhook para Google SecOps, puedes proporcionar valores para estos encabezados, y se incluirán automáticamente en todas las solicitudes de webhook enviadas a tu endpoint, lo que le permite a Google SecOps autenticar y procesar los eventos del webhook.
+
+## Verificación de la firma
+
+ChainPatrol firma cada solicitud de webhook para que puedas verificar que la solicitud provino de ChainPatrol. La firma se incluye en el encabezado `X-ChainPatrol-Signature` de cada solicitud. La firma se calcula tomando el HMAC SHA256 del cuerpo de la solicitud, usando el secreto de tu webhook como clave. La firma se codifica como una cadena hexadecimal.
+
+```
+sha256=hex(hmac_sha256(webhook_secret, request_body))
+```
+
+Puedes verificar la firma de una solicitud calculando la firma por tu cuenta y comparándola con la firma incluida en la solicitud. Si las dos firmas coinciden, puedes estar seguro de que la solicitud provino de ChainPatrol.
+
+Este es un ejemplo de cómo verificar la firma en Node.js:
+
+```js
+const crypto = require("node:crypto");
+
+const [, signature] = req.headers["x-chainpatrol-signature"].split("=");
+
+const expectedSignature = crypto
+  .createHmac("sha256", process.env.WEBHOOK_SECRET)
+  .update(req.body)
+  .digest("hex");
+
+if (signature !== expectedSignature) {
+  throw new Error("Invalid signature");
+}
+```
+
+## Estado de entrega y reintentos
+
+Cada intento de entrega de un webhook se registra con uno de los siguientes estados:
+
+- `PENDING`: La entrega está en cola
+- `IN_PROGRESS`: Se está intentando la entrega
+- `SUCCESS`: La entrega fue exitosa (se recibió una respuesta 2xx)
+- `FAILURE`: La entrega falló
+
+Una entrega se reintenta solo cuando ChainPatrol no pudo llegar a tu endpoint en absoluto, por ejemplo, si la conexión fue rechazada. En ese caso se reintenta hasta 3 veces.
+
+Una vez que tu endpoint responde, la entrega no se reintenta, sea cual sea la respuesta:
+
+- Un código de estado `2xx` se registra como `SUCCESS`.
+- Cualquier otro código de estado se registra como `FAILURE`. Las redirecciones (`3xx`) no se siguen, así que configura la URL del webhook con la dirección final.
+- Si tu endpoint no responde en 30 segundos, la entrega se registra como `FAILURE` y no se reintenta, porque es posible que tu endpoint ya la haya procesado.
+
+Puedes ver el estado de entrega, el payload y los detalles de la solicitud y de la respuesta de cada intento de webhook en el dashboard.
+
+## Seguridad
+
+Los webhooks se envían por HTTPS y se firman con un secreto que es único para tu cuenta. Debes:
+
+1. Usar solo endpoints HTTPS
+2. Mantener seguro el secreto de tu webhook y nunca subirlo a un sistema de control de versiones
+3. Verificar siempre la firma de los webhooks entrantes
+4. Contactarnos de inmediato si sospechas que el secreto de tu webhook se vio comprometido
+
+Si necesitas rotar el secreto de tu webhook, puedes eliminar el webhook existente y crear uno nuevo con la misma configuración.

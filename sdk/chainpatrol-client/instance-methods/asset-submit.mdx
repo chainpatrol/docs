@@ -61,14 +61,17 @@ client.asset.submit(request: AssetSubmitInput): Promise<AssetSubmitOutput>
 {" "}
 
 <Card title="Crypto Addresses" icon="coins">
-  - `0x1234...abcd` (Ethereum) - `bc1q...` (Bitcoin) - `cosmos1abc...` (Cosmos)
+  - `0x1234...abcd` (Ethereum)
+  - `bc1q...` (Bitcoin)
+  - `cosmos1abc...` (Cosmos)
 </Card>
 
 {" "}
 
 <Card title="Social Profiles" icon="users">
-  - `@scammer_account` - `https://twitter.com/fake_support` -
-  `discord.gg/phishing_server`
+  - `@scammer_account`
+  - `https://twitter.com/fake_support`
+  - `discord.gg/phishing_server`
 </Card>
 
   <Card title="Other Assets" icon="shield">
@@ -82,17 +85,23 @@ client.asset.submit(request: AssetSubmitInput): Promise<AssetSubmitOutput>
 
 <Tabs>
   <Tab title="With Organization Slug">
-    When `organizationSlug` is provided: ✅ Assets are classified specifically
-    for that organization ✅ Immediate scanning workflow is triggered ✅
-    `scanId` is more likely to be returned ✅ Results are optimized for the
-    organization's threat profile ✅ Faster processing and priority handling
+    When `organizationSlug` is provided:
+
+    - ✅ Assets are classified specifically for that organization
+    - ✅ Immediate scanning workflow is triggered
+    - ✅ `scanId` is more likely to be returned
+    - ✅ Results are optimized for the organization's threat profile
+    - ✅ Faster processing and priority handling
   </Tab>
 
   <Tab title="Without Organization Slug">
-    When `organizationSlug` is omitted: 📋 Assets are processed for general
-    threat detection 📋 Background processing via Redis queue 📋 `scanId` may
-    not be immediately available 📋 Results benefit all ChainPatrol users 📋
-    Standard processing priority
+    When `organizationSlug` is omitted:
+
+    - 📋 Assets are processed for general threat detection
+    - 📋 Assets are processed in the background
+    - 📋 `scanId` may not be immediately available
+    - 📋 Results benefit all ChainPatrol users
+    - 📋 Standard processing priority
   </Tab>
 </Tabs>
 
@@ -105,20 +114,19 @@ client.asset.submit(request: AssetSubmitInput): Promise<AssetSubmitOutput>
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 
 const client = new ChainPatrolClient({
-apiKey: "cp_live_your_api_key_here",
+  apiKey: "cp_live_your_api_key_here",
 });
 
 const result = await client.asset.submit({
-assets: [
-"suspicious-domain.com",
-"https://fake-site.net",
-"0x1234567890abcdef1234567890abcdef12345678",
-],
+  assets: [
+    "suspicious-domain.com",
+    "https://fake-site.net",
+    "0x1234567890abcdef1234567890abcdef12345678",
+  ],
 });
 
 console.log(`Submitted ${result.submittedAssets.length} assets`);
-
-````
+```
 
 ```typescript Organization-Specific
 const result = await client.asset.submit({
@@ -133,7 +141,7 @@ result.submittedAssets.forEach((asset) => {
     console.log(`Immediate scan created: ${asset.scanId}`);
   }
 });
-````
+```
 
 ```json Example Response
 {
@@ -148,7 +156,7 @@ result.submittedAssets.forEach((asset) => {
       "assetId": 12346
     },
     {
-      "asset": "https://fake-exchange.net",
+      "asset": "https://fake-site.net",
       "assetId": 12347,
       "scanId": 67891
     }
@@ -329,15 +337,21 @@ class SecurityMonitor {
 ### Rate Limits & Constraints
 
 <Warning>
-  **Important Limits** - **Max assets per request**: 100 - **Asset string
-  length**: 1-1000 characters - **Recommended delay**: 500-1000ms between
-  requests - **Daily limits**: Contact support for high-volume usage plans
+  **Important Limits**
+
+  - **Max assets per request**: 100
+  - **Asset string length**: 1-1000 characters
+  - **Recommended delay**: 500-1000ms between requests
+  - **Daily limits**: Contact support for high-volume usage plans
 </Warning>
 
 <Note>
-  **Performance Tips** - Batch submissions for efficiency - Use organization
-  slug for faster processing - Implement proper error handling and retries -
-  Monitor API quotas and rate limits
+  **Performance Tips**
+
+  - Batch submissions for efficiency
+  - Use organization slug for faster processing
+  - Implement proper error handling and retries
+  - Monitor API quotas and rate limits
 </Note>
 
 ### Error Handling
@@ -396,18 +410,18 @@ async function testAssetSubmit() {
 ### Related Methods
 
 <CardGroup cols={2}>
-  <Card title="asset.check" icon="magnifying-glass" href="../asset-check">
+  <Card title="asset.check" icon="magnifying-glass" href="/sdk/chainpatrol-client/instance-methods/asset-check">
     Check the threat status of individual assets
   </Card>
 
-  <Card title="asset.list" icon="list" href="../asset-list">
+  <Card title="asset.list" icon="list" href="/sdk/chainpatrol-client/instance-methods/asset-list">
     Retrieve lists of assets with filtering options
   </Card>
 </CardGroup>
 
 ### Additional Documentation
 
-- [Asset Submit Quick Start](/asset-submit-quickstart)
+- [Asset Submit Quick Start](/external-api/asset-submit)
 - [API Authentication](/external-api/authentication)
-- [Organization Management](/general/concepts)
+- [Organization Management](/concepts/organizations)
 - [Integration Guide](/integration/guide)

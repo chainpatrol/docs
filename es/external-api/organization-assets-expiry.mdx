@@ -1,0 +1,185 @@
+---
+title: Definir vencimiento de assets de la organización
+openapi: "POST /organization/assets/expiry"
+---
+
+## Descripción general
+
+Define, renueva o borra la fecha en que los assets (**Asset**: activo digital, como una URL, dirección, perfil, app, etc.) salen de la **Allowlist** (lista de permitidos) de tu organización. Úsalo para assets que solo deben permanecer por un tiempo, como el sitio web de un socio.
+
+Cuando pasa el vencimiento de un asset, este sigue permitido y en tu organización durante un **período de gracia de 14 días**; después se quita de tu organización y se deja de monitorear. Su estado no cambia. Los propietarios y administradores de la organización reciben por correo electrónico un resumen diario de los próximos vencimientos y eliminaciones. Consulta [Vencimiento](/es/concepts/allowlist#vencimiento) para ver la línea de tiempo completa.
+
+- Definir una fecha en un asset vencido lo renueva y pone fin a su período de gracia.
+- Pasar `null` borra el vencimiento, así que los assets permanecen indefinidamente.
+- La solicitud es todo o nada: si algún asset no está en tu organización, no cambia nada.
+
+## Inicio rápido
+
+### Autenticación
+
+Incluye tu clave de API en el encabezado `X-API-KEY`:
+
+```bash
+X-API-KEY: your_api_key_here
+```
+
+Una clave de API de organización necesita acceso de lectura y escritura. Con credenciales de usuario, pasa `slug`; debes ser propietario o administrador de esa organización.
+
+### Solicitud de ejemplo
+
+<CodeGroup>
+
+```typescript TypeScript
+const response = await fetch(
+  "https://app.chainpatrol.io/api/v2/organization/assets/expiry",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    body: JSON.stringify({
+      assetIds: [12345, 12346],
+      expiresAt: "2027-04-30T23:59:59Z",
+    }),
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/organization/assets/expiry",
+    headers={
+        "Content-Type": "application/json",
+        "X-API-KEY": "YOUR_API_KEY_HERE",
+    },
+    json={
+        "assetIds": [12345, 12346],
+        "expiresAt": "2027-04-30T23:59:59Z",
+    },
+)
+
+print(response.json())
+```
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/organization/assets/expiry' \
+  -H 'X-API-KEY: YOUR_API_KEY_HERE' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "assetIds": [12345, 12346],
+    "expiresAt": "2027-04-30T23:59:59Z"
+  }'
+```
+
+</CodeGroup>
+
+Para borrar el vencimiento, envía `"expiresAt": null`.
+
+## Cuerpo de la solicitud
+
+| Campo     | Tipo           | Obligatorio | Descripción                                                                                                                                        |
+| --------- | -------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| assetIds  | number[]       | Sí          | ID de los assets de tu organización, de 1 a 5000 por solicitud. Obtenlos desde [Listar assets de la organización](/es/external-api/organization-assets-list). |
+| expiresAt | string \| null | Sí          | Cuándo vencen los assets, como fecha y hora ISO 8601 en el futuro. `null` borra el vencimiento.                                                     |
+| slug      | string         | No          | Slug de la organización. Opcional para las claves de API de organización; obligatorio cuando tus credenciales pueden acceder a más de una organización. |
+
+## Respuesta
+
+### Respuesta exitosa
+
+```json
+{
+  "updatedCount": 2,
+  "expiresAt": "2027-04-30T23:59:59.000Z"
+}
+```
+
+### Campos de la respuesta
+
+| Campo        | Tipo           | Descripción                                             |
+| ------------ | -------------- | ------------------------------------------------------- |
+| updatedCount | number         | Cantidad de assets actualizados                         |
+| expiresAt    | string \| null | El vencimiento que se definió, o `null` cuando se borró |
+
+La respuesta de [Listar assets de la organización](/es/external-api/organization-assets-list) muestra el `allowlistExpiresAt` de cada asset, y `allowlistExpiredAt` una vez que comenzó su período de gracia.
+
+## Respuestas de error
+
+### 400 Bad Request
+
+Se devuelve cuando `expiresAt` no está en el futuro o el cuerpo está mal formado:
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "`expiresAt` must be in the future"
+  }
+}
+```
+
+### 401 Unauthorized
+
+Se devuelve cuando no se pasa ningún `slug` y las credenciales no están limitadas a una organización:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Pass `slug` to choose an organization, or authenticate with an API key scoped to one"
+  }
+}
+```
+
+### 403 Forbidden
+
+Se devuelve cuando la clave de API es de solo lectura, pertenece a una organización distinta de la indicada en `slug`, o el usuario no es propietario ni administrador de la organización.
+
+### 404 Not Found
+
+Se devuelve cuando alguno de los assets no está en tu organización. No se cambia nada:
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Assets not found on this organization: 12346"
+  }
+}
+```
+
+## Casos de uso
+
+### Hacer que los assets de socios venzan después de un año
+
+```typescript
+const oneYearFromNow = new Date();
+oneYearFromNow.setUTCFullYear(oneYearFromNow.getUTCFullYear() + 1);
+oneYearFromNow.setUTCHours(23, 59, 59, 999);
+
+await fetch("https://app.chainpatrol.io/api/v2/organization/assets/expiry", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-KEY": "YOUR_API_KEY_HERE",
+  },
+  body: JSON.stringify({
+    assetIds: partnerAssetIds,
+    expiresAt: oneYearFromNow.toISOString(),
+  }),
+});
+```
+
+### Desde la CLI o MCP
+
+```bash
+chainpatrol orgs assets set-expiry 12345 12346 --in 1y
+```
+
+El [servidor MCP](/es/mcp-server) expone la misma operación como la herramienta `organization_assets_set_expiry`.

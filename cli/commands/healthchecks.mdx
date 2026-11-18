@@ -63,7 +63,7 @@ chainpatrol healthchecks run <id|--all> --org <slug>
 chainpatrol healthchecks run --all --org acme
 chainpatrol healthchecks run reviewing.backlog --org acme
 chainpatrol healthchecks run takedowns.stale-in-progress --org acme
-chainpatrol --json healthchecks run --all --org acme --output json
+chainpatrol healthchecks run --all --org acme --output json
 ```
 
 A breached threshold exits with [code `6`](/cli/output#exit-codes) — the check ran, and

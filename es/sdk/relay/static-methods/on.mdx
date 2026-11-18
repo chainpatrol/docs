@@ -1,0 +1,28 @@
+---
+title: on()
+description: Registra un callback con Relay.on() para escuchar los eventos de la página de advertencia de ChainPatrol, como ContinueAtOwnRisk, dentro del script en segundo plano de tu extensión de navegador.
+---
+
+## Ejemplo
+
+```js
+import { Relay, Events } from "@chainpatrol/sdk";
+
+Relay.on(Events.ContinueAtOwnRisk, (request) => {
+  // Handle the event
+});
+```
+
+## Parámetros
+
+El método `on()` acepta dos parámetros:
+
+<ParamField body="type" type="EventType" required>
+  La propiedad `type` especifica qué tipo de evento quieres escuchar.
+</ParamField>
+
+<ParamField body="callback" type="(data: EventData) => void" required>
+  La propiedad `callback` es una función que se llamará cuando se
+  dispare el evento. Los datos del evento se pasan a la función callback como primer
+  parámetro.
+</ParamField>

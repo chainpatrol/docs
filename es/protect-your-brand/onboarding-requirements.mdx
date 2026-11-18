@@ -1,0 +1,406 @@
+---
+title: "Requisitos de onboarding"
+description: "Proporciona los assets, la identidad de marca y los documentos legales que ChainPatrol necesita para proteger a tu organización de las amenazas de phishing y suplantación."
+---
+
+Esta guía explica la información que ChainPatrol necesita durante el onboarding y cómo mantener actualizados los datos de tu organización para una protección eficaz contra amenazas.
+
+## Descripción general
+
+ChainPatrol protege a tu organización monitoreando las amenazas que suplantan a tus marcas, **assets** (activos digitales: URLs, direcciones, perfiles, apps, etc.) y empleados. Para hacerlo de forma eficaz, necesitamos información precisa y completa sobre:
+
+<CardGroup cols={3}>
+  <Card title="Assets" icon="link">
+    Todas las propiedades digitales que posees o administras
+  </Card>
+  
+  <Card title="Identidad de marca" icon="palette">
+    Logos, marcas registradas y términos de marca
+  </Card>
+  
+  <Card title="Autorización legal" icon="scale-balanced">
+    Documentos que nos permiten actuar en tu nombre
+  </Card>
+</CardGroup>
+
+<Info>
+Mantener esta información al día garantiza que podamos identificar las amenazas y responder a ellas rápidamente, evitando a la vez los falsos positivos.
+</Info>
+
+## Qué información recopilamos
+
+### Assets
+
+Necesitamos conocer todas las propiedades digitales asociadas a tu organización:
+
+<Tabs>
+  <Tab title="Dominios" icon="globe">
+    - Sitios web y aplicaciones web
+    - Subdominios y entornos de desarrollo
+    - Landing pages y sitios de marketing
+    - Portales de documentación y soporte
+  </Tab>
+  
+  <Tab title="Redes sociales" icon="share-nodes">
+    - Usuarios (handles) de Twitter/X
+    - Servidores de Discord
+    - Canales y grupos de Telegram
+    - Páginas de empresa de LinkedIn
+    - Canales de YouTube
+    - Cuentas en otras plataformas
+  </Tab>
+  
+  <Tab title="Correo y comunicación" icon="envelope">
+    - Direcciones de correo oficiales de la empresa
+    - Direcciones de correo de los empleados
+    - Correos de soporte y de contacto
+    - Direcciones de newsletters
+  </Tab>
+  
+  <Tab title="Blockchain" icon="link">
+    - Direcciones de wallets
+    - Contratos inteligentes
+    - Nombres ENS
+    - Identidades on-chain
+    - Contratos de tokens
+  </Tab>
+  
+  <Tab title="Aplicaciones" icon="mobile">
+    - Aplicaciones de iOS
+    - Aplicaciones de Android
+    - Extensiones de Chrome
+    - Complementos de Firefox
+    - Extensiones de Safari
+  </Tab>
+  
+  <Tab title="Otras propiedades" icon="folder">
+    - Repositorios de GitHub
+    - Sitios de documentación
+    - Foros de la comunidad
+    - Portales para desarrolladores
+    - Endpoints de API
+  </Tab>
+</Tabs>
+
+<Warning>
+**Importante:** Cuando se agrega algo a tu organización, lo **incluimos automáticamente en la Allowlist** (lista de permitidos) para que nuestros sistemas no lo bloqueen ni lo den de baja por accidente.
+</Warning>
+
+### Imágenes de marca e identidad visual
+
+Recopilamos recursos visuales para ayudar a identificar los intentos de suplantación de marca:
+
+<AccordionGroup>
+  <Accordion title="Logos" icon="image">
+    - Logo principal (todos los formatos)
+    - Variaciones secundarias del logo
+    - Logotipos tipográficos y versiones solo de texto
+    - Versiones monocromáticas
+    - Versiones solo con el ícono
+  </Accordion>
+  
+  <Accordion title="Colores de marca" icon="palette">
+    - Paleta de colores principal
+    - Colores secundarios
+    - Códigos hexadecimales y valores RGB
+    - Lineamientos de uso del color
+  </Accordion>
+  
+  <Accordion title="Recursos de diseño" icon="paintbrush">
+    - Íconos y símbolos
+    - Patrones y texturas
+    - Tipografía y fuentes
+    - Otros elementos de marca
+  </Accordion>
+</AccordionGroup>
+
+### Términos de marca y marcas registradas
+
+Monitoreamos el uso no autorizado de tus:
+
+<CardGroup cols={2}>
+  <Card title="Marcas registradas" icon="trademark">
+    Todas las marcas registradas ante oficinas de marcas
+  </Card>
+  
+  <Card title="Nombres de productos" icon="box">
+    Nombres oficiales de tus productos y servicios
+  </Card>
+  
+  <Card title="Lemas y eslóganes" icon="quote-left">
+    Frases de marketing asociadas a tu marca
+  </Card>
+  
+  <Card title="Errores ortográficos comunes" icon="spell-check">
+    Variaciones que los estafadores podrían usar
+  </Card>
+</CardGroup>
+
+### Documentos legales
+
+Antes de poder realizar **takedowns** (solicitudes de baja de contenido fraudulento) en tu nombre, necesitamos:
+
+<Steps>
+  <Step title="Letter of Authorization (LOA)">
+    Carta de autorización: autoriza a ChainPatrol a presentar solicitudes de takedown en tu nombre
+  </Step>
+  
+  <Step title="Documentación de respaldo">
+    Certificados de marca registrada y documentos de registro de la empresa
+  </Step>
+</Steps>
+
+<Warning>
+Estos documentos son **obligatorios antes de que podamos habilitar los servicios de takedown** para tu organización.
+</Warning>
+
+## Cómo administrar los assets de tu organización
+
+### Página de configuración de assets de la organización
+
+Puedes agregar, quitar o modificar assets directamente desde la configuración de tu organización:
+
+<Steps>
+  <Step title="Ve a Settings (configuración)">
+    Abre **Brand Assets** (tu Allowlist: los dominios, cuentas y direcciones oficiales de tu marca) en la barra lateral del **Dashboard** (panel principal)
+  </Step>
+  
+  <Step title="Agrega assets">
+    Haz clic en **Add Assets** para incluir nuevas propiedades
+  </Step>
+  
+  <Step title="Quita assets">
+    Selecciona los assets y haz clic en **Remove** para eliminar las entradas desactualizadas
+  </Step>
+  
+  <Step title="Busca y filtra">
+    Usa las herramientas de búsqueda y filtrado para encontrar assets específicos
+  </Step>
+  
+  <Step title="Organiza">
+    Agrupa los assets para organizarlos por prioridad o por tipo
+  </Step>
+</Steps>
+
+### Administración por API
+
+Si tu organización tiene muchos assets o actualizaciones frecuentes, puedes administrar los assets de forma programática con nuestra API:
+
+<CardGroup cols={3}>
+  <Card title="Documentación de la API" icon="book" href="/es/external-api/overview">
+    Documentación completa de los endpoints
+  </Card>
+  
+  <Card title="Genera claves de API" icon="key">
+    Crea las claves en Developer › API Keys
+  </Card>
+  
+  <Card title="Operaciones por lotes" icon="layer-group">
+    Agrega o quita varios assets en una sola solicitud
+  </Card>
+</CardGroup>
+
+<Tip>
+Consulta nuestra [Guía de integración de la API](/integration/guide) para ver instrucciones detalladas sobre la administración programática de assets.
+</Tip>
+
+## El proceso de onboarding
+
+### Customer Information Sheet (CIS)
+
+Durante el onboarding, recibirás una **Customer Information Sheet** (hoja de información del cliente) para completar. Este formulario integral recoge toda la información mencionada arriba.
+
+<Warning>
+**Buena práctica:** No completes la CIS por tu cuenta. Compártela con los equipos de toda tu organización.
+</Warning>
+
+#### Equipos a involucrar
+
+<AccordionGroup>
+  <Accordion title="Marketing" icon="bullhorn">
+    - Campañas e iniciativas de marca
+    - Cuentas de redes sociales
+    - Recursos y materiales creativos
+    - Dominios y landing pages de marketing
+  </Accordion>
+  
+  <Accordion title="Ingeniería" icon="code">
+    - Dominios de infraestructura
+    - Repositorios de GitHub
+    - Herramientas para desarrolladores y APIs
+    - Entornos de staging y de pruebas
+  </Accordion>
+  
+  <Accordion title="Producto" icon="box">
+    - Nombres y funcionalidades de los productos
+    - Programas beta
+    - Lanzamientos de funcionalidades
+    - Documentación de producto
+  </Accordion>
+  
+  <Accordion title="Legal" icon="scale-balanced">
+    - Registros de marca
+    - Documentación oficial
+    - Letter of Authorization
+    - Registro de la empresa
+  </Accordion>
+  
+  <Accordion title="Comunidad" icon="users">
+    - Servidores de Discord
+    - Grupos de Telegram
+    - Foros de la comunidad
+    - Programas de embajadores
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+A veces los equipos reservan ("squat") dominios o usuarios de redes sociales para un uso futuro sin que la dirección de la empresa lo sepa. Una revisión interna completa evita que estos assets se identifiquen por error como amenazas.
+</Note>
+
+### Actualizaciones continuas de la Allowlist
+
+No recopilamos la información una sola vez. ChainPatrol realiza **recopilaciones frecuentes de la Allowlist a lo largo del año** para:
+
+<CardGroup cols={2}>
+  <Card title="Reflejar el crecimiento" icon="arrow-up">
+    Nuevos assets a medida que tu organización crece
+  </Card>
+  
+  <Card title="Quitar lo obsoleto" icon="trash">
+    Propiedades desactualizadas o retiradas
+  </Card>
+  
+  <Card title="Actualizar materiales" icon="arrows-rotate">
+    Materiales de marca después de una renovación
+  </Card>
+  
+  <Card title="Agregar miembros del equipo" icon="user-plus">
+    Nuevos empleados y miembros del equipo
+  </Card>
+</CardGroup>
+
+<Info>
+Te avisaremos cuando sea momento de revisar la Allowlist, por lo general cada trimestre o después de cambios organizacionales importantes.
+</Info>
+
+## Seguridad y privacidad de los documentos
+
+Tus documentos legales y tu información sensible se manejan con medidas de seguridad estrictas:
+
+<CardGroup cols={2}>
+  <Card title="Almacenamiento privado en la nube" icon="cloud-lock">
+    Todos los documentos se guardan en un almacenamiento en la nube cifrado y con control de acceso
+  </Card>
+  
+  <Card title="Acceso limitado" icon="user-lock">
+    Solo el personal autorizado de takedowns y de soporte puede acceder a los documentos
+  </Card>
+  
+  <Card title="Registros de auditoría" icon="list-check">
+    Todo acceso a los documentos queda registrado y se monitorea
+  </Card>
+  
+  <Card title="Cumplimiento" icon="shield-check">
+    Seguimos prácticas de seguridad estándar de la industria
+  </Card>
+</CardGroup>
+
+## Preguntas frecuentes
+
+<AccordionGroup>
+  <Accordion title="¿Qué pasa cuando alguien deja tu empresa?" icon="user-minus">
+    Debes quitar su dirección de correo y cualquier cuenta personal de la lista de assets de tu organización. Puedes hacerlo desde la página de Settings o mediante la API.
+    
+    <Tip>
+    Recomendamos integrar la administración de assets con tu proceso de offboarding de empleados.
+    </Tip>
+  </Accordion>
+  
+  <Accordion title="¿Qué pasa cuando haces un rebranding?" icon="paintbrush">
+    Contáctanos de inmediato cuando estés planificando un rebranding. Trabajaremos contigo para:
+    
+    1. Agregar los nuevos assets de marca a tu Allowlist
+    2. Actualizar los materiales de identidad visual
+    3. Mantener protegidos los assets de la marca anterior durante el período de transición
+    4. Quitar finalmente los assets desactualizados una vez completada la transición
+    
+    <Info>
+    Las transiciones de rebranding suelen requerir entre 30 y 90 días en los que tanto los assets anteriores como los nuevos están protegidos.
+    </Info>
+  </Accordion>
+  
+  <Accordion title="¿Qué pasa cuando te adquieren o cuando adquieres una nueva marca?" icon="building">
+    **Para las adquisiciones que haces:**
+    - Agrega la marca adquirida como submarca en tu organización
+    - Incluye todos sus assets en tu Allowlist
+    - Conserva la LOA existente de la entidad adquirida
+    
+    **Si te adquieren:**
+    - Trabaja con tu nueva empresa matriz para transferir los servicios de ChainPatrol
+    - Es posible que haya que actualizar los documentos legales para reflejar la nueva estructura de propiedad
+    - Escribe a [support@chainpatrol.io](mailto:support@chainpatrol.io) para coordinar la transición
+  </Accordion>
+  
+  <Accordion title="¿Qué pasa si uno de tus assets se ve comprometido?" icon="triangle-exclamation">
+    Si un asset que te pertenece se ve comprometido (hackeo, robo de credenciales, etc.):
+    
+    <Steps>
+      <Step title="Avisa de inmediato a ChainPatrol">
+        Escribe a [support@chainpatrol.io](mailto:support@chainpatrol.io) o usa tu canal dedicado de Slack
+      </Step>
+      
+      <Step title="Quítalo de la Allowlist">
+        Quita el asset comprometido para que podamos actuar contra él
+      </Step>
+      
+      <Step title="Reporta el compromiso">
+        Repórtalo a través de nuestra plataforma para que podamos dar seguimiento a la amenaza y monitorearla
+      </Step>
+      
+      <Step title="Vuelve a agregarlo tras la recuperación">
+        Vuelve a agregar el asset una vez que hayas recuperado el control y lo hayas asegurado
+      </Step>
+    </Steps>
+    
+    <Check>
+    Podemos responder rápidamente ante assets comprometidos una vez que nos avisas; a menudo los damos de baja en cuestión de horas.
+    </Check>
+  </Accordion>
+  
+  <Accordion title="¿Puedo administrar varias marcas o subsidiarias?" icon="sitemap">
+    ¡Sí! Las organizaciones pueden tener varias marcas, cada una con su propio conjunto de:
+    
+    - Listas de assets
+    - Materiales de identidad de marca
+    - Términos protegidos
+    
+    Esto es habitual en holdings, firmas de inversión u organizaciones con varias líneas de productos.
+  </Accordion>
+  
+  <Accordion title="¿Con qué frecuencia debo revisar mi lista de assets?" icon="calendar-check">
+    Recomendamos revisar tus assets:
+    
+    - **Cada trimestre**: Revisiones periódicas para detectar cambios graduales
+    - **Después de lanzamientos**: Nuevos productos, campañas o iniciativas
+    - **Después de reorganizaciones**: Fusiones, adquisiciones o reestructuraciones
+    - **Cuando te lo pidamos**: Te avisaremos cuando sea momento de una revisión programada
+  </Accordion>
+  
+  <Accordion title="¿Y si no tengo claro si algo debe incluirse?" icon="circle-question">
+    **Ante la duda, inclúyelo.** Es mejor tener assets de más en tu Allowlist que pasar algo por alto.
+    
+    <Tip>
+    Nuestro equipo puede ayudarte a afinar tu lista durante el onboarding y en las revisiones periódicas.
+    </Tip>
+  </Accordion>
+</AccordionGroup>
+
+---
+
+<Card
+  title="¿Todo listo para empezar?"
+  icon="rocket"
+  href="https://cal.com/chainpatrol"
+>
+  Agenda una llamada de onboarding para empezar a proteger a tu organización
+</Card>

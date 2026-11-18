@@ -1,0 +1,82 @@
+---
+title: ignore()
+description: Agrega un dominio a la ignorelist de ThreatDetector cuando un usuario elige continuar bajo su propio riesgo, para evitar redirecciones repetidas a la página de advertencia.
+---
+
+Si un usuario elige continuar bajo su propio riesgo después de ver una advertencia, puedes usar este método para ignorar el
+dominio, de modo que el detector lo ignore en el futuro. Sin esto, el usuario seguirá siendo redirigido
+a la página de advertencia, lo cual no es una buena experiencia de usuario.
+
+## Ejemplo
+
+<CodeGroup>
+
+```js Code
+await detector.ignore("google.com");
+
+console.log(await detector.url("https://google.com"));
+```
+
+```js Output
+{
+    ok: true,
+    url: "google.com",
+    status: "IGNORED"
+}
+```
+
+</CodeGroup>
+
+## Parámetros
+
+<ParamField body="url" type="string" required>
+
+    La URL que se va a ignorar. Puede ser una URL completa o un dominio.
+
+    P. ej., `https://google.com` o `google.com`
+
+</ParamField>
+
+## Valor de retorno
+
+El valor de retorno es una promesa que se resuelve con un objeto de resultado.
+
+### Éxito
+
+Si la URL se agregó correctamente, el objeto contendrá las siguientes propiedades:
+
+<ParamField body="result" type="object" required>
+  <Expandable title="propiedades" defaultOpen>
+
+    <ParamField body="ok" type="true" required>
+      Esta propiedad será `true` si la URL se agregó correctamente.
+    </ParamField>
+
+    <ParamField body="url" type="string">
+      La propiedad `url` es la URL que se agregó.
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+### Error
+
+En cambio, si la URL no se pudo agregar, el objeto contendrá lo siguiente:
+
+<ParamField body="result" type="object" required>
+  <Expandable title="propiedades" defaultOpen>
+
+    <ParamField body="ok" type="false" required>
+        Esta propiedad será `false` si la URL no se pudo agregar.
+    </ParamField>
+
+    <ParamField body="url" type="string">
+      La propiedad `url` es la URL que intentamos agregar.
+    </ParamField>
+
+    <ParamField body="error" type="string">
+      La propiedad `error` contendrá un mensaje de error legible para las personas.
+    </ParamField>
+
+  </Expandable>
+</ParamField>

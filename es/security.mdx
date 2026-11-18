@@ -1,0 +1,115 @@
+---
+title: "Whitepaper de seguridad"
+description: "Resumen del programa de seguridad de ChainPatrol: avance hacia SOC 2, gobernanza, infraestructura, cifrado de datos, controles de acceso y desarrollo seguro."
+---
+
+**Última actualización:** 22 de septiembre de 2026
+
+## Descripción general
+
+**ChainPatrol** ofrece servicios de protección de marca para ayudar a las organizaciones a combatir el phishing, la suplantación y el fraude. Como nuestra plataforma maneja activos de marca sensibles, inteligencia de amenazas y documentación legal en nombre de nuestros clientes, la seguridad es la base de cómo construimos y operamos.
+
+Este documento resume los controles administrativos, técnicos y físicos que ChainPatrol mantiene para proteger los datos de los clientes y garantizar la disponibilidad, la confidencialidad y la integridad de nuestros servicios.
+
+## Cumplimiento
+
+ChainPatrol está actualmente en proceso de obtener la certificación **SOC 2 Type II**, que cubre los Criterios de Servicios de Confianza (Trust Services Criteria) de **Seguridad, Disponibilidad y Confidencialidad**. Estamos en nuestro período de observación, y se espera un informe de auditoría independiente para fines del primer trimestre de 2027.
+
+Nuestro informe finalizado, junto con la documentación de políticas que lo respalda, estará disponible en nuestro [Trust Center](https://trust.chainpatrol.com) para clientes y potenciales clientes bajo NDA.
+
+## Gobernanza de seguridad
+
+La seguridad de la información en ChainPatrol se rige por un programa de seguridad formal, construido en torno a políticas documentadas que cubren el control de acceso, la gestión de activos, la criptografía, la gestión de datos, la respuesta a incidentes, la seguridad de las operaciones, la seguridad física, la gestión de riesgos, el desarrollo seguro y la gestión de terceros.
+
+- Un **Delegado de Seguridad** designado es responsable de la implementación diaria de los controles de seguridad, las evaluaciones de riesgo y el mantenimiento de las políticas.
+- La **dirección de Ingeniería** es responsable de los controles de seguridad del desarrollo y de la infraestructura en la nube.
+- Las políticas de seguridad se revisan al menos una vez al año y las aprueba la alta dirección.
+- Todos los empleados y contratistas aceptan nuestra Política de Seguridad de la Información y nuestro Código de Conducta al momento de su contratación.
+
+### Seguridad de las personas
+
+- Se realizan verificaciones de antecedentes al personal con acceso a los sistemas de producción, de forma proporcional al rol y al riesgo.
+- Los empleados completan una capacitación de concientización en seguridad al momento de su contratación y, a partir de ahí, una vez al año, como parte de nuestro programa de incorporación y capacitación continua.
+- El acceso a los sistemas de producción se otorga solo después de que se completan los requisitos de incorporación (acuerdos firmados, capacitación, aceptación de las políticas) y se revoca sin demora al terminar la relación laboral, mediante un proceso de desvinculación automatizado.
+- Los dispositivos administrados por la empresa están inscritos en una gestión centralizada de dispositivos y protegidos con detección y respuesta en endpoints (EDR).
+- El acceso de los empleados a las herramientas internas usa inicio de sesión único (SSO) centralizado, y el acceso a nivel de red se rige por controles de confianza cero (zero trust).
+
+## Infraestructura y arquitectura
+
+ChainPatrol opera una arquitectura SaaS multiinquilino (multi-tenant), alojada en proveedores consolidados de nube y de servicios administrados.
+
+- Las cargas de trabajo se ejecutan en contenedores dentro de redes privadas aisladas.
+- La infraestructura se administra como código mediante **Terraform**, con cambios que se revisan y se registran antes del despliegue.
+- Los roles de IAM aplican el acceso de mínimo privilegio a la infraestructura de producción; no se usan credenciales compartidas para la actividad administrativa estándar.
+- Los entornos de producción y de desarrollo/staging están segregados lógicamente. Los datos de producción de los clientes no se usan en desarrollo ni en pruebas sin una aprobación explícita y la depuración previa de los campos sensibles.
+- Los datos principales de la aplicación se almacenan en bases de datos relacionales administradas, y los archivos se almacenan en almacenamiento de objetos administrado.
+- El tráfico de red está protegido por controles en capas, que incluyen mitigación de DDoS, protecciones de firewall de aplicaciones web, grupos de seguridad y aislamiento de red.
+
+## Protección de datos
+
+Los datos se clasifican como **Confidencial**, **Restringido** o **Público**, con requisitos de manejo acordes a su sensibilidad. Los activos de marca de los clientes, los documentos legales, la inteligencia de amenazas y los datos del personal (p. ej., nombres o usuarios de redes sociales que se usan en el monitoreo) se tratan como Confidencial o Restringido y no se almacenan en medios extraíbles.
+
+- **Cifrado en tránsito:** todos los datos de clientes y los datos confidenciales que se transmiten por redes públicas se cifran con TLS 1.2 o superior.
+- **Cifrado en reposo:** los datos confidenciales en reposo se cifran con AES-256; las copias de seguridad también se cifran.
+- **La gestión de claves** sigue las prácticas estándar de la industria en cuanto a la solidez de los algoritmos, la longitud de las claves y su rotación.
+- **Retención de datos:** los datos de los clientes se conservan solo durante el tiempo necesario para la prestación del servicio o para cumplir obligaciones contractuales o legales, y se eliminan dentro de un plazo definido (hasta 90 días) después de la terminación del contrato.
+- ChainPatrol no almacena credenciales de pago de los clientes ni secretos de autenticación en nombre de los clientes.
+
+### Gestión de secretos
+
+Los secretos y las credenciales de la aplicación se administran mediante una bóveda dedicada de gestión de secretos, en lugar de almacenarse en el código, en archivos de configuración o en variables de entorno. Los secretos y las claves de API se rotan según políticas basadas en el riesgo y calendarios definidos.
+
+## Control de acceso
+
+- El acceso de los clientes y del personal interno a la aplicación de ChainPatrol se administra mediante **SSO** y **control de acceso basado en roles (RBAC)**.
+- El acceso a los sistemas y datos de producción sigue el principio de mínimo privilegio, requiere una aprobación documentada y se revisa de forma recurrente.
+- El acceso a los datos de producción de los clientes requiere, específicamente, la aprobación de la gerencia de Ingeniería.
+- Las solicitudes de acceso, el aprovisionamiento y el desaprovisionamiento se registran en nuestro sistema de tickets de la mesa de ayuda de TI.
+- Los registros de auditoría capturan los cambios en la configuración de la organización dentro de la aplicación, junto con la actividad administrativa y privilegiada en los sistemas de producción.
+- Se requiere autenticación multifactor para el acceso privilegiado a la infraestructura de producción, donde esté disponible.
+
+## Desarrollo seguro
+
+ChainPatrol sigue una Política de Desarrollo Seguro documentada, que incorpora principios de seguridad desde el diseño y de privacidad desde el diseño (mínimo privilegio, defensa en profundidad, configuraciones seguras por defecto, comportamiento de fallo seguro).
+
+- Los cambios de código requieren revisión y aprobación antes de fusionarse en las ramas de producción; ninguna persona puede, por sí sola, desarrollar, probar y desplegar un cambio sin supervisión independiente y sin mecanismos de control.
+- La seguridad de la cadena de suministro de software se monitorea de forma continua mediante **GitHub Dependabot**, [Socket.dev](https://socket.dev) y **GitHub Secret Scanning**.
+- Una vez al año se realiza una **prueba de penetración** independiente de la aplicación del **Dashboard** (panel principal).
+- Si bien ChainPatrol no opera actualmente un programa público formal de bug bounty, aceptamos, clasificamos y remediamos las vulnerabilidades reportadas externamente.
+- Las vulnerabilidades se priorizan y se remedian de acuerdo con SLA documentados y basados en la gravedad.
+
+## Integraciones
+
+ChainPatrol ofrece integraciones opcionales, iniciadas por el cliente, con Slack, Discord, Telegram, Intercom, Zapier y Vercel para dar soporte a las alertas y a la automatización de flujos de trabajo. Estas integraciones se activan por decisión del cliente (opt-in), se limitan a los datos mínimos necesarios para la función de la integración y se rigen por los mismos estándares de control de acceso y manejo de datos que se aplican a nuestra plataforma principal.
+
+## Continuidad del negocio y recuperación ante desastres
+
+ChainPatrol mantiene un plan de Continuidad del Negocio y Recuperación ante Desastres que contempla escenarios como caídas de los proveedores de nube, interrupciones en las oficinas y la pérdida de herramientas SaaS de soporte. Las copias de seguridad se prueban una vez al año para validar que se pueden recuperar, y los objetivos de tiempo y de punto de recuperación están definidos y se revisan para los sistemas críticos.
+
+## Respuesta a incidentes
+
+ChainPatrol mantiene un Plan de Respuesta a Incidentes formal que cubre la detección, la clasificación, la contención, la erradicación, la recuperación y la revisión posterior al incidente.
+
+- Los eventos e incidentes de seguridad se clasifican y se les asigna un nivel de gravedad, con SLA de remediación definidos y basados en la gravedad.
+- Un Delegado de Seguridad designado lidera las tareas de respuesta a incidentes, con escalamiento al área legal y a la dirección ejecutiva en los incidentes que involucran posibles brechas de datos.
+- Se realizan revisiones posteriores al incidente (post-mortems) de los incidentes críticos para registrar la causa raíz e impulsar la remediación a largo plazo.
+- En caso de una brecha confirmada, se notifica a los clientes, a los reguladores y a las demás partes afectadas de acuerdo con las obligaciones contractuales y legales.
+
+## Gestión de riesgos de terceros y proveedores
+
+Los proveedores y subencargados que acceden a datos confidenciales pasan por una revisión de debida diligencia antes de su incorporación, en la que se consideran sus políticas de seguridad, sus certificaciones (p. ej., SOC 2, ISO 27001) y sus prácticas de manejo de datos. Las relaciones con los proveedores se revisan de forma recurrente, y los cambios sustanciales en los servicios de los proveedores se evalúan para determinar su impacto en la seguridad.
+
+## Privacidad de los datos
+
+- **Minimización de datos:** ChainPatrol evalúa las necesidades de recopilación de datos caso por caso y busca recopilar solo lo necesario para prestar nuestros servicios de protección de marca.
+- **Consentimiento:** el uso de nuestra plataforma, incluidas las funciones de escaneo y monitoreo, se rige por nuestros Términos de Servicio y por los acuerdos con los clientes.
+- **Anonimización:** a los datos de producción de los clientes que se usan en entornos de staging o de pruebas se les quitan los identificadores y la información de identificación personal (PII) antes de su uso, en línea con nuestras prácticas de desarrollo seguro.
+- **Subencargados:** ChainPatrol trabaja con un conjunto limitado de subencargados para prestar sus servicios. La lista vigente de subencargados está disponible a pedido y se publicará en nuestro Trust Center.
+
+## Seguridad física
+
+Cuando corresponde, se mantienen controles de seguridad física (sistemas de control de acceso, gestión de visitantes, protecciones ambientales) en las instalaciones de la empresa y en los centros de datos de los proveedores de nube, en línea con nuestra Política de Seguridad Física. La infraestructura de producción de ChainPatrol está alojada por completo en instalaciones de proveedores de nube que mantienen sus propios controles de seguridad física, auditados de forma independiente.
+
+## Preguntas
+
+Para obtener documentación de seguridad adicional, incluido nuestro informe SOC 2 Type II cuando esté disponible, o para completar un cuestionario de seguridad, visita nuestro Trust Center o escríbenos a **security@chainpatrol.io**.

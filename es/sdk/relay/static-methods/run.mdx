@@ -1,0 +1,21 @@
+---
+title: run()
+description: Llama a Relay.run() en un script de contenido para empezar a reenviar los eventos de la página de advertencia de ChainPatrol entre la página y el script en segundo plano de tu extensión de navegador.
+---
+
+## Ejemplo
+
+```js
+import { Relay, Events } from "@chainpatrol/sdk";
+
+Relay.run([Events.ContinueAtOwnRisk]);
+```
+
+## Parámetros
+
+El método `run()` acepta un parámetro, que es un arreglo de eventos para reenviar:
+
+<ParamField body="events" type="EventType[]" required>
+  La propiedad `events` especifica qué eventos se reenvían a los demás listeners
+  del relay.
+</ParamField>

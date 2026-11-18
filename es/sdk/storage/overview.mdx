@@ -1,0 +1,24 @@
+---
+title: "Adaptadores de almacenamiento para la caché de ThreatDetector"
+description: Los adaptadores de almacenamiento guardan en caché las consultas de URL de ThreatDetector para reducir las llamadas a la API de ChainPatrol, con opciones de localStorage del navegador, almacenamiento de extensiones y memoria.
+---
+
+La clase [ThreatDetector](/es/sdk/threat-detector/overview) está diseñada para usarse con un adaptador de almacenamiento de caché
+que reduce la cantidad de llamadas a la API necesarias para realizar un **Asset Scan** (escaneo de un asset). Para lograrlo, guarda los
+resultados de las llamadas anteriores a la API en la caché y los recupera cuando hacen falta.
+
+Según el entorno en el que uses el SDK, es posible que tengas que usar el adaptador de almacenamiento adecuado.
+
+## Adaptadores
+
+| Adaptador                | Descripción                                                                        |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| [Browser](./browser)     | Guarda los datos en caché en el almacenamiento local del navegador.                |
+| [Extension](./extension) | Guarda los datos en caché en el almacenamiento de extensiones del navegador.       |
+| [Memory](./memory)       | Guarda los datos en caché en memoria. Este es el adaptador predeterminado.         |
+
+<Note>
+  ¿Nos falta algún adaptador? Escríbenos con confianza a{" "}
+  [support@chainpatrol.io](mailto:support@chainpatrol.io?subject=Re:%20Custom%20Storage%20Adapter&body=)
+  y con gusto conversaremos sobre cómo implementarlo.
+</Note>

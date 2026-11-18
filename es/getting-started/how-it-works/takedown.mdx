@@ -1,0 +1,206 @@
+---
+title: "Takedown"
+description: "Ciclo de vida de las solicitudes de takedown de ChainPatrol: envío a proveedores de hosting, registradores y plataformas sociales, monitoreo de la eliminación y retractación de falsos positivos."
+---
+
+## Descripción general
+
+Un **takedown** (solicitud de baja de contenido fraudulento) es el proceso de solicitar que una plataforma, un servicio de hosting o un proveedor elimine contenido dañino. Esta página explica cómo avanzan los takedowns a lo largo de su ciclo de vida en ChainPatrol, cómo se envían y se monitorean, y cómo funcionan las retractaciones cuando se determina que un **asset** (activo digital: URL, dirección, perfil, app, etc.) es legítimo.
+
+ChainPatrol estableció contactos directos con los equipos de seguridad y de trust & safety (confianza y seguridad) de plataformas clave (como Vercel) y aprovecha las integraciones por API cuando están disponibles. Estas relaciones permiten takedowns acelerados, con lo que las amenazas confirmadas se eliminan más rápido que por los canales de reporte estándar.
+
+### Consideraciones específicas por plataforma
+
+#### Vercel
+
+ChainPatrol mantiene una relación directa con los equipos de seguridad y de trust & safety de Vercel, que incluye una integración con la API de takedowns para acelerar la eliminación de contenido malicioso alojado en Vercel.
+
+Además, ChainPatrol ofrece a sus clientes una integración con Vercel que confirma qué despliegues de Vercel pertenecen a la organización de Vercel del cliente. Esto ayuda a reducir los falsos positivos y permite revisar más rápido los subdominios falsos de Vercel que usan los estafadores frente a los despliegues legítimos.
+
+#### Google Safe Browsing
+
+Google Safe Browsing opera con su propio proceso de revisión independiente para los envíos. Si bien Google se encarga de su propia revisión de todos los envíos y la aceptación no está garantizada, ChainPatrol mantiene una tasa de aceptación líder en la industria para los envíos a Google Safe Browsing gracias a nuestros procesos rigurosos de verificación y recopilación de evidencia.
+
+## Alianzas reforzadas con plataformas
+
+ChainPatrol mantiene alianzas estratégicas con las principales plataformas para ofrecer capacidades reforzadas de protección contra amenazas:
+
+### Acuerdo Enterprise con X (antes Twitter)
+
+ChainPatrol tiene un acuerdo Enterprise con X que permite:
+
+- **Escaneo mejorado**: Mejores capacidades de monitoreo en toda la plataforma X para una detección de amenazas más completa
+- **Takedowns prioritarios**: Procesamiento con mayor prioridad para lograr takedowns rápidos de amenazas de suplantación directa dirigidas a tu marca en X
+
+<Note>
+Esta alianza le permite a ChainPatrol responder más rápido a los intentos de suplantación de marca en X, lo que ayuda a proteger a tu comunidad de los ataques de phishing basados en redes sociales.
+</Note>
+
+## Ciclo de vida de un takedown
+
+Un takedown pasa por etapas definidas desde el envío hasta la resolución:
+
+1. **En cola (`TODO`)** — Una vez que se aprueba una **Proposal** (propuesta para bloquear o permitir un asset) de bloqueo, se crea una solicitud de takedown y se pone en cola para enviarla a los proveedores responsables (servicios de hosting, registradores, redes sociales o tiendas de aplicaciones).
+2. **En curso (`IN_PROGRESS`)** — ChainPatrol envía reportes de abuso y evidencia a las plataformas responsables y comienza un monitoreo activo para detectar cuándo el asset queda fuera de línea.
+3. **Pendiente de tu respuesta (`PENDING_INPUT`)** — La acción se pausa temporalmente cuando ChainPatrol necesita una confirmación o indicaciones de tu equipo. Esto ocurre con más frecuencia cuando un proveedor de hosting afirma que el asset es legítimo o cuando el personal interno sospecha que podría no ser una amenaza. La pausa evita acciones no deseadas entre los turnos 24/7 mientras los miembros del equipo coordinan contigo por Slack, Telegram o notas dentro de la aplicación.
+4. **Completado (`COMPLETED`)** — El proveedor cumple con la solicitud y elimina el asset o el contenido malicioso.
+5. **Cancelado (`CANCELLED`)** — El takedown se detiene, por ejemplo cuando se confirma que el asset es legítimo, cuando se retracta o cuando ya no es accionable.
+
+### Resultados alternativos
+
+- **`PENDING_RETRACTION`** - Se identificó como falso positivo y se marcó para retractación, pero todavía no se envió al proveedor
+- **`RETRACTION_SENT`** - Se envió al proveedor una solicitud formal de retractación para detener o revertir el takedown
+- **`RETRACTED`** - El proveedor confirmó la retractación; el takedown se detuvo o se revirtió por completo
+
+## Cómo procesa ChainPatrol un takedown
+
+### Creación de un takedown
+
+<Info>
+Se crea automáticamente un takedown por cada asset que se bloquea, siempre que la organización tenga **habilitado el servicio de Takedowns**.
+</Info>
+
+Cada takedown está vinculado directamente al asset bloqueado y contiene todo el contexto esencial necesario para las acciones posteriores:
+
+- **Referencia del asset** - URL, perfil social, hash de IPFS o ficha de la app
+- **Evidencia de respaldo** - Explicación de por qué el asset se clasificó como dañino
+- **Información del proveedor** - Plataforma o servicio de hosting responsable del contenido
+
+Tras su creación, el takedown pasa al estado `TODO`, lo que indica que se generó y está listo para revisarse y procesarse.
+
+### Asignación de un proveedor
+
+ChainPatrol determina qué plataforma, empresa de hosting, registrador o canal es responsable del contenido.
+
+**Hosting y dominios:**
+- Proveedores de hosting (AWS, Cloudflare, Vercel, etc.)
+- Registradores de dominios (GoDaddy, Namecheap, etc.)
+- Registros de TLD (para dominios de nivel superior como `.com`, `.xyz`, etc.)
+
+**Redes sociales:**
+Twitter/X, Facebook, Instagram, YouTube, Telegram, Discord, Reddit
+
+**Tiendas de aplicaciones:**
+Google Play Store, Apple App Store, tiendas de extensiones de navegador
+
+**Almacenamiento distribuido:**
+Gateways de IPFS y servicios de pinning, plataformas de hosting descentralizado
+
+Mantenemos un registro actualizado de **más de 100 contactos de abuso**, tanto para enviar takedowns como para retractar solicitudes hechas por error.
+
+### Envío del takedown
+
+ChainPatrol prepara y envía la solicitud de takedown al proveedor correspondiente, responsable de alojar o distribuir el contenido malicioso.
+
+**Qué incluye un envío:**
+
+- **Explicación clara** - Descripción detallada de por qué el contenido se considera dañino, con evidencia y contexto
+- **Documentación legal** - Documentos legales de respaldo necesarios para justificar la eliminación (cuando corresponde)
+- **Formato específico del proveedor** - Los envíos usan el canal de reporte preferido de cada proveedor para asegurar la mayor probabilidad de éxito
+
+Una vez enviado, el takedown pasa al estado `IN_PROGRESS`.
+
+**Transparencia total:** Los clientes tienen visibilidad en tiempo real, que incluye actualizaciones de estado y respuestas de los proveedores. Las copias de las comunicaciones con los proveedores se muestran directamente en la línea de tiempo de eventos del takedown.
+
+### Monitoreo
+
+Después del envío, ChainPatrol monitorea continuamente el takedown para dar seguimiento a su avance y su resultado:
+
+- **Verificación del contenido** - Verificar si el contenido señalado se eliminó
+- **Respuestas del proveedor** - Revisar e interpretar las respuestas del proveedor
+- **Escalamiento** - Reintentar o escalar automáticamente cuando hace falta
+
+El takedown permanece activo hasta que se llega a un resultado final. El monitoreo continuo ayuda a garantizar que los takedowns no se cierren antes de tiempo.
+
+### Resultado final
+
+Un takedown termina en uno de los siguientes estados:
+
+**`COMPLETED`** - El proveedor eliminó el contenido. Algunos ejemplos: sitios web que quedan inaccesibles, perfiles o mensajes de redes sociales que se eliminan, canales de Telegram que se cierran, contenido de IPFS que deja de estar disponible a través de gateways y apps fraudulentas que se retiran de las tiendas.
+
+**`CANCELLED`** - La solicitud de takedown no puede continuar. Los motivos incluyen contenido no válido, falta de documentación requerida y que el asset ya no cumple los criterios para un takedown.
+
+**`RETRACTED`** - El takedown se retiró formalmente después de enviarse. Por lo general, porque el asset se identificó como falso positivo, se determinó que el contenido es legítimo o la organización solicitó la retractación.
+
+Todos los resultados se registran con claridad y se muestran a los clientes para mayor transparencia.
+
+## Retractación de un takedown
+
+Una **retractación de takedown** es el proceso formal de detener o revertir una solicitud de takedown después de que ya se envió a un proveedor.
+
+<Warning>
+Las retractaciones garantizan que el contenido legítimo no se elimine por error y que los proveedores sean notificados lo antes posible cuando se identifica un problema.
+</Warning>
+
+### Cuándo ocurren las retractaciones
+
+Por lo general, una retractación se inicia cuando ChainPatrol determina que el takedown original se creó por error:
+
+- **Falso positivo** - El asset se clasificó incorrectamente como dañino
+- **Contenido legítimo** - Una investigación más profunda muestra que el contenido está autorizado
+- **Solicitud del cliente** - La organización identifica el asset como legítimo
+
+### Proceso de retractación
+
+1. **Identificación** - El asset se identifica como legítimo o como falso positivo
+2. **`PENDING_RETRACTION`** - El takedown está marcado para retractación, pero la solicitud todavía no se envió
+3. **`RETRACTION_SENT`** - Se envió la solicitud formal al proveedor para detener o revertir el takedown
+4. **`RETRACTED`** - El proveedor confirma que el takedown se detuvo o se revirtió
+
+Las retractaciones de takedowns se gestionan con el mismo nivel de cuidado, estructura y transparencia que los envíos de takedowns.
+
+## Tipos de takedowns
+
+ChainPatrol admite múltiples categorías de takedown, cada una con un resultado esperado claro:
+
+**Takedowns de sitios web** - Se dirigen a proveedores de hosting, registradores de dominios y registros de TLD. Resultado: El sitio web queda inaccesible o el dominio se suspende. Algunos ejemplos: sitios de phishing alojados en proveedores de nube, dominios maliciosos registrados a través de registradores y dominios de typosquatting.
+
+**Takedowns en redes sociales** - Las plataformas incluyen X/Twitter, Facebook, Instagram, YouTube, Telegram, Discord, Reddit. Resultado: El perfil, canal, publicación o video que suplanta a la marca se elimina o se suspende. Algunos ejemplos: cuentas de marca falsas, perfiles de suplantación, publicaciones y videos de estafas y canales maliciosos de Telegram.
+
+**Takedowns en tiendas de aplicaciones** - Se dirigen a plataformas de apps móviles y tiendas de extensiones. Resultado: Las apps fraudulentas se eliminan de la tienda. Algunos ejemplos: apps de wallet falsas, extensiones de navegador maliciosas y aplicaciones de suplantación.
+
+**Takedowns en IPFS** - Se dirigen a operadores de gateways de IPFS o servicios de pinning. Resultado: El contenido malicioso de IPFS se desancla (unpin) o queda inaccesible a través de los gateways más comunes. Algunos ejemplos: sitios de phishing alojados en IPFS y contenido malicioso distribuido mediante almacenamiento descentralizado.
+
+## Visibilidad para el cliente y actualizaciones de estado
+
+Dentro de ChainPatrol, los clientes tienen una visibilidad clara de cada takedown:
+
+- **Estado actual** - Estado en tiempo real: `TODO`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED` o los estados de retractación
+- **Marcas de tiempo** - Línea de tiempo completa de todas las acciones principales y los cambios de estado
+- **Respuestas del proveedor** - Copias completas de los correos y las comunicaciones de los proveedores
+- **Evidencia de eliminación** - Confirmación cuando el contenido se eliminó con éxito
+
+Esto les da a los clientes una comprensión completa del avance y los resultados durante todo el ciclo de vida del takedown.
+
+## Seguridad y cumplimiento
+
+ChainPatrol se asegura de que todos los datos relacionados con los takedowns se manejen de forma segura y responsable:
+
+- **Almacenamiento seguro** - Los documentos legales se almacenan con sistemas seguros y controles de acceso
+- **Uso compartido limitado** - Los datos solo se comparten con los proveedores cuando se requiere de forma explícita
+- **Estándares de la industria** - Seguimos las mejores prácticas para proteger los datos de los clientes
+- **Confidencialidad** - Mantenemos una confidencialidad estricta durante todo el proceso
+
+## Preguntas frecuentes
+
+**¿Cómo sé si mi takedown tuvo éxito?**
+El takedown pasará al estado `COMPLETED` y verás la confirmación del proveedor en la línea de tiempo del takedown.
+
+**¿Por qué mi takedown tardó más de lo esperado?**
+Los tiempos de respuesta varían según la plataforma. Algunas actúan rápido, mientras que otras requieren documentación legal o tardan varios días en responder. Los proveedores de hosting y los registradores de dominios tienen tiempos de respuesta distintos, y algunas plataformas pueden tardar más que otras.
+
+**¿Qué pasa si el contenido vuelve a aparecer?**
+Si un contenido eliminado anteriormente reaparece, el takedown existente se **reactiva** y vuelve al estado `TODO`. ChainPatrol actuará de nuevo sobre él y volverá a presentar solicitudes hasta que el contenido se dé de baja por completo.
+
+**¿ChainPatrol puede garantizar la eliminación?**
+Ningún proveedor garantiza la eliminación en todos los casos, pero ChainPatrol trabaja para maximizar el éxito mediante envíos consistentes y precisos y un monitoreo continuo. Nuestras tasas de éxito varían según el proveedor, pero suelen ser muy altas para las amenazas reales.
+
+**¿Qué documentación tengo que aportar?**
+La mayoría de los takedowns requiere documentos legales como la **Letter of Authorization** (carta de autorización), el **Trademark Registration** (registro de marca) y los documentos de registro de la empresa. Los requisitos varían según el proveedor y se comunicarán durante el onboarding.
+
+## Puntos clave
+
+- Los takedowns ocurren automáticamente después del bloqueo: cada asset bloqueado con Takedowns habilitado recibe una solicitud de takedown sin intervención manual
+- El monitoreo con la **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando) confirma el éxito: los assets se ponen en la Watchlist durante los takedowns para que detectemos automáticamente cuándo quedan fuera de línea
+- Las retractaciones protegen contra los falsos positivos: si un asset se identifica como legítimo después de que empieza un takedown, enviamos solicitudes formales de retractación para evitar una eliminación indebida
+- El formato específico de cada proveedor aumenta el éxito: cada plataforma requiere un formato de envío distinto, y nosotros lo gestionamos automáticamente para maximizar las tasas de eliminación

@@ -1,0 +1,30 @@
+---
+title: Listar organizaciones del usuario
+openapi: "POST /user/orgs"
+---
+
+## Descripción general
+
+Lista las organizaciones a las que tiene acceso el usuario actual, junto con el estado de
+suscripción de cada una, qué servicios están habilitados (reportes, revisión, protección,
+**Takedowns** —solicitudes de baja de contenido fraudulento—, detección y monitoreo de dark web), el estado de conexión de las integraciones, si
+está habilitada la aprobación obligatoria de un administrador de la organización, el archivo adjunto de la
+**Letter of Authorization** (carta de autorización) a nivel de organización y cada **Trademark Registration** (registro de marca) a nivel de organización que esté cargado.
+
+## Notas
+
+- Cada servicio expone un indicador `active`; solo `takedowns` expone además
+  `automated`.
+- El objeto `integrations` informa qué integraciones de terceros están conectadas. `slack`,
+  `discord`, `vercel`, `intercom` y `moderation` son booleanos; `telegram` informa tanto un
+  indicador de conexión como una cantidad de grupos, ya que una organización puede tener varios grupos de
+  Telegram.
+- `legalDocuments` tiene una entrada `letterOfAuthorization` que informa si el documento está
+  presente, junto con su nombre de archivo y su URL. Su entrada `powerOfAttorney` está obsoleta: la
+  Letter of Authorization es ahora el único documento legal, y el campo devuelve un **Power of
+  Attorney** (poder legal) cargado antes de ese cambio. Se eliminará en una versión futura.
+- `trademarkRegistrations` es la lista completa de las marcas registradas a nivel de organización, con su oficina
+  emisora, su número de registro y un enlace al PDF del certificado cuando se ha cargado uno; úsala
+  para identificar qué clientes agregaron marcas registradas y cuáles no.
+- Los filtros opcionales `subscriptionStatus`, `services` y `obligatoryAdminApproval`
+  acotan el resultado del lado del servidor. Las organizaciones `INACTIVE` siempre se excluyen.

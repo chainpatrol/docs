@@ -1,0 +1,129 @@
+---
+title: Cómo evaluar las suspected threats
+description: "Responde las preguntas de evaluación más comunes, como la cantidad de amenazas confirmadas, de amenazas sospechosas (suspected threats) en dominios y de dominios en la Watchlist, con una sola solicitud a la API para cada una."
+---
+
+Cuando evalúas ChainPatrol por primera vez a través de la API, las preguntas suelen ser conteos:
+cuántas amenazas confirmadas, cuántas **Suspected Threats** (amenazas sospechosas detectadas automáticamente, todavía sin confirmar), cuántas en seguimiento, cuántas
+por encima de un umbral de confianza. Cada una de las que siguen es una sola solicitud con `includeTotal: true`, así que
+obtienes el número sin tener que paginar todos los resultados.
+
+<Warning>
+**No agregues un rango de fechas a menos que realmente lo necesites.** Todo filtro de fecha deja fuera el historial
+más antiguo, y cada endpoint filtra según una marca de tiempo distinta:
+
+| Endpoint | `startDate` / `endDate` (o equivalente) filtran según | Sin fechas |
+| --- | --- | --- |
+| [`/detection/list`](/es/external-api/detection-list) | cuándo se creó la suspected threat | todo |
+| [`/threats/list`](/es/external-api/threats-list) | cuándo se bloqueó la amenaza (`blockedAt`) | **solo el último día** |
+| [`/organization/watchlist`](/es/external-api/organization-watchlist-list) | cuándo tu organización reportó el asset | todo |
+| [`/metrics/summary`](/es/external-api/metrics-summary) | la marca de tiempo propia de cada métrica, y solo cuando se definen **ambas** fechas | todo el historial |
+</Warning>
+
+En todos los casos, excluye las suspected threats eliminadas con
+`{ "property": "deleted", "operator": "notIn", "value": ["deleted"] }`, porque
+`/detection/list` las incluye de forma predeterminada.
+
+## ¿Cuántas amenazas confirmadas tenemos?
+
+Una amenaza confirmada es un **Asset** (activo digital: URL, dirección, perfil, app, etc.) que ChainPatrol revisó y bloqueó. Si la protección
+no está activa para tu organización, las amenazas confirmadas quedan como **Pending Blocked** (bloqueo pendiente)
+en lugar de aplicarse, pero igual están confirmadas. Incluye ambas.
+
+```bash
+curl -X POST https://app.chainpatrol.io/api/v2/metrics/summary \
+  -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
+  -d '{ "slug": "your-org" }'
+```
+
+`metrics.newThreats` es el conteo de todo el historial, con `domainThreats`, `twitterThreats`,
+`telegramThreats` y `otherThreats` como desglose. Para listar las confirmadas
+entre tus suspected threats:
+
+```bash
+curl -X POST https://app.chainpatrol.io/api/v2/detection/list \
+  -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
+  -d '{
+    "slug": "your-org",
+    "limit": 100,
+    "includeTotal": true,
+    "filters": [
+      { "property": "blockStatus", "operator": "in", "value": ["blocked", "pending"] },
+      { "property": "deleted", "operator": "notIn", "value": ["deleted"] }
+    ]
+  }'
+```
+
+Los dos números pueden diferir: `newThreats` también cuenta las amenazas que tú mismo reportaste
+y que ningún detector produjo. Para listar todas las amenazas confirmadas sin importar la fuente, usa
+`/threats/list` con `includePending: true` y un `startDate` antiguo.
+
+## ¿Cuántas suspected threats en dominios tenemos?
+
+```bash
+curl -X POST https://app.chainpatrol.io/api/v2/detection/list \
+  -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
+  -d '{
+    "slug": "your-org",
+    "limit": 100,
+    "includeTotal": true,
+    "filters": [
+      { "property": "assetType", "operator": "in", "value": ["URL", "PAGE", "IPFS"] },
+      { "property": "deleted", "operator": "notIn", "value": ["deleted"] }
+    ]
+  }'
+```
+
+`total` cuenta suspected threats. Varias suspected threats pueden apuntar al mismo
+dominio, así que elimina los duplicados por `asset.id` si necesitas dominios únicos.
+
+## ¿Cuántos dominios hay en la Watchlist?
+
+```bash
+curl 'https://app.chainpatrol.io/api/v2/organization/watchlist?assetType=URL&includeTotal=true' \
+  -H 'X-API-KEY: <api-key>'
+```
+
+Omite `assetType` para obtener toda la **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando). Ese `total` coincide con
+`threatsWatchlisted` en `/metrics/summary`. El campo `reason` de cada elemento indica por qué está en
+seguimiento (`DEAD`, `PARKING`, `NOT_ENOUGH_EVIDENCE`, …).
+
+## ¿Cuántas suspected threats superan el 80% (o el 90%) de confianza?
+
+Usa el umbral sobre el `score` sin procesar, no el filtro `confidence`. Los niveles de confianza se
+agrupan a partir del puntaje según los umbrales propios de tu organización, así que `"high"` no es un
+porcentaje fijo.
+
+```bash
+curl -X POST https://app.chainpatrol.io/api/v2/detection/list \
+  -H 'Content-Type: application/json' -H 'X-API-KEY: <api-key>' \
+  -d '{
+    "slug": "your-org",
+    "limit": 100,
+    "minScore": 0.8,
+    "includeTotal": true,
+    "filters": [
+      { "property": "deleted", "operator": "notIn", "value": ["deleted"] }
+    ]
+  }'
+```
+
+`minScore` es inclusivo. Cámbialo a `0.9` para la pregunta del 90%, y pagina con
+`nextCursor` para listar todas las coincidencias.
+
+## Desde la CLI o un agente de IA
+
+Las mismas preguntas con la [CLI de ChainPatrol](/es/cli/commands/detections):
+
+```bash
+chainpatrol detections list --org your-org --block-status blocked,pending --include-total
+chainpatrol detections list --org your-org --asset-type URL,PAGE,IPFS --include-total
+chainpatrol orgs watchlist list --org your-org --asset-type URL --include-total
+chainpatrol detections list --org your-org --min-score 0.8 --include-total
+```
+
+La CLI no tiene una opción para excluir las suspected threats eliminadas, así que los totales de su `detections list`
+las incluyen. Usa las solicitudes a la API de arriba cuando el número exacto sea importante.
+
+El [servidor MCP de ChainPatrol](/es/mcp-server) incluye un prompt `detection_evaluation` que ejecuta todas
+estas consultas para una organización y reporta los conteos.
