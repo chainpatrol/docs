@@ -1,0 +1,106 @@
+---
+title: "Metrics"
+description: "Cómo ChainPatrol reporta el volumen de amenazas, los takedowns presentados y completados, y la mediana del tiempo de respuesta por marca, tipo de asset y períodos de tiempo personalizados"
+---
+
+## Descripción general
+
+<Info>
+**Metrics** (métricas) son los números y gráficos de alto nivel que ChainPatrol muestra para resumir cuántas amenazas estamos viendo, cuántas bloqueamos o dimos de baja y qué tan rápido estamos respondiendo durante un período de tiempo elegido.
+</Info>
+
+Se construyen consolidando la actividad de tu organización —reportes, amenazas sospechosas, **assets** (activos digitales: URL, direcciones, perfiles, apps, etc.) bloqueados y **takedowns** (solicitudes de baja de contenido fraudulento)— en resúmenes simples y fáciles de leer.
+
+### Por qué importa
+
+Las métricas te ayudan a responder **"¿Estamos protegidos?"** al mostrar el volumen de amenazas, la cobertura y la calidad de la respuesta a tus partes interesadas internas y, cuando está habilitado, a audiencias externas a través de tu **Security Portal** (portal de seguridad).
+
+## Características clave
+
+### Específicas de cada organización
+
+Las métricas siempre se calculan para una organización específica y reflejan solo los reportes, las amenazas y la actividad de takedowns de esa organización. Solo ves los datos de tu organización, sin visibilidad entre organizaciones, adaptados a tus marcas y assets, y que reflejan tu panorama de amenazas específico.
+
+### Acotadas en el tiempo
+
+Cada vista de métricas usa una ventana de tiempo (p. ej., "últimos 30 días" o un rango personalizado). Los períodos comunes incluyen los últimos 7 días, los últimos 30 días, los últimos 90 días y rangos de fechas personalizados. La misma métrica (p. ej., "New Threats", amenazas nuevas) puede verse muy distinta según el período que selecciones.
+
+### Filtrables
+
+Muchas métricas se pueden filtrar por marca y desglosar por:
+
+**Tipo de asset**: dominios, Twitter/X, Telegram, otras plataformas
+
+**Categoría de amenaza**: suplantación de marca, suplantación de empleados, phishing general, tipos de ataque específicos
+
+### Componentes
+
+**Conteos**: reportes recibidos, amenazas nuevas bloqueadas, amenazas en la **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando), takedowns presentados, takedowns completados
+
+**Desgloses**: amenazas por tipo de asset, amenazas por marca, amenazas sospechosas por fuente, distribuciones por categoría
+
+**Líneas de tiempo y velocidad**: amenazas bloqueadas por día, takedowns completados por día, mediana del tiempo hasta el takedown, análisis de tendencias
+
+## Qué incluye Metrics
+
+### Métricas principales de volumen
+
+- **Reports** (reportes): cuántos envíos recibió tu organización de usuarios, socios e integraciones
+- **New Threats**: cuántos assets se bloquearon como amenazas (dominios, perfiles sociales, canales de Telegram, etc.)
+- **Threats Watchlisted** (amenazas en la Watchlist): amenazas que estás siguiendo activamente (cuando un takedown no corresponde o está en espera)
+- **Takedowns Filed** (takedowns presentados): cuántas solicitudes de takedown inició tu organización
+- **Takedowns Completed** (takedowns completados): cuántas solicitudes de takedown se resolvieron con éxito
+
+### Desgloses de amenazas
+
+**Por tipo de asset:**
+
+- **Domain Threats** (amenazas en dominios): dominios y URL maliciosos bloqueados (sitios web de phishing, landing pages falsas, sitios de suplantación, aplicaciones web maliciosas)
+- **Twitter Threats** (amenazas en Twitter): amenazas bloqueadas en Twitter/X (cuentas de suplantación, publicaciones de estafa, cuentas de soporte falsas, sorteos fraudulentos)
+- **Telegram Threats** (amenazas en Telegram): amenazas bloqueadas en Telegram (canales de soporte falsos, grupos de estafa, cuentas de suplantación, bots de phishing)
+- **Other Threats** (otras amenazas): amenazas bloqueadas en todas las demás superficies compatibles (tiendas de apps, otras redes sociales, plataformas para desarrolladores, direcciones de correo electrónico, direcciones de blockchain)
+
+**Por marca:**
+
+Amenazas bloqueadas por marca dentro de tu organización, lo que muestra qué marcas son más atacadas. Úsalo para identificar las marcas más atacadas, asignar recursos de protección, hacer seguimiento de campañas dirigidas a una marca específica y comparar los niveles de amenaza en todo tu portafolio.
+
+### Métricas de series de tiempo y de velocidad
+
+**Threats Blocked Per Day** (amenazas bloqueadas por día): muestra cuántos assets se bloquearon cada día del rango seleccionado. Ayuda a identificar picos de amenazas, seguir patrones estacionales, medir la efectividad de la detección y detectar campañas coordinadas.
+
+**Takedowns Completed Per Day** (takedowns completados por día): muestra cuántos takedowns llegaron al estado `COMPLETED` cada día. Ayuda a seguir la velocidad de los takedowns, medir la capacidad de respuesta de los proveedores, identificar cuellos de botella y monitorear la eficiencia del equipo.
+
+**Median Time to Takedown** (mediana del tiempo hasta el takedown): se calcula desde que se crea una solicitud de takedown hasta que se marca como completada por primera vez. Está disponible como mediana general, por tipo de asset (dominios, redes sociales, etc.) y por categoría de amenaza (suplantación de marca vs. suplantación de empleados). Las medianas más bajas indican una eliminación más rápida de las amenazas y mejores relaciones con los proveedores.
+
+## Cómo se relaciona Metrics con otros conceptos
+
+**Assets y Asset Scans**: cuando los **Asset Scans** (escaneos de un asset) y las revisiones llevan a que se bloquee un asset, ese asset se suma a métricas como New Threats, las amenazas por tipo de asset y Threats Blocked Per Day. Los escaneos continuos y las actualizaciones de **liveness** (si el asset sigue online o ya no) garantizan que las métricas reflejen el estado actual de tu superficie de amenazas.
+
+**Amenazas / Suspected Threats** (amenazas sospechosas detectadas automáticamente, todavía sin confirmar): cada amenaza sospechosa o asset bloqueado se suma a conteos como las amenazas nuevas, las amenazas sospechosas por tipo y los dominios bloqueados. Las métricas resumen cuánta actividad maliciosa se está encontrando y neutralizando para tu organización a lo largo del tiempo.
+
+**Reports y Review** (reportes y revisión): los reportes que generan tu equipo o tus usuarios alimentan la métrica Reports. Los resultados de la revisión (p. ej., aprobar una amenaza como real y bloquearla) pasan a las métricas de amenazas y de takedowns. Muestra qué tan bien tu proceso de revisión le sigue el ritmo a las amenazas entrantes.
+
+**Takedowns**: los registros de takedowns alimentan Takedowns Filed, Takedowns Completed y la mediana del tiempo hasta el takedown por tipo de asset y por categoría. Estas métricas muestran qué tan rápido se eliminan las amenazas una vez identificadas.
+
+**Marcas y servicios**: las métricas se pueden filtrar por marca para mostrar qué marcas son las más atacadas. Habilitar servicios como la detección, la revisión, los takedowns y la **blocklist** (lista de bloqueo) suele aumentar la visibilidad en las métricas (más amenazas encontradas, bloqueadas y eliminadas). Un mayor número de amenazas no significa que estés menos protegido; significa que estás detectando más amenazas que siempre estuvieron ahí.
+
+## Ejemplos
+
+### Ejemplo 1: Resumen trimestral de amenazas
+
+Para un informe ejecutivo, seleccionas "Last 90 days" (últimos 90 días) en la página Metrics. El **Dashboard** (panel principal) muestra los reportes recibidos (245), las amenazas nuevas bloqueadas (187), los takedowns presentados (142) y los takedowns completados (128), además de gráficos de amenazas bloqueadas por día. Compartes estos números con la dirección para resumir la actividad maliciosa detectada y las acciones tomadas. Conclusiones clave: el 76% de los reportes terminó en amenazas bloqueadas, el 90% de los takedowns se completó y hubo un promedio de 2 amenazas bloqueadas por día.
+
+### Ejemplo 2: Amenazas en dominios vs. en redes sociales
+
+Para analizar el panorama de amenazas, comparas los conteos de amenazas del último mes: Domain Threats (45, por debajo de las 60 del mes anterior), Twitter Threats (30, estable), Telegram Threats (55, por encima de las 35 del mes anterior), Other Threats (20, estable). Ves que las amenazas en dominios disminuyeron mientras que las de Telegram aumentaron, y ajustas tus planes de monitoreo y comunicación en consecuencia: aumentas la frecuencia de monitoreo de Telegram, alertas a la comunidad sobre las estafas en Telegram e investigas por qué los atacantes cambiaron de plataforma.
+
+### Ejemplo 3: Análisis de la velocidad de los takedowns
+
+Para revisar el desempeño de los proveedores, analizas la mediana del tiempo hasta el takedown por tipo de asset: dominios (48 horas), Twitter (24 horas), Telegram (18 horas), tiendas de apps (72 horas). Conclusiones: las plataformas sociales responden más rápido que los proveedores de hosting, las tiendas de apps tienen los tiempos de respuesta más largos y Telegram es la que mejor responde. Acciones: enfocarte en mejorar la velocidad de los takedowns de dominios, investigar las demoras de las tiendas de apps y documentar las buenas prácticas de Telegram.
+
+## Puntos clave
+
+- Las métricas revelan brechas de protección: hacer seguimiento de las amenazas sospechosas por canal muestra dónde se concentran los atacantes, lo que te ayuda a priorizar el monitoreo en las plataformas con mayor actividad de amenazas
+- El análisis basado en el tiempo identifica patrones de campañas: los picos repentinos de amenazas sospechosas suelen indicar campañas coordinadas, mientras que los aumentos sostenidos sugieren un interés creciente de los atacantes
+- Las métricas de velocidad impulsan mejoras operativas: la mediana del tiempo hasta el bloqueo y los tiempos de finalización de los takedowns ayudan a identificar cuellos de botella en tu proceso de respuesta
+- El filtrado permite tomar decisiones estratégicas: desglosar las métricas por marca, tipo de asset o categoría de amenaza revela qué partes de tu organización enfrentan el mayor riesgo

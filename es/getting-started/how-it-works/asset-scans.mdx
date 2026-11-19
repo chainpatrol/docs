@@ -1,0 +1,112 @@
+---
+title: "Cómo funcionan los Asset Scans"
+description: "Cómo ChainPatrol ejecuta escaneos con marca de tiempo sobre URL, perfiles sociales, apps y direcciones cripto para detectar phishing, dar seguimiento a si siguen activos (liveness) y puntuar amenazas."
+---
+
+## Descripción general
+
+Un **Asset Scan** (escaneo de un asset) es una verificación de seguridad automatizada que ChainPatrol ejecuta sobre una superficie en línea que podría usarse en una estafa, como un sitio web, un perfil social, una ficha en una tienda de aplicaciones o una dirección cripto. Cada escaneo registra lo que observamos en un momento específico y evalúa el riesgo con una combinación de reglas de detección y señales de IA.
+
+<Info>
+Los Asset Scans resuelven un problema simple: internet cambia constantemente, los atacantes iteran rápido y la revisión manual no escala. Los escaneos nos permiten monitorear grandes volúmenes de **assets** (activos digitales: URL, direcciones, perfiles, apps, etc.), detectar amenazas recién surgidas y dar seguimiento a si el contenido riesgoso sigue activo.
+</Info>
+
+## Qué escaneamos
+
+ChainPatrol admite muchos tipos de assets en todo el entorno digital:
+
+- **Propiedades web** - URL y páginas alojadas (incluidas las cadenas de redirección y las páginas de destino)
+- **Perfiles sociales y de contenido** - Twitter/X, Telegram, YouTube, Reddit, Medium, Farcaster y más
+- **Fichas de aplicaciones y extensiones** - Google Play, Apple App Store, Mozilla Add-ons y otros marketplaces
+- **Direcciones cripto** - Identificadores normalizados de contratos/direcciones (p. ej., estilo CAIP-2) con el contexto de la cadena
+
+## Asset vs. Asset Scan
+
+Entender la diferencia es clave para saber cómo funciona nuestro monitoreo:
+
+**Asset** - Un asset es la cosa en sí: una URL, un nombre de usuario, una ficha o una dirección. Ejemplo: `https://fake-metamask.com`
+
+**Asset Scan** - Un Asset Scan es una instantánea con marca de tiempo de ese asset. El mismo asset puede escanearse muchas veces, y los escaneos forman una línea de tiempo de cambios. Ejemplo: Escaneo n.º 1 (1 de enero), Escaneo n.º 2 (3 de enero), Escaneo n.º 3 (5 de enero)
+
+Varios escaneos del mismo asset crean una línea de tiempo histórica, lo que nos permite dar seguimiento a los cambios, detectar cuándo las amenazas se activan o se dan de baja, y monitorear el comportamiento del asset a lo largo del tiempo.
+
+## Cuándo se ejecutan los escaneos
+
+Los escaneos se activan de tres formas principales:
+
+**Automáticamente** - Los escaneos se ejecutan cuando las fuentes de detección de ChainPatrol sacan a la luz algo relevante, cuando se agrega un asset (p. ej., mediante un reporte, el onboarding o la ingesta por API) y durante el monitoreo de la **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando), en el que los assets se vuelven a escanear con una programación que se adapta con el tiempo (más frecuente al principio, menos frecuente a medida que el asset se mantiene estable, y los assets bloqueados se escanean con menos frecuencia para reducir el ruido).
+
+**A demanda** - Los escaneos manuales o activados por API ocurren cuando un miembro del equipo inicia un nuevo escaneo desde la interfaz o cuando tus sistemas envían assets mediante la API.
+
+**Verificaciones continuas de Liveness** (si el asset sigue online o ya no) - Para ciertos assets alojados en plataformas (p. ej., creadores de sitios o marketplaces específicos), ChainPatrol vuelve a comprobar periódicamente si un asset previamente bloqueado sigue siendo accesible.
+
+## Cómo funcionan los escaneos
+
+Nuestro proceso de escaneo sigue un enfoque sistemático para evaluar las amenazas con eficiencia y precisión:
+
+1. **Normalizar y preparar** - Normalizamos la entrada (p. ej., resolvemos las URL o los identificadores canónicos), creamos un registro del escaneo y ejecutamos una primera pasada de verificaciones que no requieren enriquecimiento externo.
+
+2. **Enriquecer con contexto** - Según el tipo de asset, recopilamos los datos relevantes:
+
+   **Enriquecimientos de URL / páginas web:**
+   - Resultados de la solicitud HTTP (estado, redirecciones, enlaces extraídos, metadatos básicos como título y descripción)
+   - Captura opcional en navegador (captura de pantalla y señales del DOM cuando están disponibles)
+   - Contexto de red y de registro (DNS, TLS, WHOIS/RDAP cuando está habilitado)
+
+   **Enriquecimientos de plataforma/API:**
+   - Detalles del perfil y de la ficha (descripciones, campos de autor y publicador, señales de seguidores e interacción)
+
+   <Tip>
+   Algunos enriquecimientos se ejecutan solo cuando las señales previas sugieren un riesgo elevado, para mantener la eficiencia de los escaneos.
+   </Tip>
+
+3. **Análisis de seguridad** - Evaluamos el asset con reglas y señales de IA/ML en busca de patrones como phishing, suplantación y mecánicas de estafa. Esto incluye indicadores basados en el contenido y también visuales/de comportamiento cuando están disponibles.
+
+4. **Etiquetas, puntuaciones y Liveness** - Cada escaneo se marca con etiquetas y genera puntuaciones para la priorización:
+
+   **Etiquetas comunes:**
+   - Captcha detected (captcha detectado)
+   - Parked domain (dominio estacionado)
+   - Provider suspended (suspendido por el proveedor)
+   - Brand impersonation (suplantación de marca)
+   - Wallet drainer detected (wallet drainer detectado)
+
+   **Estado de Liveness:**
+   - **`ALIVE`** - El asset está activo y accesible
+   - **`DEAD`** - El asset ya no es accesible
+   - **`UNKNOWN`** - No concluyente (no equivale a "seguro")
+
+5. **Descubrimiento de relaciones** - En las superficies web y sociales compatibles, los escaneos pueden extraer enlaces salientes y redirecciones para ayudarte a rastrear la infraestructura relacionada y descubrir redes de amenazas.
+
+## Cómo se usan los resultados de los escaneos
+
+- **Triaje y revisión** - Los escaneos aportan evidencia (metadatos, redirecciones, enlaces, capturas de pantalla) para que los revisores puedan decidir si bloquear, permitir, investigar más a fondo o iniciar **Takedowns** (solicitudes de baja de contenido fraudulento)
+- **Detección y automatización** - Los escaneos de alto riesgo alimentan los flujos de detección y los pipelines de monitoreo; las acciones varían según la configuración y las políticas
+- **Higiene del monitoreo** - Los flujos de Watchlist y de Liveness mantienen actualizado tu conjunto de monitoreo y destacan los cambios significativos a lo largo del tiempo
+
+## Qué ves en el producto
+
+Nuestra plataforma ofrece una visibilidad integral de los resultados de los escaneos y del historial de los assets:
+
+**Línea de tiempo por asset** - Un historial completo de los escaneos de cada asset, que incluye los cambios en el estado de Liveness, los cambios notables en el contenido o el comportamiento, la evolución de la puntuación de riesgo y las etiquetas agregadas o eliminadas.
+
+**Vistas de detalle del escaneo** - Analiza a fondo cada escaneo con artefactos de evidencia (capturas de pantalla, metadatos), las etiquetas aplicadas y sus fuentes, las señales de puntuación y las coincidencias de reglas, y los datos de enriquecimiento (redirecciones, enlaces, información de red).
+
+**Paneles de organización/marca** - Una vista general de alto nivel que muestra la actividad reciente y las nuevas amenazas, los assets de mayor riesgo que requieren atención, la cobertura de monitoreo en las distintas plataformas y el análisis de tendencias a lo largo del tiempo.
+
+**Reportes y métricas** - Información accionable que incluye el volumen y la frecuencia de los escaneos, las métricas de velocidad de detección, la cantidad de assets riesgosos que siguen activos y las tasas de éxito de los takedowns.
+## Eficiencia y escala de los escaneos
+
+- **Programación inteligente** - Frecuencia de escaneo adaptativa según el riesgo y la estabilidad del asset
+- **Enriquecimiento selectivo** - El análisis profundo se activa solo cuando las señales de riesgo lo justifican
+- **Procesamiento en paralelo** - Varios assets se escanean simultáneamente para lograr una cobertura más rápida
+- **Contexto histórico** - Análisis basado en la línea de tiempo para detectar cambios de comportamiento
+
+Nuestra infraestructura de escaneo procesa miles de assets a diario y ofrece inteligencia de amenazas en tiempo real, manteniendo la precisión y minimizando los falsos positivos.
+
+## Puntos clave
+
+- Un asset, muchos escaneos: la misma URL puede escanearse varias veces para crear una línea de tiempo que muestra cómo evolucionan las amenazas o cuándo se dan de baja
+- El enriquecimiento selectivo ahorra recursos: el análisis profundo solo se activa cuando las señales iniciales sugieren un riesgo elevado, lo que mantiene la rapidez de los escaneos en los assets de bajo riesgo
+- El seguimiento de Liveness permite la automatización: saber cuándo un asset pasa de `ALIVE` a `DEAD` nos permite confirmar automáticamente los takedowns exitosos
+- El descubrimiento de relaciones revela campañas: extraer enlaces y redirecciones de los escaneos te ayuda a rastrear redes de amenazas completas en lugar de bloquear los sitios uno por uno

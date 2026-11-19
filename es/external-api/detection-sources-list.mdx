@@ -1,0 +1,17 @@
+---
+title: Listar fuentes de detección
+openapi: "GET /detection/sources"
+---
+
+## Descripción general
+
+Lista el catálogo de fuentes de detección de amenazas que ChainPatrol puede ejecutar para tu
+organización. Cada entrada incluye los alcances que admite la fuente, si funciona
+por extracción (pull) o por envío (push), su alcance de marca, los tipos de asset que monitorea y el
+JSON Schema que debe cumplir su objeto `config`.
+
+Se omiten las fuentes que no aplican a la industria de tu organización.
+
+Usa este endpoint para descubrir las claves `source` válidas y la forma de su configuración antes de
+llamar a [Crear configuración de detección](/es/external-api/detection-configs-create) o a
+[Actualizar configuración de detección](/es/external-api/detection-configs-update).

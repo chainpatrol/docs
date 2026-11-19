@@ -1,0 +1,20 @@
+---
+title: Memory
+description: El adaptador Storage.memory() es la caché en memoria predeterminada de ThreatDetector, útil para pruebas y desarrollo cuando no se necesita persistencia.
+---
+
+El adaptador `Storage.memory()` guarda los datos en memoria. Es el adaptador predeterminado cuando creas
+una nueva instancia de `ThreatDetector`.
+
+No recomendamos usar este adaptador en producción, ya que no conserva los datos entre sesiones. Pero
+es útil para pruebas y desarrollo.
+
+## Ejemplo
+
+```js
+import { Storage } from "@chainpatrol/sdk";
+
+const storage = Storage.memory({
+  quota: 1024 * 1024 * 2, // 2MB
+});
+```

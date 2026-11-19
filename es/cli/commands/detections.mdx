@@ -1,0 +1,193 @@
+---
+title: Comando detections — ejecuta y administra configuraciones de detección
+sidebarTitle: detections
+icon: radar
+description: "Ejecuta configuraciones de detección de ChainPatrol bajo demanda, valida que sigan devolviendo resultados, detecta desviaciones en las consultas, lista amenazas sospechosas y actualiza una configuración."
+---
+
+```bash
+chainpatrol detections <healthcheck|validate|drift|run|list|configs>
+```
+
+Todos los subcomandos operan en el ámbito de una organización. Pasa `--org <slug>` una vez y queda
+[guardado como tu valor predeterminado](/es/cli/installation#definir-una-organización-predeterminada).
+
+## detections healthcheck
+
+Ejecuta una verificación de estado sobre todas las configuraciones de detección de una organización.
+
+```bash
+chainpatrol detections healthcheck --org <slug> [options]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--source <key>` | Filtra por clave de fuente de detección. |
+| `--min-results <n>` | Cantidad mínima de resultados recientes que debe haber producido una configuración. |
+| `--lookback-hours <n>` | Ventana de tiempo hacia atrás, en horas. |
+| `--run` | Ejecuta las configuraciones de detección antes de validarlas. |
+| `--include-disabled` | Incluye las configuraciones deshabilitadas. |
+
+```bash
+chainpatrol detections healthcheck --org acme --run
+chainpatrol detections healthcheck --org acme --run --min-results 1 --lookback-hours 168
+chainpatrol --json detections healthcheck --org acme --run
+```
+
+Un resultado no saludable termina con el [código `6`](/es/cli/output#códigos-de-salida): la verificación se ejecutó bien,
+pero algo anda mal. Por eso puedes usarlo directamente como control (gate) de CI.
+
+## detections validate
+
+Valida que las configuraciones de detección sigan produciendo los resultados que esperas, sin el
+informe de estado que lo acompaña. Acepta las mismas opciones que `healthcheck`.
+
+```bash
+chainpatrol detections validate --org acme --source urlscan
+chainpatrol detections validate --org acme --min-results 5
+```
+
+## detections drift
+
+Muestra señales de desviación (drift): configuraciones que devuelven cero resultados, configuraciones
+que se volvieron ruidosas y consultas desactualizadas.
+
+```bash
+chainpatrol detections drift --org <slug> [options]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--source <key>` | Filtra por clave de fuente de detección. |
+| `--config-id <n>` | Filtra por ID de configuración. |
+| `--lookback-hours <n>` | Ventana de tiempo hacia atrás, en horas. |
+| `--include-disabled` | Incluye las configuraciones deshabilitadas. |
+
+```bash
+chainpatrol detections drift --org acme --lookback-hours 168
+chainpatrol detections drift --org acme --explain --output markdown
+```
+
+Agrega `--explain` para obtener la recomendación detrás de cada señal, y no solo los conteos.
+
+## detections run
+
+Ejecuta una o más configuraciones de detección bajo demanda.
+
+```bash
+chainpatrol detections run --org <slug> [options]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--config-id <n>` | Ejecuta una configuración específica. |
+| `--source <key>` | Filtra por clave de fuente de detección. |
+| `--include-disabled` | Incluye las configuraciones deshabilitadas. |
+| `--dry-run` | Muestra una vista previa sin ejecutar. |
+
+```bash
+chainpatrol detections run --org acme --source google_search
+chainpatrol detections run --org acme --config-id 42
+```
+
+## detections list
+
+Lista las amenazas sospechosas recientes (resultados sin confirmar de la detección automática), con los mismos
+filtros que la página **Suspected Threats** de la app.
+La confianza se devuelve como un nivel legible para personas, en lugar de un puntaje sin procesar.
+
+```bash
+chainpatrol detections list --org <slug> [filters]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--limit <n>` | Tamaño de página, 1–100. El valor predeterminado es 50. |
+| `--cursor <n>` | Cursor de paginación. |
+| `--search <q>` | Busca por contenido de la amenaza. |
+| `--source <list>` | Lista separada por comas de claves de fuente de detección. |
+| `--confidence <list>` | Lista separada por comas: `none`, `low`, `medium`, `high`. |
+| `--asset-status <list>` | Lista separada por comas: `BLOCKED`, `ALLOWED`, `UNKNOWN`. |
+| `--asset-type <list>` | Lista separada por comas de tipos de **Asset** (activo digital: URL, dirección, perfil, app, etc.). |
+| `--brand <ids>` | Lista separada por comas de IDs de marca. |
+| `--liveness <list>` | Lista separada por comas: `ALIVE`, `DEAD`, `UNKNOWN`. |
+| `--watchlist <list>` | Lista separada por comas: `ENABLED`, `DISABLED`. |
+| `--reported <list>` | Lista separada por comas: `reported`, `not_reported`. |
+| `--country-code <list>` | Lista separada por comas de códigos de país ISO de 2 letras. |
+| `--only-deleted` | Devuelve solo las amenazas sospechosas con eliminación lógica (soft-deleted). Sin esta opción, se devuelven tanto las eliminadas como las no eliminadas. |
+| `--exclude-deleted` | Deja fuera las amenazas sospechosas con eliminación lógica (soft-deleted), para que los totales coincidan con los de la app. No se puede combinar con `--only-deleted`. |
+| `--block-status <list>` | Lista separada por comas: `blocked`, `pending`. Las dos juntas seleccionan todas las amenazas confirmadas, incluidas las **Pending Blocked** (bloqueo pendiente) de organizaciones sin protección activa. |
+| `--min-score <n>` | Solo amenazas sospechosas con un puntaje sin procesar de al menos `n` (0–1). Usa esta opción en lugar de `--confidence` para un punto de corte fijo, como `0.8`. |
+| `--max-score <n>` | Solo amenazas sospechosas con un puntaje sin procesar de como máximo `n` (0–1). |
+| `--include-total` | También muestra cuántas amenazas sospechosas coinciden en todas las páginas. |
+| `--from <iso>` / `--to <iso>` | Rango de fechas (ISO 8601) según cuándo se creó la amenaza sospechosa. Omite ambas para incluir todas las amenazas sospechosas. |
+
+Cada fila muestra la confianza y el puntaje sin procesar. Los bloqueos pendientes se muestran como `PENDING_BLOCKED`
+en lugar de `UNKNOWN`.
+
+```bash
+chainpatrol detections list --org acme --confidence medium,high
+chainpatrol detections list --org acme --source twitter --liveness ALIVE
+chainpatrol detections list --org acme --reported not_reported --watchlist ENABLED
+chainpatrol detections list --org acme --brand 12,34 --country-code US,GB
+chainpatrol detections list --org acme --min-score 0.8 --include-total
+chainpatrol detections list --org acme --block-status blocked,pending --include-total
+```
+
+Consulta [Cómo evaluar las suspected threats](/es/external-api/evaluating-detections) para las preguntas
+habituales sobre conteos.
+
+## configs list
+
+Lista las configuraciones de detección disponibles para tu organización. `chainpatrol configs list` es un
+atajo de nivel superior para `chainpatrol detections configs list`.
+
+```bash
+chainpatrol configs list --org acme
+chainpatrol detections configs list --org acme
+chainpatrol --json configs list --org acme
+```
+
+## detections configs update
+
+Actualiza el estado, el título, la programación cron o la consulta de una configuración existente.
+
+```bash
+chainpatrol detections configs update --org <slug> --config-id <n> [options]
+```
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--config-id <n>` | ID de la configuración. Obligatorio. |
+| `--enable` / `--disable` | Habilita o deshabilita la configuración. |
+| `--title <text>` | Nuevo título. |
+| `--description <text>` | Nueva descripción. |
+| `--cron <expr>` | Nueva expresión CRON. |
+| `--set key=value` | Modifica un valor dentro de la configuración. Se puede repetir. |
+| `--merge-config` | Combina las claves de `--set` con la configuración existente. El valor predeterminado es true. |
+| `--dry-run` | Muestra una vista previa sin aplicar los cambios. |
+
+Los valores de `--set` se interpretan: `true`, `false`, `null` y los números se convierten en sus tipos JSON,
+`{...}` y `[...]` se interpretan como JSON, y todo lo demás queda como cadena de texto.
+
+```bash
+chainpatrol detections configs update --org acme --config-id 42 --disable
+chainpatrol detections configs update --org acme --config-id 42 \
+  --set query=brand-phishing --set maxResults=100
+chainpatrol detections configs update --org acme --config-id 42 \
+  --set query="phishing site" --dry-run --output json
+```
+
+También se acepta `detections configs run`, que se comporta igual que `detections run`.
+
+## Relacionado
+
+- [`GET /organization/detections`](/es/external-api/detection-list)
+- [`GET /organization/detection-configs`](/es/external-api/detection-configs-list)
+- [`POST /organization/detection-configs/{id}`](/es/external-api/detection-configs-update)
+- [Concepto de Suspected Threats](/es/concepts/detections)

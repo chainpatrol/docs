@@ -1,0 +1,48 @@
+---
+title: "Autenticación de la External API"
+description: "Autentica las solicitudes a la External API de ChainPatrol con un encabezado X-API-KEY, crea una clave de API desde tu dashboard y elige acceso de solo lectura o de lectura y escritura."
+---
+
+Usamos **claves de API** para autenticar las solicitudes. Los propietarios y administradores
+de la organización pueden crear una desde **Developer › API Keys** (claves de API) en el
+[**Dashboard** (panel principal) de ChainPatrol](https://app.chainpatrol.io/admin). Consulta
+[Obtén tu clave de API](/es/general/api-key) para ver una guía paso a paso.
+
+## Cómo autenticar una solicitud
+
+Para autenticar una solicitud, debes incluir en ella un encabezado `X-API-KEY`
+con el valor de tu clave de API:
+
+```bash
+'X-API-KEY': '<your api key>'
+```
+
+## Permisos de la clave
+
+Cada clave de API tiene uno de dos permisos, que se elige al crearla:
+
+| Permiso                                          | Qué puede hacer la clave                                                                 |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| **Read only** (solo lectura; es el predeterminado) | Consultar y exportar datos                                                               |
+| **Read & write** (lectura y escritura)           | Todo lo que puede hacer una clave de solo lectura, más los endpoints que modifican datos |
+
+Para enviar reportes se necesita una clave **Read & write**. Lo mismo aplica a cualquier otro endpoint que
+cree o modifique datos, como [Crear reporte](/es/external-api/report-create),
+[Enviar asset](/es/external-api/asset-submit), [Crear disputa](/es/external-api/dispute-create),
+y agregar, actualizar o quitar [assets de la organización](/es/external-api/organization-assets-add)
+(activos digitales: URL, direcciones, perfiles, apps, etc.) y [grupos de assets](/es/external-api/organization-asset-groups-create).
+
+Si llamas a uno de ellos con una clave de solo lectura, se devuelve `403 Forbidden` con un mensaje como este:
+
+```text
+"reportCreate" changes data, and this API key is read-only. Create an API key with read & write access to make changes.
+```
+
+El permiso de una clave no se puede cambiar después de crearla. Para obtener acceso de escritura, crea una
+clave nueva con **Read & write** seleccionado, cambia tu integración para que la use y luego revoca la
+clave anterior.
+
+<Note>
+  Las organizaciones de integración solo pueden crear claves de solo lectura. Si tu organización necesita
+  acceso de escritura, escribe a [support@chainpatrol.io](mailto:support@chainpatrol.io).
+</Note>

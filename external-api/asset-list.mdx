@@ -51,7 +51,7 @@ When using time-based filtering (e.g., fetching only the last 5 minutes of block
 
 ### Recommended Approaches
 
-1. **Monitor allowlist and unknown list for removals**: Check both the allowlist and unknown list endpoints periodically to detect assets that have been removed from the blocklist.
+1. **Monitor allowed and unknown assets for removals**: Call `POST /asset/list` periodically with `status` set to `ALLOWED` and to `UNKNOWN` to detect assets that have been removed from the blocklist.
 
 2. **Periodic full sync**: Perform a complete sync of the full blocklist at regular intervals (e.g., hourly or daily) to catch any missed changes.
 

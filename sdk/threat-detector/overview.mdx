@@ -15,7 +15,7 @@ import { ThreatDetector, Storage } from "@chainpatrol/sdk";
 const detector = new ThreatDetector({
   mode: "cloud", // 'cloud' | 'local' (default: 'cloud')
 
-  // Optional: Specify a custom API key (only available for 'cloud' mode)
+  // Required in 'cloud' mode: your ChainPatrol API key
   apiKey: "YOUR_API_KEY",
 
   // Optional: Configure a proxy server (only available for 'cloud' mode)
@@ -27,7 +27,8 @@ const detector = new ThreatDetector({
   // storage: Storage.memory(),
 
   // Optional: Specify a custom redirect URL
-  redirectUrl: "https://app.chainpatrol.io/warning",
+  // (default: "https://app.chainpatrol.io/preview")
+  redirectUrl: "https://acme.com/blocked",
 });
 ```
 

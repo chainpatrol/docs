@@ -1,0 +1,62 @@
+---
+icon: github
+title: GitHub
+description: Instala la GitHub App de ChainPatrol para monitorear pull requests, issues y discussions en busca de enlaces de estafa y proteger a tu comunidad de código abierto del phishing.
+---
+
+## Descripción general
+
+Esta guía te ayudará a conectar tus repositorios de GitHub con ChainPatrol. Una vez conectados, ChainPatrol monitoreará la actividad de tus repositorios y ayudará a proteger a tu comunidad de los enlaces de estafa y del contenido malicioso que se comparte en pull requests, discussions e issues.
+
+## Instala la GitHub App
+
+Visita la [página pública de la GitHub App de ChainPatrol](https://github.com/apps/chainpatrol):
+
+1. Haz clic en "Install"
+2. Selecciona la cuenta de GitHub
+3. Elige a qué repositorios le darás acceso a ChainPatrol:
+   - Instalar en todos los repositorios (recomendado para una protección completa)
+   - O seleccionar repositorios específicos
+4. Revisa los permisos que solicita ChainPatrol
+5. Haz clic en "Install" para autorizar la conexión
+
+<Warning>
+  **Importante**: Asegúrate de que todos tus repositorios públicos también estén
+  agregados a los activos de tu organización en **Brand Assets** (tu Allowlist:
+  los dominios, cuentas y direcciones oficiales de tu marca), en la barra lateral
+  del **Dashboard** (panel principal), para tener una cobertura de protección completa.
+</Warning>
+
+## Qué esperar después de conectar
+
+Una vez conectado, ChainPatrol hará lo siguiente:
+
+- **Monitorear pull requests**: Escanea automáticamente los enlaces compartidos en los comentarios y las descripciones de los PR
+- **Vigilar las discussions**: Revisa los enlaces publicados en las discussions del repositorio en busca de posibles estafas
+- **Revisar los issues**: Analiza los enlaces en los comentarios y las descripciones de los issues en busca de contenido malicioso
+- **Protección en tiempo real**: Envía los enlaces sospechosos a ChainPatrol para su revisión inmediata
+- **Respuesta automatizada**: Agrega los enlaces de estafa confirmados a nuestra **Blocklist** (lista de bloqueo) global
+- **Protección de la comunidad**: Oculta los comentarios e issues de estafa para proteger a tu comunidad
+- **Integración fluida**: Funciona en segundo plano sin interrumpir tu flujo de trabajo de desarrollo
+
+La app de GitHub solo monitoreará los repositorios públicos y no accederá a tu código privado ni a información sensible.
+
+## Requisitos de los repositorios
+
+Para una protección óptima:
+
+- Los repositorios deben ser públicos (ChainPatrol se enfoca en proteger comunidades públicas)
+- Habilita Issues y Discussions si quieres una cobertura de monitoreo completa
+- Asegúrate de que la app tenga los permisos necesarios para leer y moderar contenido
+
+## ¿Necesitas ayuda?
+
+Si tienes algún problema durante el proceso de conexión:
+
+- Asegúrate de tener permisos de administrador tanto en tu organización de GitHub como en tu organización de ChainPatrol
+- Verifica que los repositorios que quieres proteger sean públicos
+- Intenta actualizar la página y volver a realizar la conexión
+- Comprueba que Issues y Discussions estén habilitados en tus repositorios
+- Contacta al soporte de ChainPatrol si los problemas continúan
+
+¡Eso es todo! Tus repositorios de GitHub ahora están protegidos por ChainPatrol, lo que ayuda a mantener a tu comunidad a salvo de estafas y enlaces maliciosos.

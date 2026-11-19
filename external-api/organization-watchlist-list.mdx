@@ -68,14 +68,14 @@ data = response.json()
 
 | Parameter       | Type      | Required | Default | Description                                                                                                               |
 | --------------- | --------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `slug`          | `string`  | No       | -       | Organization slug. Required only when your credentials can reach more than one organization.                              |
-| `assetType`     | `string`  | No       | -       | Filter by asset type, for example `URL` or `TWITTER`.                                                                     |
-| `query`         | `string`  | No       | -       | Only assets whose content contains this text (case-insensitive).                                                          |
-| `reportedSince` | `string`  | No       | -       | ISO 8601. Only assets your organization reported at or after this time.                                                   |
-| `reportedUntil` | `string`  | No       | -       | ISO 8601. Only assets your organization reported at or before this time.                                                  |
-| `includeTotal`  | `boolean` | No       | `false` | Also return `total`: how many watchlisted assets match across all pages. Ask on the first page only.                      |
-| `per_page`      | `number`  | No       | `100`   | Page size, 1–1000.                                                                                                        |
-| `next_page`     | `string`  | No       | -       | Cursor from the previous response.                                                                                        |
+| `slug`          | `string`  | ❌ No       | -       | Organization slug. Required only when your credentials can reach more than one organization.                              |
+| `assetType`     | `string`  | ❌ No       | -       | Filter by asset type, for example `URL` or `TWITTER`.                                                                     |
+| `query`         | `string`  | ❌ No       | -       | Only assets whose content contains this text (case-insensitive).                                                          |
+| `reportedSince` | `string`  | ❌ No       | -       | ISO 8601. Only assets your organization reported at or after this time.                                                   |
+| `reportedUntil` | `string`  | ❌ No       | -       | ISO 8601. Only assets your organization reported at or before this time.                                                  |
+| `includeTotal`  | `boolean` | ❌ No       | `false` | Also return `total`: how many watchlisted assets match across all pages. Ask on the first page only.                      |
+| `per_page`      | `number`  | ❌ No       | `100`   | Page size, 1–1000.                                                                                                        |
+| `next_page`     | `string`  | ❌ No       | -       | Cursor from the previous response.                                                                                        |
 
 <Note>
 `reportedSince` and `reportedUntil` filter on when **your organization reported**

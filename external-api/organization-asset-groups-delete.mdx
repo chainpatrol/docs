@@ -425,9 +425,9 @@ await deleteGroupWithAudit(4, "admin@example.com", "Consolidating group structur
 
 ## Use Cases
 
-### Clean Up Unused Groups
+### Clean Up Small Groups
 
-Remove groups that haven't been used in a while:
+Remove groups that have 3 assets or fewer. The assets in these groups stay in your organization, without a group:
 
 ```typescript
 async function cleanupUnusedGroups() {

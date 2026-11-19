@@ -1,0 +1,167 @@
+---
+title: "Allowlist"
+description: "Cómo ChainPatrol registra los dominios, wallets y cuentas de redes sociales de confianza que pertenecen a la marca para reducir los falsos positivos y servir como referencia base para la detección de phishing"
+---
+
+## Descripción general
+
+Una **allowlist** (lista de permitidos) es una lista curada de **assets** (activos digitales: URL, direcciones, perfiles, apps, etc.) conocidos y de confianza que se reconocen explícitamente como legítimos dentro de ChainPatrol.
+
+<Info>
+Los assets agregados a la allowlist se consideran **oficiales o aprobados** y se tratan de forma distinta a los assets desconocidos o sospechosos durante la detección y el análisis de amenazas.
+</Info>
+
+ChainPatrol puede identificar automáticamente los assets legítimos mediante integraciones; por ejemplo, la [integración con Vercel](/es/integration/vercel) confirma qué despliegues de Vercel pertenecen a tu organización, lo que reduce los falsos positivos y acelera el proceso de revisión.
+
+Incluir assets en la allowlist ayuda a ChainPatrol a distinguir entre el contenido genuino que pertenece a la marca y la posible suplantación o el abuso.
+
+A diferencia de las **blocklists** (listas de bloqueo), que se enfocan en el contenido malicioso, las allowlists definen lo que **se sabe que es seguro**.
+
+## Por qué usamos una allowlist en ChainPatrol
+
+Las allowlists cumplen un papel fundamental para mejorar tanto la **precisión de la detección** como la **calidad de las señales**.
+
+### Doble propósito
+
+**Exclusión de la detección** - Cuando un asset está en la allowlist, queda excluido de la detección automática de amenazas. Esto evita que los assets legítimos que pertenecen a la marca se marquen por error como suplantación, reduce los falsos positivos, elimina investigaciones innecesarias y mejora la eficiencia del equipo. Por ejemplo, tu sitio web oficial `example.com` está en la allowlist, por lo que nunca se marcará como un sitio de phishing, aunque las reglas de detección normalmente se activarían con las palabras clave relacionadas con la marca.
+
+**Referencia base** - Los assets incluidos en la allowlist se usan como puntos de referencia al analizar contenido potencialmente malicioso. ChainPatrol puede comparar una página sospechosa de phishing con un sitio web oficial incluido en la allowlist para determinar si se está copiando la identidad de marca, si se está imitando el diseño, si se está duplicando el contenido y si se están robando elementos visuales. Por ejemplo, se detecta un sitio sospechoso, `examp1e.com`. ChainPatrol lo compara con tu `example.com`, que está en la allowlist, e identifica un 95% de similitud visual, un uso idéntico del logo y una estructura de página copiada, lo que da como resultado una detección de suplantación de marca de alta confianza.
+
+Este doble papel (la exclusión de la detección y el uso como referencia base de confianza) hace que las allowlists sean esenciales para un análisis confiable de la suplantación de marca.
+
+## ¿Qué se puede incluir en la allowlist?
+
+En ChainPatrol, **cualquier tipo de asset puede incluirse en la allowlist**:
+
+- **Dominios y URL** - Sitios web y aplicaciones web oficiales
+- **Cuentas de redes sociales** - Cuentas verificadas de la marca y de empleados
+- **Páginas de aplicaciones** - Fichas en tiendas de aplicaciones y contenido alojado
+- **Entornos de desarrollo** - Entornos de pruebas, staging y QA
+- **Despliegues de vista previa** - URL de vista previa de Vercel, Netlify y otros
+- **Direcciones de blockchain** - Contratos inteligentes y wallets oficiales
+- **Direcciones de correo electrónico** - Correos oficiales de la empresa y del equipo
+- **Otros assets** - Cualquier asset controlado legítimamente por tu organización
+
+La inclusión en la allowlist no está limitada por plataforma ni por categoría de asset, siempre que se sepa que el asset está controlado legítimamente por la organización o la marca.
+
+## ¿Qué se debe y qué no se debe incluir en la allowlist?
+
+### Qué sí debe incluirse en la allowlist ✅
+
+Assets que son **propiedad** de la organización o de sus marcas, o que estas **controlan u operan intencionalmente**:
+
+**Sitios web oficiales** - Sitio web principal de la empresa, sitios web de productos, sitios de documentación, portales de soporte, landing pages de marketing. Ejemplo: `company.com`, `docs.company.com`, `support.company.com`
+
+**Cuentas verificadas de redes sociales** - Cuentas oficiales de Twitter/X, servidores oficiales de Discord, canales oficiales de Telegram, canales oficiales de YouTube, cuentas verificadas de empleados. Ejemplo: `@CompanyOfficial`, `discord.gg/company-official`
+
+**Entornos internos de pruebas** - Entornos de QA, servidores de staging, sitios internos de pruebas, entornos de desarrollo de los empleados. Ejemplo: `staging.company.com`, `qa-env.company.com`
+
+**Páginas de desarrollo y de vista previa** - Despliegues de Vercel que pertenecen a la empresa, URL de vista previa de Netlify, GitHub Pages de repositorios oficiales, entornos de vista previa de CI/CD. Ejemplo: `company-app.vercel.app`, `preview-123.netlify.app`
+
+**Assets oficiales de blockchain** - Contratos inteligentes oficiales, wallets de tesorería, direcciones multisig, contratos de tokens. Ejemplo: `0x1234...` (contrato oficial del token)
+
+### Qué NO debe incluirse en la allowlist ❌
+
+**Contenido de terceros** - Contenido que simplemente se tolera pero que tu organización no controla, incluidos los sitios web de socios que mencionan tu marca, los artículos de noticias sobre tu empresa, las reseñas o comparaciones de terceros y los sitios de afiliados o revendedores. Aunque el contenido sea positivo o esté autorizado, si no lo controlas, no lo incluyas en la allowlist.
+
+**Contenido generado por usuarios** - Contenido creado por los usuarios, incluso en tus plataformas, incluidos los perfiles de usuario en tu plataforma, el contenido enviado por la comunidad, los comentarios o publicaciones de usuarios y los testimonios de clientes en sitios externos.
+
+**Assets que no controlas por completo** - Assets sobre los que no tienes control o propiedad totales, incluidos los entornos de hosting compartido, las integraciones de terceros, los widgets o contenidos embebidos externos y la infraestructura temporal o prestada. Si hay alguna duda sobre el control o la propiedad, opta por la cautela y no lo incluyas en la allowlist.
+
+<Warning>
+**Importante:** Incluir un asset en la allowlist es una señal implícita de confianza. Como los assets incluidos en la allowlist quedan excluidos de la detección automática, incluir un asset de forma incorrecta puede reducir la visibilidad de las amenazas reales.
+</Warning>
+
+## Manejo de riesgos y escalamiento
+
+Estar en la allowlist no exime permanentemente a un asset de ser examinado.
+
+Si un asset incluido en la allowlist muestra un comportamiento sospechoso o se cree que fue comprometido, aún puede escalarse, investigarse y ser objeto de acciones.
+
+### Escenarios de compromiso
+
+**Cuenta comprometida** - Si hackean tu cuenta oficial de Twitter: el asset está en la allowlist, así que la detección automática no lo marca; la comunidad reporta actividad sospechosa; la investigación manual revela el compromiso; el asset se quita temporalmente de la allowlist; la amenaza se bloquea y se reporta; después de la recuperación, el asset se vuelve a incluir en la allowlist.
+
+**Secuestro de dominio** - Si secuestran tu dominio o se compromete el DNS: el asset está en la allowlist, así que la detección automática no lo marca; el monitoreo detecta un comportamiento inusual o cambios en el contenido; el equipo de seguridad investiga; el asset se quita de la allowlist durante el incidente; el contenido malicioso se bloquea; después de la resolución, el asset se vuelve a incluir en la allowlist.
+
+**Brecha en la infraestructura** - Si tu infraestructura de hosting se ve comprometida: los assets incluidos en la allowlist empiezan a servir contenido malicioso; los reportes de usuarios o el monitoreo automatizado detectan anomalías; se activa la respuesta a incidentes; los assets afectados se quitan de la allowlist; las amenazas se contienen y se remedian; los assets se vuelven a incluir en la allowlist después de la verificación.
+
+Esto garantiza que la confianza no sea absoluta y que los assets oficiales comprometidos no se conviertan en puntos ciegos.
+
+## Vencimiento
+
+Algunos assets solo deberían permanecer en tu allowlist por un tiempo, como el sitio web de un socio o una campaña que dura una temporada. Asígnales a estos assets una **fecha de vencimiento** y ChainPatrol los quita de tu organización cuando esa fecha pasa, para que la allowlist no se llene de relaciones que ya terminaron.
+
+### Qué pasa cuando un asset vence
+
+1. **Recordatorios** - Los propietarios y administradores de la organización reciben por correo un resumen diario que enumera los assets que vencen en 30 días y en 7 días.
+2. **Vencimiento** - En la fecha de vencimiento, el asset se marca como **Expired** (vencido) y comienza un **período de gracia de 14 días**. Durante el período de gracia sigue permitido y en tu organización, así que puedes renovarlo si la relación continúa.
+3. **Recordatorio final** - El resumen te avisa de nuevo 3 días antes de que termine el período de gracia.
+4. **Eliminación** - Cuando termina el período de gracia, el asset se quita de tu organización y se detiene su monitoreo. El resumen enumera lo que se quitó.
+
+<Info>
+El vencimiento quita el asset de tu organización; no cambia el estado del asset. Un asset permitido sigue en `ALLOWED`, así que se sigue tratando como seguro y no se marca como amenaza. Cada eliminación queda registrada en el registro de auditoría de tu organización, igual que una eliminación manual.
+</Info>
+
+### Cómo establecer un vencimiento
+
+- **Al agregar assets** - En el diálogo **Add Assets** (agregar assets), elige un vencimiento: en 6 meses, en 1 año o en una fecha determinada. A través de la API, pasa `expiresAt` a [Agregar assets a la organización](/es/external-api/organization-assets-add#definir-un-vencimiento-al-agregar).
+- **En la página Allowlist** - Usa **Set expiry** (establecer vencimiento) en un asset, o selecciona varios y establece una sola fecha para todos. Filtra la lista por **Expiring soon** (por vencer) o **Expired** (vencidos) para ver qué necesita atención.
+- **Desde la API, la CLI o MCP** - Usa el endpoint [Definir vencimiento de assets de la organización](/es/external-api/organization-assets-expiry), el [comando de la CLI](/es/cli/commands/orgs) `chainpatrol orgs assets set-expiry` o la herramienta `organization_assets_set_expiry` del [servidor MCP](/es/mcp-server).
+
+Una fecha de vencimiento rige hasta el final de ese día en UTC. Establecer una nueva fecha en un asset vencido lo renueva y termina su período de gracia. Borrar el vencimiento conserva el asset de forma indefinida.
+
+Los propietarios y administradores de la organización pueden establecer, renovar y borrar las fechas de vencimiento.
+
+## Granularidad de las allowlists
+
+Las allowlists en ChainPatrol pueden configurarse en distintos niveles:
+
+**Nivel de organización** - Los assets incluidos en la allowlist a nivel de organización son de confianza para toda la organización, sin importar con qué marca estén asociados. Los casos de uso incluyen sitios web corporativos, infraestructura compartida, cuentas de redes sociales de toda la empresa y sistemas centrales de autenticación. Ejemplo: `company.com` está en la allowlist a nivel de organización, lo que lo protege para todas las marcas de la organización.
+
+**Nivel de marca** - Los assets incluidos en la allowlist a nivel de marca son de confianza solo para esa marca específica dentro de la organización. Los casos de uso incluyen sitios web específicos de un producto, cuentas de redes sociales específicas de una marca, infraestructura de productos individuales y campañas específicas de una marca. Ejemplo: `product-a.com` está en la allowlist para la marca "Product A", pero no para la marca "Product B".
+
+Esta flexibilidad permite que los equipos que gestionan múltiples marcas ajusten la confianza de forma adecuada.
+
+### Ejemplo de jerarquía
+
+```
+Organization: Acme Corp
+├── Brand: Acme Protocol
+│   ├── acme-protocol.com (Brand-level allowlist)
+│   └── @AcmeProtocol (Brand-level allowlist)
+├── Brand: Acme Wallet
+│   ├── acme-wallet.com (Brand-level allowlist)
+│   └── @AcmeWallet (Brand-level allowlist)
+└── Organization-level allowlist:
+    ├── acme.com (All brands)
+    ├── @AcmeCorp (All brands)
+    └── support@acme.com (All brands)
+```
+
+## ¿Quién puede actualizar la allowlist?
+
+La gestión de la allowlist está restringida a los **administradores de la organización y a los miembros del personal autorizados**.
+
+- **Administradores de la organización** - Control total sobre las allowlists a nivel de organización y a nivel de marca
+- **Personal autorizado** - El personal de ChainPatrol puede ayudar con la gestión de la allowlist
+- **Acceso limitado** - Los usuarios estándar no pueden modificar las allowlists
+- **Registro de auditoría** - Todos los cambios en la allowlist se registran y se les hace seguimiento
+
+Limitar el acceso ayuda a garantizar que las allowlists se mantengan precisas, intencionales y alineadas con las buenas prácticas de seguridad.
+
+### Buenas prácticas para la gestión de la allowlist
+
+1. **Sé conservador** - Incluye en la allowlist solo los assets que controlas y en los que confías sin lugar a dudas
+2. **Revisiones periódicas** - Revisa tu allowlist periódicamente (se recomienda cada trimestre) para quitar los assets desactualizados u obsoletos
+3. **Documenta las decisiones** - Mantén documentación interna de por qué se incluyeron los assets en la allowlist
+4. **Quita los assets comprometidos** - Quita de inmediato cualquier asset que se sospeche que fue comprometido
+5. **Vuelve a agregarlos después de verificar** - Vuelve a incluir los assets en la allowlist solo después de confirmar que son seguros y están bajo tu control
+6. **Establece un vencimiento para los assets temporales** - Asígnales a los assets de socios y de campañas una [fecha de vencimiento](#vencimiento) para que se quiten cuando ya no sean necesarios
+
+## Puntos clave
+
+- La allowlist reduce el ruido de los falsos positivos: agregar tus assets oficiales los filtra de las fuentes de detección, lo que permite que tu equipo dedique el tiempo de revisión a las amenazas reales
+- Una allowlist conservadora evita los puntos ciegos: agrega solo los assets que controlas sin lugar a dudas, porque los assets de la allowlist que resulten comprometidos no activarán alertas automáticas
+- La inclusión de dominios en la allowlist usa coincidencia inteligente: agregar `example.com` hace que se confíe automáticamente en todos los subdominios, lo que reduce el mantenimiento sin perder protección
+- Los cambios en la allowlist requieren privilegios de administrador: esta restricción evita inclusiones accidentales o maliciosas en la allowlist que podrían crear brechas de seguridad

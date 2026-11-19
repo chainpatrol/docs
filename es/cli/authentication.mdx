@@ -1,0 +1,121 @@
+---
+title: "Autenticación de la CLI de ChainPatrol"
+icon: key
+description: "Autentica la CLI de ChainPatrol con el flujo de inicio de sesión por código de dispositivo, o con una CHAINPATROL_API_KEY para CI, shells sin interfaz (headless) y agentes de IA."
+---
+
+La CLI admite dos tipos de credenciales. Los usuarios interactivos inician sesión una sola
+vez con un navegador; los scripts, los jobs de CI y los agentes configuran una clave de
+API en el entorno.
+
+## Inicio de sesión interactivo
+
+```bash
+chainpatrol login
+```
+
+Esto inicia un flujo de código de dispositivo (device-code). La CLI muestra una URL de
+verificación y un código de usuario corto, abre tu navegador cuando puede y espera a que
+apruebes la solicitud:
+
+```
+Open this URL on any device to approve in one step:
+  https://app.chainpatrol.io/device?user_code=ABCD-EFGH
+Or visit https://app.chainpatrol.io/device and enter the code: ABCD-EFGH
+Waiting for approval...
+Logged in successfully as you@acme.com
+```
+
+Al aprobar, se escribe un token de sesión en `credentials.json`, dentro del [directorio de
+configuración](/es/cli/installation#configuración), con permisos `0600`. Puedes revisarlo en
+cualquier momento:
+
+```bash
+chainpatrol whoami
+```
+
+Para cerrar sesión y eliminar el token guardado:
+
+```bash
+chainpatrol logout
+```
+
+<Note>
+  Los tokens de sesión expiran. Cuando eso ocurre, la CLI lo borra y te pide que ejecutes
+  `chainpatrol login` de nuevo, y termina con el [código `2`](/es/cli/output#códigos-de-salida).
+</Note>
+
+### Iniciar sesión sin navegador
+
+En un shell remoto, un contenedor o un runner de CI, la CLI detecta que no está conectada a
+una terminal y recurre a texto plano: la URL de verificación se imprime en stdout de
+inmediato, en lugar de quedar oculta detrás de una interfaz interactiva. Ábrela en cualquier
+dispositivo.
+
+Para un programa que analiza la salida, `--json` emite un objeto JSON por cada hito:
+
+```bash
+chainpatrol login --json
+```
+
+```json
+{"action":"open_url","user_code":"ABCD-EFGH","verification_uri":"https://app.chainpatrol.io/device","verification_uri_complete":"https://app.chainpatrol.io/device?user_code=ABCD-EFGH","expires_in":900,"headless":true}
+{"status":"success","email":"you@acme.com"}
+```
+
+<Warning>
+  `chainpatrol login --no-input` se rechaza a menos que también pases `--json`. Sin alguno
+  de ellos no hay forma de mostrar el código de dispositivo, así que el comando parecería
+  quedarse colgado.
+</Warning>
+
+## Autenticación con clave de API
+
+Configura `CHAINPATROL_API_KEY` y la CLI la usará en lugar de una sesión guardada: sin paso
+de inicio de sesión y sin escribir nada en disco. Es la opción correcta para CI, tareas cron
+y cuentas de servicio.
+
+```bash
+export CHAINPATROL_API_KEY="your_api_key_here"
+chainpatrol whoami
+chainpatrol threats list --json
+```
+
+La clave se envía en el encabezado `X-API-KEY`, el mismo que usa la [External
+API](/es/external-api/authentication), así que una clave de API existente funciona con la CLI
+tal cual.
+
+Una clave con alcance de organización lleva consigo su organización. Los comandos que de otro
+modo necesitarían `--org` (`threats list`, `takedowns list`, `orgs assets list`, `reports search`,
+`proposals review`) la resuelven a partir de la clave.
+
+<Tip>
+  `CHAINPATROL_API_KEY` tiene prioridad sobre cualquier sesión guardada, así que puedes
+  apuntar un solo shell a una cuenta de servicio para un único comando:
+
+  ```bash
+  CHAINPATROL_API_KEY=... chainpatrol metrics organization --json --include reports
+  ```
+</Tip>
+
+## ¿Qué identidad estoy usando?
+
+```bash
+chainpatrol whoami
+chainpatrol whoami --json
+```
+
+Con una clave de API, `whoami` valida la clave e informa a qué organización está vinculada.
+Con un token de sesión, devuelve el usuario que inició sesión. En cualquier caso, es la
+verificación más rápida antes de un comando que escribe.
+
+## Permisos
+
+La CLI tiene exactamente los permisos de la credencial que la respalda; no los amplía.
+Dos consecuencias que vale la pena conocer:
+
+- Las funciones exclusivas para staff (por ejemplo `queues snapshot --all`) fallan con el
+  [código de salida `5`](/es/cli/output#códigos-de-salida) cuando se usan credenciales de cliente.
+- Las [revisiones de **Proposals**](/es/cli/commands/proposals) (propuestas para bloquear o
+  permitir un asset) deben atribuirse a un miembro de la organización con rol de cliente,
+  por lo que ahí se rechazan las credenciales de staff.

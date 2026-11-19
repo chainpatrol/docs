@@ -1,0 +1,46 @@
+---
+title: Comando queues — toma una instantánea de las colas de revisión y de takedowns
+sidebarTitle: queues
+icon: layer-group
+description: "Toma una instantánea de las Proposals pendientes de revisión y los takedowns abiertos de ChainPatrol, para una organización o para todas, con ventanas de antigüedad configurables."
+---
+
+```bash
+chainpatrol queues snapshot [--org <slug>|--all] [--window-hours <n>]
+```
+
+## queues snapshot
+
+Toma una instantánea de las colas operativas —las **Proposals** (propuestas para bloquear o permitir un asset) pendientes de revisión y los **Takedowns** (solicitudes de baja de contenido fraudulento) abiertos— para que puedas
+ver qué está en espera y cuánto tiempo lleva esperando.
+
+| Opción | Descripción |
+| --- | --- |
+| `--org <slug>` | Slug de la organización. |
+| `--all` | Todas las organizaciones. Solo para staff. |
+| `--window-hours <n>` | Horas que se usan para las ventanas de antigüedad. |
+
+```bash
+# one organization
+chainpatrol queues snapshot --org acme
+
+# everything, over the last week, as a table to paste into a doc
+chainpatrol queues snapshot --all --window-hours 168 --output markdown
+
+# for a spreadsheet
+chainpatrol queues snapshot --all --output csv > queues.csv
+
+# with the reasoning behind each flag
+chainpatrol queues snapshot --org acme --explain
+```
+
+<Note>
+  `--all` requiere credenciales de staff. Con una credencial de cliente falla con el [código de salida
+  `5`](/es/cli/output#códigos-de-salida).
+</Note>
+
+## Relacionado
+
+- [`GET /operations/queues/snapshot`](/es/external-api/operations-queues-snapshot)
+- [`healthchecks run`](/es/cli/commands/healthchecks) para convertir estos conteos en controles (gates) de aprobado/fallido
+- [`takedowns list`](/es/cli/commands/takedowns) para ver los registros individuales detrás de los conteos

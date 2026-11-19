@@ -1,0 +1,104 @@
+---
+title: "Review"
+description: "Cómo ChainPatrol combina la puntuación de riesgo automatizada y la revisión de analistas humanos para aprobar Proposals de bloqueo o de permiso sobre assets sospechosos de phishing y estafa."
+---
+
+## Descripción general
+
+Para bloquear amenazas maliciosas o permitir **assets** (activos digitales: URL, direcciones, perfiles, apps, etc.) oficiales, usamos el proceso de **Review** (revisión de propuestas pendientes de aprobación). Para cambiar el estado de un Asset (de `UNKNOWN` a `BLOCKED`/`ALLOWED` o, en casos especiales, entre `BLOCKED` y `ALLOWED`), creamos una **Proposal** (propuesta para bloquear o permitir un asset).
+
+<Info>
+Cada Proposal es evaluada por revisores humanos o por nuestra automatización, que pueden tomar una de cuatro decisiones: **Approve** (aprobar), **Reject** (rechazar), **Skip** (omitir) o **Escalate** (escalar).
+</Info>
+
+### Decisiones sobre una Proposal
+
+- **Approve** - Acepta el cambio de estado del Asset y cierra la Proposal
+- **Reject** - Rechaza el cambio de estado y cierra la Proposal
+- **Skip** - Mantiene la Proposal pendiente cuando no hay evidencia suficiente
+- **Escalate** - La envía a miembros sénior del equipo o al cliente para una revisión adicional
+
+Solo las decisiones **Approve** y **Reject** cierran la Proposal. **Skip** y **Escalate** mantienen la Proposal en estado `PENDING` para seguir evaluándola.
+
+## Automatización
+
+Nuestro sistema de revisión automatizada se ocupa de las amenazas sospechosas de alta confianza, lo que permite que los analistas humanos se concentren en los casos límite y en las decisiones complejas.
+
+### ¿Cuándo hacemos una revisión automatizada?
+
+La revisión automatizada se habilita cuando se cumplen condiciones específicas:
+
+**Requisitos de la organización** - La automatización de la revisión solo se activa para las organizaciones con un estado de suscripción activo (Active, Trial o Prospect).
+
+**Requisitos de información del Asset** - La automatización requiere datos suficientes sobre el Asset. Algunas plataformas actualmente no cuentan con capacidades adecuadas de recopilación de información. Las plataformas que requieren revisión humana incluyen Facebook, Instagram y TikTok, debido a que la recopilación automatizada de datos es limitada.
+
+**Restricciones por tipo de Proposal** - La revisión automatizada solo se ocupa de las Proposals para establecer un Asset en estado `BLOCKED`. Las Proposals para establecer Assets en estado `ALLOWED` o `UNKNOWN` no se automatizan.
+
+### ¿Cómo toma una decisión la revisión automatizada?
+
+Nuestro sistema de revisión automatizada calcula una **puntuación de riesgo** para determinar si un asset debe aprobarse como malicioso.
+
+1. **Ejecución de reglas** - Durante un **Asset Scan** (escaneo de un asset), se ejecutan múltiples reglas de detección sobre el asset
+2. **Cálculo de la puntuación** - La puntuación de riesgo es una suma ponderada de todas las puntuaciones individuales de cada regla ejecutada con éxito
+3. **Evaluación del umbral** - La puntuación de riesgo final se compara con nuestro umbral de aprobación
+4. **Decisión** - Los assets que alcanzan el umbral se aprueban automáticamente; los demás se escalan a revisión humana
+
+### Reglas de legitimidad
+
+<Warning>
+**Caso especial:** Las reglas de legitimidad (Legitimacy Rules) pueden anular la aprobación automática, incluso con puntuaciones de riesgo altas.
+</Warning>
+
+Las reglas de legitimidad son reglas de detección especiales que identifican cuándo un asset **no es malicioso**. Si se cumple una regla de legitimidad con confianza "Very High" (muy alta), la automatización **no** aprobará automáticamente la Proposal, sin importar la puntuación de riesgo.
+
+**Ejemplo:** Un asset puede tener una puntuación de riesgo alta, pero si coincide con una regla de legitimidad de confianza Very High (p. ej., un dominio oficial verificado), la Proposal se escalará a revisión humana en lugar de bloquearse automáticamente.
+
+### Aprobación automática de la Proposal
+
+Para que una Proposal se apruebe automáticamente, deben cumplirse **todas** las condiciones siguientes:
+
+**Condiciones obligatorias:**
+- El Asset no debe estar ya en `ALLOWED`
+- La organización debe tener Reviewing habilitado y no estar inactiva
+- La Proposal debe ser para bloquear el Asset (no para permitirlo)
+- No se cumplió ninguna regla de legitimidad con confianza "Very High"
+
+**Disparadores de aprobación (al menos uno debe cumplirse):**
+- Puntuación de riesgo alta: la puntuación de riesgo general del Asset alcanza nuestro umbral de confianza
+- Trusted Reporter (reportador de confianza): el Asset formó parte de un **Report** (reporte de una posible amenaza) creado por un Trusted Reporter
+
+## Revisión humana
+
+Las personas son esenciales para tomar decisiones sobre las Proposals que quedan fuera de los criterios de aprobación automatizada.
+
+Como la automatización solo se ocupa de las Proposals para bloquear Assets con puntuaciones de confianza altas, los analistas humanos evalúan todos los demás casos.
+
+### Cuándo intervienen las personas
+
+- **Bloqueos de menor confianza** - Proposals para bloquear un Asset que no alcanza el umbral automatizado
+- **Proposals para permitir** - Todas las Proposals para permitir un Asset
+- **Estado `UNKNOWN`** - Proposals para establecer un Asset en `UNKNOWN`
+
+### Proceso de revisión humana
+
+1. **Asignación de la Proposal** - Las Proposals se derivan a los analistas adecuados según su experiencia y su carga de trabajo
+2. **Revisión de la evidencia** - Los analistas examinan los resultados de los escaneos, las capturas de pantalla, los metadatos y el contexto
+3. **Toma de decisiones** - Con criterios y pautas establecidos, los analistas toman decisiones de Approve/Reject/Skip/Escalate
+4. **Control de calidad** - Las decisiones retroalimentan a nuestros modelos de IA para mejorar la precisión de la automatización futura
+
+### Qué usan los analistas para tomar decisiones
+
+**Resultados del Asset Scan** - Capturas de pantalla y evidencia visual, contenido y metadatos de la página, datos de red e infraestructura, línea de tiempo histórica de los escaneos.
+
+**Reglas de detección** - Qué reglas se activaron y sus niveles de confianza, los pesos de las reglas y el desglose de la puntuación, los resultados de las reglas de legitimidad.
+
+**Contexto e inteligencia** - Assets e infraestructura relacionados, información e historial del reportador, pautas específicas de la marca, patrones de amenazas recientes.
+
+**Configuración de la organización** - Umbrales de detección personalizados, entradas de la **Allowlist** (lista de permitidos) y de la **Blocklist** (lista de bloqueo), prioridades de protección de marca.
+
+## Puntos clave
+
+- Las reglas de legitimidad te protegen del bloqueo excesivo: si se cumple una regla de legitimidad con confianza Very High, la Proposal pasa a revisión humana sin importar la puntuación de riesgo
+- Escala los casos poco claros de forma estratégica: usa "Skip" cuando necesites más información, "Escalate to Team" cuando haga falta conocimiento experto y "Escalate to Customer" cuando el contexto de la marca sea importante
+- La automatización aprende de las personas: cada decisión de revisión manual retroalimenta al sistema y mejora la precisión de la detección automática futura
+- El modelo de cuatro decisiones evita el estancamiento: a diferencia de los sistemas binarios de aprobar/rechazar, Skip y Escalate garantizan que las amenazas poco claras reciban la atención adecuada sin forzar decisiones prematuras

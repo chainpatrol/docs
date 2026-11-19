@@ -1,0 +1,93 @@
+---
+title: Dejar de seguir asset
+openapi: "POST /asset/unfollow"
+---
+
+## Descripción general
+
+Deja de recibir los correos de un **Asset** (activo digital: URL, dirección, perfil, app, etc.) que
+sigues. Deshace [Seguir asset](/es/external-api/asset-follow), y un seguimiento hecho con el
+botón **Follow** (seguir) de la app también se puede deshacer aquí.
+
+Dejar de seguir nunca se rechaza por el límite de seguimientos: es justamente la forma de
+volver a quedar por debajo de él. Dejar de seguir un asset que no sigues no es un error.
+
+Al igual que seguir, requiere una clave de API de usuario (user-scoped) o una
+sesión iniciada.
+
+## Inicio rápido
+
+### Autenticación
+
+Incluye tu clave de API de usuario en el encabezado `X-API-KEY`:
+
+```bash
+X-API-KEY: <api-key>
+```
+
+### Solicitud de ejemplo
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST 'https://app.chainpatrol.io/api/v2/asset/unfollow' \
+  -H 'X-API-KEY: <api-key>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "assetId": 4175269 }'
+```
+
+```typescript TypeScript
+const response = await fetch("https://app.chainpatrol.io/api/v2/asset/unfollow", {
+  method: "POST",
+  headers: {
+    "X-API-KEY": "<api-key>",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ assetId: 4175269 }),
+});
+
+const { following, followCount } = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://app.chainpatrol.io/api/v2/asset/unfollow",
+    headers={"X-API-KEY": "<api-key>"},
+    json={"assetId": 4175269},
+)
+data = response.json()
+```
+
+</CodeGroup>
+
+## Cuerpo de la solicitud
+
+| Campo     | Tipo     | Obligatorio    | Descripción                                                                                       |
+| --------- | -------- | -------------- | ------------------------------------------------------------------------------------------------- |
+| `content` | `string` | Uno de los dos | Contenido del asset: una URL, un dominio, una dirección de wallet, un perfil de red social, etc.  |
+| `assetId` | `number` | Uno de los dos | ID del asset en ChainPatrol.                                                                      |
+| `slug`    | `string` | No             | Slug de la organización. Obligatorio solo cuando tus credenciales tienen acceso a más de una organización. |
+
+## Respuesta
+
+Tiene la misma forma que [Seguir asset](/es/external-api/asset-follow#respuesta), con
+`following` en `false`.
+
+```json
+{
+  "assetId": 4175269,
+  "following": false,
+  "followCount": 11,
+  "limit": 100,
+  "warnThreshold": 90,
+  "canFollowMore": true,
+  "warning": null
+}
+```
+
+## Relacionado
+
+- [Seguir asset](/es/external-api/asset-follow)
+- [Listar assets seguidos](/es/external-api/asset-follows-list)

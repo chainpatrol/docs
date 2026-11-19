@@ -1,0 +1,55 @@
+---
+title: Obtener tasa de éxito de takedowns
+openapi: "POST /metrics/takedown-success-rate"
+---
+
+## Descripción general
+
+Obtén la proporción de **takedowns** (solicitudes de baja de contenido fraudulento) que terminaron en una eliminación, por tipo de **asset** (activo digital: URL, dirección, perfil, app, etc.), para los takedowns
+presentados por primera vez ante un proveedor en un rango de fechas.
+
+<Note>
+  Este endpoint está restringido por el feature flag `takedown-success-rate`, que se
+  habilita por organización. Si el flag no está habilitado para tu organización, la API
+  devuelve un error 403 Forbidden. Contacta a ChainPatrol para habilitar el acceso.
+</Note>
+
+```bash
+curl --request POST \
+  --url https://app.chainpatrol.io/api/v2/metrics/takedown-success-rate \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <api-key>' \
+  --data '{
+    "slug": "your-org",
+    "startDate": "2026-08-01",
+    "endDate": "2026-09-30"
+  }'
+```
+
+## Cuerpo de la solicitud
+
+| Campo          | Tipo       | Obligatorio | Descripción                                                                                                                       |
+| -------------- | ---------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `slug`         | `string`   | ✅ Sí       | Slug de la organización.                                                                                                          |
+| `startDate`    | `string`   | ❌ No       | Solo takedowns presentados por primera vez en esta fecha o después. Un valor de solo fecha (`YYYY-MM-DD`) empieza a la medianoche UTC. |
+| `endDate`      | `string`   | ❌ No       | Solo takedowns presentados por primera vez en esta fecha o antes. Un valor de solo fecha abarca todo el día en UTC.               |
+| `brandIds`     | `number[]` | ❌ No       | Solo assets que pertenecen a estas marcas.                                                                                        |
+| `brandType`    | `string`   | ❌ No       | Solo marcas de este tipo: `INDIVIDUAL`, `ORGANIZATION` o `PRODUCT`.                                                               |
+| `blockLabel`   | `string`   | ❌ No       | Solo assets bloqueados con esta etiqueta de revisión, como `Brand Impersonation`.                                                 |
+| `countryCodes` | `string[]` | ❌ No       | Solo assets escaneados desde estos países (códigos ISO 3166-1 alpha-2).                                                           |
+
+## Cómo leer la respuesta
+
+`byAssetType` tiene una entrada por tipo de asset, ordenadas de mayor a menor cantidad de takedowns:
+
+| Campo                 | Descripción                                                                                                                  |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `submitted`           | Takedowns presentados por primera vez ante un proveedor dentro del rango. Los takedowns abiertos pero nunca presentados no se cuentan. |
+| `completed`           | De esos, cuántos terminaron en una eliminación.                                                                              |
+| `stillOpen`           | De esos, cuántos todavía no tienen un resultado.                                                                             |
+| `successRate`         | `completed / submitted`, de 0 a 1. Los takedowns que todavía están en curso cuentan en contra.                               |
+| `resolvedSuccessRate` | `completed / (submitted - stillOpen)`, de 0 a 1, o `null` cuando ninguno tiene un resultado todavía.                         |
+
+Los resultados se leen tal como están en este momento, así que un rango reciente tiene más takedowns todavía abiertos y un
+`successRate` más bajo. Compara `resolvedSuccessRate` cuando quieras la tasa entre los
+takedowns que ya terminaron.

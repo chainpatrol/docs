@@ -1,0 +1,158 @@
+---
+title: "Servidor MCP de ChainPatrol"
+sidebarTitle: "Servidor MCP"
+icon: plug
+description: "Conecta Claude, Cursor y otros agentes de IA al servidor MCP de ChainPatrol, ya sea alojado en app.chainpatrol.io/api/mcp o ejecutado localmente mediante la CLI."
+---
+
+El servidor [MCP](https://modelcontextprotocol.io) de ChainPatrol pone toda la API pública a
+disposición de los agentes de IA en forma de herramientas: verificación y búsqueda de **Assets**
+(activos digitales: URL, dirección, perfil, app, etc.), reportes, revisión de **Proposals**
+(propuestas para bloquear o permitir un asset), **Suspected Threats** (amenazas sospechosas
+detectadas automáticamente, todavía sin confirmar) y configuraciones de detección, **Takedowns**
+(solicitudes de baja de contenido fraudulento), amenazas, métricas, healthchecks (verificaciones de estado) y administración
+de la organización. Cada operación de la [referencia de la API](/es/external-api/overview) es una
+herramienta que el agente puede llamar, excepto [Subir archivo adjunto](/es/external-api/attachment-upload):
+para adjuntar un archivo a un reporte, súbelo tú y pasa la URL devuelta en `attachmentUrls`.
+
+Hay dos formas de conectarse:
+
+- **Alojado** (Hosted): apunta tu cliente a una URL e inicia sesión desde tu navegador. No hay nada que instalar.
+- **Local**: ejecuta `chainpatrol mcp` desde la [CLI](/es/cli/overview) en tu propio equipo.
+
+Ambos exponen las mismas herramientas y aplican los mismos permisos que tu cuenta de ChainPatrol
+o tu clave de API.
+
+## Servidor alojado
+
+```
+https://app.chainpatrol.io/api/mcp
+```
+
+El servidor usa OAuth. La primera vez que tu cliente se conecta, abre en tu navegador una página de
+inicio de sesión y consentimiento de ChainPatrol. Después de que la apruebes, el cliente guarda el token y
+se vuelve a conectar por su cuenta. Los clientes que admiten el registro dinámico de clientes (dynamic
+client registration) no necesitan nada más que la URL.
+
+<Tabs>
+  <Tab title="Claude Code">
+    ```bash
+    claude mcp add --transport http chainpatrol https://app.chainpatrol.io/api/mcp
+    ```
+
+    Luego ejecuta `/mcp` dentro de Claude Code y elige `chainpatrol` para iniciar sesión.
+
+  </Tab>
+  <Tab title="Claude.ai / Claude Desktop">
+    Abre **Settings → Connectors → Add custom connector** (Configuración → Conectores → Agregar
+    conector personalizado), ponle el nombre `ChainPatrol` y pega
+    `https://app.chainpatrol.io/api/mcp` como URL. Haz clic en **Connect** (conectar) para iniciar sesión.
+  </Tab>
+  <Tab title="Cursor">
+    Agrega esto a `~/.cursor/mcp.json` (o a `.cursor/mcp.json` en un proyecto):
+
+    ```json
+    {
+      "mcpServers": {
+        "chainpatrol": {
+          "url": "https://app.chainpatrol.io/api/mcp"
+        }
+      }
+    }
+    ```
+
+  </Tab>
+  <Tab title="Otros clientes">
+    Cualquier cliente que admita el transporte Streamable HTTP puede conectarse a
+    `https://app.chainpatrol.io/api/mcp`. Si el cliente admite MCP OAuth, encuentra el
+    servidor de autorización mediante el encabezado `WWW-Authenticate` en el primer `401`.
+  </Tab>
+</Tabs>
+
+### Usar una clave de API en su lugar
+
+Para cuentas de servicio y agentes sin interfaz (headless) que no pueden completar un inicio de sesión
+en el navegador, envía una [clave de API](/es/external-api/authentication) en el encabezado `X-API-KEY`:
+
+```bash
+claude mcp add --transport http chainpatrol https://app.chainpatrol.io/api/mcp \
+  --header "X-API-KEY: <your api key>"
+```
+
+## Servidor local (CLI)
+
+El servidor también viene incluido con la [CLI de ChainPatrol](/es/cli/installation), que se encarga del
+inicio de sesión por ti:
+
+```bash
+npm install -g @chainpatrol/cli
+chainpatrol login
+chainpatrol mcp        # speaks MCP on stdio
+```
+
+Apunta tu cliente MCP a ese comando. Para Claude Code:
+
+```bash
+claude mcp add chainpatrol -- chainpatrol mcp
+```
+
+O en cualquier cliente que acepte una configuración `mcpServers`:
+
+```json
+{
+  "mcpServers": {
+    "chainpatrol": {
+      "command": "chainpatrol",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+Para usar una cuenta de servicio, define `CHAINPATROL_API_KEY` en lugar de ejecutar `chainpatrol login`.
+
+### Configuración
+
+| Variable                 | Propósito                                                                                |
+| ------------------------ | ---------------------------------------------------------------------------------------- |
+| `CHAINPATROL_API_KEY`    | Clave de API. Tiene prioridad sobre un inicio de sesión guardado.                        |
+| `CHAINPATROL_API_URL`    | URL base de la API. El valor predeterminado es `https://app.chainpatrol.io`.             |
+| `CHAINPATROL_CONFIG_DIR` | Ubicación desde donde se leen las credenciales.                                          |
+| `CHAINPATROL_MCP_TOOLS`  | Nombres de las herramientas a exponer, separados por comas. De forma predeterminada, todas. |
+
+`chainpatrol mcp --tools asset_check,asset_list` hace lo mismo que `CHAINPATROL_MCP_TOOLS`
+para una sola ejecución, y prevalece cuando ambos están definidos. Reducir la lista de herramientas
+ahorra presupuesto de contexto, pero no es un control de acceso. La API aplica la autorización según
+la credencial en uso.
+
+## Qué expone el servidor
+
+- **Tools** (herramientas): una por cada operación de la API pública. La mayoría de las herramientas
+  tienen alcance de una sola organización y no hay un valor predeterminado implícito, así que llama
+  primero a `user_orgs` y pasa el slug de la organización de forma explícita.
+- **Resources** (recursos): las listas largas de valores, como `chainpatrol://enums/asset_type`, y
+  guías que explican qué significa cada etiqueta de Proposal y cada motivo de rechazo.
+- **Prompts**: flujos de trabajo listos para usar que reciben el slug de una organización:
+
+| Prompt                 | Qué hace                                                                                                      |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `org_healthcheck`      | Audita una organización en detección, revisión, inclusión en la **Blocklist** (lista de bloqueo) y takedowns, e informa qué necesita atención. |
+| `trend_search`         | Compara una ventana reciente con una línea base para sacar a la luz picos: nuevos canales de ataque, campañas u objetivos (targeting). |
+| `cs_weekly_health`     | Revisión semanal de la salud del cliente: amenazas encontradas, métricas de resumen y si los detectores están produciendo resultados.   |
+| `detection_evaluation` | Cuenta las amenazas confirmadas, las Suspected Threats en dominios, el tamaño de la **Watchlist** (lista de seguimiento de assets sospechosos que se siguen monitoreando) y las Suspected Threats con puntaje alto. Consulta [Cómo evaluar las suspected threats](/es/external-api/evaluating-detections). |
+
+## Prompts de ejemplo
+
+Una vez conectado, pregunta en lenguaje natural:
+
+- "¿Está `claim-airdrop-example.xyz` en la Blocklist de ChainPatrol?"
+- "Ejecuta el healthcheck de la organización para `acme`."
+- "¿Qué reportes de `acme` están esperando la revisión del cliente?"
+- "¿Cuántas amenazas encontramos para `acme` esta semana y de qué fuentes?"
+
+## Buscar en esta documentación desde un agente
+
+Esta página cubre el servidor para los datos de ChainPatrol. El sitio de documentación también ofrece su propio
+servidor MCP de solo lectura en `https://chainpatrol.com/docs/mcp`, que permite a un agente buscar en
+esta documentación. Agrégalo junto al servidor de ChainPatrol si quieres que el agente consulte cómo
+funciona la API mientras la usa.
