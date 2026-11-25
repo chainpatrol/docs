@@ -243,13 +243,49 @@ This event is sent when ChainPatrol reports one of your organization's takedowns
   A takedown is often filed with more than one provider, so you can receive several `takedown.filed` events for the same `takedown_id`.
 </Note>
 
+### `takedown.provider-replied`
+
+This event is sent when ChainPatrol receives an email from a provider and matches it to one of your organization's takedowns. It is also sent when a ChainPatrol analyst links an email to a takedown by hand. Quarantined emails don't send it. If one email is matched or linked to several takedowns, you receive one event per takedown. The payload doesn't include the email's body, subject, or sender address.
+
+```json
+{
+  "type": "takedown.provider-replied",
+  "created_at": "2026-11-26T08:05:00.000Z",
+  "data": {
+    "takedown_id": 4567,
+    "status": "IN_PROGRESS",
+    "created_at": "2026-11-24T09:15:00.000Z",
+    "url": "https://app.chainpatrol.io/admin/your-org/takedowns?takedown_id=4567",
+    "organization_id": 100,
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "provider_name": "Namecheap",
+    "received_at": "2026-11-26T08:04:51.000Z"
+  }
+}
+```
+
+| Field             | Description                                                                                                                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `takedown_id`     | ID of the takedown.                                                                                                                                                                          |
+| `status`          | The takedown's current status, such as `IN_PROGRESS`.                                                                                                                                        |
+| `created_at`      | When the takedown was created.                                                                                                                                                               |
+| `url`             | Link to the takedown in the ChainPatrol dashboard.                                                                                                                                           |
+| `organization_id` | ID of your organization.                                                                                                                                                                     |
+| `asset_id`        | ID of the asset being taken down.                                                                                                                                                            |
+| `content`         | The asset itself, such as a URL, domain, or social media profile.                                                                                                                            |
+| `type`            | The asset type, such as `URL`.                                                                                                                                                               |
+| `provider_name`   | The provider of the latest filing on this takedown that was sent to an email address on the sender's domain. `null` otherwise, for example for replies about API or form filings, or for emails that didn't come from a provider. |
+| `received_at`     | When ChainPatrol received the email.                                                                                                                                                         |
+
 ## Webhook Configuration
 
 When creating a webhook, you'll need to provide:
 
 1. An HTTPS endpoint URL that will receive the webhook events
 2. An optional description to help identify the webhook's purpose
-3. The events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, `audit-log.created`, and `takedown.filed`)
+3. The events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, `audit-log.created`, `takedown.filed`, and `takedown.provider-replied`)
 4. Optional HTTP headers for supported integrations (currently Google SecOps headers are available)
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
