@@ -321,13 +321,89 @@ This event is sent each time one of your organization's takedowns moves to Compl
   If a completed takedown is reopened and completed again, you receive another `takedown.completed` event.
 </Note>
 
+### `takedown.unactionable`
+
+This event is sent when one of your organization's takedowns moves to Cancelled, meaning ChainPatrol won't act on it. This includes takedowns ChainPatrol cancels automatically when it detects that the domain is parked.
+
+```json
+{
+  "type": "takedown.unactionable",
+  "created_at": "2026-11-26T12:00:05.000Z",
+  "data": {
+    "takedown_id": 4567,
+    "status": "CANCELLED",
+    "created_at": "2026-11-24T09:15:00.000Z",
+    "url": "https://app.chainpatrol.io/admin/your-org/takedowns?takedown_id=4567",
+    "organization_id": 100,
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "reason": "cancelled",
+    "occurred_at": "2026-11-26T12:00:00.000Z"
+  }
+}
+```
+
+| Field             | Description                                                                                                                         |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `takedown_id`     | ID of the takedown.                                                                                                                 |
+| `status`          | Always `CANCELLED`. This is the status the takedown moved to, not its current status, which may have changed by the time you receive the event. |
+| `created_at`      | When the takedown was created.                                                                                                      |
+| `url`             | Link to the takedown in the ChainPatrol dashboard.                                                                                  |
+| `organization_id` | ID of your organization.                                                                                                            |
+| `asset_id`        | ID of the asset.                                                                                                                    |
+| `content`         | The asset itself, such as a URL, domain, or social media profile.                                                                   |
+| `type`            | The asset type, such as `URL`.                                                                                                      |
+| `reason`          | Always `cancelled`.                                                                                                                 |
+| `occurred_at`     | When the status change was recorded.                                                                                                |
+
+### `takedown.awaiting-input`
+
+This event is sent when one of your organization's takedowns moves to Pending Evidence or Pending Input. ChainPatrol will act on the takedown, but something is missing first, such as more evidence or further input.
+
+```json
+{
+  "type": "takedown.awaiting-input",
+  "created_at": "2026-11-26T12:00:05.000Z",
+  "data": {
+    "takedown_id": 4567,
+    "status": "PENDING_EVIDENCE",
+    "created_at": "2026-11-24T09:15:00.000Z",
+    "url": "https://app.chainpatrol.io/admin/your-org/takedowns?takedown_id=4567",
+    "organization_id": 100,
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "reason": "needs_evidence",
+    "occurred_at": "2026-11-26T12:00:00.000Z"
+  }
+}
+```
+
+| Field             | Description                                                                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `takedown_id`     | ID of the takedown.                                                                                                                                                 |
+| `status`          | `PENDING_EVIDENCE` or `PENDING_INPUT`. This is the status the takedown moved to, not its current status, which may have changed by the time you receive the event. |
+| `created_at`      | When the takedown was created.                                                                                                                                      |
+| `url`             | Link to the takedown in the ChainPatrol dashboard.                                                                                                                  |
+| `organization_id` | ID of your organization.                                                                                                                                            |
+| `asset_id`        | ID of the asset.                                                                                                                                                    |
+| `content`         | The asset itself, such as a URL, domain, or social media profile.                                                                                                   |
+| `type`            | The asset type, such as `URL`.                                                                                                                                      |
+| `reason`          | `needs_evidence` for Pending Evidence, or `needs_input` for Pending Input.                                                                                          |
+| `occurred_at`     | When the status change was recorded.                                                                                                                                |
+
+<Note>
+  No event is sent when a takedown leaves Cancelled, Pending Evidence, or Pending Input, for example when missing evidence arrives or a parked domain comes back and the takedown restarts. The latest event for that takedown stays `takedown.unactionable` or `takedown.awaiting-input` until the next `takedown.filed` or `takedown.completed`.
+</Note>
+
 ## Webhook Configuration
 
 When creating a webhook, you'll need to provide:
 
 1. An HTTPS endpoint URL that will receive the webhook events
 2. An optional description to help identify the webhook's purpose
-3. The events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, `audit-log.created`, `takedown.filed`, `takedown.provider-replied`, and `takedown.completed`)
+3. The events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, `audit-log.created`, `takedown.filed`, `takedown.provider-replied`, `takedown.completed`, `takedown.unactionable`, and `takedown.awaiting-input`)
 4. Optional HTTP headers for supported integrations (currently Google SecOps headers are available)
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
