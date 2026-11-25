@@ -5,7 +5,7 @@ description: "Search dark web leak data against a brand's tracked email domains,
 
 ## Overview
 
-**Dark Web Monitoring** lives under **Employee Protection → Dark Web**. The page has two tabs:
+**Dark Web Monitoring** lives under **Employee Protection → Dark Web**, on the page titled **Dark Web Exposure (Beta)**. The page has two tabs:
 
 - **Leaked credentials**: search dark web leak data against each brand's tracked assets.
 - **[Brand presence](#brand-presence)**: scan dark web forums and chat channels for fraud chatter about a brand.
@@ -36,11 +36,10 @@ Domain, email, and wallet searches share one table layout. Each row shows:
 
 - **Severity**: the triage level for the record.
 - **Identity**: the leaked email address, or the searched wallet address shortened for display. If an identity appears in more than one leak, the row shows **Seen in N leaks**. A login-site infostealer row with no mailbox shows the login site instead, marked **Login site, account unknown**.
-- **Credential**: whether the record contains a plaintext password, a hash, or no password. For login-site infostealer rows, it shows what was taken: **Saved password**, **Autofill data**, **Browser data**, or cookies (**Login cookies (N)**, **Expired login cookies**, or **Tracking cookies only**).
-- **Exposed data**: other personal data found in the record, such as phone numbers, IP addresses, or payment cards.
+- **Credential**: whether the record contains a plaintext password, a hash, or no password. For login-site infostealer rows, it shows what was taken: **Saved password**, **Autofill data**, **Browser data**, or cookies (**Login cookies (N)**, **Expired login cookies**, or **Tracking cookies only**). Other personal data found in the record, such as phone numbers, IP addresses, or payment cards, shows under the credential.
 - **Leak · source**: the breach dataset or dark web site the record came from. Infostealer rows are labeled **Infostealer log**.
 - **Breach date**: when the leak was recorded.
-- **Status**: **Open** or **Acknowledged**.
+- **Status**: **Open** or **Acknowledged**. This column stays pinned to the right edge of the table.
 
 Leaks are shown with sensitive details masked. CSV exports include an **Email** or **Address** column for the search target you ran. For login-site rows with no mailbox, exports and **Copy identities** use the login site.
 
@@ -71,12 +70,23 @@ If the infostealer check fails, mailbox results still show, with a warning that 
 
 ### Summary tiles and filters
 
-Summary tiles above the table show the number of exposed identities, **Critical** and **High** results, **Plaintext passwords**, **Infostealer logs** (with the newest capture date), and **Open** results. Click a tile to filter the table to those results. Click it again to clear the filter.
+A summary line above the tiles shows the total identities, records, and leaks, and how many records are acknowledged.
+
+Six summary tiles follow, ordered from most to least urgent:
+
+- **Needs action**: open results rated **Critical** or **High**.
+- **Live sessions**: stolen login cookies that haven't expired yet.
+- **Staff in stealer logs**: infostealer rows that include a staff mailbox, with the newest date.
+- **Plaintext passwords**: plaintext passwords from the last 12 months.
+- **Your sites in stealer logs**: infostealer rows for the brand's login sites where the account is unknown.
+- **New this month**: results from the last 30 days.
+
+Click a tile to filter the table to those results. Click it again to clear the filter. While a tile filter is on, the tile is highlighted and the summary line shows a **Show all** button.
 
 To narrow results further:
 
 - Use the search box to match emails, leak names, and sources.
-- Use the **Severity**, **Password** (**Plaintext**, **Hash**, or **No password**), **Status** (**Open** or **Acknowledged**), and **Leak type** (**Any leak type**, **Infostealer log**, or **Data breach**) filters.
+- Use the filter menu for the **Severity**, **Password** (**Plaintext**, **Hash**, or **No password**), **Status** (**Open** or **Acknowledged**), and **Leak type** (**Any leak type**, **Infostealer log**, or **Data breach**) filters.
 
 For domain searches, switch from **Records** to **By identity** to group rows by email address. Each group shows how many distinct leaks include that identity, and its **Credential** cell counts infostealer rows (**N infostealer**).
 
@@ -84,7 +94,7 @@ Leak counts are based on distinct leak sources, not rows. A single dump often co
 
 ### Acknowledging results
 
-You can track which leaks you have already reviewed. Click a row's status to toggle it between **Open** and **Acknowledged**.
+You can track which leaks you have already reviewed. Click a row's status to toggle it between **Open** and **Acknowledged**. If **Needs action** or the **Open** status filter is on, an acknowledged row stays in the table showing **Acknowledged** until you change the filters, and the tile counts update right away.
 
 To act on several results at once, select rows with the checkboxes. Then choose one of the bulk actions:
 
