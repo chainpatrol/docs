@@ -199,13 +199,57 @@ This event is sent when an action is recorded in your organization's Audit Log, 
 | `ip_address`   | IP address the action came from. `null` for staff actions and when none was recorded.                                                                                       |
 | `user_agent`   | Browser or client that made the request. `null` for staff actions and when none was recorded.                                                                               |
 
+### `takedown.filed`
+
+This event is sent when ChainPatrol reports one of your organization's takedowns to a provider, such as a registrar, host, or platform. It is also sent when a takedown is filed again with a provider. Subscribe to it to see that work on a takedown has started without polling the dashboard.
+
+```json
+{
+  "type": "takedown.filed",
+  "created_at": "2026-11-25T16:30:00.000Z",
+  "data": {
+    "takedown_id": 4567,
+    "status": "IN_PROGRESS",
+    "created_at": "2026-11-24T09:15:00.000Z",
+    "url": "https://app.chainpatrol.io/admin/your-org/takedowns?takedown_id=4567",
+    "organization_id": 100,
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "provider_name": "Cloudflare",
+    "channel": "api",
+    "is_refile": false,
+    "filed_at": "2026-11-25T16:29:58.000Z"
+  }
+}
+```
+
+| Field             | Description                                                                                            |
+| ----------------- | ------------------------------------------------------------------------------------------------------ |
+| `takedown_id`     | ID of the takedown.                                                                                    |
+| `status`          | The takedown's current status, such as `IN_PROGRESS`.                                                  |
+| `created_at`      | When the takedown was created.                                                                         |
+| `url`             | Link to the takedown in the ChainPatrol dashboard.                                                     |
+| `organization_id` | ID of your organization.                                                                               |
+| `asset_id`        | ID of the asset being taken down.                                                                      |
+| `content`         | The asset itself, such as a URL, domain, or social media profile.                                      |
+| `type`            | The asset type, such as `URL`.                                                                         |
+| `provider_name`   | The provider the takedown was filed with. May be `null`.                                               |
+| `channel`         | How the takedown was filed: `email`, `form`, `api`, or `other` when the filing method wasn't recorded. |
+| `is_refile`       | `true` if the takedown was already filed with this provider before, `false` for the first filing.      |
+| `filed_at`        | When the filing was recorded.                                                                          |
+
+<Note>
+  A takedown is often filed with more than one provider, so you can receive several `takedown.filed` events for the same `takedown_id`.
+</Note>
+
 ## Webhook Configuration
 
 When creating a webhook, you'll need to provide:
 
 1. An HTTPS endpoint URL that will receive the webhook events
 2. An optional description to help identify the webhook's purpose
-3. The events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, and `audit-log.created`)
+3. The events you want to receive (available events include `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, `audit-log.created`, and `takedown.filed`)
 4. Optional HTTP headers for supported integrations (currently Google SecOps headers are available)
 
 The webhook secret will be automatically generated and shown to you once when creating the webhook. Make sure to copy it as it won't be displayed again.
