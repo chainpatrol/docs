@@ -108,6 +108,7 @@
                   "external-api/overview",
                   "external-api/authentication",
                   "general/api-key",
+                  "general/integrator-signup",
                   "general/api-usage",
                   "mcp-server",
                   "external-api/deprecation-policy"
