@@ -72,6 +72,8 @@ The timestamps on each threat:
   was filed with a provider, and `completedAt` the first time it was completed. If
   the site comes back, the takedown reopens: `status` goes back to `IN_PROGRESS` while
   `completedAt` keeps the first completion. Watch `status` to catch re-emergence.
+  Telegram and pump.fun takedowns that a person marked complete stay `COMPLETED`,
+  even if a later scan finds the asset online.
 - `updatedAt`: the latest change to the asset, its reports or its takedown. This is
   the value `updatedSince` compares against.
 
