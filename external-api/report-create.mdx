@@ -15,6 +15,15 @@ step-by-step walkthrough of the whole flow, with worked examples.
   `403 Forbidden`. See [Key permissions](/external-api/authentication#key-permissions).
 </Note>
 
+### Organization authorization
+
+When a report names an organization by `organizationSlug`, `discordGuildId`, or `telegramGroupId`, your credentials must be authorized for that organization:
+
+- Requests without credentials return `401 Unauthorized`.
+- Requests with another organization's API key return `403 Forbidden`.
+
+Reports that name no organization are unaffected.
+
 ## Attachments
 
 `attachmentUrls` accepts URLs of any evidence file, not just images — `.eml` and `.msg`

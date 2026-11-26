@@ -60,8 +60,8 @@ You configure the Security Portal in **Settings → Security Portal** within you
 
 Controls who can access the portal:
 
-- **Disabled** - The portal isn't accessible to anyone. Portal returns 404 error and no one can submit reports via portal.
-- **Private** - Only members of your organization can see it. Requires ChainPatrol login and is good for internal testing.
+- **Disabled** - The portal isn't accessible to anyone. The portal and its report page return a not found error, and no one can submit reports to your organization through the portal.
+- **Private** - Only members of your organization and ChainPatrol staff can see it or submit reports to your organization. Requires ChainPatrol login and is good for internal testing. Signed-out visitors to `/<slug>/report` see the same "You do not have access to this organization" page as the portal home, not the report form.
 - **Public** - Anyone with the link can access it. No authentication required for maximum community engagement.
 
 ### Public Reports

@@ -12,3 +12,8 @@ Include your API key in the `X-API-KEY` header:
 ```bash
 X-API-KEY: <api-key>
 ```
+
+<Note>
+  `organizationSlug` must match the organization that owns your API key. Submitting to
+  another organization's slug returns `403 FORBIDDEN`.
+</Note>
