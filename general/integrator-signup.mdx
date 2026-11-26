@@ -1,0 +1,154 @@
+---
+icon: plug
+title: Sign Up as an Integrator
+sidebarTitle: Integrator Signup
+description: "Create a free ChainPatrol integration account and get an API key in minutes to check URLs, domains, and crypto addresses against the ChainPatrol blocklist."
+---
+
+If you're building a wallet, browser extension, security app, bot, or any other product
+that should warn users before they open a scam link or send funds to a scam address, you
+can sign up for a ChainPatrol **integration account** yourself. You don't need to talk to
+sales or wait for a reply to a form. You get an API key at the end of signup and can start
+making requests right away.
+
+## Who it's for
+
+Integration accounts are for **consumers of ChainPatrol's threat data**: teams that want to
+check assets against our blocklist and allowlist and act on the result in their own product.
+
+If you want ChainPatrol to **protect your brand** (detect impersonations of your project,
+review reports, and take down scam sites), you need a customer organization instead.
+[Contact us](mailto:support@chainpatrol.io) to set one up.
+
+| | Integration account (self-signup) | Brand protection customer |
+| --- | --- | --- |
+| How to get one | Sign up yourself | Set up with the ChainPatrol team |
+| API key access | Read only | Read only or read & write |
+| Check assets, read the blocklist | Yes | Yes |
+| Submit reports, disputes, webhooks | No | Yes |
+| Detection, reviews, takedowns for your brand | No | Yes |
+| Public brand portal | No | Yes |
+
+## Sample use cases
+
+<CardGroup cols={2}>
+  <Card title="Wallets" icon="wallet">
+    Check the site a user is connecting to, or the address they are about to send funds to,
+    and show a warning before they sign. See the
+    [Wallet Integration Guide](/integration/guide).
+  </Card>
+
+  <Card title="Browser extensions & antivirus" icon="shield-halved">
+    Check each page a user navigates to and block known phishing domains before the page
+    loads.
+  </Card>
+
+  <Card title="Community moderation bots" icon="robot">
+    In Discord, Telegram, or forum bots, check every link posted in a channel and delete or
+    flag messages that contain known scams.
+  </Card>
+
+  <Card title="Exchanges & payment apps" icon="money-bill-transfer">
+    Screen withdrawal and payout addresses against known scam wallets and contracts before a
+    transfer goes out.
+  </Card>
+
+  <Card title="Email & messaging security" icon="envelope">
+    Scan links in inbound email or chat messages and quarantine those that point to known
+    scam sites.
+  </Card>
+
+  <Card title="Security research & SOC tooling" icon="magnifying-glass-chart">
+    Pull the blocklist and its changelog into your own pipeline, SIEM, or threat-intel
+    platform to enrich alerts.
+  </Card>
+</CardGroup>
+
+## How to sign up
+
+<Steps>
+  <Step title="Enter your work email">
+    Go to [app.chainpatrol.io/auth/signup](https://app.chainpatrol.io/auth/signup), enter
+    your work email, complete the captcha, and click **Continue**.
+  </Step>
+
+  <Step title="Confirm your email">
+    We send you a sign-in link. Open it from the same inbox to verify the address and sign in.
+  </Step>
+
+  <Step title="Create your organization">
+    Fill in three fields:
+
+    - **Organization name**: your company or project name, for example `Acme Labs`.
+    - **Slug**: used in your dashboard URL. Lowercase letters, numbers, and single hyphens
+      only, 3–48 characters, and it can't start or end with a hyphen.
+    - **What do you plan to use ChainPatrol for?**: at least 30 characters describing your
+      product and how you'll use the API. A person on our team reads this.
+  </Step>
+
+  <Step title="Copy your API key">
+    Your organization is created along with an API key. **The key is shown only once.** Copy
+    it and store it somewhere safe, such as a secrets manager, before you leave the page.
+  </Step>
+</Steps>
+
+After signup you land on your organization's **API Keys** page. From the dashboard you can
+also see your [API usage](/general/api-usage), manage organization settings, and view the
+audit log.
+
+## Make your first request
+
+Send your key in the `X-API-KEY` header. For example, to check whether a URL is blocked:
+
+```bash
+curl -X POST https://app.chainpatrol.io/api/v2/asset/check \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: $CHAINPATROL_API_KEY" \
+  -d '{ "content": "https://example.com" }'
+```
+
+The response tells you whether the asset is `BLOCKED`, `ALLOWED`, or `UNKNOWN`. See
+[Asset Check](/external-api/asset-check) for the full response.
+
+<Tip>
+  Call the API from your own server rather than shipping the key in a browser extension or
+  mobile app. See [Proxying API requests](/integration/proxy) for a ready-made setup.
+</Tip>
+
+## What your API key can do
+
+Self-signup keys are **live, organization-level, read-only** keys. They can call any
+endpoint that reads data, including:
+
+- [Asset Check](/external-api/asset-check): check one URL, domain, or address
+- [Asset List](/external-api/asset-list): fetch the full blocklist or allowlist
+- [Asset Changelog](/external-api/asset-changelog): fetch recent status changes to keep a
+  local copy in sync
+- [Asset Details](/external-api/asset-details) and [Asset Search](/external-api/asset-search)
+
+Endpoints that change data return `403 Forbidden` with a read-only key. That includes
+[Create Report](/external-api/report-create), [Create Dispute](/external-api/dispute-create),
+[Asset Scan](/external-api/asset-scan), and [Configure Webhook](/external-api/webhook-config).
+If you need any of these, email [support@chainpatrol.io](mailto:support@chainpatrol.io).
+
+To report a scam without write access, see [how reporting works](/reporting-flow/report).
+To flag a false positive, email [support@chainpatrol.io](mailto:support@chainpatrol.io).
+
+## Limits
+
+- **Key expiry**: keys expire **180 days** after they are created. Create a new key and
+  revoke the old one from the **API Keys** page before then. See
+  [Get Your API Key](/general/api-key).
+- **Organizations per person**: you can create up to **3** self-signup organizations, for
+  example one for development and one for production.
+- **Inviting teammates**: new self-signup organizations can't invite other members yet.
+  Email support if your team needs shared access.
+- **Daily signup limit**: while self-signup is rolling out, we accept a limited number of new
+  signups per day. If you see a message saying the day's limit is reached, try again the
+  next day (limits reset at midnight UTC).
+
+## Need more?
+
+If you need write access, webhooks, higher limits, or brand protection for your own project,
+email [support@chainpatrol.io](mailto:support@chainpatrol.io) with your organization slug and
+we'll help you upgrade.
