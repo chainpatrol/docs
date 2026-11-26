@@ -27,7 +27,31 @@ Labels below match [`POST /threats/list`](/external-api/threats-list) and [`POST
 | `PINTEREST` | Pinterest profiles/pins |
 | `PATREON` | Patreon profiles |
 | `SUBSTACK` | Substack publications |
+| `TUMBLR` | Tumblr blogs, posts, and communities |
 | `QUORA` | Quora profiles/posts |
 | `PRIMAL` | Primal profiles |
 | `DESO` | DeSo profiles |
 | `TWITCH` | Twitch channel identifiers |
+
+## Tumblr
+
+When you report or add a Tumblr link, ChainPatrol classifies it as a `TUMBLR` asset. This covers blogs, posts, communities, and tag pages:
+
+```text
+scam-blog.tumblr.com
+scam-blog.tumblr.com/post/123456789
+tumblr.com/scam-blog
+tumblr.com/scam-blog/123456789
+tumblr.com/communities/scam-community
+tumblr.com/tagged/airdrop
+```
+
+Blocking a `TUMBLR` asset targets that blog or post only. It does not block all of `tumblr.com`.
+
+The following inputs stay `URL` assets instead:
+
+- Bare `tumblr.com`
+- Tumblr infrastructure subdomains, such as `www`, `api`, and media hosts like `64.media.tumblr.com`
+- Lookalike domains, such as `stumblr.com` or `tumblr.com.evil.com`
+
+You can add Tumblr assets to watchlists. ChainPatrol also sends automated takedown requests for blocked Tumblr assets.
