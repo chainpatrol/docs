@@ -199,13 +199,182 @@ Este evento se envía cuando se registra una acción en el **Audit Log** (regist
 | `ip_address`   | Dirección IP desde la que se realizó la acción. `null` para las acciones del staff y cuando no se registró ninguna.                                                         |
 | `user_agent`   | Navegador o cliente que hizo la solicitud. `null` para las acciones del staff y cuando no se registró ninguno.                                                              |
 
+### Eventos de takedowns
+
+Los eventos de takedowns te informan de lo que hace ChainPatrol con los [takedowns](/es/concepts/takedowns) de tu organización: cuándo se presenta un takedown ante un proveedor, cuándo responde el proveedor y cuándo el takedown se completa, se cancela o queda a la espera de algo. Úsalos para mantener sincronizado un ticket o un panel sin tener que entrar al dashboard.
+
+Todos los eventos de takedowns incluyen estos campos en `data`, además de los campos propios de cada evento:
+
+| Campo             | Descripción                                                                                                                              |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `takedown_id`     | ID del takedown.                                                                                                                         |
+| `status`          | El estado del takedown, como `IN_PROGRESS` o `COMPLETED`. Consulta [Estados de un takedown](/es/concepts/takedowns#estados-de-un-takedown). |
+| `created_at`      | Cuándo se creó el takedown. No es la hora del evento; la hora del evento es el `created_at` de nivel superior.                          |
+| `url`             | Enlace al takedown en el dashboard de ChainPatrol.                                                                                       |
+| `organization_id` | ID de tu organización.                                                                                                                   |
+| `asset_id`        | ID del asset que se está dando de baja.                                                                                                  |
+| `content`         | El asset en sí, como una URL, un dominio o un perfil de redes sociales.                                                                  |
+| `type`            | El tipo de asset, como `URL`.                                                                                                            |
+
+#### `takedown.filed`
+
+Este evento se envía cada vez que ChainPatrol presenta un takedown ante un proveedor, como un proveedor de hosting, un registrador o una plataforma. Un takedown se puede presentar ante varios proveedores, y volver a presentar ante el mismo proveedor, así que puedes recibir este evento más de una vez para un mismo takedown.
+
+```json
+{
+  "type": "takedown.filed",
+  "created_at": "2026-11-20T10:15:02.000Z",
+  "data": {
+    "takedown_id": 4521,
+    "status": "IN_PROGRESS",
+    "created_at": "2026-11-20T09:58:41.000Z",
+    "url": "https://app.chainpatrol.io/admin/your-org/takedowns?takedown_id=4521",
+    "organization_id": 100,
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "provider_name": "Cloudflare",
+    "channel": "api",
+    "is_refile": false,
+    "filed_at": "2026-11-20T10:15:00.000Z"
+  }
+}
+```
+
+| Campo           | Descripción                                                                                                                        |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `provider_name` | Nombre del proveedor ante el que se presentó el takedown. Puede ser `null`.                                                        |
+| `channel`       | Cómo se presentó: `email`, `form` (el formulario web del proveedor), `api` (la API del proveedor) u `other`.                       |
+| `is_refile`     | `true` cuando ChainPatrol ya había presentado este takedown ante el mismo proveedor y lo vuelve a presentar.                       |
+| `filed_at`      | Cuándo se registró la presentación.                                                                                                |
+
+#### `takedown.provider-replied`
+
+Este evento se envía cuando un proveedor responde por email sobre un takedown. También se envía cuando el equipo de ChainPatrol vincula a mano una respuesta a un takedown después de que llegó.
+
+El evento te avisa de que llegó una respuesta. No incluye la respuesta en sí; abre `url` para leerla en el dashboard.
+
+```json
+{
+  "type": "takedown.provider-replied",
+  "created_at": "2026-11-21T08:03:12.000Z",
+  "data": {
+    "takedown_id": 4521,
+    "status": "IN_PROGRESS",
+    "created_at": "2026-11-20T09:58:41.000Z",
+    "url": "https://app.chainpatrol.io/admin/your-org/takedowns?takedown_id=4521",
+    "organization_id": 100,
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "provider_name": "Cloudflare",
+    "received_at": "2026-11-21T08:03:05.000Z"
+  }
+}
+```
+
+| Campo           | Descripción                                                                                                                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `provider_name` | Nombre del proveedor que respondió. `null` cuando ChainPatrol no puede saber qué proveedor envió la respuesta, por ejemplo, cuando responde a una presentación por formulario o API, o la envía otra persona. |
+| `received_at`   | Cuándo se recibió la respuesta.                                                                                                                                                                   |
+
+#### `takedown.completed`
+
+Este evento se envía cuando un takedown pasa a `COMPLETED`, es decir, el proveedor eliminó el asset. Si un takedown completado se reabre y se vuelve a completar, recibes el evento otra vez.
+
+```json
+{
+  "type": "takedown.completed",
+  "created_at": "2026-11-22T14:30:04.000Z",
+  "data": {
+    "takedown_id": 4521,
+    "status": "COMPLETED",
+    "created_at": "2026-11-20T09:58:41.000Z",
+    "url": "https://app.chainpatrol.io/admin/your-org/takedowns?takedown_id=4521",
+    "organization_id": 100,
+    "asset_id": 12345,
+    "content": "https://example.com/phishing",
+    "type": "URL",
+    "started_at": "2026-11-20T10:15:00.000Z",
+    "completed_at": "2026-11-22T14:30:00.000Z",
+    "time_to_takedown_seconds": 188100
+  }
+}
+```
+
+| Campo                      | Descripción                                                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `started_at`               | Cuándo empezó el trabajo en el takedown: su primer paso a `IN_PROGRESS`, o su creación si nunca tuvo ese estado.  |
+| `completed_at`             | Cuándo el takedown pasó a `COMPLETED`.                                                                             |
+| `time_to_takedown_seconds` | Segundos desde `started_at` hasta `completed_at`.                                                                  |
+
+#### `takedown.unactionable`
+
+Este evento se envía cuando un takedown pasa a `CANCELLED`, es decir, ChainPatrol no va a actuar sobre él, por ejemplo, porque el asset resultó ser legítimo o un duplicado.
+
+```json
+{
+  "type": "takedown.unactionable",
+  "created_at": "2026-11-21T11:00:03.000Z",
+  "data": {
+    "takedown_id": 4522,
+    "status": "CANCELLED",
+    "created_at": "2026-11-20T09:58:41.000Z",
+    "url": "https://app.chainpatrol.io/admin/your-org/takedowns?takedown_id=4522",
+    "organization_id": 100,
+    "asset_id": 12346,
+    "content": "https://example.org",
+    "type": "URL",
+    "reason": "cancelled",
+    "occurred_at": "2026-11-21T11:00:00.000Z"
+  }
+}
+```
+
+| Campo         | Descripción                                   |
+| ------------- | --------------------------------------------- |
+| `reason`      | Siempre `cancelled`.                          |
+| `occurred_at` | Cuándo el takedown pasó a `CANCELLED`.        |
+
+#### `takedown.awaiting-input`
+
+Este evento se envía cuando un takedown pasa a `PENDING_EVIDENCE` o `PENDING_INPUT`. ChainPatrol sigue teniendo intención de actuar, pero antes falta algo, como más evidencia o una decisión de tu equipo. Consulta [Estados de un takedown](/es/concepts/takedowns#estados-de-un-takedown) para saber cuándo se usa cada estado.
+
+```json
+{
+  "type": "takedown.awaiting-input",
+  "created_at": "2026-11-21T09:20:02.000Z",
+  "data": {
+    "takedown_id": 4523,
+    "status": "PENDING_INPUT",
+    "created_at": "2026-11-20T09:58:41.000Z",
+    "url": "https://app.chainpatrol.io/admin/your-org/takedowns?takedown_id=4523",
+    "organization_id": 100,
+    "asset_id": 12347,
+    "content": "https://example.net",
+    "type": "URL",
+    "reason": "needs_input",
+    "occurred_at": "2026-11-21T09:20:00.000Z"
+  }
+}
+```
+
+| Campo         | Descripción                                                                                                  |
+| ------------- | ------------------------------------------------------------------------------------------------------------ |
+| `reason`      | `needs_evidence` cuando el estado es `PENDING_EVIDENCE`, o `needs_input` cuando es `PENDING_INPUT`.          |
+| `occurred_at` | Cuándo el takedown pasó a ese estado.                                                                        |
+
+<Note>
+  En `takedown.completed`, `takedown.unactionable` y `takedown.awaiting-input`, `status` es el estado al que pasó el takedown cuando ocurrió el evento. Es posible que el takedown haya cambiado de estado otra vez cuando recibas el evento.
+</Note>
+
 ## Configuración del webhook
 
 Al crear un webhook, tendrás que proporcionar:
 
 1. Una URL de endpoint HTTPS que recibirá los eventos del webhook
 2. Una descripción opcional que ayude a identificar el propósito del webhook
-3. Los eventos que quieres recibir (los eventos disponibles incluyen `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added` y `audit-log.created`)
+3. Los eventos que quieres recibir (los eventos disponibles incluyen `asset.status-updated`, `asset.status-escalated`, `asset.escalation-resolved`, `organization.threat-detection-added`, `audit-log.created` y los [eventos de takedowns](#eventos-de-takedowns) `takedown.filed`, `takedown.provider-replied`, `takedown.completed`, `takedown.unactionable` y `takedown.awaiting-input`)
 4. Encabezados HTTP opcionales para las integraciones compatibles (actualmente están disponibles los encabezados de Google SecOps)
 
 El secreto del webhook se genera automáticamente y se te muestra una sola vez al crear el webhook. Asegúrate de copiarlo, porque no se volverá a mostrar.
