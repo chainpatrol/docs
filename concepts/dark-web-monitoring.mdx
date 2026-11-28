@@ -5,7 +5,14 @@ description: "Search dark web leak data against a brand's tracked email domains,
 
 ## Overview
 
-**Dark Web Monitoring** lives under **Employee Protection → Dark Web**. It supports searching dark web leak data against each brand's tracked assets. Three search targets are available:
+**Dark Web Monitoring** lives under **Employee Protection → Dark Web**, on the page titled **Dark Web Exposure (Beta)**. The page has two tabs:
+
+- **Leaked credentials**: search dark web leak data against each brand's tracked assets.
+- **[Brand presence](#brand-presence)**: scan dark web forums and chat channels for fraud chatter about a brand.
+
+Organization owners, admins, and members can use both tabs once dark web monitoring is enabled for the organization. Only brands that ChainPatrol has enabled for dark web monitoring can be searched or scanned.
+
+The **Leaked credentials** tab supports three search targets:
 
 - **Email domains**: find leaked credentials for any address under a tracked domain.
 - **Email addresses**: find leaked credentials for a specific tracked address.
@@ -21,17 +28,20 @@ A **Monthly searches** meter next to the search controls shows how many searches
 
 ## Results
 
+Domain searches also return infostealer logs: stealer logs from the last 12 months that list the domain, or one of its subdomains, as a login site. These appear even when the victim used a personal email address, and they show as ordinary rows in the same table.
+
+Every row has a leak type: **Infostealer log** or **Data breach**. Infostealer logs include login-site rows and mailbox rows from leaks classified as stealer logs. Everything else is a data breach.
+
 Domain, email, and wallet searches share one table layout. Each row shows:
 
 - **Severity**: the triage level for the record.
-- **Identity**: the leaked email address, or the searched wallet address shortened for display. If an identity appears in more than one leak, the row shows **Seen in N leaks**.
-- **Credential**: whether the record contains a plaintext password, a hash, or no password.
-- **Exposed data**: other personal data found in the record, such as phone numbers, IP addresses, or payment cards.
-- **Leak · source**: the breach dataset or dark web site the record came from.
+- **Identity**: the leaked email address, or the searched wallet address shortened for display. If an identity appears in more than one leak, the row shows **Seen in N leaks**. A login-site infostealer row with no mailbox shows the login site instead, marked **Login site, account unknown**.
+- **Credential**: whether the record contains a plaintext password, a hash, or no password. For login-site infostealer rows, it shows what was taken: **Saved password**, **Autofill data**, **Browser data**, or cookies (**Login cookies (N)**, **Expired login cookies**, or **Tracking cookies only**). Other personal data found in the record, such as phone numbers, IP addresses, or payment cards, shows under the credential.
+- **Leak · source**: the breach dataset or dark web site the record came from. Infostealer rows are labeled **Infostealer log**.
 - **Breach date**: when the leak was recorded.
-- **Status**: **Open** or **Acknowledged**.
+- **Status**: **Open** or **Acknowledged**. This column stays pinned to the right edge of the table.
 
-Leaks are shown with sensitive details masked. CSV exports include an **Email** or **Address** column for the search target you ran.
+Leaks are shown with sensitive details masked. CSV exports include an **Email** or **Address** column for the search target you ran. For login-site rows with no mailbox, exports and **Copy identities** use the login site.
 
 ### Severity
 
@@ -44,24 +54,47 @@ ChainPatrol assigns each result a severity based on the data it exposes:
 | **Medium** | Hashed password, or personal data exposed without a password. |
 | **Low** | Identity appears in a leak without a password or other exposed data. |
 
-Results are sorted by severity first, then by breach date with the most recent first. You can re-sort by the **Severity** and **Breach date** columns.
+Infostealer rows are rated by what the malware took:
+
+| Severity | Criteria |
+| --- | --- |
+| **High** | A saved password or session captured in the last 12 months, or a sign-in cookie that hasn't expired. |
+| **Medium** | A sign-in cookie captured over a year ago, a cookie file with no readable cookies, or other stolen browser data. |
+| **Low** | Only expired sign-in cookies, or only tracking cookies. |
+
+Results are sorted by breach date, newest first. Click the **Breach date** or **Severity** column header to re-sort. The first click sorts newest first or most severe first.
+
+A search loads up to the 2,000 most recent mailbox records. When more exist, the table notes that it is showing only the newest mailbox records. Login-site infostealer results are also capped, and the table notes when more login-site infostealer logs exist.
+
+If the infostealer check fails, mailbox results still show, with a warning that some infostealer logs may be missing or shown as data breaches.
 
 ### Summary tiles and filters
 
-Summary tiles above the table show the number of exposed identities, **Critical** and **High** results, **Plaintext passwords**, and **Open** results. Click a tile to filter the table to those results. Click it again to clear the filter.
+A summary line above the tiles shows the total identities, records, and leaks, and how many records are acknowledged.
+
+Six summary tiles follow, ordered from most to least urgent:
+
+- **Needs action**: open results rated **Critical** or **High**.
+- **Live sessions**: stolen login cookies that haven't expired yet.
+- **Staff in stealer logs**: infostealer rows that include a staff mailbox, with the newest date.
+- **Plaintext passwords**: plaintext passwords from the last 12 months.
+- **Your sites in stealer logs**: infostealer rows for the brand's login sites where the account is unknown.
+- **New this month**: results from the last 30 days.
+
+Click a tile to filter the table to those results. Click it again to clear the filter. While a tile filter is on, the tile is highlighted and the summary line shows a **Show all** button.
 
 To narrow results further:
 
 - Use the search box to match emails, leak names, and sources.
-- Use the **Severity**, **Password** (**Plaintext**, **Hash**, or **No password**), and **Status** (**Open** or **Acknowledged**) filters.
+- Use the filter menu for the **Severity**, **Password** (**Plaintext**, **Hash**, or **No password**), **Status** (**Open** or **Acknowledged**), and **Leak type** (**Any leak type**, **Infostealer log**, or **Data breach**) filters.
 
-For domain searches, switch from **Records** to **By identity** to group rows by email address. Each group shows how many distinct leaks include that identity.
+For domain searches, switch from **Records** to **By identity** to group rows by email address. Each group shows how many distinct leaks include that identity, and its **Credential** cell counts infostealer rows (**N infostealer**).
 
 Leak counts are based on distinct leak sources, not rows. A single dump often contains many rows for the same identity, and those rows count as one leak.
 
 ### Acknowledging results
 
-You can track which leaks you have already reviewed. Click a row's status to toggle it between **Open** and **Acknowledged**.
+You can track which leaks you have already reviewed. Click a row's status to toggle it between **Open** and **Acknowledged**. If **Needs action** or the **Open** status filter is on, an acknowledged row stays in the table showing **Acknowledged** until you change the filters, and the tile counts update right away.
 
 To act on several results at once, select rows with the checkboxes. Then choose one of the bulk actions:
 
@@ -78,8 +111,36 @@ Click a row to open the record drawer. The drawer shows:
 - Collapsible sections for exposed data, recommended next steps, matched context, and details about the leak.
 - Other leaks for the same email or wallet, with the severity of each.
 
+Infostealer rows also show the **Login site** and **Data taken**, and a **Cookies taken** section lists each cookie's name, host, kind, and expiry. Their next steps cover ending sessions on the site when cookies were taken, expecting sign-in attempts when a saved password was taken, and watching the site for unfamiliar logins. Infostealer mailbox rows also suggest checking the owner's device for malware before changing passwords. Stealer log files aren't downloaded, so these rows have no excerpt.
+
 Press **J** to move to the next record and **K** to move to the previous one. The drawer follows the table's current sort order.
 
 ## Slack alerts
 
 When leaks increase for a monitored domain, ChainPatrol sends an alert to your configured Slack channel with a link back to the page.
+
+## Brand presence
+
+The **Brand presence** tab looks for a brand being discussed by fraud actors, such as account takeover, payment fraud, insider recruitment, and impersonation. Pick a brand and click **Scan**. ChainPatrol runs a set of checks against dark web forums and chat channels and lists every mention it finds.
+
+Scans look for the brand's name, website domain, Twitter handle, and included terms. A brand's tickers only count when they appear as a cashtag, such as `$LINK`, never as the plain word.
+
+### Scan quota
+
+Each brand can be scanned 20 times per calendar month. The counter next to the **Scan** button shows how many scans are left. The quota resets at 00:00 UTC on the first day of each month.
+
+ChainPatrol does not save Brand presence scan results, which exist only while the page is open. Switching to another tab on the Dark Web page and back keeps a running scan going and keeps its results. If you leave the page while a scan is running or results are shown, ChainPatrol asks you to confirm first (reloading, closing the browser tab, or typing a URL shows your browser's own leave prompt instead). Once you leave, the results are lost, and running the scan again uses another scan from the brand's monthly quota.
+
+### Scan results
+
+Each result shows its **Severity**, **What matched**, **Source**, when it was **Seen**, and its **Status** (**Open** or **Acknowledged**). Click a severity tile above the table, or use **Filter results**, to narrow the list. Mentions with no fraud terms nearby are hidden by default. To include them, click **Show _N_ mentions with no fraud terms**.
+
+If some checks could not be completed, the toolbar shows how many failed. If a scan finds nothing, the page says no fraud chatter surfaced across the checks that ran.
+
+Click a row to open the result drawer. It shows:
+
+- Why the result got its severity.
+- Whether the brand appears next to a fraud term, in leaked records, is only mentioned, or is likely a different brand.
+- The checks that matched the result.
+- The source address, with a copy button. Addresses aren't links. `.onion` addresses open only in Tor Browser, and dark web pages can carry malware or illegal content.
+- Quoted passages where the brand appears, with matched words highlighted. Email addresses, credentials, cards, and phone numbers are removed from the passages.
