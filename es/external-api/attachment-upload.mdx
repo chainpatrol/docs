@@ -157,7 +157,7 @@ print([attachment["url"] for attachment in attachments])
 - Los componentes de directorio se eliminan: `../../secrets/evidence.eml` se almacena como
   `evidence.eml`.
 - Los nombres no deben contener caracteres de control y tienen una longitud máxima; el esquema
-  de arriba indica el límite.
+  de la solicitud en esta página indica el límite.
 - Por lo demás, tu nombre se conserva tal cual. Eso importa porque es el nombre que se muestra
   en el reporte, y el nombre que ve un registrador o un proveedor de hosting cuando nuestro
   equipo de takedown reenvía el archivo; por eso `phishing-email.eml` vale más que
@@ -168,7 +168,7 @@ print([attachment["url"] for attachment in attachments])
 
 ## Tipos de archivo admitidos
 
-Las extensiones aceptadas se enumeran en la descripción de la solicitud de arriba, y esa lista
+Las extensiones aceptadas se enumeran en la descripción de la solicitud en esta página, y esa lista
 se genera a partir de las mismas constantes que aplica el endpoint, así que siempre está al día.
 
 El tipo de contenido con el que servimos el archivo se deriva de la extensión, **no** del
@@ -184,7 +184,7 @@ procesar).
 ## Límites
 
 El tamaño máximo del cuerpo de la solicitud y la cantidad de archivos por solicitud se indican
-en el esquema de arriba. Hay dos cosas que el esquema no te dice:
+en el esquema de la solicitud en esta página. Hay dos cosas que el esquema no te dice:
 
 - **El tamaño máximo se aplica a todo el cuerpo de la solicitud**, así que en una solicitud
   multipart todas las partes comparten un mismo cupo. Para cualquier cosa más grande, divídela
@@ -209,7 +209,7 @@ en el esquema de arriba. Hay dos cosas que el esquema no te dice:
 ## Respuestas de error
 
 Todos los errores devuelven un cuerpo JSON con una única cadena `error` que describe qué
-estuvo mal. Los códigos de estado se enumeran junto con las respuestas de arriba; hay dos cosas
+estuvo mal. Los códigos de estado se enumeran en la referencia de respuestas de esta página; hay dos cosas
 que vale la pena destacar:
 
 - **`405` no está en la lista**, porque no es una respuesta de `POST`. El endpoint solo admite

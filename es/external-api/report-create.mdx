@@ -49,8 +49,8 @@ Se devuelve cuando la solicitud es sintácticamente válida pero contiene errore
 | `INVALID_FORMAT`         | El formato del asset no es válido                                                                                        | Usa URL, dominios o direcciones de blockchain válidos                 |
 | `ASSET_NOT_FOUND`        | No se pudo ubicar ni crear el asset                                                                                      | Verifica el formato del asset y que sea accesible                     |
 | `ASSET_ALREADY_CORRECT`  | El asset ya tiene el estado solicitado                                                                                   | No hace falta ninguna acción: el asset ya está en el estado deseado   |
-| `ALREADY_PENDING_REVIEW` | El asset tiene una **Proposal** (propuesta para bloquear o permitir un asset) pendiente para el estado solicitado        | Espera a que se procese la Proposal existente                         |
-| `REPORT_ALREADY_EXISTS`  | Ya existe un reporte o una Proposal pendiente para este asset                                                            | Revisa los reportes existentes o espera a que se procese              |
+| `ALREADY_PENDING_REVIEW` | Tu organización ya estableció un estado `BLOCKED` pendiente en este asset                                                | Espera a que se procese la **Proposal** (propuesta para bloquear o permitir un asset) existente |
+| `REPORT_ALREADY_EXISTS`  | El asset ya tiene una Proposal pendiente en otro de los reportes de tu organización                                      | Revisa los reportes existentes o espera a que se procese              |
 | `PROCESSING_FAILED`      | Ocurrió un error técnico durante el procesamiento del asset                                                              | Reintenta la solicitud o contacta a soporte                           |
 | `DOMAIN_NOT_ALLOWED`     | El dominio del asset está en la lista de ignorados                                                                       | El dominio está excluido de los reportes según la política de contenido |
 | `VALIDATION_ERROR`       | Error de validación genérico                                                                                             | Revisa el formato y los requisitos del asset                          |
@@ -125,29 +125,22 @@ Se devuelve ante condiciones inesperadas del servidor, incluidos errores de base
 
 ### Validación de assets
 
-**URL**: Incluye el protocolo completo (`https://` o `http://`)
-
-**Dominios**: Usa nombres de dominio limpios, sin protocolos ni rutas
-
-**Direcciones de blockchain**: Usa el formato EIP-155 para las direcciones de Ethereum
-
-**Evita duplicados**: Cada asset debe aparecer una sola vez por reporte
+- **URL**: Incluye el protocolo completo (`https://` o `http://`)
+- **Dominios**: Usa nombres de dominio limpios, sin protocolos ni rutas
+- **Direcciones de blockchain**: Usa el formato EIP-155 para las direcciones de Ethereum
+- **Evita duplicados**: Cada asset debe aparecer una sola vez por reporte
 
 ### Manejo de errores
 
-Revisa siempre el arreglo `data.errors` en las respuestas 422 para ver los detalles por asset
-
-Usa el campo `suggestion` de las respuestas de error para orientar a los usuarios
-
-Implementa una lógica de reintentos con backoff exponencial para los errores 500
+- Revisa siempre el arreglo `data.errors` en las respuestas 422 para ver los detalles por asset
+- Usa el campo `suggestion` de las respuestas de error para orientar a los usuarios
+- Implementa una lógica de reintentos con backoff exponencial para los errores 500
 
 ### Consejos de rendimiento
 
-Agrupa varios assets en una sola solicitud cuando sea posible
-
-Valida los formatos de los assets del lado del cliente antes de enviarlos
-
-Maneja el límite de solicitudes de forma adecuada
+- Agrupa varios assets en una sola solicitud cuando sea posible
+- Valida los formatos de los assets del lado del cliente antes de enviarlos
+- Maneja el límite de solicitudes de forma adecuada
 
 ## Solución de problemas
 
@@ -155,54 +148,41 @@ Maneja el límite de solicitudes de forma adecuada
 
 **Errores "INVALID_FORMAT":**
 
-Asegúrate de que las URL incluyan el protocolo (`https://` o `http://`)
-
-Verifica que los nombres de dominio no incluyan protocolos ni rutas
-
-Comprueba que el formato de la dirección de blockchain coincida con el estándar EIP-155
+- Asegúrate de que las URL incluyan el protocolo (`https://` o `http://`)
+- Verifica que los nombres de dominio no incluyan protocolos ni rutas
+- Comprueba que el formato de la dirección de blockchain coincida con el estándar EIP-155
 
 **Errores "DUPLICATE_ASSETS":**
 
-Quita las entradas duplicadas del arreglo de assets
-
-Revisa si hay diferencias de mayúsculas y minúsculas
-
-Verifica la normalización de las URL (barras finales, etc.)
+- Quita las entradas duplicadas del arreglo de assets
+- Revisa si hay diferencias de mayúsculas y minúsculas
+- Verifica la normalización de las URL (barras finales, etc.)
 
 **Errores "DOMAIN_NOT_ALLOWED":**
 
-El dominio está en la lista de ignorados de ChainPatrol
-
-Escribe a disputes@chainpatrol.io para disputar esta decisión
-
-Considera reportar URL específicas en lugar del dominio completo
+- El dominio está en la lista de ignorados de ChainPatrol
+- Escribe a disputes@chainpatrol.io para disputar esta decisión
+- Considera reportar URL específicas en lugar del dominio completo
 
 **Errores "ASSET_ALREADY_CORRECT":**
 
-El asset ya tiene el estado que estás solicitando
-
-Revisa el estado actual del asset antes de reportarlo
-
-No hace falta ninguna acción: el asset ya está en el estado deseado
+- El asset ya tiene el estado que estás solicitando
+- Revisa el estado actual del asset antes de reportarlo
+- No hace falta ninguna acción: el asset ya está en el estado deseado
 
 ### Límite de solicitudes
 
 El endpoint aplica un límite de solicitudes para prevenir abusos. Si recibes errores de límite de solicitudes:
 
-Implementa backoff exponencial en tu lógica de reintentos
-
-Considera agrupar solicitudes para reducir las llamadas a la API
-
-Contacta a soporte si necesitas límites de solicitudes más altos
+- Implementa backoff exponencial en tu lógica de reintentos
+- Considera agrupar solicitudes para reducir las llamadas a la API
+- Contacta a soporte si necesitas límites de solicitudes más altos
 
 ## Notas
 
-La forma del payload de error es estable en todos los errores 422; revisa `data.errors` para ver los detalles por asset
-
-Proporciona el `organizationSlug` y `assets` válidos para minimizar los errores 500 causados por un estado inválido
-
-Todos los assets deben ser válidos para que se cree el reporte
-
-Solo se puede crear un reporte una vez por dirección de correo electrónico para un asset específico
+- La forma del payload de error es estable en todos los errores 422; revisa `data.errors` para ver los detalles por asset
+- Proporciona el `organizationSlug` y `assets` válidos para minimizar los errores 500 causados por un estado inválido
+- Todos los assets deben ser válidos para que se cree el reporte
+- Un reporte no puede incluir un asset que ya tiene una Proposal pendiente en otro de los reportes de tu organización
 
 Si tienes problemas técnicos o preguntas sobre las respuestas de error, escribe a support@chainpatrol.io e incluye la respuesta de error completa en tu solicitud.

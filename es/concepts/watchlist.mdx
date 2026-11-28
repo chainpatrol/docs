@@ -78,7 +78,7 @@ Cada asset se agrega automáticamente a la Watchlist cuando se inicia un takedow
 
 Los assets de la Watchlist se escanean con distintas frecuencias según cuánto tiempo llevan en monitoreo y su estado actual:
 
-**Assets `UNKNOWN`/`ALLOWED`** (monitoreo más frecuente para assets inciertos):
+**Assets `UNKNOWN`** (monitoreo más frecuente para assets inciertos):
 
 | Tiempo en la Watchlist | Frecuencia de escaneo |
 |-------------------|----------------|
@@ -114,7 +114,8 @@ Los assets se quitan automáticamente de la Watchlist cuando:
 
 - **El estado cambia a `ALLOWED`**: se confirmó que el asset es legítimo
 - **El asset vuelve a estar online**: un asset que antes estaba inactivo se vuelve accesible (se envía a la cola de revisión)
-- **30 días en `UNKNOWN`**: el factor de decaimiento quita los assets que llevan mucho tiempo en estado incierto
+- **2 semanas en `UNKNOWN`**: el factor de decaimiento quita los assets que llevan mucho tiempo en estado incierto
+- **3 meses offline después del takedown**: un asset bloqueado con un takedown completado o cancelado que sigue offline durante 3 meses
 - **Takedown exitoso**: el asset queda offline durante el takedown
 - **Suspensión del proveedor**: el proveedor de hosting suspende el asset
 - **Eliminación manual**: un analista decide que el monitoreo ya no es necesario
@@ -124,4 +125,4 @@ Los assets se quitan automáticamente de la Watchlist cuando:
 - La Watchlist resuelve el problema de la zona gris: cuando sospechas que un asset podría ser malicioso pero no tienes evidencia para bloquearlo, agregarlo a la Watchlist te permite monitorear sus cambios sin actuar de forma prematura
 - El monitoreo automático de takedowns ahorra trabajo manual: cada takedown agrega automáticamente el asset a la Watchlist, lo que elimina la necesidad de revisar manualmente si el contenido ya se eliminó
 - La frecuencia adaptativa optimiza los recursos: los assets agregados hace poco se escanean con frecuencia para detectar cambios rápidos, mientras que los assets estables se escanean con menos frecuencia para no gastar recursos en actualizaciones poco probables
-- El decaimiento a los 30 días evita la acumulación: los assets que permanecen en `UNKNOWN` durante un mes sin volverse maliciosos se quitan automáticamente, lo que mantiene el monitoreo enfocado en las amenazas activas
+- El decaimiento evita la acumulación: los assets que permanecen en `UNKNOWN` durante 2 semanas sin volverse maliciosos se quitan automáticamente, lo que mantiene el monitoreo enfocado en las amenazas activas

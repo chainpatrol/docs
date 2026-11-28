@@ -302,7 +302,7 @@ Se agotó el cupo diario de revisiones de la organización:
 
 ```json
 {
-  "message": "Review limit of 10 per day reached for this organization.",
+  "message": "This organization has reached its limit of 10 proposal reviews per day over the API. Reviews from the Review page are not affected, and the limit resets within 24 hours.",
   "code": "TOO_MANY_REQUESTS"
 }
 ```
@@ -321,7 +321,7 @@ const listed = await fetch(
   { headers: { "X-API-KEY": process.env.CHAINPATROL_API_KEY! } }
 ).then((res) => res.json());
 
-for (const report of listed.reports) {
+reviewQueue: for (const report of listed.reports) {
   for (const proposal of report.proposals) {
     // Decide from the asset and its scan data before writing anything.
     const decision = shouldBlock(proposal.asset)
@@ -342,7 +342,7 @@ for (const report of listed.reports) {
 
     if (res.status === 429) {
       console.log("Daily review budget spent — finish the rest in the app.");
-      return;
+      break reviewQueue;
     }
     if (res.status === 403) {
       console.log(`Proposal ${proposal.id} needs a person on the Review page.`);
@@ -367,27 +367,30 @@ listed = requests.get(
     params={"needsCustomerReview": "true", "limit": 20},
 ).json()
 
-for report in listed["reports"]:
-    for proposal in report["proposals"]:
-        # Decide from the asset and its scan data before writing anything.
-        decision = (
-            {"decision": "APPROVE", "label": "General Phishing"}
-            if should_block(proposal["asset"])
-            else {"decision": "REJECT", "rejectReason": "no_malicious_activity"}
-        )
+def review_queue():
+    for report in listed["reports"]:
+        for proposal in report["proposals"]:
+            # Decide from the asset and its scan data before writing anything.
+            decision = (
+                {"decision": "APPROVE", "label": "General Phishing"}
+                if should_block(proposal["asset"])
+                else {"decision": "REJECT", "rejectReason": "no_malicious_activity"}
+            )
 
-        res = requests.post(
-            f"https://app.chainpatrol.io/api/v2/organization/proposals/{proposal['id']}/review",
-            headers=headers,
-            json={"assetId": proposal["asset"]["id"], **decision},
-        )
+            res = requests.post(
+                f"https://app.chainpatrol.io/api/v2/organization/proposals/{proposal['id']}/review",
+                headers=headers,
+                json={"assetId": proposal["asset"]["id"], **decision},
+            )
 
-        if res.status_code == 429:
-            print("Daily review budget spent — finish the rest in the app.")
-            break
-        if res.status_code == 403:
-            print(f"Proposal {proposal['id']} needs a person on the Review page.")
-            continue
+            if res.status_code == 429:
+                print("Daily review budget spent — finish the rest in the app.")
+                return
+            if res.status_code == 403:
+                print(f"Proposal {proposal['id']} needs a person on the Review page.")
+                continue
+
+review_queue()
 ```
 
 </CodeGroup>

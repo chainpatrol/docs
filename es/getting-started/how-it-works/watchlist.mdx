@@ -16,7 +16,7 @@ Quitamos assets de la Watchlist por tres motivos:
 
 - **Asset permitido** - El estado del asset cambió a `ALLOWED`
 - **Vuelve a estar en línea** - Un asset que estaba inactivo vuelve a ser accesible
-- **Demasiado tiempo fuera de línea** - El asset estuvo fuera de línea durante más de 30 días
+- **Decaimiento** - Un asset `UNKNOWN` permanece en la Watchlist durante 2 semanas sin volverse malicioso, o un asset bloqueado con un takedown cerrado permanece fuera de línea durante 3 meses
 
 <Info>
 Para más detalles sobre el concepto de Watchlist, consulta nuestra [documentación de Conceptos](/es/concepts/watchlist).
@@ -73,7 +73,7 @@ También ejecutamos verificaciones para determinar si debemos mantener el asset 
 
 Recorremos la Watchlist cada minuto y verificamos unos **150 assets a la vez**. La frecuencia de escaneo depende de cuánto tiempo lleva el asset en la Watchlist y de su estado actual.
 
-### Assets UNKNOWN / ALLOWED
+### Assets UNKNOWN
 
 Los assets que todavía no están bloqueados se escanean con más frecuencia:
 
@@ -103,7 +103,7 @@ Los assets bloqueados se escanean con menos frecuencia porque ya están protegid
 | < 2 meses | Cada 6 días |
 | > 2 meses | Cada 12 días |
 
-**¿Por qué la diferencia?** Los assets `UNKNOWN` y `ALLOWED` necesitan un monitoreo más cercano para detectar cuándo se vuelven maliciosos. Los assets `BLOCKED` ya están protegidos, así que los monitoreamos principalmente para confirmar el éxito del takedown.
+**¿Por qué la diferencia?** Los assets `UNKNOWN` necesitan un monitoreo más cercano para detectar cuándo se vuelven maliciosos. Los assets `BLOCKED` ya están protegidos, así que los monitoreamos principalmente para confirmar el éxito del takedown.
 
 ## Cómo se quitan los assets de la Watchlist
 
@@ -119,7 +119,9 @@ Si el estado de **Liveness** (si el asset sigue online o ya no) de un asset camb
 
 ### Factor de decaimiento
 
-**Assets UNKNOWN: límite de 30 días** - Si un asset está en estado `UNKNOWN`, lo quitamos de la Watchlist después de 30 días. Si un asset no se volvió malicioso después de un mes, es poco probable que represente una amenaza.
+**Assets UNKNOWN: límite de 2 semanas** - Si un asset está en estado `UNKNOWN`, lo quitamos de la Watchlist 2 semanas después de agregarlo. Si un asset no se volvió malicioso después de 2 semanas, es poco probable que represente una amenaza.
+
+**Assets bloqueados: límite de 3 meses** - Si un asset está en estado `BLOCKED`, su takedown está en `COMPLETED` o `CANCELLED` y permanece fuera de línea durante 3 meses, lo quitamos de la Watchlist.
 
 **Takedown exitoso** - Si el asset se puso en la Watchlist durante el proceso de takedown y el takedown está en estado `IN_PROGRESS`, cuando el asset queda fuera de línea o el proveedor del takedown suspende el asset, se quita de la Watchlist porque el takedown tuvo éxito.
 
@@ -137,4 +139,4 @@ Si el estado de **Liveness** (si el asset sigue online o ya no) de un asset camb
 - La Watchlist es para la zona gris: úsala cuando sospeches que un asset podría ser malicioso, pero todavía no tengas evidencia suficiente para bloquearlo
 - El monitoreo automático de takedowns ahorra tiempo: cada takedown pone automáticamente el asset en la Watchlist para detectar cuándo queda fuera de línea, lo que elimina la verificación manual
 - La frecuencia adaptativa optimiza los recursos: los assets agregados recientemente se escanean cada hora, mientras que los estables se escanean con menos frecuencia, así detectas los cambios rápido sin desperdiciar escaneos
-- El decaimiento a los 30 días evita que la Watchlist se sature: los assets `UNKNOWN` que no se volvieron maliciosos después de un mes se quitan automáticamente, lo que mantiene tu monitoreo enfocado
+- El decaimiento evita que la Watchlist se sature: los assets `UNKNOWN` que no se volvieron maliciosos después de 2 semanas se quitan automáticamente, lo que mantiene tu monitoreo enfocado

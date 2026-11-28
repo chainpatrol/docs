@@ -51,7 +51,7 @@ Al usar filtros basados en tiempo (p. ej., obtener solo los últimos 5 minutos d
 
 ### Enfoques recomendados
 
-1. **Monitorea la Allowlist (lista de permitidos) y la lista de assets `UNKNOWN` para detectar eliminaciones**: Consulta periódicamente los endpoints de la Allowlist y de la lista `UNKNOWN` para detectar los assets que se quitaron de la Blocklist.
+1. **Monitorea los assets permitidos y desconocidos para detectar eliminaciones**: Llama periódicamente a `POST /asset/list` con `status` en `ALLOWED` y en `UNKNOWN` para detectar los assets que se quitaron de la Blocklist.
 
 2. **Sincronización completa periódica**: Realiza una sincronización completa de toda la Blocklist a intervalos regulares (p. ej., cada hora o cada día) para detectar cualquier cambio que se haya pasado por alto.
 

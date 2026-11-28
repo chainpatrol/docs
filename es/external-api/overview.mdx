@@ -199,6 +199,10 @@ Administra los assets y los grupos de assets que pertenecen a tu organización.
   <Card title="Eliminar grupo de assets de la organización" icon="folder-minus" href="/es/external-api/organization-asset-groups-delete">
     Elimina un grupo de assets.
   </Card>
+
+  <Card title="Definir vencimiento de assets de la organización" icon="calendar-xmark" href="/es/external-api/organization-assets-expiry">
+    Define, renueva o borra las fechas de vencimiento de los assets de la organización.
+  </Card>
 </CardGroup>
 
 ## Reportes de la organización
@@ -210,6 +214,14 @@ Administra los assets y los grupos de assets que pertenecen a tu organización.
 
   <Card title="Obtener reportes de la organización (obsoleto)" icon="clock-rotate-left" href="/es/external-api/organization-reports">
     Obsoleto: usa Listar reportes de la organización.
+  </Card>
+
+  <Card title="Obtener reporte de la organización" icon="file-lines" href="/es/external-api/organization-reports-get">
+    Obtén uno de los reportes de tu organización por su ID.
+  </Card>
+
+  <Card title="Revisar Proposal de la organización" icon="clipboard-check" href="/es/external-api/organization-proposals-review">
+    Aprueba o rechaza una Proposal que espera la revisión de tu organización.
   </Card>
 </CardGroup>
 
@@ -257,6 +269,18 @@ Lista las Suspected Threats, inspecciona sus fuentes y administra las configurac
   <Card title="Listar amenazas" icon="triangle-exclamation" href="/es/external-api/threats-list">
     Lista las amenazas de tu organización.
   </Card>
+
+  <Card title="Listar amenazas de la organización" icon="shield-halved" href="/es/external-api/organization-threats-list">
+    Lista las amenazas confirmadas de tu organización.
+  </Card>
+
+  <Card title="Listar Watchlist de la organización" icon="eye" href="/es/external-api/organization-watchlist-list">
+    Lista los assets de la **Watchlist** (lista de seguimiento) de tu organización.
+  </Card>
+
+  <Card title="Cómo evaluar las suspected threats" icon="magnifying-glass" href="/es/external-api/evaluating-detections">
+    Responde las preguntas de evaluación más comunes con los endpoints de detección y de Watchlist.
+  </Card>
 </CardGroup>
 
 ## Dark Web
@@ -300,12 +324,36 @@ Busca credenciales filtradas de los objetivos que una marca ya tiene en seguimie
     Cantidad de amenazas bloqueadas, separadas según quién las reportó primero: tú o ChainPatrol.
   </Card>
 
-  <Card title="Listar métricas de la organización" icon="list" href="/es/external-api/organization-metrics-list">
+  <Card title="Obtener métricas de la organización" icon="list" href="/es/external-api/organization-metrics-list">
     Obtén las métricas de tu organización (`GET /organization/metrics`).
   </Card>
 
   <Card title="Obtener métricas de la organización (obsoleto)" icon="clock-rotate-left" href="/es/external-api/organization-metrics">
-    Obsoleto: usa Listar métricas de la organización.
+    Obsoleto: usa Obtener métricas de la organización (`GET /organization/metrics`).
+  </Card>
+
+  <Card title="Obtener tiempo de takedown" icon="stopwatch" href="/es/external-api/metrics-takedown-time">
+    Mediana del tiempo desde la creación de un takedown hasta que se completa.
+  </Card>
+
+  <Card title="Obtener tendencia del tiempo de takedown" icon="chart-line" href="/es/external-api/metrics-takedown-time-trend">
+    Evolución del tiempo de takedown a lo largo del tiempo.
+  </Card>
+
+  <Card title="Obtener tiempo de takedown por proveedor" icon="server" href="/es/external-api/metrics-takedown-time-by-provider">
+    Tiempo de takedown de cada proveedor.
+  </Card>
+
+  <Card title="Obtener tasa de éxito de takedowns" icon="circle-check" href="/es/external-api/metrics-takedown-success-rate">
+    Proporción de takedowns que se completaron.
+  </Card>
+
+  <Card title="Obtener tasa de falsos positivos" icon="scale-balanced" href="/es/external-api/metrics-false-positive-rate">
+    Proporción de bloqueos que se revirtieron después.
+  </Card>
+
+  <Card title="Obtener tiempo hasta la detección" icon="radar" href="/es/external-api/metrics-time-to-detection">
+    Cuánto tiempo estuvieron activas las amenazas antes de que ChainPatrol las detectara por primera vez.
   </Card>
 </CardGroup>
 
@@ -330,6 +378,10 @@ Busca credenciales filtradas de los objetivos que una marca ya tiene en seguimie
 
   <Card title="Obtener una organización del usuario" icon="building-circle-check" href="/es/external-api/user-orgs-get">
     Obtén una sola organización por su slug.
+  </Card>
+
+  <Card title="Crear organización (Staff)" icon="user-shield" href="/es/external-api/staff-organization-create">
+    Solo para Staff. Crea una nueva organización.
   </Card>
 </CardGroup>
 

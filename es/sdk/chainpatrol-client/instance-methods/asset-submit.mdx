@@ -61,14 +61,17 @@ client.asset.submit(request: AssetSubmitInput): Promise<AssetSubmitOutput>
 {" "}
 
 <Card title="Direcciones cripto" icon="coins">
-  - `0x1234...abcd` (Ethereum) - `bc1q...` (Bitcoin) - `cosmos1abc...` (Cosmos)
+  - `0x1234...abcd` (Ethereum)
+  - `bc1q...` (Bitcoin)
+  - `cosmos1abc...` (Cosmos)
 </Card>
 
 {" "}
 
 <Card title="Perfiles sociales" icon="users">
-  - `@scammer_account` - `https://twitter.com/fake_support` -
-  `discord.gg/phishing_server`
+  - `@scammer_account`
+  - `https://twitter.com/fake_support`
+  - `discord.gg/phishing_server`
 </Card>
 
   <Card title="Otros assets" icon="shield">
@@ -82,17 +85,23 @@ client.asset.submit(request: AssetSubmitInput): Promise<AssetSubmitOutput>
 
 <Tabs>
   <Tab title="Con slug de la organización">
-    Cuando se indica `organizationSlug`: ✅ Los assets se clasifican específicamente
-    para esa organización ✅ Se activa el flujo de escaneo inmediato ✅
-    Es más probable que se devuelva `scanId` ✅ Los resultados se optimizan para el
-    perfil de amenazas de la organización ✅ Procesamiento más rápido y atención prioritaria
+    Cuando se indica `organizationSlug`:
+
+    - ✅ Los assets se clasifican específicamente para esa organización
+    - ✅ Se activa el flujo de escaneo inmediato
+    - ✅ Es más probable que se devuelva `scanId`
+    - ✅ Los resultados se optimizan para el perfil de amenazas de la organización
+    - ✅ Procesamiento más rápido y atención prioritaria
   </Tab>
 
   <Tab title="Sin slug de la organización">
-    Cuando se omite `organizationSlug`: 📋 Los assets se procesan para la detección
-    general de amenazas 📋 Procesamiento en segundo plano mediante una cola de Redis 📋 Es posible que `scanId`
-    no esté disponible de inmediato 📋 Los resultados benefician a todos los usuarios de ChainPatrol 📋
-    Prioridad de procesamiento estándar
+    Cuando se omite `organizationSlug`:
+
+    - 📋 Los assets se procesan para la detección general de amenazas
+    - 📋 Los assets se procesan en segundo plano
+    - 📋 Es posible que `scanId` no esté disponible de inmediato
+    - 📋 Los resultados benefician a todos los usuarios de ChainPatrol
+    - 📋 Prioridad de procesamiento estándar
   </Tab>
 </Tabs>
 
@@ -105,20 +114,19 @@ client.asset.submit(request: AssetSubmitInput): Promise<AssetSubmitOutput>
 import { ChainPatrolClient } from "@chainpatrol/sdk";
 
 const client = new ChainPatrolClient({
-apiKey: "cp_live_your_api_key_here",
+  apiKey: "cp_live_your_api_key_here",
 });
 
 const result = await client.asset.submit({
-assets: [
-"suspicious-domain.com",
-"https://fake-site.net",
-"0x1234567890abcdef1234567890abcdef12345678",
-],
+  assets: [
+    "suspicious-domain.com",
+    "https://fake-site.net",
+    "0x1234567890abcdef1234567890abcdef12345678",
+  ],
 });
 
 console.log(`Submitted ${result.submittedAssets.length} assets`);
-
-````
+```
 
 ```typescript Organization-Specific
 const result = await client.asset.submit({
@@ -133,7 +141,7 @@ result.submittedAssets.forEach((asset) => {
     console.log(`Immediate scan created: ${asset.scanId}`);
   }
 });
-````
+```
 
 ```json Example Response
 {
@@ -148,7 +156,7 @@ result.submittedAssets.forEach((asset) => {
       "assetId": 12346
     },
     {
-      "asset": "https://fake-exchange.net",
+      "asset": "https://fake-site.net",
       "assetId": 12347,
       "scanId": 67891
     }
@@ -329,15 +337,21 @@ class SecurityMonitor {
 ### Límites de solicitudes y restricciones
 
 <Warning>
-  **Límites importantes** - **Máximo de assets por solicitud**: 100 - **Longitud de la cadena
-  del asset**: 1-1000 caracteres - **Espera recomendada**: 500-1000 ms entre
-  solicitudes - **Límites diarios**: contacta a soporte para conocer los planes de uso de alto volumen
+  **Límites importantes**
+
+  - **Máximo de assets por solicitud**: 100
+  - **Longitud de la cadena del asset**: 1-1000 caracteres
+  - **Espera recomendada**: 500-1000 ms entre solicitudes
+  - **Límites diarios**: contacta a soporte para conocer los planes de uso de alto volumen
 </Warning>
 
 <Note>
-  **Consejos de rendimiento** - Agrupa los envíos en lotes para mayor eficiencia - Usa el slug de la
-  organización para un procesamiento más rápido - Implementa un manejo de errores y reintentos adecuado -
-  Supervisa las cuotas de la API y los límites de solicitudes
+  **Consejos de rendimiento**
+
+  - Agrupa los envíos en lotes para mayor eficiencia
+  - Usa el slug de la organización para un procesamiento más rápido
+  - Implementa un manejo de errores y reintentos adecuado
+  - Supervisa las cuotas de la API y los límites de solicitudes
 </Note>
 
 ### Manejo de errores
@@ -409,5 +423,5 @@ async function testAssetSubmit() {
 
 - [Inicio rápido de Asset Submit](/es/external-api/asset-submit)
 - [Autenticación de la API](/es/external-api/authentication)
-- [Gestión de organizaciones](/general/concepts)
+- [Gestión de organizaciones](/es/concepts/organizations)
 - [Guía de integración](/integration/guide)

@@ -27,7 +27,7 @@ flowchart LR
 
 <Info>
   **Los adjuntos son opcionales.** Si no tienes archivos para enviar, omite por completo el
-  paso 2 y llama a `report.create` directamente. Y si ya alojas tu evidencia en algún lugar de
+  paso de subida y llama a `report.create` directamente. Y si ya alojas tu evidencia en algún lugar de
   acceso público, pon esas URL directamente en `attachmentUrls`: el endpoint de subida existe
   para que no tengas que alojarlas tú.
 </Info>
@@ -273,6 +273,7 @@ curl -X POST 'https://app.chainpatrol.io/api/v2/report/create' \
     "organizationSlug": "acme",
     "title": "Acme airdrop phishing email",
     "description": "Customer forwarded a phishing email impersonating Acme support.",
+    "contactInfo": "security@acme.example",
     "attachmentUrls": [
       "https://upcdn.io/ACCOUNT/raw/uploads/.../phishing-email.eml",
       "https://upcdn.io/ACCOUNT/raw/uploads/.../screenshot.png"

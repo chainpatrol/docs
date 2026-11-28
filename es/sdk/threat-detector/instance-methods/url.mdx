@@ -87,6 +87,7 @@ Si la verificación se realizó correctamente, el objeto contendrá las siguient
 
     <ParamField body="status" type="'ALLOWED' | 'BLOCKED' | 'UNKNOWN' | 'IGNORED'" required>
       La propiedad `status` indica si la URL está permitida o bloqueada.
+      Es `UNKNOWN` cuando el dominio no está en ninguna de las dos listas.
       Es `IGNORED` cuando el dominio se agregó con
       [`ignore()`](/es/sdk/threat-detector/instance-methods/ignore), por ejemplo,
       después de que un usuario eligió continuar bajo su propio riesgo.
