@@ -432,6 +432,14 @@ Once your endpoint answers, the delivery is not retried, whatever the answer:
 - Any other status code is recorded as `FAILURE`. Redirects (`3xx`) are not followed, so set the webhook URL to the final address.
 - If your endpoint doesn't answer within 30 seconds, the delivery is recorded as `FAILURE` and not retried, because your endpoint may already have processed it.
 
+ChainPatrol also checks for deliveries that stay `PENDING` because they were never sent:
+
+- A delivery still `PENDING` 15 minutes after it was created is queued again, once. ChainPatrol only sends a delivery while it is `PENDING`, so this never sends the same delivery to your endpoint twice.
+- A delivery still `PENDING` 24 hours after it was created is recorded as `FAILURE` with the error `WebhookDeliveryExpired`, instead of being sent late.
+- A pending delivery for a webhook that was disabled or deleted is recorded as `FAILURE` with the error `WebhookInactive`.
+
+Deliveries in `IN_PROGRESS` are never sent again, because the request may already have reached your endpoint.
+
 You can view the delivery status, payload, request, and response details for each webhook attempt in the dashboard.
 
 ## Security
